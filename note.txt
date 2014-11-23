@@ -1,6 +1,5 @@
-prova 1
 
-
+Github
 --------------------------------------------------------------
 user:alericci
 psw: @scimmie83
@@ -20,5 +19,11 @@ git commit -am "comment"	... per fare il commit cioe' la sicronizzazione con il 
 git push			... per rendere effettivo il commit (chiede psw)
 
 git checkout nomedelbranch	... per cambiare branch
+git reset --hard                ... per ritornare alla situazione pulita prima del commit rispetto al server
+git stash                       ... ti mette in una stage area le tue modifiche
+git stash pop                   ... ti reinserisce le modifiche della stage area
 
 altrimenti pui usare il tool SourceTree
+
+quando ci sono modifiche sul server che nn hai sincronizzato mentre tu stai lavorando:
+git stash -> git pull -> git stash pop -> git commit -am "" -> git push
