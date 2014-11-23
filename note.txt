@@ -1,0 +1,23 @@
+
+Github
+--------------------------------------------------------------
+user:alericci
+psw: @scimmie83
+indirizzo Web repository:	https://github.com/symis84/Push_Forex_4.0
+https://github.com/symis84/Push_Forex_4.0.git
+
+commands Github:
+
+git pull			... da fare prima di iniziare a lavorare, sicronizza branch locale con il remoto
+git fetch			... sincronizza nomi dei branches
+
+git status 			... viasualizazzione status
+git diff   			... visualizza righe di codice modificate (le differenze)
+git add *  			... per condividere sul server dopo aver creato un nuovo file (li ricondivide tutti)
+
+git commit -am "comment"	... per fare il commit cioe' la sicronizzazione con il server
+git push			... per rendere effettivo il commit (chiede psw)
+
+git checkout nomedelbranch	... per cambiare branch
+
+altrimenti pui usare il tool SourceTree
