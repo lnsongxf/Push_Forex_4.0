@@ -152,7 +152,7 @@ classdef TimeSeriesExpert_10 < handle
             %timeScales=[5,30];
             %timeScales=[1,5,10,30,60,240,1440];
             n=1;
-            actTimeScale=5;
+            actTimeScale=1;
             
             [~,~,v1]=find(timeScales==1);
             [~,~,v5]=find(timeScales==5);
@@ -165,7 +165,7 @@ classdef TimeSeriesExpert_10 < handle
             if v1
                 % binary on 1 minute scale
                 newTimeScale=1;
-                inFit=[0 0];
+                inFit=[12500 0];
                 [obj]=obj.linFitTrendRec(data,actTimeScale,newTimeScale,n,@linear1,inFit);
                 
                 obj.Trend1mins(:,1)=obj.startTrend;
@@ -182,7 +182,7 @@ classdef TimeSeriesExpert_10 < handle
             if v5
                 % binary on 5 minutes scale
                 newTimeScale=5;
-                inFit=[0 0];
+                inFit=[12500 0];
                 [obj]=obj.linFitTrendRec(data,actTimeScale,newTimeScale,n,@linear1,inFit);
                 obj.startTrend;
                 obj.Trend5mins;
@@ -307,7 +307,6 @@ classdef TimeSeriesExpert_10 < handle
             % fun           ... fitting function default: linear1
             % inFit         ... initialization FIT parameters default:
             %                   inFit=[0 0]
-            % ydim          ... motor step dimension along y
             %
             % OUTPUT parameters:
             % -------------------------------------------------------------
@@ -315,7 +314,7 @@ classdef TimeSeriesExpert_10 < handle
             %
             % EXAMPLE of use:
             % -------------------------------------------------------------
-            % inFit=[0 0]; [type,rate,err,indexStart,i]=expert.linFitTrendRec(data(1:5000,:),1,10,1,@linear1,inFit)
+            % inFit=[12500 0]; [type,rate,err,indexStart,i]=expert.linFitTrendRec(data(1:5000,:),1,10,1,@linear1,inFit)
             %
             
             [obj]=obj.readData(data);
@@ -356,7 +355,7 @@ classdef TimeSeriesExpert_10 < handle
                 q0(in,1)=vEnd_f1(1,2);
                 rate(in,1)=abs(vEnd_f1(1,1));
                 type(in,1)=sign(vEnd_f1(1,1));
-                inFit1=[type(in,1).*rate(in,1);vEnd_f1(1,2)];
+                inFit1=[type(in,1).*rate(in,1),vEnd_f1(1,2)];
                 
                 if i>t01+2;
                     
@@ -486,15 +485,12 @@ classdef TimeSeriesExpert_10 < handle
             
             
             % uncomment to plot the price with the binary
-            figure(1);
+            figure(1)
             cla
             plot(price,'-b');
             hold on
             plot(index1,price(index1),'or');
-            plot(x1,yEnd_f1,'-b');
-            %                 plot(x2,yEnd_f2,'-g');
-            %                 plot(index2,price(index2),'og');
-            
+            plot(x1,yEnd_f1,'-b');            
         end
         
         

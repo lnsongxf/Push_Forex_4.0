@@ -1,0 +1,23 @@
+general aspect of stable distribution funtion
+----------------------------------------------------------------
+http://math.bu.edu/people/mveillet/html/alphastablepub.html
+http://en.wikipedia.org/wiki/Stable_distribution
+
+
+STBL documentation:
+----------------------------------------------------------------
+http://www.mathworks.com/matlabcentral/fileexchange/37514-stbl-alpha-stable-distributions-for-matlab
+
+
+
+Levy Distribution Function:
+----------------------------------------------------------------
+http://en.wikipedia.org/wiki/L%C3%A9vy_distribution
+
+
+
+distribution moments:
+----------------------------------------------------------------
+http://en.wikipedia.org/wiki/Moment_(statistics)
+http://en.wikipedia.org/wiki/Skewness
+http://en.wikipedia.org/wiki/Kurtosis
