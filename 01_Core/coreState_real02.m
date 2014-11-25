@@ -1,4 +1,4 @@
-classdef coreState_real2 < handle
+classdef coreState_real02 < handle
     
     properties
         state
