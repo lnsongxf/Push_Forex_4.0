@@ -51,8 +51,8 @@ valueTp   = 0;
 
 
 
-cState = coreState;
-decMaker = DecisionMaker;
+cState = coreState_real02;
+decMaker = DecisionMaker_real02;
 
 
 if(isempty(map))
