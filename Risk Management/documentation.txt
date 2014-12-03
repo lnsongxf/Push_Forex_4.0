@@ -1,0 +1,21 @@
+
+example of use of the Risk Management instruments:
+--------------------------------------------------------
+
+[outputBktWeb]=fromBktWebToMatrix;
+[HistData_1min_,HistData_freq_]=fromRawHystToHistorical(actTimeScale,newTimeScale)
+
+or use an input historical with specific freq if the backtest is done on it and not on rescaled data:
+[history_1min_,~]=fromRawHystToHistorical(1,5)		use path of historical on 1 min
+[history_5min_,~]=fromRawHystToHistorical(1,1)		use path of historical on 5 min
+
+
+performance=Performance_03;
+performance=performance.calcSinglePerformance('real_17','bktWeb','EURUSD',5,1,outputBktWeb);
+dove:
+obj=calcSinglePerformance(obj,nameAlgo_,origin_,cross_,freq_,transCost_,inputResultsMatrix_)
+
+perDis=PerformanceDistribution_03;
+perDis=perDis.calcPerformanceDistr('real_17','bktWeb','EURUSD',5,1,outputBktWeb,HistData_1min,HistData_5min,12,10,10);
+dove:
+obj=calcPerformanceDistr(obj,nameAlgo_,origin_,cross_,freq_,transCost_,inputResultsMatrix_,HistData_1min_,HistData_freq_,nstep,nstepeq,dimCluster)
