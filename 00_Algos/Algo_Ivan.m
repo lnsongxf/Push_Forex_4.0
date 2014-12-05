@@ -1,4 +1,4 @@
-function [oper, openValue, closeValue, stopLoss, noLoose, valueTp, real] = Algo_001(matrix)
+function [oper, openValue, closeValue, stopLoss, noLoose, valueTp, real] = Algo_Ivan(matrix, BigPointValue, intialRiskLimit)
 
 %
 % DESCRIPTION:
@@ -48,8 +48,6 @@ noLoose   = 0;
 valueTp   = 0;
 
 
-
-cState = coreState_Pegasus;
 decMaker = DecisionMaker_Pegasus;
 
 
@@ -81,10 +79,20 @@ chiusure        = matrix(:,4);
 
 % 01
 % -------- coreState filter ------------------ %
-cState.anderson(matrix,0.6,1);
-state=cState.state;
-% state=1;           % in case of no coreState filter
+%state=cState.state;
+state=1;           % in case of no coreState filter
 
+
+%initialize variables
+close = matrix(:,4);
+value1 = avg(close(end-99:end));
+value2 = (close(end) - value1)*BigPointValue;
+value3 = (value1 - close(end))*BigPointValue;
+
+std100 = std(close(end-99:end));
+upperBand = value1 + std100;
+lowerBand = value1 - std100;
+Large_ATR = 2*(AvgTrueRange(matrix,10))
 
 if operationState.lock
     counter = counter + 1;
@@ -103,8 +111,7 @@ else
         if abs(operationState.actualOperation) == 0
             if state
                 
-                % 03a
-                % -------- decMaker filter -------------------------- %
+                %Long entry
                 decMaker.decisionReal1(returns);
                 real=decMaker.real;
                 % real=1;           % in case of no virtual mode
