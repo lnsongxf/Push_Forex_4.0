@@ -16,11 +16,15 @@ classdef RiskManager_01 < handle
     methods
         %% VaR calculation
         
-        function obj=VaR(obj,performance)
+        function obj=VaR(obj,performan)
             
-            timeframe1day=performance.ferialExReturns;
-
-            nPDF=6;
+            if exist ('performance','var') == 0
+                timeframe1day=performance.ferialExReturns;
+            else
+                performance=Performance_04;
+                timeframe1day=performance.ferialExReturns;
+            end
+            nPDF=10;
             [xPDF,hPDF,~]=PDF(timeframe1day,min(timeframe1day),max(timeframe1day),nPDF);
             [hCDF]=CDF(hPDF);
             
@@ -33,5 +37,5 @@ classdef RiskManager_01 < handle
         
         
     end
-    
+       
 end
