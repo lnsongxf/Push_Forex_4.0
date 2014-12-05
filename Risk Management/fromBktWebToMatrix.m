@@ -8,11 +8,11 @@ function [outputBktWeb]=fromBktWebToMatrix
 % 
 
 filename = 'bktWeb_17_14Oct_1Nov';
-filedir = 'C:\Users\Ale\algorithms_RAV\QUANT\_TEST Algos\Demo-BktWeb\';
+filedir = 'C:\Users\alericci\Desktop\Forex 4.0\Risk Management\';
 Fullname  = strcat(filedir, filename,'.mat');
 
 tempMatrix = load(Fullname);
-matrixWeb=tempMatrix.z_cut;
+matrixWeb=tempMatrix.z;
 %matrixWeb=result;
 
 
@@ -37,7 +37,7 @@ for i = 1: l
     nCandelotto(i)=floor(Dxminutes(i)/5)+1;
 end
 
-outputBktWeb(:,1)=nCandelotto;
+outputBktWeb(:,1)=nCandelotto;           % index of stick
 outputBktWeb(:,2)=matrixWeb(:,2);        % opening price
 outputBktWeb(:,3)=matrixWeb(:,3);        % closing price
 outputBktWeb(:,4)=matrixWeb(:,4);        % returns

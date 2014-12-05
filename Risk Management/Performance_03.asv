@@ -63,7 +63,7 @@ classdef Performance_03 < handle
             %
             % example of the use:
             % After having created the object with the name: 'objname'
-            % objname=objname.calcSinglePerformance('real_17','bktWeb','EURUSD',5,1,outputBktWeb)
+            % objname=objname.calcSinglePerformance('real_17','bktWeb','EURUSD',5,1,LCN_17_0_2009_a)
             %
             
             
@@ -79,14 +79,12 @@ classdef Performance_03 < handle
                 return
             end
             
-            colour='r';
-            
             obj.nameAlgo=nameAlgo_;
             obj.origin=origin_;
             obj.cross=cross_;
             obj.freq=freq_;
             obj.transCost=transCost_;
-            obj=obj.SharpeRatio(colour);
+            obj=obj.SharpeRatio;
             obj=obj.RicciRatio;
             obj=obj.DrawDown;            
             
@@ -135,13 +133,13 @@ classdef Performance_03 < handle
             name2=strcat(name,'_',origin1_,'.mat');
             switch c
                 case 1
-                    P_bktWeb1=obj; %#ok<NASGU>
+                    P_bktWeb1=obj;
                     save(name2,'P_bktWeb1')
                 case 2
-                    P_demo1=obj; %#ok<NASGU>
+                    P_demo1=obj;
                     save(name2,'P_demo1')
                 case 3
-                    P_bkt1=obj; %#ok<NASGU>
+                    P_bkt1=obj;
                     save(name2,'P_bkt1')
             end
             
@@ -178,13 +176,13 @@ classdef Performance_03 < handle
             name2=strcat(name,'_',origin2_,'.mat');
             switch c
                 case 1
-                    P_bktWeb2=obj; %#ok<NASGU>
+                    P_bktWeb2=obj;
                     save(name2,'P_bktWeb2')
                 case 2
-                    P_demo2=obj; %#ok<NASGU>
+                    P_demo2=obj;
                     save(name2,'P_demo2')
                 case 3
-                    P_bkt2=obj; %#ok<NASGU>
+                    P_bkt2=obj;
                     save(name2,'P_bkt2')
             end
 
@@ -284,7 +282,7 @@ classdef Performance_03 < handle
             title('cumulative Excess of Returns per operation');
             %axis([0 numOper+2 min(PL)-5 max(PL)+5]);
             hold on
-            plot(lin1,'-c');
+            plot(lin1);
             
             p(1)=subplot(4,1,2);
             plot(xData,dailyNumOper,cCurve);
@@ -426,7 +424,6 @@ classdef Performance_03 < handle
         end
         
         
-       
     end
     
     

@@ -43,9 +43,10 @@ classdef PerformanceDistribution_03 < handle
             % transCost_            ... transaction cost (spread)
             % inputResultsMatrix_   ... matrix of results coming from the test
             % HistData_1min_        ... 1min-hystorical data correspondent to the period of test
+            %                           use the function [outputHyst]=fromRawHystToHistorical
             % HistData_freq_        ... 5mins-hystorical data correspondet to the period of test
             % nstep                 ... number of binnig steps
-            % nstepeq               ... distance between a given worng/correct operation and the next
+            % nstepeq               ... distance between a given wrong/correct operation and the next
             % dimCluster            ... number of wrong/correct subsequent operations (dimension of cluster)
             %
             % OUTPUT parameters:
@@ -391,7 +392,11 @@ classdef PerformanceDistribution_03 < handle
             [rowHistfreqOpenn,rowHistfreqClosen]=rowPositionOnHystorical(obj.HistDatafreq,obj.inputResultsMatrix(obj.rowResn,:));
             
             figure
-            plot(obj.HistDatafreq(:,1),'-k')
+            start=min(rowHistfreqOpenp(1),rowHistfreqOpenn(1));
+            stop=max(rowHistfreqClosep(end),rowHistfreqClosen(end));
+            rowHistDatafreq=start:stop;
+            operHistDatafreq=obj.HistDatafreq(start:stop,1);
+            plot(rowHistDatafreq,operHistDatafreq,'-k')
             hold on
             plot(rowHistfreqOpenp,obj.inputResultsMatrix(obj.rowResp,2),'ob')
             plot(rowHistfreqClosep,obj.inputResultsMatrix(obj.rowResp,3),'*b')

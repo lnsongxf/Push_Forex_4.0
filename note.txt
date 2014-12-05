@@ -14,6 +14,7 @@ git fetch			... sincronizza nomi dei branches
 git status 			... viasualizazzione status
 git diff   			... visualizza righe di codice modificate (le differenze)
 git add *  			... per condividere sul server dopo aver creato un nuovo file (li ricondivide tutti)
+git add --all			... aggiorna tutte le modifiche anche le eliminazioni 
 
 git commit -am "comment"	... per fare il commit cioe' la sicronizzazione con il server
 git push			... per rendere effettivo il commit (chiede psw)
