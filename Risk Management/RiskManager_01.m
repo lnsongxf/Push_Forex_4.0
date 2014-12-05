@@ -25,9 +25,16 @@ classdef RiskManager_01 < handle
             [hCDF]=CDF(hPDF);
             
             figure
-            plot(xPDF,hCDF,'-k');
-            hold on
-            plot(xPDF,hPDF,'-or');
+            [ax,p1,p2] = plotyy(xPDF,hPDF,xPDF,hCDF,'plot');
+            set(p1,'LineStyle','-','LineWidth',1,'Marker','o','Color','r')
+            set(ax(1),'YColor','k')
+            set(p2,'LineStyle','--','LineWidth',2,'Color','k')
+            set(ax(2),'YColor','k')
+            grid on
+            ylabel(ax(1),'Probability Density Function','Color','k') % label left y-axis
+            ylabel(ax(2),'Cumulative Density Function','Color','k') % label right y-axis
+            xlabel(ax(2),'Returns (pips)','Color','k') % label x-axis
+            title('VaR evaluation');
             
         end
         
