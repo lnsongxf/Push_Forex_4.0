@@ -18,14 +18,25 @@ classdef RiskManager_01 < handle
         
         function obj=VaR(obj,performance)
             
-            timeframe1day=performance.ferialExReturns;
-
+            exReturns1day=performance.ferialExReturns;
+%             totalFerialDays=252;
+%             totalmonths=12;
+            daysPerMonth=3;
+            
+            l=lenght(exReturns1day);
+            n=floor(l/daysPerMonth);
+            j=0;
+            for i = 1:n
+                exReturns21days(j+1)=sum(exReturns1day(daysPerMonth*j+1:daysPerMonth*(j+1)));
+                j=j+1;
+            end
+            
+            
             nPDF=6;
-            [xPDF,hPDF,~]=PDF(timeframe1day,min(timeframe1day),max(timeframe1day),nPDF);
+            [xPDF,hPDF,~]=PDF(exReturns1day,min(exReturns1day),max(exReturns1day),nPDF);
             [hCDF]=CDF(hPDF);
             
             figure
-            title ('');
             [ax,p1,p2] = plotyy(xPDF,hPDF,xPDF,hCDF,'plot');
             set(p1,'LineStyle','-','LineWidth',1,'Marker','o','Color','r')
             set(ax(1),'YColor','k')
@@ -35,6 +46,7 @@ classdef RiskManager_01 < handle
             ylabel(ax(1),'Probability Density Function','Color','k') % label left y-axis
             ylabel(ax(2),'Cumulative Density Function','Color','k') % label right y-axis
             xlabel(ax(2),'Returns (pips)','Color','k') % label x-axis
+            title('VaR evaluation');
             
         end
         
