@@ -21,14 +21,14 @@ classdef RiskManager_01 < handle
             exReturns1day=performance.ferialExReturns;
 %             totalFerialDays=252;
 %             totalmonths=12;
-            daysPerMonth=2;
+            ferialDaysPerMonth=2;  %test (21)
             
             l=length(exReturns1day);
-            n=floor(l/daysPerMonth);
+            n=floor(l/ferialDaysPerMonth);
             exReturns21days=zeros(n,1);
             j=0;
             for i = 1:n
-                exReturns21days(j+1)=sum(exReturns1day(daysPerMonth*j+1:daysPerMonth*(j+1)));
+                exReturns21days(j+1)=sum(exReturns1day(ferialDaysPerMonth*j+1:ferialDaysPerMonth*(j+1)));
                 j=j+1;
             end
                         
