@@ -1,12 +1,11 @@
 classdef coreState_Pegasus < handle
     
     properties
-        state = 1
+        MarketPosition = 0;
     end
     
     
     methods
     
-        
     end
 end

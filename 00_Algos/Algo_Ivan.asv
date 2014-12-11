@@ -108,18 +108,10 @@ if(cState.MarketPosition == 0)
 end
 
 if(cState.MarketPosition == 1)
-    if ( longExit(matrix,value1,trueRange,Large_ATR) )
+    if (longExit(obj,matrix,value1,trueRange,Large_ATR) )
         % long exit
-        cState.MarketPosition = 0;
-    end
-end
+    
 
-if(cState.MarketPosition == -1)
-    if ( shortExit(matrix,value1,trueRange,Large_ATR) )
-        % short exit
-        cState.MarketPosition = 0;
-    end
-end
 
 oper = operationState.actualOperation;
 real_Algo = RealAlgo(operationState,params);
