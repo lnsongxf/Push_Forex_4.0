@@ -10,12 +10,12 @@ or use an input historical with specific freq if the backtest is done on it and 
 [history_5min_,~]=fromRawHystToHistorical(1,1)		use path of historical on 5 min
 
 
-performance=Performance_03;
+performance=Performance_04;
 performance=performance.calcSinglePerformance('real_17','bktWeb','EURUSD',5,1,outputBktWeb);
 dove:
 obj=calcSinglePerformance(obj,nameAlgo_,origin_,cross_,freq_,transCost_,inputResultsMatrix_)
 
-perDis=PerformanceDistribution_03;
+perDis=PerformanceDistribution_04;
 perDis=perDis.calcPerformanceDistr('real_17','bktWeb','EURUSD',5,1,outputBktWeb,HistData_1min,HistData_5min,12,10,10);
 dove:
 obj=calcPerformanceDistr(obj,nameAlgo_,origin_,cross_,freq_,transCost_,inputResultsMatrix_,HistData_1min_,HistData_freq_,nstep,nstepeq,dimCluster)
