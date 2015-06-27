@@ -1,23 +1,71 @@
-function bktOffline(nData)
-    storico = readcsv('storico.csv');
-    startingOperation=0;
-   
-for i=100:length(storico)
+function [outputBktOffline]=bktOffline(nData,histName)
 
-        newState = algo(storico(i-99:i,:));
+%
+% DESCRIPTION:
+% -------------------------------------------------------------
+% This function runs the offline backtest on given historical data
+%
+%
+% INPUT parameters:
+% -------------------------------------------------------------
+% nData             ... 
+% histName          ... 'storico.csv'
+%                   ... 
+%                   ... 
+%
+% OUTPUT parameters:
+% -------------------------------------------------------------
+%
+%
+%
+% EXAMPLE of use:
+% -------------------------------------------------------------
+% 
+%
+
+
+storico = csvread(histName);
+startingOperation=0;
+indexResult=0;
+
+for i=nData:length(storico)
+    
+    newState = Algo_testBktOffline(storico(i-(nData-1):i,:));
+    
+    %risultato contiene [oper, openValue, closeValue, stopLoss, noLoose, valueTp, real]
+    
+    if newState
+    updatedOperation=newState{1};
+    
+    if abs(updatedOperation)>1 && startingOperation==0
         
-        %risultato contiene [oper, openValue, closeValue, stopLoss, noLoose, valueTp, real]
+        indexResult=indexResult+1;
+        startingOperation=newState{1};
         
-        operation=
-        if abs(oper)>1 && startingOperation==0
-            startingOperation=newState{1};
-            registra_apertura ( newState );
-        elseif (chiusura ( newState ))
-            registra_chiusura ( newState );
-        end
+        direction(indexResult)=newState{1};
+        openingPrice(indexResult)=newState{2};
+        realoper(indexResult)=newState{7};
+        
+    elseif updatedOperation==0 && abs(startingOperation)>0
+        closingPrice(indexResult)=newState{3};
+    end
+    end
 end
 
-% 
+l=length(openingPrice);
+outputBktOffline=zeros(l,8);
+
+% outputBktOffline(:,1)=nCandelotto;           % index of stick
+outputBktOffline(:,2)=openingPrice;          % opening price
+outputBktOffline(:,3)=closingPrice;          % closing price
+% outputBktOffline(:,4)=matrixWeb(:,4);        % returns
+outputBktOffline(:,5)=direction;             % direction
+outputBktOffline(:,6)=realoper;              % real
+% outputBktOffline(:,7)=openingDateNum;        % opening date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
+% outputBktOffline(:,8)=closingDateNum;        % closing date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
+
+
+%
 % for i = 100:(length(v)-120)
 %    v1 = v(i-99:i,1) ;
 %    v2 = v(i-99:i,2) ;
@@ -39,7 +87,7 @@ end
 %             k = k+1;
 %             operazioni(k,2) = value;
 %             operazioni(k,1) = operation;
-%         end 
+%         end
 %    end
 
 

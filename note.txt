@@ -6,8 +6,6 @@ psw: @scimmie83
 indirizzo Web repository:	https://github.com/symis84/Push_Forex_4.0
 https://github.com/symis84/Push_Forex_4.0.git
 
-open sourcetree
-
 commands Github:
 
 git pull			... da fare prima di iniziare a lavorare, sicronizza branch locale con il remoto
