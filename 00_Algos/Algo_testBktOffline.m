@@ -133,9 +133,9 @@ else
 end
 
 oper = operationState.actualOperation;
+
 real_Algo = RealAlgo(operationState,params);
 map('Algo_testBktOffline')     = real_Algo;
-
 
 openValue = params.get('openValue_');
 closeValue= params.get('closeValue');
@@ -168,12 +168,7 @@ clear ra;
 %clear highs;
 %clear lows;
 
-%display(oper);
-
-
-
-
-display(oper);
+display(oper)
 
 end
 
