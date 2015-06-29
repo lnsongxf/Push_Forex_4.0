@@ -84,7 +84,7 @@ chiusure        = matrix(:,4);
 
 % 01
 % -------- coreState filter ------------------ %
-cState.anderson(matrix,0.6,1);
+% cState.anderson(matrix,0.6,1);
 % state=cState.state;
 state=1;           % in case of no coreState filter
 
@@ -108,7 +108,7 @@ else
                 
                 % 03a
                 % -------- decMaker filter -------------------------- %
-                decMaker.decisionReal4(chiusure);
+%                 decMaker.decisionReal4(chiusure);
 %                 real=decMaker.real;
                 real=1;           % in case of no virtual mode
                 
