@@ -38,7 +38,7 @@ for i=nData:length(storico)
     
     %risultato contiene [oper, openValue, closeValue, stopLoss, noLoose, valueTp, real]
     
-    if newState %by_ivan si assume che se l'algo non prende decisioni, il vettore newState e' vuoto?
+%     if newState %by_ivan si assume che se l'algo non prende decisioni, il vettore newState e' vuoto?
         %puoi anche usare isempty(variabile)
         updatedOperation=newState{1};
         
@@ -54,7 +54,7 @@ for i=nData:length(storico)
         elseif updatedOperation==0 && abs(startingOperation)>0
             closingPrice(indexResult)=newState{3};
         end
-    end
+%     end
 end
 
 if closingPrice(length(closingPrice)) == 0
