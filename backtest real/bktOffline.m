@@ -40,9 +40,11 @@ for i=nData:length(storico)
     
 %     if newState %by_ivan si assume che se l'algo non prende decisioni, il vettore newState e' vuoto?
         %puoi anche usare isempty(variabile)
+        if (length(newState) > 1)
         updatedOperation=newState{1};
         
         if abs(updatedOperation)>1 && startingOperation==0
+            
             
             indexResult=indexResult+1;
             startingOperation=newState{1};
@@ -53,6 +55,7 @@ for i=nData:length(storico)
             
         elseif updatedOperation==0 && abs(startingOperation)>0
             closingPrice(indexResult)=newState{3};
+        end
         end
 %     end
 end

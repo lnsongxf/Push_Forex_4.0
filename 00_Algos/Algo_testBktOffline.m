@@ -1,4 +1,4 @@
-function [oper, openValue, closeValue, stopLoss, noLoose, valueTp, real] = Algo_testBktOffline(matrix)
+function [oper, openValue, closeValue, stopLoss, noLoose, valueTp] = Algo_testBktOffline(matrix)
 
 %
 % DESCRIPTION:
@@ -32,7 +32,6 @@ function [oper, openValue, closeValue, stopLoss, noLoose, valueTp, real] = Algo_
 % to do
 %
 
-
 global      map;
 % global      log;
 persistent  counter;
@@ -64,7 +63,6 @@ if(isempty(countCycle) || countCycle == 0)
     params         = Parameters;
     map('Algo_testBktOffline') = RealAlgo(operationState,params);
     oper = 0;
-    real = 0;
     return;
 end
 
@@ -96,8 +94,7 @@ if operationState.lock
         operationState.lock = 0;
     end
 else
-    if abs(operationState.actualOperation) > 0
-        
+    if abs(operationState.actualOperation) > 0  
         % 02a
         % -------- takeProfitManager: close for TP or SL ------ %
         [operationState,~,params] = takeProfitManager(operationState,chiusure,params);
@@ -110,8 +107,9 @@ else
                 % -------- decMaker filter -------------------------- %
 %                 decMaker.decisionReal4(chiusure);
 %                 real=decMaker.real;
-                real=1;           % in case of no virtual mode
-                
+
+
+
                 % 02b
                 % -------- takeProfitManager: define TP and SL ------ %
                 %                      TO CREATE
@@ -144,7 +142,6 @@ closeValue= params.get('closeValue');
 stopLoss  = params.get('stopLoss__');
 noLoose   = params.get('noLoose___');
 valueTp   = params.get('valueTp___');
-real      = params.get('real______');
 
 
 clear real_Algo;
@@ -175,8 +172,7 @@ clear ra;
 
 
 
-oper = oper * real;
-display(real);
+
 display(oper);
 
 end

@@ -23,6 +23,7 @@ classdef Parameters < handle
         maxIterOpt;
         operClosingValue;
         operOpeningValue;
+        real;
         %}
     end
     
