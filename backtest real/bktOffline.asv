@@ -58,6 +58,7 @@ for i=nData:length(storico)
 end
 
 if closingPrice(length(closingPrice)) == 0
+    
     l=length(openingPrice)-1;
 end
 outputBktOffline=zeros(l,8);
