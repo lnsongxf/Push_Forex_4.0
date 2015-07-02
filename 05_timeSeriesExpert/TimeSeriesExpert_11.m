@@ -631,7 +631,7 @@ classdef TimeSeriesExpert_11 < handle
             global inFit1
             
             if(isempty(inFit1))
-                inFit1=[0 0];
+                inFit1=[13000 0];
             end
             
             n=1;
@@ -644,7 +644,7 @@ classdef TimeSeriesExpert_11 < handle
             q0=vEnd_f1(1,2);
             rate=abs(vEnd_f1(1,1));
             type=sign(vEnd_f1(1,1));
-            inFit1=[type.*rate;vEnd_f1(1,2)];
+            inFit1=[type.*rate,vEnd_f1(1,2)];
             
             
         end

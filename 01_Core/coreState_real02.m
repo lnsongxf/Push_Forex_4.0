@@ -3,6 +3,8 @@ classdef coreState_real02 < handle
     properties
         state
         suggestedDirection
+        suggestedTP
+        suggestedSL
         P
         dev
         med
@@ -88,52 +90,6 @@ classdef coreState_real02 < handle
             amp = getSimpleAmplitude(data);
             pd  = fitdist(amp','normal');
             
-            
-            %w = 0;
-            %l = 0;
-            
-            %s = sign(pd.mu);
-            
-            %{
-if (pd.mean == 0)
-    w = 0;
-    l = 1;
-    dev = 1;
-    med = 0;
-    return;
-end
-
-if(nargin == 1)
-    takeProfit = s*4;
-    stopLoss   = -8*s;
-elseif(nargin < 3)
-    takeProfit = s*pd.std*stopLoss;
-    stopLoss   = -3*pd.std*s;
-else
-    takeProfit = takeProfit*s*pd.std;
-    stopLoss   = -stopLoss*pd.std*s;
-end
-
-for i = 1 : 100
-finished = 0;
-res = 0;
-    while finished == 0
-        finished = 1;
-        rand = pd.random;
-        res = res + rand;
-        if (abs(res) >= abs(takeProfit) && sign(res) == sign(takeProfit))
-            w = w + 1;
-        elseif (abs(res) >= abs(stopLoss) && sign(res) == sign(stopLoss))
-            l = l + 1;
-        else
-            finished = 0;
-        end
-    end
-end
-
-w = w/100;
-l = l/100;
-            %}
             obj.dev = pd.std;
             obj.med = pd.mean;
             
@@ -232,7 +188,7 @@ l = l/100;
         
         %%
         
-        function obj = CoreLinearFlatTrend (obj,timeSeries,closurePrices,limitRate1,limitRate2)
+        function obj = CoreLinearFlatTrend (obj,TimeSeriesExpert_11,closurePrices,limitRate1,limitRate2)
             
             %NOTE: usa la funzione linearRegression del TimeSiriesExpert
             %LOGICA: Prese in input le chiusure controlla il rate e il
@@ -241,7 +197,7 @@ l = l/100;
             
             closure1=closurePrices;
             
-            [q0,res,rate1,type1] = timeSeries.linearRegression (closure1);
+            [q0,res,rate1,type1] = TimeSeriesExpert_11.linearRegression (closure1);
             
             flatTrend1=0;
             flatTrend2=0;
@@ -252,7 +208,7 @@ l = l/100;
             
             closure2=closurePrices(end-5:end);
             
-            [q0,res,rate2,type2] = timeSeries.linearRegression (closure2);
+            [q0,res,rate2,type2] = TimeSeriesExpert_11.linearRegression (closure2);
             
             
             if rate2 <= limitRate2
@@ -285,7 +241,36 @@ l = l/100;
             
             
         end
+
         
+                %%
+        
+        function obj = Algo_002_Ale (obj,closure)
+            
+            %NOTE: 
+            %LOGICA: fa uno smoothing e se il prezzo e 2 dev sopra apre in
+            %direzione del prezzo rispetto allo smooth
+            
+            smoothClose=smooth(closure,5);
+            fluctuations=abs(closure-smoothClose);
+            devFluct=std(fluctuations);
+            actualFluct=closure(end)-smoothClose(end);
+            signDirection=sign(actualFluct);
+            
+            if actualFluct >= 2*devFluct
+                obj.state=1;
+                obj.suggestedDirection=signDirection;
+                obj.suggestedTP=6;
+                obj.suggestedTP=3;
+            else
+                obj.state=0;
+            end
+            
+            
+            
+            
+            
+        end
         
         
     end

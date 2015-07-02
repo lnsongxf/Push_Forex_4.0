@@ -256,7 +256,7 @@ classdef DecisionMaker_real02 < handle
         end
         
         %%
-        function [params,operationState,counter] = decisionDirectionTest (obj,closurePrices,params,operationState,cState,TakeP,StopL)
+        function [params,operationState,counter] = decisionDirectionByCore (obj,closurePrices,params,operationState,cState,TakeP,StopL)
             
             p=closurePrices;
 

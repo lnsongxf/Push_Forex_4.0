@@ -1,4 +1,4 @@
-function [oper, openValue, closeValue, stopLoss, noLoose, valueTp] = Algo_001(matrix)
+function [oper, openValue, closeValue, stopLoss, noLoose, valueTp, real] = Algo_001(matrix)
 
 %
 % DESCRIPTION:
@@ -32,6 +32,10 @@ function [oper, openValue, closeValue, stopLoss, noLoose, valueTp] = Algo_001(ma
 % to do
 %
 
+
+
+
+
 global      map;
 % global      log;
 persistent  counter;
@@ -61,13 +65,14 @@ if(isempty(countCycle) || countCycle == 0)
     countCycle = 1;
     operationState = OperationState;
     params         = Parameters;
-    map('Algo_testBktOffline') = RealAlgo(operationState,params);
+    map('LCNB_240m_real15') = RealAlgo(operationState,params);
     oper = 0;
+    real = 0;
     return;
 end
 
-ra = map('Algo_testBktOffline');
-remove(map,'Algo_testBktOffline');
+ra = map('LCNB_240m_real15');
+remove(map,'LCNB_240m_real15');
 
 params         = ra.p;
 operationState = ra.os;
@@ -82,9 +87,9 @@ chiusure        = matrix(:,4);
 
 % 01
 % -------- coreState filter ------------------ %
-% cState.anderson(matrix,0.6,1);
-% state=cState.state;
-state=1;           % in case of no coreState filter
+cState.anderson(matrix,0.6,1);
+state=cState.state;
+% state=1;           % in case of no coreState filter
 
 
 if operationState.lock
@@ -94,7 +99,8 @@ if operationState.lock
         operationState.lock = 0;
     end
 else
-    if abs(operationState.actualOperation) > 0  
+    if abs(operationState.actualOperation) > 0
+        
         % 02a
         % -------- takeProfitManager: close for TP or SL ------ %
         [operationState,~,params] = takeProfitManager(operationState,chiusure,params);
@@ -105,11 +111,10 @@ else
                 
                 % 03a
                 % -------- decMaker filter -------------------------- %
-%                 decMaker.decisionReal4(chiusure);
-%                 real=decMaker.real;
-
-
-
+                decMaker.decisionReal1(returns);
+                real=decMaker.real;
+                % real=1;           % in case of no virtual mode
+                
                 % 02b
                 % -------- takeProfitManager: define TP and SL ------ %
                 %                      TO CREATE
@@ -133,15 +138,16 @@ else
 end
 
 oper = operationState.actualOperation;
-
 real_Algo = RealAlgo(operationState,params);
-map('Algo_testBktOffline')     = real_Algo;
+map('LCNB_240m_real15')     = real_Algo;
+
 
 openValue = params.get('openValue_');
 closeValue= params.get('closeValue');
 stopLoss  = params.get('stopLoss__');
 noLoose   = params.get('noLoose___');
 valueTp   = params.get('valueTp___');
+real      = params.get('real______');
 
 
 clear real_Algo;
@@ -168,7 +174,13 @@ clear ra;
 %clear highs;
 %clear lows;
 
-display(oper)
+%display(oper);
+
+
+
+oper = oper * real;
+display(real);
+display(oper);
 
 end
 

@@ -62,9 +62,10 @@ classdef bktOffline < handle
             openingPrice=zeros(floor(ls/2));
             closingPrice=zeros(floor(ls/2));
             
+            tic
             for i=nData:ls
                 
-                [oper, openValue, closeValue, stopLoss, noLoose, valueTp] = Algo_testBktOffline(obj.newHisData(i-(nData-1):i,:));
+                [oper, openValue, closeValue, stopLoss, noLoose, valueTp] = Algo_002_Ale(obj.newHisData(i-(nData-1):i,:));
                 
                 newState{1}=oper;
                 newState{2}=openValue;
@@ -94,6 +95,8 @@ classdef bktOffline < handle
                 end
                 
             end
+            
+            toc
             
             direction=direction(1:indexClose);
             openingPrice=openingPrice(1:indexClose);

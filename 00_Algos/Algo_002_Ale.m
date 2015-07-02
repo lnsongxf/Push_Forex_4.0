@@ -1,4 +1,4 @@
-function [oper, openValue, closeValue, stopLoss, noLoose, valueTp] = Algo_001(matrix)
+function [oper, openValue, closeValue, stopLoss, noLoose, valueTp] = Algo_002_Ale(matrix)
 
 %
 % DESCRIPTION:
@@ -61,13 +61,13 @@ if(isempty(countCycle) || countCycle == 0)
     countCycle = 1;
     operationState = OperationState;
     params         = Parameters;
-    map('Algo_testBktOffline') = RealAlgo(operationState,params);
+    map('Algo_002_Ale') = RealAlgo(operationState,params);
     oper = 0;
     return;
 end
 
-ra = map('Algo_testBktOffline');
-remove(map,'Algo_testBktOffline');
+ra = map('Algo_002_Ale');
+remove(map,'Algo_002_Ale');
 
 params         = ra.p;
 operationState = ra.os;
@@ -82,9 +82,9 @@ chiusure        = matrix(:,4);
 
 % 01
 % -------- coreState filter ------------------ %
-% cState.anderson(matrix,0.6,1);
-% state=cState.state;
-state=1;           % in case of no coreState filter
+cState.Algo_002_Ale(chiusure);
+state=cState.state;
+
 
 
 if operationState.lock
@@ -113,12 +113,12 @@ else
                 % 02b
                 % -------- takeProfitManager: define TP and SL ------ %
                 %                      TO CREATE
-                TakeP=1;
-                StopL=1;
+                TakeP=cState.suggestedTP;
+                StopL=cState.suggestedSL;
                 
                 % 03b
                 % -------- decMaker direction manager --------------- %
-                [params, operationState,counter] = decMaker.decisionDirection1(chiusure,params,operationState,TakeP,StopL);
+                [params, operationState,counter] = decMaker.decisionDirectionByCore(chiusure,params,operationState,TakeP,StopL);
                 display('operazione aperta');
                 
                 % 03c
@@ -135,7 +135,7 @@ end
 oper = operationState.actualOperation;
 
 real_Algo = RealAlgo(operationState,params);
-map('Algo_testBktOffline')     = real_Algo;
+map('Algo_002_Ale')     = real_Algo;
 
 openValue = params.get('openValue_');
 closeValue= params.get('closeValue');
