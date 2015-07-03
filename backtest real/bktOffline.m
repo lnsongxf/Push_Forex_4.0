@@ -58,9 +58,9 @@ classdef bktOffline < handle
             end
             
             ls=length(obj.newHisData);
-            direction=zeros(floor(ls/2));
-            openingPrice=zeros(floor(ls/2));
-            closingPrice=zeros(floor(ls/2));
+            direction=zeros(floor(ls/2), 1);
+            openingPrice=zeros(floor(ls/2), 1);
+            closingPrice=zeros(floor(ls/2), 1);
             
             tic
             for i=nData:ls
