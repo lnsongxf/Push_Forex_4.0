@@ -1,4 +1,4 @@
-function [oper, openValue, closeValue, stopLoss, noLoose, valueTp] = Algo_001(matrix)
+function [oper, openValue, closeValue, stopLoss, noLoose, valueTp] = Algo_003_Lore(matrix)
 
 %
 % DESCRIPTION:

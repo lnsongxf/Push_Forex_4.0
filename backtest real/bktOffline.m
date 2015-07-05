@@ -65,7 +65,7 @@ classdef bktOffline < handle
             tic
             for i=nData:ls
                 
-                [oper, openValue, closeValue, stopLoss, noLoose, valueTp] = Algo_002_Ale(obj.newHisData(i-(nData-1):i,:));
+                [oper, openValue, closeValue, stopLoss, noLoose, valueTp] = Algo_003_Lore(obj.newHisData(i-(nData-1):i,:));
                 
                 newState{1}=oper;
                 newState{2}=openValue;
