@@ -251,17 +251,17 @@ classdef coreState_real02 < handle
             %LOGICA: fa uno smoothing e se il prezzo e 2 dev sopra apre in
             %direzione del prezzo rispetto allo smooth
             
-            smoothClose=smooth(closure,5);
+            smoothClose=smooth(closure,10);
             fluctuations=abs(closure-smoothClose);
             devFluct=std(fluctuations);
             actualFluct=closure(end)-smoothClose(end);
             signDirection=sign(actualFluct);
             
-            if actualFluct >= 2*devFluct
+            if actualFluct >= 1.5*devFluct && abs(signDirection)>0
                 obj.state=1;
                 obj.suggestedDirection=signDirection;
                 obj.suggestedTP=6;
-                obj.suggestedTP=3;
+                obj.suggestedSL=3;
             else
                 obj.state=0;
             end

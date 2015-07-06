@@ -118,7 +118,8 @@ else
                 
                 % 03b
                 % -------- decMaker direction manager --------------- %
-                [params, operationState,counter] = decMaker.decisionDirectionByCore(chiusure,params,operationState,TakeP,StopL);
+                [params, operationState,counter] = decMaker.decisionDirectionByCore(chiusure,params,operationState,cState,TakeP,StopL);
+
                 display('operazione aperta');
                 
                 % 03c
