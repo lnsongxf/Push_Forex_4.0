@@ -3,6 +3,7 @@ classdef bktOffline < handle
     properties
         newHisData
         outputBktOffline
+        performance
     end
     
     methods
@@ -70,11 +71,12 @@ classdef bktOffline < handle
             closingPrice=zeros(floor(ls/2), 1);
             openingDateNum=zeros(floor(ls/2), 1);
             closingDateNum=zeros(floor(ls/2), 1);
+            nCandelotto=zeros(floor(ls/2), 1);
             
             tic
             for i=nData:ls
                 
-                [oper, openValue, closeValue, stopLoss, noLoose, valueTp] = Algo_003_Lore(obj.newHisData(i-(nData-1):i,:));
+                [oper, openValue, closeValue, stopLoss, noLoose, valueTp] = Algo_002_Ale(obj.newHisData(i-(nData-1):i,:));
                 
                 newState{1}=oper;
                 newState{2}=openValue;
@@ -118,14 +120,18 @@ classdef bktOffline < handle
             
             obj.outputBktOffline=zeros(l,8);
             
-            obj.outputBktOffline(:,1)=nCandelotto;           % index of stick
+            obj.outputBktOffline(:,1)=nCandelotto(1:l);           % index of stick
             obj.outputBktOffline(:,2)=openingPrice(1:l);          % opening price
             obj.outputBktOffline(:,3)=closingPrice(1:l);          % closing price
-            obj.outputBktOffline(:,4)=closingPrice(1:l) - openingPrice(1:l);        % returns
+            obj.outputBktOffline(:,4)=(closingPrice(1:l) - openingPrice(1:l)).*direction(1:l);        % returns
             obj.outputBktOffline(:,5)=direction(1:l);             % direction
             obj.outputBktOffline(:,6)=ones(l,1);              % real
             obj.outputBktOffline(:,7)=openingDateNum;        % opening date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
             obj.outputBktOffline(:,8)=closingDateNum;        % closing date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
+            
+            
+            p=Performance_04;
+            obj.performance=p.calcSinglePerformance('Ale002','bktWeb','EURUSD',1,1,obj.outputBktOffline);
             
         end
         

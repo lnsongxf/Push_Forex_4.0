@@ -252,14 +252,18 @@ classdef coreState_real02 < handle
             %direzione del prezzo rispetto allo smooth
             
             windowSize = 5;
-            b = (1/windowSize)*ones(1,windowSize);
-            smoothClose = filter(b,1,closure);
+
+b = (1/windowSize)*ones(1,windowSize)
+y = filter(b,a,x);
+            
+            
+            smoothClose=smooth(closure,10);
             fluctuations=abs(closure-smoothClose);
-            devFluct=std(fluctuations(windowSize:end));
+            devFluct=std(fluctuations);
             actualFluct=closure(end)-smoothClose(end);
             signDirection=sign(actualFluct);
             
-            if abs(actualFluct) >= 1.5*devFluct && abs(signDirection)>0
+            if actualFluct >= 1.5*devFluct && abs(signDirection)>0
                 obj.state=1;
                 obj.suggestedDirection=signDirection;
                 obj.suggestedTP=6;

@@ -3,11 +3,12 @@ classdef bktOffline < handle
     properties
         newHisData
         outputBktOffline
+        performance
     end
     
     methods
  
-        function [obj]=spin(obj,nData,histName,actTimeScale,newTimeScale)
+        function [obj]=spin(obj,nameAlgo,cross,nData,histName,actTimeScale,newTimeScale)
             % Commenti al codice sono contrassegnati da by_ivan
             % In generale e' molto ben fatto e non vedo errori particolari.
             % Per ora non ho matlab e' non posso fare il debug, aspetto Simone che crei la macchina virtuale,
@@ -122,11 +123,15 @@ classdef bktOffline < handle
             obj.outputBktOffline(:,1)=nCandelotto(1:l);           % index of stick
             obj.outputBktOffline(:,2)=openingPrice(1:l);          % opening price
             obj.outputBktOffline(:,3)=closingPrice(1:l);          % closing price
-            obj.outputBktOffline(:,4)=closingPrice(1:l) - openingPrice(1:l);        % returns
+            obj.outputBktOffline(:,4)=(closingPrice(1:l) - openingPrice(1:l)).*direction(1:l);        % returns
             obj.outputBktOffline(:,5)=direction(1:l);             % direction
             obj.outputBktOffline(:,6)=ones(l,1);              % real
             obj.outputBktOffline(:,7)=openingDateNum;        % opening date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
             obj.outputBktOffline(:,8)=closingDateNum;        % closing date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
+            
+            
+            p=Performance_04;
+            obj.performance=p.calcSinglePerformance(nameAlgo,'bktWeb',cross,1,1,obj.outputBktOffline);
             
         end
         
