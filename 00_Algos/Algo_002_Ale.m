@@ -82,7 +82,7 @@ chiusure        = matrix(:,4);
 
 % 01
 % -------- coreState filter ------------------ %
-cState.Algo_002_Ale(chiusure);
+cState.Algo_002_Ale(chiusure,params);
 state=cState.state;
 
 

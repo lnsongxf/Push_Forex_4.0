@@ -245,28 +245,59 @@ classdef coreState_real02 < handle
         
                 %%
         
-        function obj = Algo_002_Ale (obj,closure)
+        function obj = Algo_002_Ale (obj,closure,params)
             
             %NOTE: 
             %LOGICA: fa uno smoothing e se il prezzo e 2 dev sopra apre in
             %direzione del prezzo rispetto allo smooth
             
-            windowSize = 5;
-            b = (1/windowSize)*ones(1,windowSize);
-            smoothClose = filter(b,1,closure);
-            fluctuations=abs(closure-smoothClose);
-            devFluct=std(fluctuations(windowSize:end));
-            actualFluct=closure(end)-smoothClose(end);
-            signDirection=sign(actualFluct);
+            windowSize1 = 3;
+            a = (1/windowSize1)*ones(1,windowSize1);
+            smoothClose1 = filter(a,1,closure);
+%             fluctuations1=abs(closure-smoothClose1);
+%             devFluct1=std(fluctuations1(windowSize1:end));
+%             actualFluct1=closure(end)-smoothClose1(end);
+%             signDirection1=sign(actualFluct1);
             
-            if abs(actualFluct) >= 1.5*devFluct && abs(signDirection)>0
+            windowSize2 = 15;
+            b = (1/windowSize2)*ones(1,windowSize2);
+            smoothClose2 = filter(b,1,closure);
+            fluctuations2=abs(closure-smoothClose2);
+            devFluct2=std(fluctuations2(windowSize2:end));
+            %             actualFluct2=closure(end)-smoothClose2(end);
+            %             signDirection2=sign(actualFluct2);
+            
+            figure
+            plot(closure,'ob')
+            hold on
+            plot(smoothClose1,'-b')
+            plot(smoothClose2,'-r')
+            
+            newSmoothClose1=smoothClose1(end);
+            newSmoothClose2=smoothClose2(end);
+            
+            oldSmoothClose1=params.get('smoothVal1');
+            oldSmoothClose2=params.get('smoothVal2');
+            
+            oldDifference=oldSmoothClose1-oldSmoothClose2;
+            newDifference=newSmoothClose1-newSmoothClose2;
+            
+            oldSign=sign(oldDifference);
+            newSign=sign(newDifference);
+            
+            inversion=oldSign*newSign;
+            
+            if inversion<0 
                 obj.state=1;
-                obj.suggestedDirection=signDirection;
-                obj.suggestedTP=6;
-                obj.suggestedSL=3;
+                obj.suggestedDirection=newSign;
+                obj.suggestedTP=devFluct2;
+                obj.suggestedSL=devFluct2;
             else
                 obj.state=0;
             end
+
+            params.set('smoothVal1',smoothClose1(end));
+            params.set('smoothVal2',smoothClose2(end));
    
         end
         

@@ -9,6 +9,8 @@ classdef Parameters < handle
         alfa;
         newAlfa;
         stopLoss;
+        smoothVal1;
+        smoothVal2;
         smoothingCoef;
         startValue;
         lastDer;
@@ -153,6 +155,11 @@ classdef Parameters < handle
             obj.set('valueTp___',-1);
             obj.map('real______') =parameter;
             obj.set('real______',-1);
+            obj.map('smoothVal1') =parameter;
+            obj.set('smoothVal1',-1);
+            obj.map('smoothVal2') =parameter;
+            obj.set('smoothVal2',-1);
+            
             
         end
         function obj = setMap (obj,inMap)

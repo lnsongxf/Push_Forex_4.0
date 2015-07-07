@@ -8,7 +8,7 @@ classdef bktOffline < handle
     
     methods
  
-        function [obj]=spin(obj,nameAlgo,cross,nData,histName,actTimeScale,newTimeScale)
+        function [obj]=spin(obj,nameAlgo,cross,nData,histName,actTimeScale,newTimeScale,transCost)
             % Commenti al codice sono contrassegnati da by_ivan
             % In generale e' molto ben fatto e non vedo errori particolari.
             % Per ora non ho matlab e' non posso fare il debug, aspetto Simone che crei la macchina virtuale,
@@ -131,7 +131,7 @@ classdef bktOffline < handle
             
             
             p=Performance_04;
-            obj.performance=p.calcSinglePerformance(nameAlgo,'bktWeb',cross,1,1,obj.outputBktOffline);
+            obj.performance=p.calcSinglePerformance(nameAlgo,'bktWeb',cross,newTimeScale,transCost,obj.outputBktOffline);
             
         end
         
