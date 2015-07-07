@@ -248,10 +248,10 @@ classdef coreState_real02 < handle
         function obj = Algo_002_Ale (obj,closure,params)
             
             %NOTE: 
-            %LOGICA: fa uno smoothing e se il prezzo e 2 dev sopra apre in
-            %direzione del prezzo rispetto allo smooth
+            %LOGICA: fa 2 smoothing e quando si incrociano apre nella direzione dello smooth minore
+            %
             
-            windowSize1 = 3;
+            windowSize1 = 2;
             a = (1/windowSize1)*ones(1,windowSize1);
             smoothClose1 = filter(a,1,closure);
 %             fluctuations1=abs(closure-smoothClose1);
@@ -259,7 +259,7 @@ classdef coreState_real02 < handle
 %             actualFluct1=closure(end)-smoothClose1(end);
 %             signDirection1=sign(actualFluct1);
             
-            windowSize2 = 15;
+            windowSize2 = 20;
             b = (1/windowSize2)*ones(1,windowSize2);
             smoothClose2 = filter(b,1,closure);
             fluctuations2=abs(closure-smoothClose2);
@@ -267,11 +267,11 @@ classdef coreState_real02 < handle
             %             actualFluct2=closure(end)-smoothClose2(end);
             %             signDirection2=sign(actualFluct2);
             
-            figure
-            plot(closure,'ob')
-            hold on
-            plot(smoothClose1,'-b')
-            plot(smoothClose2,'-r')
+%             figure
+%             plot(closure,'ob')
+%             hold on
+%             plot(smoothClose1,'-b')
+%             plot(smoothClose2,'-r')
             
             newSmoothClose1=smoothClose1(end);
             newSmoothClose2=smoothClose2(end);
@@ -290,8 +290,8 @@ classdef coreState_real02 < handle
             if inversion<0 
                 obj.state=1;
                 obj.suggestedDirection=newSign;
-                obj.suggestedTP=devFluct2;
-                obj.suggestedSL=devFluct2;
+                obj.suggestedTP=10*devFluct2;
+                obj.suggestedSL=10*devFluct2;
             else
                 obj.state=0;
             end
