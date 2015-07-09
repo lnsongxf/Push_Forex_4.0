@@ -279,7 +279,7 @@ classdef Performance_04 < handle
             cLine=strcat('-',colour);
             cCurve=strcat('-o',colour);
             
-            subplot(4,1,1)
+            figure
             PL=cumsum(ExReturns);
             plot(PL,cLine);
             title('cumulative Excess of Returns per operation');
@@ -287,19 +287,20 @@ classdef Performance_04 < handle
             hold on
             plot(lin1,'-c');
             
-            p(1)=subplot(4,1,2);
+            figure
+            p(1)=subplot(3,1,1);
             plot(xData,dailyNumOper,cCurve);
             title('number of operations per day');
             hold on
             plot(xData,lin2);
                        
-            p(2)=subplot(4,1,3);
+            p(2)=subplot(3,1,2);
             plot(xData,dailyExReturns,cCurve);
             title('daily Excess of Returns');
             hold on
             plot(xData,lin2);
             
-            p(3)=subplot(4,1,4);
+            p(3)=subplot(3,1,3);
             plot(xData,cumsum(dailyExReturns),cCurve);
             title('cumulative Excess of Returns per day');
             hold on
