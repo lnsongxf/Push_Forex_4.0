@@ -21,7 +21,10 @@ git push			... per rendere effettivo il commit (chiede psw)
 
 git checkout nomedelbranch	... per cambiare branch
 git reset --hard                ... per ritornare alla situazione pulita prima del commit rispetto al server
+
+per fare il pull avendo delle modifiche nn committate:
 git stash                       ... ti mette in una stage area le tue modifiche
+git pull
 git stash pop                   ... ti reinserisce le modifiche della stage area
 
 altrimenti pui usare il tool SourceTree

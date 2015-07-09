@@ -15,6 +15,9 @@ classdef bktOffline < handle
             % ma se gia' facessi il push del dummy storico e del'algo di test, potrei darti un'idea piu' precisa.
             % Se lo hai gia' fatto, non sono riuscito a trovare i file.
             %
+            % per salvare lo storico:
+            % dlmwrite('EURUSD_2012_2015.csv', data, '-append') ;
+            %
             % DESCRIPTION:
             % -------------------------------------------------------------
             % This function runs the offline backtest on given historical data
