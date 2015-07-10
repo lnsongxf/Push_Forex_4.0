@@ -8,7 +8,7 @@ classdef bktOffline < handle
     
     methods
  
-        function [obj]=spin(obj,nameAlgo,cross,nData,histName,actTimeScale,newTimeScale,transCost)
+        function [obj]=spin(obj,nameAlgo,cross,nData,histName,actTimeScale,newTimeScale,transCost,initialStack,leverage)
             % Commenti al codice sono contrassegnati da by_ivan
             % In generale e' molto ben fatto e non vedo errori particolari.
             % Per ora non ho matlab e' non posso fare il debug, aspetto Simone che crei la macchina virtuale,
@@ -75,6 +75,7 @@ classdef bktOffline < handle
             openingDateNum=zeros(floor(ls/2), 1);
             closingDateNum=zeros(floor(ls/2), 1);
             nCandelotto=zeros(floor(ls/2), 1);
+            lots=zeros(floor(ls/2), 1);
             
             tic
             for i=nData:ls
@@ -100,6 +101,7 @@ classdef bktOffline < handle
                     direction(indexOpen)=newState{1};
                     openingPrice(indexOpen)=newState{2};
                     openingDateNum(indexOpen)=obj.newHisData(i,6);
+                    lots(indexOpen)=1;
                     
                 elseif updatedOperation==0 && abs(startingOperation)>0
                     nCandelotto(indexOpen)=i;
@@ -119,6 +121,7 @@ classdef bktOffline < handle
             openingPrice=openingPrice(1:indexClose);
             openingDateNum=openingDateNum(1:indexClose);
             closingDateNum=closingDateNum(1:indexClose);
+            lots=lots(1:indexClose);
             l=length(direction);
             
             obj.outputBktOffline=zeros(l,8);
@@ -131,10 +134,14 @@ classdef bktOffline < handle
             obj.outputBktOffline(:,6)=ones(l,1);              % real
             obj.outputBktOffline(:,7)=openingDateNum;        % opening date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
             obj.outputBktOffline(:,8)=closingDateNum;        % closing date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
+            obj.outputBktOffline(:,9)=lots;           % lots setted for single operation
             
-            
-            p=Performance_04;
-            obj.performance=p.calcSinglePerformance(nameAlgo,'bktWeb',cross,newTimeScale,transCost,obj.outputBktOffline);
+%             p=Performance_04;
+%             obj.performance=p.calcSinglePerformance(nameAlgo,'bktWeb',cross,newTimeScale,transCost,obj.outputBktOffline);
+
+            p=Performance_05;
+            obj.performance=p.calcSinglePerformance(nameAlgo,'bktWeb',cross,newTimeScale,transCost,initialStack,leverage,obj.outputBktOffline);
+
             
         end
         

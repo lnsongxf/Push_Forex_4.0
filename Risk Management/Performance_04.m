@@ -258,6 +258,7 @@ classdef Performance_04 < handle
             end
                       
             [~,~,obj.ferialExReturns]= find(dailyExReturns);
+            
             obj.ferialAveExReturns=mean(obj.ferialExReturns(:));
             obj.dailyAveExReturns=mean(dailyExReturns(:));
             ferialStdExReturns=std(obj.ferialExReturns(:));
