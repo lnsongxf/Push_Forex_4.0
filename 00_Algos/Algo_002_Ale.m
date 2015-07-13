@@ -52,24 +52,28 @@ decMaker = DecisionMaker_real02;
 
 
 if(isempty(map))
+    
     map = containers.Map;
     counter = 0;
+
 end
 
 %display(countCycle);
 if(isempty(countCycle) || countCycle == 0)
+
     countCycle = 1;
     operationState = OperationState;
-    params         = Parameters;
+    params = Parameters;
     map('Algo_002_Ale') = RealAlgo(operationState,params);
     oper = 0;
     return;
+
 end
 
 ra = map('Algo_002_Ale');
 remove(map,'Algo_002_Ale');
 
-params         = ra.p;
+params = ra.p;
 operationState = ra.os;
 
 
@@ -83,24 +87,33 @@ chiusure        = matrix(:,4);
 % 01
 % -------- coreState filter ------------------ %
 cState.Algo_002_Ale(chiusure,params);
-state=cState.state;
+state = cState.state;
 
 
 
 if operationState.lock
+    
     counter = counter + 1;
+    
     if(counter > operationState.lockDuration )
+        
         counter = 0;
         operationState.lock = 0;
+        
     end
+    
 else
-    if abs(operationState.actualOperation) > 0  
+    
+    if abs(operationState.actualOperation) > 0 
+        
         % 02a
         % -------- takeProfitManager: close for TP or SL ------ %
         [operationState,~,params] = takeProfitManager(operationState,chiusure,params);
         
     else
+        
         if abs(operationState.actualOperation) == 0
+            
             if state
                 
                 % 03a
@@ -113,8 +126,8 @@ else
                 % 02b
                 % -------- takeProfitManager: define TP and SL ------ %
                 %                      TO CREATE
-                TakeP=cState.suggestedTP;
-                StopL=cState.suggestedSL;
+                TakeP = cState.suggestedTP;
+                StopL = cState.suggestedSL;
                 
                 % 03b
                 % -------- decMaker direction manager --------------- %
@@ -127,9 +140,10 @@ else
                 operationState = decMaker.calcLock(operationState);
                                 
             end
+            
         end
+        
     end
-    
     
 end
 
