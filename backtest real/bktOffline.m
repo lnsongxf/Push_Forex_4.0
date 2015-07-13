@@ -24,7 +24,7 @@ classdef bktOffline < handle
             % -------------------------------------------------------------
             % nameAlgo: nome dell'algoritmo che usi
             % cross: ad es 'EURUSD'
-            % nData: numero di dati in input di storico DOPO IL REBINNING
+            % nData: numero di dati in input di storico per ciclo
             % histName: nome dello storico, es: 'nome_storico.csv'
             % actTimeScale: scala temporale dello storico in input
             % newTimeScale: scala temporale su cui vuoi lavorare (in minuti)
@@ -40,7 +40,7 @@ classdef bktOffline < handle
             % EXAMPLE of use:
             % -------------------------------------------------------------
             % clear all; bkt_AlgoX=bktOffline
-            % bkt_AlgoX=bkt_AlgoX.spin('Algo_Ale_02','EURUSD',10000,'EURUSD_2012_2015.csv',1,5,1,10000,10)
+            % bkt_AlgoX=bkt_AlgoX.spin('Algo_Ale_02','EURUSD',100,'EURUSD_2012_2015.csv',1,5,1,10000,10)
             %
             
             hisData = csvread(histName);
@@ -88,16 +88,6 @@ classdef bktOffline < handle
             closingDateNum = zeros(floor(ls/2), 1);
             nCandelotto = zeros(floor(ls/2), 1);
             lots = zeros(floor(ls/2), 1);
-            
-            % complain se lo storico rebinned ha dimensioni maggiori di nData
-            if ls < nData
-                
-                msg = 'Error: nData è più grosso dello storico dopo il rebinning';
-                disp(['length storico rebinnato = ' num2str(ls)]);
-                disp(['nData = ' num2str(nData)]);
-                error(msg)
-                
-            end
             
             % da qui inizia il core dello spin
             tic
