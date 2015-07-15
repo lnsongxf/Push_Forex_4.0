@@ -17,7 +17,7 @@ sock.subscribe('cmd1');
 console.log('Subscriber connected to port 50004');
 
 sock.on('message', function(topic, message) {
-  console.log('received a message related to:', topic, 'containing message:', message);
+  console.log('received a message related to:', topic.toString(), 'containing message:', message.toString());
 });
 
 
@@ -28,3 +28,4 @@ console.log('Worker connected to port 3000');
 sock.on('message', function(msg){
   console.log('work: %s', msg.toString());
 });*/
+
