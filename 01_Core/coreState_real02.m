@@ -248,7 +248,8 @@ classdef coreState_real02 < handle
         function obj = Algo_002_Ale (obj,closure,params)
             
             %NOTE: 
-            %LOGICA: fa 2 smoothing e quando si incrociano apre nella direzione dello smooth minore
+            %LOGICA: fa 2 smoothing e quando si incrociano apre nella
+            %direzione opposta dello smooth minore
             %
             
             windowSize1 = 2;
@@ -301,6 +302,88 @@ classdef coreState_real02 < handle
    
         end
         
+        %%
+        
+        function obj = Algo_004_Ale (obj,closure,params)
+            
+            %NOTE:
+            %LOGICA: fa 2 smoothing e quando si incrociano apre nella direzione dello smooth minore
+            %
+            
+            windowSize1 = 5;
+            a = (1/windowSize1)*ones(1,windowSize1);
+            smoothClose1 = filter(a,1,closure);
+            %             fluctuations1=abs(closure-smoothClose1);
+            %             devFluct1=std(fluctuations1(windowSize1:end));
+            %             actualFluct1=closure(end)-smoothClose1(end);
+            %             signDirection1=sign(actualFluct1);
+            
+            windowSize2 = 30;
+            b = (1/windowSize2)*ones(1,windowSize2);
+            smoothClose2 = filter(b,1,closure);
+            fluctuations2=abs(closure-smoothClose2);
+            meanFluct2=mean(fluctuations2(windowSize2:end));
+            devFluct2=std(fluctuations2(windowSize2:end));
+            %             actualFluct2=closure(end)-smoothClose2(end);
+            %             signDirection2=sign(actualFluct2);
+            
+            gradient1=gradient(smoothClose1);
+            gradient2=gradient(smoothClose2);
+            
+            newSmoothClose1=smoothClose1(end);
+            newSmoothClose2=smoothClose2(end);       
+            newGradient1=gradient1(end);
+            newGradient2=gradient2(end);
+            
+            oldSmoothClose1=params.get('smoothVal1');
+            oldSmoothClose2=params.get('smoothVal2');
+            oldGradient1=gradient1(end-1);
+            oldGradient2=gradient2(end-1);
+            
+            oldDifference=oldSmoothClose1-oldSmoothClose2;
+            newDifference=newSmoothClose1-newSmoothClose2;
+            
+            oldSign=sign(oldDifference);
+            newSign=sign(newDifference);
+            
+            inversion=oldSign*newSign;
+            newState=sign(newGradient1*newGradient2);
+            oldState=sign(oldGradient1*oldGradient2);
+            trend=newState+oldState;
+            trendDirection=sign(newGradient1);
+            
+%             figure
+%             plot(closure,'ob')
+%             hold on
+%             plot(smoothClose1,'-b')
+%             plot(smoothClose2,'-r')
+%             
+%             figure
+%             plot(newGradient1,'-b')
+%             plot(newGradient2,'-r')
+            
+            if inversion<0 && trend==2
+                obj.state=1;
+                obj.suggestedDirection=trendDirection;   % cambia qui il segno
+                obj.suggestedTP=2*devFluct2;
+                obj.suggestedSL=2*devFluct2;
+            else
+                obj.state=0;
+            end
+            
+%             if inversion<0 && trend==2
+%                 obj.state=1;
+%                 obj.suggestedDirection=-trendDirection;   % cambia qui il segno
+%                 obj.suggestedTP=6*devFluct2;
+%                 obj.suggestedSL=2*devFluct2;
+%             else
+%                 obj.state=0;
+%             end
+            
+            params.set('smoothVal1',smoothClose1(end));
+            params.set('smoothVal2',smoothClose2(end));
+            
+        end
         
     end
     

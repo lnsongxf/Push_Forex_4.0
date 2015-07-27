@@ -94,7 +94,7 @@ classdef bktOffline < handle
             
             for i = nData:ls
                 
-                [oper, openValue, closeValue, stopLoss, noLoose, valueTp] = Algo_002_Ale(obj.newHisData(i-(nData-1):i,:));
+                [oper, openValue, closeValue, stopLoss, noLoose, valueTp] = Algo_004_Ale(obj.newHisData(i-(nData-1):i,:));
                 
                 newState{1} = oper;
                 newState{2} = openValue;
