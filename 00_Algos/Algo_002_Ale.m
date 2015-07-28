@@ -183,7 +183,7 @@ clear ra;
 %clear highs;
 %clear lows;
 
-display(oper)
+display(['oper = ' num2str(oper)]) ;
 
 end
 

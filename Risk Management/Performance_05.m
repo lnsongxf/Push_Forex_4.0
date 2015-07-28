@@ -71,7 +71,7 @@ classdef Performance_05 < handle
     
     methods
         
-        %% Function to calculate all the performance parameters of a single rusult matrix
+        %% Function to calculate all the performance parameters of a single result matrix
         
         function obj=calcSinglePerformance(obj,nameAlgo_,origin_,cross_,freq_,transCost_,initialStack_,leverage_,inputResultsMatrix_)
             
@@ -324,8 +324,9 @@ classdef Performance_05 < handle
             lin1=zeros(numOper);
             lin2=zeros(daysOper);
             
-            cLine=strcat('-',colour);
-            cCurve=strcat('-o',colour);
+            %cLine=strcat('-',colour);
+            cLine=colour;
+            cCurve=colour;
             
             
             figure
