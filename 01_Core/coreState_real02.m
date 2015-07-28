@@ -352,33 +352,26 @@ classdef coreState_real02 < handle
             trend=newState+oldState;
             trendDirection=sign(newGradient1);
             
-%             figure
+%             subplot(1,2,1)
+%             cla
 %             plot(closure,'ob')
 %             hold on
 %             plot(smoothClose1,'-b')
 %             plot(smoothClose2,'-r')
 %             
-%             figure
+%             subplot(1,2,2)
+%             cla
 %             plot(newGradient1,'-b')
 %             plot(newGradient2,'-r')
-            
+                       
             if inversion<0 && trend==2
                 obj.state=1;
-                obj.suggestedDirection=trendDirection;   % cambia qui il segno
-                obj.suggestedTP=2*devFluct2;
-                obj.suggestedSL=2*devFluct2;
+                obj.suggestedDirection=trendDirection;
+                obj.suggestedTP=2*meanFluct2;
+                obj.suggestedSL=2*meanFluct2;
             else
                 obj.state=0;
             end
-            
-%             if inversion<0 && trend==2
-%                 obj.state=1;
-%                 obj.suggestedDirection=-trendDirection;   % cambia qui il segno
-%                 obj.suggestedTP=6*devFluct2;
-%                 obj.suggestedSL=2*devFluct2;
-%             else
-%                 obj.state=0;
-%             end
             
             params.set('smoothVal1',smoothClose1(end));
             params.set('smoothVal2',smoothClose2(end));
