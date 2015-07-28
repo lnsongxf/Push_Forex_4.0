@@ -23,7 +23,7 @@ if (cond1+cond2 == 2)
 	operationState = params.close(operationState,termUp);
     display('win');
     % operationState = params.updatePh0To1(operationState,termUp);
-elseif (abs (termDw - params.get('openValue_')) > params.get('stopLoss__') && sign (termDw - params.get('openValue_')) == sign (operationState.actualOperation)*-1)
+elseif (abs (termDw - params.get('openValue_')) >= params.get('stopLoss__') && sign (termDw - params.get('openValue_')) == sign (operationState.actualOperation)*-1)
     operationState = params.updateOnStopLoss(operationState);
     display('loose');
 % elseif (cond3 == 1)
