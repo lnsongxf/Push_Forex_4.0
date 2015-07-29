@@ -2,6 +2,7 @@ classdef OperationState
     
     properties
         actualOperation;
+        closeRightNow;
         phase;
         lastOperation;
         lock;
@@ -12,6 +13,7 @@ classdef OperationState
     methods
         function obj = OperationState
             obj.actualOperation = 0;
+            obj.closeRightNow   = 0;
             obj.phase           = 0;
             obj.lastOperation   = 0;
             obj.lock            = 0;

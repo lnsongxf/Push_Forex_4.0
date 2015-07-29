@@ -252,18 +252,22 @@ classdef coreState_real02 < handle
             %direzione opposta dello smooth minore
             %
             
+            % non uso i dati al minuto per le valutazioni dello
+            % state
+            closePrice=closure(1:end-1);
+            
             windowSize1 = 2;
             a = (1/windowSize1)*ones(1,windowSize1);
-            smoothClose1 = filter(a,1,closure);
-%             fluctuations1=abs(closure-smoothClose1);
+            smoothClose1 = filter(a,1,closePrice);
+            %             fluctuations1=abs(closure-smoothClose1);
 %             devFluct1=std(fluctuations1(windowSize1:end));
 %             actualFluct1=closure(end)-smoothClose1(end);
 %             signDirection1=sign(actualFluct1);
             
             windowSize2 = 20;
             b = (1/windowSize2)*ones(1,windowSize2);
-            smoothClose2 = filter(b,1,closure);
-            fluctuations2=abs(closure-smoothClose2);
+            smoothClose2 = filter(b,1,closePrice);
+            fluctuations2=abs(closePrice-smoothClose2);
             devFluct2=std(fluctuations2(windowSize2:end));
             %             actualFluct2=closure(end)-smoothClose2(end);
             %             signDirection2=sign(actualFluct2);
@@ -310,9 +314,13 @@ classdef coreState_real02 < handle
             %LOGICA: fa 2 smoothing e quando si incrociano apre nella direzione dello smooth minore
             %
             
+            % non uso i dati al minuto per le valutazioni dello
+            % state
+            closePrice=closure(1:end-1);
+            
             windowSize1 = 5;
             a = (1/windowSize1)*ones(1,windowSize1);
-            smoothClose1 = filter(a,1,closure);
+            smoothClose1 = filter(a,1,closePrice);
             %             fluctuations1=abs(closure-smoothClose1);
             %             devFluct1=std(fluctuations1(windowSize1:end));
             %             actualFluct1=closure(end)-smoothClose1(end);
@@ -320,8 +328,8 @@ classdef coreState_real02 < handle
             
             windowSize2 = 30;
             b = (1/windowSize2)*ones(1,windowSize2);
-            smoothClose2 = filter(b,1,closure);
-            fluctuations2=abs(closure-smoothClose2);
+            smoothClose2 = filter(b,1,closePrice);
+            fluctuations2=abs(closePrice-smoothClose2);
             meanFluct2=mean(fluctuations2(windowSize2:end));
             devFluct2=std(fluctuations2(windowSize2:end));
             %             actualFluct2=closure(end)-smoothClose2(end);
@@ -352,17 +360,17 @@ classdef coreState_real02 < handle
             trend=newState+oldState;
             trendDirection=sign(newGradient1);
             
-%             subplot(1,2,1)
-%             cla
-%             plot(closure,'ob')
-%             hold on
-%             plot(smoothClose1,'-b')
-%             plot(smoothClose2,'-r')
-%             
-%             subplot(1,2,2)
-%             cla
-%             plot(newGradient1,'-b')
-%             plot(newGradient2,'-r')
+            subplot(1,2,1)
+            cla
+            plot(closePrice,'ob')
+            hold on
+            plot(smoothClose1,'-b')
+            plot(smoothClose2,'-r')
+            
+            subplot(1,2,2)
+            plot(newGradient1,'ob')
+            hold on
+            plot(newGradient2,'or')
                        
             if inversion<0 && trend==2
                 obj.state=1;

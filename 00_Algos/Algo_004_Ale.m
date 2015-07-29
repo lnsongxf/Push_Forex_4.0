@@ -67,7 +67,7 @@ if(isempty(countCycle) || countCycle == 0)
     map('Algo_004_Ale') = RealAlgo(operationState,params);
     oper = 0;
     return;
-
+    
 end
 
 ra = map('Algo_004_Ale');

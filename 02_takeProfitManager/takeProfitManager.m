@@ -32,12 +32,15 @@ elseif (cond3 + cond4 == 2)
     
     operationState = params.updateOnStopLoss(operationState);
     display('loose');
+<<<<<<< Updated upstream
 % elseif (cond5 == 1)
     % s = simulate (valuesVector,params);
     % if (s > params.get('startValue'));
     %    operationState = params.updateOnChangeIndicator(operationState,value.close);
     % end
     
+=======
+>>>>>>> Stashed changes
 else
     
     operationState.counter = operationState.counter + 1;

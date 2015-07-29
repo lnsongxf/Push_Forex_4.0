@@ -42,7 +42,7 @@ classdef bktOffline < handle
             % clear all; bkt_AlgoX=bktOffline
             % bkt_AlgoX=bkt_AlgoX.spin('Algo_Ale_02','EURUSD',100,'EURUSD_2012_2015.csv',1,5,1,10000,10)
             %
-            
+
             hisData = csvread(histName);
             [r,c] = size(hisData);
             startingOperation = 0;
@@ -93,37 +93,46 @@ classdef bktOffline < handle
             tic
             
             for i = nData:ls
+                matrix = obj.newHisData(i-(nData-1):i,:);
                 
-                [oper, openValue, closeValue, stopLoss, noLoose, valueTp] = Algo_004_Ale(obj.newHisData(i-(nData-1):i,:));
+                for j = 1:newTimeScale
+                  matrix(end, 4) = hisData(i*newTimeFrame + j, 4);
+                  [oper, openValue, closeValue, stopLoss, noLoose, valueTp] = Algo_004_Ale(matrix);
                 
-                newState{1} = oper;
-                newState{2} = openValue;
-                newState{3} = closeValue;
-                newState{4} = stopLoss;
-                newState{5} = noLoose;
-                newState{6} = valueTp;
+                  newState{1} = oper;
+                  newState{2} = openValue;
+                  newState{3} = closeValue;
+                  newState{4} = stopLoss;
+                  newState{5} = noLoose;
+                  newState{6} = valueTp;
                 
-                updatedOperation = newState{1};
+                  updatedOperation = newState{1};
                 
-                if abs(updatedOperation) > 0 && startingOperation == 0
+                  if abs(updatedOperation) > 0 && startingOperation == 0
                     
-                    indexOpen = indexOpen + 1;
-                    startingOperation = newState{1};
+                      indexOpen = indexOpen + 1;
+                      startingOperation = newState{1};
                     
+<<<<<<< Updated upstream
                     display(['indexOpen =' num2str(indexOpen)]);
                     display(['startingOperation =' num2str(startingOperation)]);
                     
                     if indexOpen == 16
                         display('sticazzi')
                     end
+=======
+                      display(indexOpen);
+                      display(startingOperation);
+>>>>>>> Stashed changes
                     
-                    direction(indexOpen) = newState{1};
-                    openingPrice(indexOpen) = newState{2};
-                    openingDateNum(indexOpen) = obj.newHisData(i,6);
-                    lots(indexOpen) = 1;
+                      direction(indexOpen) = newState{1};
+                      openingPrice(indexOpen) = newState{2};
+                      openingDateNum(indexOpen) = obj.newHisData(i,6);
+                      lots(indexOpen) = 1;
                     
-                elseif updatedOperation == 0 && abs(startingOperation) > 0
+                  elseif updatedOperation == 0 && abs(startingOperation) > 0
                     
+<<<<<<< Updated upstream
                     nCandelotto(indexOpen) = i;
                     indexClose = indexClose + 1;
                     closingPrice(indexOpen) = newState{3};
@@ -131,7 +140,18 @@ classdef bktOffline < handle
                     display(['closeValue =' num2str(closeValue)]);
                     startingOperation = 0;
                     display('operation closed');
+=======
+                      nCandelotto(indexOpen) = i;
+                      indexClose = indexClose + 1;
+                      closingPrice(indexOpen) = newState{3};
+                      closingDateNum(indexOpen) = obj.newHisData(i,6);
+                      display(closeValue);
+                      startingOperation = 0;
+                      display('operation closed');
+>>>>>>> Stashed changes
                     
+                  end
+                  
                 end
                 
             end
