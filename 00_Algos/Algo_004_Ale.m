@@ -126,8 +126,8 @@ else
                 % 02b
                 % -------- takeProfitManager: define TP and SL ------ %
                 %                      TO CREATE
-                TakeP = cState.suggestedTP;
-                StopL = cState.suggestedSL;
+                TakeP = floor(cState.suggestedTP);
+                StopL = floor(cState.suggestedSL);
                 
                 % 03b
                 % -------- decMaker direction manager --------------- %
@@ -183,7 +183,7 @@ clear ra;
 %clear highs;
 %clear lows;
 
-display(['oper = ' num2str(oper)]) ;
+%display(['oper = ' num2str(oper)]) ;
 
 end
 

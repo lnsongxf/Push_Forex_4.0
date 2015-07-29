@@ -110,8 +110,12 @@ classdef bktOffline < handle
                     indexOpen = indexOpen + 1;
                     startingOperation = newState{1};
                     
-                    display(indexOpen);
-                    display(startingOperation);
+                    display(['indexOpen =' num2str(indexOpen)]);
+                    display(['startingOperation =' num2str(startingOperation)]);
+                    
+                    if indexOpen == 16
+                        display('sticazzi')
+                    end
                     
                     direction(indexOpen) = newState{1};
                     openingPrice(indexOpen) = newState{2};
@@ -124,7 +128,7 @@ classdef bktOffline < handle
                     indexClose = indexClose + 1;
                     closingPrice(indexOpen) = newState{3};
                     closingDateNum(indexOpen) = obj.newHisData(i,6);
-                    display(closeValue);
+                    display(['closeValue =' num2str(closeValue)]);
                     startingOperation = 0;
                     display('operation closed');
                     
