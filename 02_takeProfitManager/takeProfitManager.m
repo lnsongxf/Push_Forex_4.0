@@ -1,7 +1,6 @@
 function [operationState, chiusure, params] = takeProfitManager ( operationState, chiusure, params)
 
-termUp = chiusure(end);
-termDw = chiusure(end);
+LastClosePrice = chiusure(end);
 
 % display (value);
 % display (params.get('openValue_'));
@@ -9,30 +8,40 @@ termDw = chiusure(end);
 % display (params.get('stopLoss__'));
 
 % d = calcIndicator (params,valuesVector);
-% cond3 = sign (d) ~= operationState.actualOperation;
+% cond5 = sign (d) ~= operationState.actualOperation;
 % s = simulate (valuesVector,params);
 % prev  = valuesVector.getPrevValue;
-% cond3 = 0;
+% cond5 = 0;
 % if (s > params.startValue)
-%    cond3 = sign (value.close-prev.close) == sign (operationState.actualOperation)*-1;
+%    cond5 = sign (value.close-prev.close) == sign (operationState.actualOperation)*-1;
 % end
-% cond3 = sign (d) ~= operationState.actualOperation && abs(termDw - params.operOpeningValue) > params.stopLoss;
-cond1 = abs ( termUp - params.get('openValue_')) >= params.get('noLoose___');
-cond2 = sign (termUp - params.get('openValue_')) == sign (operationState.actualOperation);
-if (cond1+cond2 == 2)
-	operationState = params.close(operationState,termUp);
+% cond5 = sign (d) ~= operationState.actualOperation && abs(LastClosePrice - params.operOpeningValue) > params.stopLoss;
+
+cond1 = abs ( LastClosePrice - params.get('openValue_')) >= params.get('noLoose___');
+cond2 = sign (LastClosePrice - params.get('openValue_')) == sign (operationState.actualOperation);
+cond3 = abs (LastClosePrice - params.get('openValue_')) >= params.get('stopLoss__');
+cond4 = sign (LastClosePrice - params.get('openValue_')) == sign (operationState.actualOperation)*-1;
+
+if (cond1 + cond2 == 2)
+    
+	operationState = params.close(operationState,LastClosePrice);
     display('win');
-    % operationState = params.updatePh0To1(operationState,termUp);
-elseif (abs (termDw - params.get('openValue_')) >= params.get('stopLoss__') && sign (termDw - params.get('openValue_')) == sign (operationState.actualOperation)*-1)
+    % operationState = params.updatePh0To1(operationState,LastClosePrice);
+    
+elseif (cond3 + cond4 == 2)
+    
     operationState = params.updateOnStopLoss(operationState);
     display('loose');
-% elseif (cond3 == 1)
+% elseif (cond5 == 1)
     % s = simulate (valuesVector,params);
     % if (s > params.get('startValue'));
     %    operationState = params.updateOnChangeIndicator(operationState,value.close);
     % end
+    
 else
+    
     operationState.counter = operationState.counter + 1;
+    
 end
 
 end
