@@ -113,17 +113,10 @@ classdef bktOffline < handle
                       indexOpen = indexOpen + 1;
                       startingOperation = newState{1};
                     
-<<<<<<< Updated upstream
-                    display(['indexOpen =' num2str(indexOpen)]);
-                    display(['startingOperation =' num2str(startingOperation)]);
-                    
-                    if indexOpen == 16
-                        display('sticazzi')
-                    end
-=======
-                      display(indexOpen);
-                      display(startingOperation);
->>>>>>> Stashed changes
+                      display(['indexOpen =' num2str(indexOpen)]);
+                      display(['startingOperation =' num2str(startingOperation)]);
+
+
                     
                       direction(indexOpen) = newState{1};
                       openingPrice(indexOpen) = newState{2};
@@ -132,7 +125,6 @@ classdef bktOffline < handle
                     
                   elseif updatedOperation == 0 && abs(startingOperation) > 0
                     
-<<<<<<< Updated upstream
                     nCandelotto(indexOpen) = i;
                     indexClose = indexClose + 1;
                     closingPrice(indexOpen) = newState{3};
@@ -140,15 +132,7 @@ classdef bktOffline < handle
                     display(['closeValue =' num2str(closeValue)]);
                     startingOperation = 0;
                     display('operation closed');
-=======
-                      nCandelotto(indexOpen) = i;
-                      indexClose = indexClose + 1;
-                      closingPrice(indexOpen) = newState{3};
-                      closingDateNum(indexOpen) = obj.newHisData(i,6);
-                      display(closeValue);
-                      startingOperation = 0;
-                      display('operation closed');
->>>>>>> Stashed changes
+
                     
                   end
                   
