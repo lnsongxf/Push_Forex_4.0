@@ -70,14 +70,12 @@ classdef Parameters < handle
                end
             end
         end
-		function operStates = close (obj,operStates,value)
+		function operStates = closeOnTakeProfit (obj,operStates)
             obj.set('closeValue',obj.get('openValue_') + obj.get('noLoose___')*operStates.actualOperation);
             operStates.lastOperation    = operStates.actualOperation;
             operStates.actualOperation  = 0;
             operStates.lock             = 0;
             operStates.phase            = 0;
-		    %obj.set('valueTp___',obj.get('openValue_') + (value - obj.get('openValue_'))*obj.get('percTp____'));
-            %obj.set('closeValue',value);
                         
         end
         function operStates = updatePh0To1 (obj,operStates,value)
@@ -90,7 +88,7 @@ classdef Parameters < handle
                 operStates.phase = 1;
             end
         end
-        function operStates = updateOnStopLoss (obj, operStates)
+        function operStates = closeOnStopLoss (obj, operStates)
             % display ('Ho chiuso per stop loss');
             obj.set('closeValue',obj.get('openValue_') +obj.get('stopLoss__')*(-operStates.actualOperation));
             operStates.lastOperation    = operStates.actualOperation;
@@ -101,16 +99,15 @@ classdef Parameters < handle
             % display (strcat ('Guadagno netto: ',mat2str (-1*abs (obj.get('closeValue') - obj.get('openValue_')))));
         end
         
-        function operStates = updateOnChangeIndicator (obj, operStates, currValue)
+        function operStates = closeOnCall (obj, operStates, currValue)
             % display ('Ho chiuso per stop loss');
             obj.set('closeValue',currValue);
             operStates.lastOperation    = operStates.actualOperation;
             operStates.actualOperation  = 0;
             operStates.lock             = 0;
             operStates.phase            = 0;
-            % obj.set('alfa______',obj.get('newAlfa___'));
-            % display (strcat ('Guadagno netto: ',mat2str (-1*abs (obj.get('closeValue') - obj.get('openValue_')))));
         end
+                    
         function operStates = updateParamsMaxIncrease (obj, operStates,value)
             updateParamsOnMaxIncrease (obj,operStates,value);
         end

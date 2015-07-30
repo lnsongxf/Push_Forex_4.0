@@ -7,8 +7,8 @@ classdef bktOffline < handle
     end
     
     methods
- 
-        function [obj] = spin(obj,nameAlgo,cross,nData,histName,actTimeScale, ... 
+        
+        function [obj] = spin(obj,nameAlgo,cross,nData,histName,actTimeScale, ...
                 newTimeScale,transCost,initialStack,leverage)
             
             %
@@ -42,7 +42,7 @@ classdef bktOffline < handle
             % clear all; bkt_AlgoX=bktOffline
             % bkt_AlgoX=bkt_AlgoX.spin('Algo_Ale_02','EURUSD',100,'EURUSD_2012_2015.csv',1,5,1,10000,10)
             %
-
+            
             hisData = csvread(histName);
             [r,c] = size(hisData);
             startingOperation = 0;
@@ -51,18 +51,16 @@ classdef bktOffline < handle
             
             % includi colonna delle date se non esiste nel file di input
             if c == 5
-
                 hisData(1,6) = datenum('01/01/2015 00:00', 'mm/dd/yyyy HH:MM');
                 
-                for j = 2:r;                
+                for j = 2:r;
                     hisData(j,6) = hisData(1,6) + ( (actTimeScale/1440)*(j-1) );
                 end
-                
             end
-                     
+            
             % riscala temporalmente se richiesto
             if newTimeScale > 1
-
+                
                 expert = TimeSeriesExpert_11;
                 expert.rescaleData(hisData,actTimeScale,newTimeScale)
                 
@@ -71,71 +69,80 @@ classdef bktOffline < handle
                 obj.newHisData(:,3) = expert.minVrescaled;
                 obj.newHisData(:,4) = expert.closeVrescaled;
                 obj.newHisData(:,5) = expert.volrescaled;
-                obj.newHisData(:,6) = expert.openDrescaled;               
-
+                obj.newHisData(:,6) = expert.openDrescaled;
+                
             else
                 
                 obj.newHisData = hisData;
-            
+                
             end
             
             
-            ls = length(obj.newHisData);
-            direction = zeros(floor(ls/2), 1);
-            openingPrice = zeros(floor(ls/2), 1);
-            closingPrice = zeros(floor(ls/2), 1);
-            openingDateNum = zeros(floor(ls/2), 1);
-            closingDateNum = zeros(floor(ls/2), 1);
-            nCandelotto = zeros(floor(ls/2), 1);
-            lots = zeros(floor(ls/2), 1);
+            lhisData = length(hisData);
+            lnewHisData = length(obj.newHisData);
+            direction = zeros(floor(lnewHisData/2), 1);
+            openingPrice = zeros(floor(lnewHisData/2), 1);
+            closingPrice = zeros(floor(lnewHisData/2), 1);
+            openingDateNum = zeros(floor(lnewHisData/2), 1);
+            closingDateNum = zeros(floor(lnewHisData/2), 1);
+            nCandelotto = zeros(floor(lnewHisData/2), 1);
+            lots = zeros(floor(lnewHisData/2), 1);
             
             % da qui inizia il core dello spin
             tic
             
-            for i = nData:ls
-                matrix = obj.newHisData(i-(nData-1):i,:);
+            for i = nData:lnewHisData
+                indexNewHisData=i-(nData-1);
+                matrix = obj.newHisData(indexNewHisData:i,:);
                 
                 for j = 1:newTimeScale
-                  matrix(end, 4) = hisData(i*newTimeFrame + j, 4);
-                  [oper, openValue, closeValue, stopLoss, noLoose, valueTp] = Algo_004_Ale(matrix);
-                
-                  newState{1} = oper;
-                  newState{2} = openValue;
-                  newState{3} = closeValue;
-                  newState{4} = stopLoss;
-                  newState{5} = noLoose;
-                  newState{6} = valueTp;
-                
-                  updatedOperation = newState{1};
-                
-                  if abs(updatedOperation) > 0 && startingOperation == 0
                     
-                      indexOpen = indexOpen + 1;
-                      startingOperation = newState{1};
+                    indexHisData=i*newTimeScale+j-1;
                     
-                      display(['indexOpen =' num2str(indexOpen)]);
-                      display(['startingOperation =' num2str(startingOperation)]);
-
-
+                    if indexHisData > lhisData
+                        break
+                    end
                     
-                      direction(indexOpen) = newState{1};
-                      openingPrice(indexOpen) = newState{2};
-                      openingDateNum(indexOpen) = obj.newHisData(i,6);
-                      lots(indexOpen) = 1;
+                    matrix(end, 4) = hisData(indexHisData, 4);
+                    [oper, openValue, closeValue, stopLoss, noLoose, valueTp] = Algo_004_Ale(matrix);
                     
-                  elseif updatedOperation == 0 && abs(startingOperation) > 0
+                    newState{1} = oper;
+                    newState{2} = openValue;
+                    newState{3} = closeValue;
+                    newState{4} = stopLoss;
+                    newState{5} = noLoose;
+                    newState{6} = valueTp;
                     
-                    nCandelotto(indexOpen) = i;
-                    indexClose = indexClose + 1;
-                    closingPrice(indexOpen) = newState{3};
-                    closingDateNum(indexOpen) = obj.newHisData(i,6);
-                    display(['closeValue =' num2str(closeValue)]);
-                    startingOperation = 0;
-                    display('operation closed');
-
+                    updatedOperation = newState{1};
                     
-                  end
-                  
+                    if abs(updatedOperation) > 0 && startingOperation == 0
+                        
+                        indexOpen = indexOpen + 1;
+                        startingOperation = newState{1};
+                        
+                        display(['indexOpen =' num2str(indexOpen)]);
+                        display(['startingOperation =' num2str(startingOperation)]);
+                        
+                        
+                        
+                        direction(indexOpen) = newState{1};
+                        openingPrice(indexOpen) = newState{2};
+                        openingDateNum(indexOpen) = obj.newHisData(i,6);
+                        lots(indexOpen) = 1;
+                        
+                    elseif updatedOperation == 0 && abs(startingOperation) > 0
+                        
+                        nCandelotto(indexOpen) = i;
+                        indexClose = indexClose + 1;
+                        closingPrice(indexOpen) = newState{3};
+                        closingDateNum(indexOpen) = obj.newHisData(i,6);
+                        display(['closeValue =' num2str(closeValue)]);
+                        startingOperation = 0;
+                        display('operation closed');
+                        
+                        
+                    end
+                    
                 end
                 
             end
@@ -174,5 +181,5 @@ classdef bktOffline < handle
     end
     
 end
-    
-    
+
+

@@ -1,4 +1,4 @@
-function [operationState, chiusure, params] = takeProfitManager ( operationState, chiusure, params)
+function [operationState, chiusure, params] = takeProfitManager (operationState, chiusure, params)
 
 LastClosePrice = chiusure(end);
 
@@ -9,12 +9,12 @@ cond4 = sign (LastClosePrice - params.get('openValue_')) == sign (operationState
 
 if (cond1 + cond2 == 2)
     
-	operationState = params.close(operationState,LastClosePrice);
+	operationState = params.closeOnTakeProfit(operationState);
     display('win');
     
 elseif (cond3 + cond4 == 2)
     
-    operationState = params.updateOnStopLoss(operationState);
+    operationState = params.closeOnStopLoss(operationState);
     display('loose');
 
 else

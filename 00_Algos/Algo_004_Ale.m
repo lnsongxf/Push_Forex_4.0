@@ -107,8 +107,9 @@ else
     if abs(operationState.actualOperation) > 0 
         
         % 02a
-        % -------- takeProfitManager: close for TP or SL ------ %
+        % -------- takeProfitManager: close for TP or SL or Direct Call------ %
         [operationState,~,params] = takeProfitManager(operationState,chiusure,params);
+        %   [operationState,~,params] = directClosureManager(operationState, chiusure, params);
         
     else
         
