@@ -292,11 +292,15 @@ classdef coreState_real02 < handle
             
             inversion=oldSign*newSign;
             
-            if inversion<0 
+            if inversion<0 %&& devFluct2 > 4
                 obj.state=1;
                 obj.suggestedDirection=-newSign;
+%                 if devFluct2 > 20
+%                     devFluct2 = 20;
+%                 end
                 obj.suggestedTP=5*devFluct2;
-                obj.suggestedSL=1*devFluct2;
+                obj.suggestedSL=devFluct2;
+                %obj.suggestedSL=2*devFluct2;
             else
                 obj.state=0;
             end

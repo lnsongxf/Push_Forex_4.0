@@ -1,4 +1,4 @@
-function outputmio = leadlag_Ale002(P,date,N,M,cost)
+function [outputmio,standev,s,a,b] = leadlag_doppiatimescale_Ale002(Pminute,P,date,N,M,newTimeScale,cost)
 
 
 %% simula algo Ale002
@@ -28,8 +28,8 @@ OpDates=zeros(size(P));
 ClDates=zeros(size(P));
 i = 101;
 
+
 while i <= length(P)
-    
     
     % se il trend breve va sotto quello lungo compra long
     if ( s(i) < s(i-1) ) && s(i) == -1
@@ -43,40 +43,42 @@ while i <= length(P)
         openingPrices(ntrades) = Pbuy;
         OpDates(ntrades) = date(i);
         
-        for j = i+1:length(P)
+        for j = newTimeScale*i+1:length(Pminute)
             
-            %devFluct2 = std(fluctuationslag((j-M):j));
-            %devFluct2 = std(lag((j-100):j));
-            standev(j) = devFluct2;
+            indice_I = floor(j/newTimeScale);
             
-            if P(j) >= (Pbuy + 5*devFluct2)
+            standev(indice_I) = devFluct2;
+            
+            if Pminute(j) >= (Pbuy + 5*devFluct2)
                 
                 %r(j) =  P(j)-Pbuy-cost;
-                r(j) = 5*devFluct2 - cost;
-                closingPrices(ntrades) = P(j);
-                ClDates(ntrades) = date(j);
-                i = j;
-                trades(i) = 0;
+                r(indice_I) = 5*devFluct2 - cost;
+                closingPrices(ntrades) = Pbuy + 5*devFluct2;
+                %closingPrices(ntrades) = Pminute(j);
+                ClDates(ntrades) = date(indice_I); %controlla
+                i = indice_I;
+                display(['i = ' num2str(i)]);
                 break
                 
-            elseif P(j) <=  (Pbuy - devFluct2)
+            elseif Pminute(j) <=  (Pbuy - devFluct2)
                 
                 %r(j) =  P(j)-Pbuy-cost;
-                r(j) =  - devFluct2 - cost;
-                closingPrices(ntrades) = P(j);
-                ClDates(ntrades) = date(j);
-                i = j;
-                trades(i) = 0;
+                r(indice_I) =  - devFluct2 - cost;
+                closingPrices(ntrades) = Pbuy - devFluct2;
+                %closingPrices(ntrades) = Pminute(j);
+                ClDates(ntrades) = date(indice_I);
+                i = indice_I;
+                display(['i = ' num2str(i)]);
                 break
                 
             end
             
-            i = j;
+            i = indice_I;
             trades(i) = 1;
             
         end
         
-        % se il trend breve va sopra quello lungo compra short
+    % se il trend breve va sopra quello lungo compra short
     elseif ( s(i) > s(i-1) ) && s(i) == 1
         
         trades(i) = -1;
@@ -88,35 +90,37 @@ while i <= length(P)
         openingPrices(ntrades) = Pbuy;
         OpDates(ntrades) = date(i);
         
-        for j = i+1:length(P)
+        for j = newTimeScale*i+1:length(Pminute)
             
-            %devFluct2 = std(fluctuationslag((j-M):j));
-            %devFluct2 = std(lag((j-100):j));
-            standev(j) = devFluct2;
+            indice_I = floor(j/newTimeScale);
             
-            if P(j) <= (Pbuy - 5*devFluct2)
+            standev(indice_I) = devFluct2;
+            
+            if Pminute(j) <= (Pbuy - 5*devFluct2)
                 
                 %r(j) =  -(P(j)-Pbuy) - cost;
-                r(j) = 5*devFluct2 - cost;
-                closingPrices(ntrades) = P(j);
-                ClDates(ntrades) = date(j);
-                i = j;
-                trades(i) = 0;
+                r(indice_I) = 5*devFluct2 - cost;
+                closingPrices(ntrades) = Pbuy - 5*devFluct2;
+                %closingPrices(ntrades) = Pminute(j);
+                ClDates(ntrades) = date(indice_I); %controlla
+                i = indice_I;
+                display(['i = ' num2str(i)]);
                 break
                 
-            elseif P(j) >=  (Pbuy + devFluct2)
+            elseif Pminute(j) >=  (Pbuy + devFluct2)
                 
                 %r(j) =  -(P(j)-Pbuy) - cost;
-                r(j) = - devFluct2 - cost;
-                closingPrices(ntrades) = P(j);
-                ClDates(ntrades) = date(j);
-                i = j;
-                trades(i) = 0;
+                r(indice_I) = - devFluct2 - cost;
+                closingPrices(ntrades) = Pbuy + devFluct2;
+                %closingPrices(ntrades) = Pminute(j);
+                ClDates(ntrades) = date(indice_I); %controlla
+                i = indice_I;
+                display(['i = ' num2str(i)]);
                 break
                 
             end
             
-            i = j;
+            i = indice_I;
             trades(i) = -1;
             
         end

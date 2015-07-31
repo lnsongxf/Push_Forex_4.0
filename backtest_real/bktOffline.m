@@ -104,7 +104,7 @@ classdef bktOffline < handle
                     end
                     
                     matrix(end, 4) = hisData(indexHisData, 4);
-                    [oper, openValue, closeValue, stopLoss, noLoose, valueTp] = Algo_004_Ale(matrix);
+                    [oper, openValue, closeValue, stopLoss, noLoose, valueTp] = Algo_002_Ale(matrix);
                     
                     newState{1} = oper;
                     newState{2} = openValue;

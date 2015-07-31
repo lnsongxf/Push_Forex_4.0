@@ -37,7 +37,7 @@ end
 if newTimeScale > 1
     
     expert = TimeSeriesExpert_11;
-    expert.rescaleData(hisData,actTimeScale,newTimeScale)
+    expert.rescaleData(hisData,actTimeScale,newTimeScale);
     
     closeXmins = expert.closeVrescaled;
     dateXmins = expert.openDrescaled;
@@ -48,6 +48,7 @@ end
 %% prova semplice
  
 leadlag_Ale002(closeXmins,dateXmins,2,20,cost);
+%leadlag_doppiatimescale_Ale002(hisData(:,4),closeXmins,dateXmins,2,20,newTimeScale,cost);
 
 %% Estimate parameters over a range of values
 % Cambia entrambe le frequenze di smoothing per identificare la miglior
