@@ -97,7 +97,7 @@ classdef bktOffline < handle
                 
                 for j = 1:newTimeScale
                     
-                    indexHisData=i*newTimeScale+j-1;
+                    indexHisData=i*newTimeScale-(30 - j)-1;
                     
                     if indexHisData > lhisData
                         break
