@@ -263,6 +263,7 @@ classdef DecisionMaker_real02 < handle
             obj.direction = cState.suggestedDirection;
 
             currValue = p(end);
+            display(['opening price = ' num2str(currValue)]) ;
             operationState.actualOperation = obj.direction;
             
             params.set('openValue_',currValue);

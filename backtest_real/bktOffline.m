@@ -121,6 +121,7 @@ classdef bktOffline < handle
                         startingOperation = newState{1};
                         
                         display(['indexOpen =' num2str(indexOpen)]);
+                        display(['i Open =' num2str(i)]);
                         display(['startingOperation =' num2str(startingOperation)]);
                         
                         
@@ -139,6 +140,7 @@ classdef bktOffline < handle
                         display(['closeValue =' num2str(closeValue)]);
                         startingOperation = 0;
                         display('operation closed');
+                        display(['i Close =' num2str(i)]);
                         
                         
                     end

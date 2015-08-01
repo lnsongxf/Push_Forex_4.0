@@ -128,6 +128,7 @@ else
                 %                      TO CREATE
                 TakeP = floor(cState.suggestedTP);
                 StopL = floor(cState.suggestedSL);
+                display(['SL = ' num2str(StopL),' TP = ' num2str(TakeP)]) ;
                 
                 % 03b
                 % -------- decMaker direction manager --------------- %
