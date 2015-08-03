@@ -106,6 +106,7 @@ classdef PerformanceDistribution_03 < handle
             obj.HistData1min=HistData_1min_;
             obj.HistDatafreq=HistData_freq_;
             
+            % display(obj.HistData1min(1:10,:));
             
             s=size(obj.inputResultsMatrix);
             obj.rowHist=zeros(s(1),1);                                      % index of anykind of operations
@@ -119,6 +120,7 @@ classdef PerformanceDistribution_03 < handle
             
             for i = 1:s(1)
                 date=obj.inputResultsMatrix(i,7);
+                % datestr(date, 'mm/dd/yyyy HH:MM')
                 
                 [obj.rowHist(i),~,~] = find(obj.HistData1min(:,6)==date);
                 
@@ -169,8 +171,8 @@ classdef PerformanceDistribution_03 < handle
             
             volumep=obj.HistData1min(rp,5);
             volumen=obj.HistData1min(rn,5);
-            stickp=obj.HistData1min(rp,3)-obj.HistData1min(rp,2);
-            stickn=obj.HistData1min(rn,3)-obj.HistData1min(rn,2);
+            stickp=abs(obj.HistData1min(rp,3)-obj.HistData1min(rp,2));
+            stickn=abs(obj.HistData1min(rn,3)-obj.HistData1min(rn,2));
             energyp=(0.5.*volumep).*(stickp./obj.freq).^2;
             energyn=(0.5.*volumen).*(stickn./obj.freq).^2;
             
@@ -199,28 +201,28 @@ classdef PerformanceDistribution_03 < handle
             %   nstepeq after a given wrong/correct operation at time0
             
             colourp='-ob';
-            [obj,xcounterp,counterp,counterPercp]=nstepeqProbability(obj,obj.rowResp,nstepeq);
+            [obj,xcounterp,~,counterPercp]=nstepeqProbability(obj,obj.rowResp,nstepeq);
             
             colourn='-or';
-            [obj,xcountern,countern,counterPercn]=nstepeqProbability(obj,obj.rowResn,nstepeq);
+            [obj,xcountern,~,counterPercn]=nstepeqProbability(obj,obj.rowResn,nstepeq);
             
             figure
             title('Analysis of Returns Pattern');
             subplot(2,1,1)
             plot(xcounterp,counterPercp,colourp);
-            xlabel('tn (operation step)');
+            xlabel('delay time (operation step)');
             ylabel('Probability -/+op (%)');
             hold on
             plot(xcountern,counterPercn,colourn);
             
-            clear xcounterp counterp counterPercp xcountern countern counterPercn
+            clear xcounterp counterPercp xcountern counterPercn
             
             % probability to have a cluster of wrong/correct operation of
             %   dimenstion dim
             
-            [obj,xcounterp,counterp,counterPercp]=operationsClusterProbability(obj,obj.rowResp,dimCluster);
+            [obj,xcounterp,~,counterPercp]=operationsClusterProbability(obj,obj.rowResp,dimCluster);
             
-            [obj,xcountern,countern,counterPercn]=operationsClusterProbability(obj,obj.rowResn,dimCluster);
+            [obj,xcountern,~,counterPercn]=operationsClusterProbability(obj,obj.rowResn,dimCluster);
             
             subplot(2,1,2)
             plot(xcounterp,counterPercp,colourp);
@@ -241,7 +243,7 @@ classdef PerformanceDistribution_03 < handle
             limitPercEn=95;
             
             volumes=obj.HistData1min(index,5);
-            sticks=obj.HistData1min(index,3)-obj.HistData1min(index,2);
+            sticks=abs(obj.HistData1min(index,3)-obj.HistData1min(index,2));
             energies=(0.5.*volumes).*(sticks./obj.freq).^2;
             
             
@@ -260,18 +262,18 @@ classdef PerformanceDistribution_03 < handle
             subplot(3,2,1)
             [xPDFvol,hPDFvolp,hBinvolp]=PDF(obj.microParamsPos(:,5),0,xMax,n);
             [~,hPDFvoln,hBinvoln]=PDF(obj.microParamsNeg(:,5),0,xMax,n);
-            plot(xPDFvol,hPDFvolp,'-ob')
+            plot(xPDFvol,hPDFvolp,'-b')
             hold on
-            plot(xPDFvol,hPDFvoln,'-or')
+            plot(xPDFvol,hPDFvoln,'-r')
             xlabel('volume');
             ylabel('PDF');
             
             % plot the % of positive operations as a function of absolute volume
             subplot(3,2,2)
-            plot(xPDF,hCDF,'-ok');
+            plot(xPDF,hCDF,'-k');
             hold on
             volDiffperc=(hBinvolp.*100)./(hBinvolp+hBinvoln);
-            plot(xPDFvol,volDiffperc,'-or')
+            plot(xPDFvol,volDiffperc,'-r')
             axis([0 xMax 0 100]);
             xlabel('volume');
             ylabel('+operation/total (%)');
@@ -285,23 +287,24 @@ classdef PerformanceDistribution_03 < handle
             [hCDF]=CDF(hPDF);
             [~,indexMax,~]=find(hCDF>=limitPerc);
             xMax=xPDF(indexMax(1));
+            xMin=min(xPDF);
             
             subplot(3,2,3)
-            [xPDFvol,hPDFvolp,hBinvolp]=PDF(obj.microParamsPos(:,7),0,xMax,n);
-            [~,hPDFvoln,hBinvoln]=PDF(obj.microParamsNeg(:,7),0,xMax,n);
-            plot(xPDFvol,hPDFvolp,'-ob')
+            [xPDFvol,hPDFvolp,hBinvolp]=PDF(obj.microParamsPos(:,7),xMin,xMax,n);
+            [~,hPDFvoln,hBinvoln]=PDF(obj.microParamsNeg(:,7),xMin,xMax,n);
+            plot(xPDFvol,hPDFvolp,'-b')
             hold on
-            plot(xPDFvol,hPDFvoln,'-or')
+            plot(xPDFvol,hPDFvoln,'-r')
             xlabel('stick dimension');
             ylabel('PDF');
             
             % plot the % of positive operations as a function of stick dimension
             subplot(3,2,4)
-            plot(xPDF,hCDF,'-ok');
+            plot(xPDF,hCDF,'-k');
             hold on
             volDiffperc=(hBinvolp.*100)./(hBinvolp+hBinvoln);
-            plot(xPDFvol,volDiffperc,'-or')
-            axis([0 xMax 0 100]);
+            plot(xPDFvol,volDiffperc,'-r')
+            axis([xMin xMax 0 100]);
             xlabel('stick dimension');
             ylabel('+operation/total (%)');
             
@@ -318,9 +321,9 @@ classdef PerformanceDistribution_03 < handle
             subplot(3,2,5)
             [xPDFvol,hPDFvolp,hBinvolp]=PDF(obj.microParamsPos(:,8),0,xMax,n);
             [~,hPDFvoln,hBinvoln]=PDF(obj.microParamsNeg(:,8),0,xMax,n);
-            plot(xPDFvol,hPDFvolp,'-ob')
+            plot(xPDFvol,hPDFvolp,'-b')
             hold on
-            plot(xPDFvol,hPDFvoln,'-or')
+            plot(xPDFvol,hPDFvoln,'-r')
             xlabel('energy');
             ylabel('PDF');
             
@@ -329,7 +332,7 @@ classdef PerformanceDistribution_03 < handle
             plot(xPDF,hCDF,'-k');
             hold on
             volDiffperc=(hBinvolp.*100)./(hBinvolp+hBinvoln);
-            plot(xPDFvol,volDiffperc,'-or')
+            plot(xPDFvol,volDiffperc,'-r')
             axis([0 xMax 0 100]);
             xlabel('energy');
             ylabel('+operation/total (%)');
@@ -396,13 +399,14 @@ classdef PerformanceDistribution_03 < handle
             stop=max(rowHistfreqClosep(end),rowHistfreqClosen(end));
             rowHistDatafreq=start:stop;
             operHistDatafreq=obj.HistDatafreq(start:stop,1);
+            
             plot(rowHistDatafreq,operHistDatafreq,'-k')
             hold on
             plot(rowHistfreqOpenp,obj.inputResultsMatrix(obj.rowResp,2),'ob')
             plot(rowHistfreqClosep,obj.inputResultsMatrix(obj.rowResp,3),'*b')
             plot(rowHistfreqOpenn,obj.inputResultsMatrix(obj.rowResn,2),'or')
             plot(rowHistfreqClosen,obj.inputResultsMatrix(obj.rowResn,3),'*r')
-                        
+            % plotyy(cumsum(obj.inputResultsMatrix(:,4)-obj.transCost),'plot');
         end
         
         

@@ -3,9 +3,9 @@ classdef bktOffline < handle
     properties
         starthisData
         newHisData
-        iClose
-        iOpen
-        jClose
+        iCloseActTimeScale
+        iCloseNewTimeScale
+        iOpenNewTimeScale
         stopL
         takeP
         outputBktOffline
@@ -151,7 +151,7 @@ classdef bktOffline < handle
                         
                     elseif updatedOperation == 0 && abs(startingOperation) > 0
                         
-                        jC(indexOpen)=j;
+                        jC(indexOpen)=indexHisData;
                         iC(indexOpen)=i;
                         nCandelotto(indexOpen) = i;
                         indexClose = indexClose + 1;
@@ -185,9 +185,9 @@ classdef bktOffline < handle
             
             l = length(direction);
             
-            obj.jClose=jC;
-            obj.iClose=iC;
-            obj.iOpen=iO;
+            obj.iCloseActTimeScale=jC;
+            obj.iCloseNewTimeScale=iC;
+            obj.iOpenNewTimeScale=iO;
             obj.stopL=SL;
             obj.takeP=TP;
             
