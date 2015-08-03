@@ -1,7 +1,13 @@
 classdef bktOffline < handle
     
     properties
+        starthisData
         newHisData
+        iClose
+        iOpen
+        jClose
+        stopL
+        takeP
         outputBktOffline
         performance
     end
@@ -58,6 +64,8 @@ classdef bktOffline < handle
                 end
             end
             
+            obj.starthisData=hisData;
+            
             % riscala temporalmente se richiesto
             if newTimeScale > 1
                 
@@ -87,30 +95,36 @@ classdef bktOffline < handle
             closingDateNum = zeros(floor(lnewHisData/2), 1);
             nCandelotto = zeros(floor(lnewHisData/2), 1);
             lots = zeros(floor(lnewHisData/2), 1);
+            jC = zeros(floor(lnewHisData/2), 1);
+            iC = zeros(floor(lnewHisData/2), 1);
+            iO = zeros(floor(lnewHisData/2), 1);
+            SL = zeros(floor(lnewHisData/2), 1);
+            TP = zeros(floor(lnewHisData/2), 1);
+            matrix=zeros(nData+1,6);
             
             % da qui inizia il core dello spin
             tic
             
             for i = nData:lnewHisData
                 indexNewHisData=i-(nData-1);
-                matrix = obj.newHisData(indexNewHisData:i,:);
+                matrix(1:nData,:) = obj.newHisData(indexNewHisData:i,:);
                 
                 for j = 1:newTimeScale
                     
-                    indexHisData=i*newTimeScale-(30 - j)-1;
+                    indexHisData=i*newTimeScale+j-1;
                     
                     if indexHisData > lhisData
                         break
                     end
-                    
-                    matrix(end, 4) = hisData(indexHisData, 4);
-                    [oper, openValue, closeValue, stopLoss, noLoose, valueTp] = Algo_002_Ale(matrix);
+
+                    matrix(end,:) = hisData(indexHisData,:);
+                    [oper, openValue, closeValue, stopLoss, takeProfit, valueTp] = Algo_002_Ale(matrix);
                     
                     newState{1} = oper;
                     newState{2} = openValue;
                     newState{3} = closeValue;
                     newState{4} = stopLoss;
-                    newState{5} = noLoose;
+                    newState{5} = takeProfit;
                     newState{6} = valueTp;
                     
                     updatedOperation = newState{1};
@@ -118,6 +132,10 @@ classdef bktOffline < handle
                     if abs(updatedOperation) > 0 && startingOperation == 0
                         
                         indexOpen = indexOpen + 1;
+                        iO(indexOpen)=i;
+                        SL(indexOpen)=stopLoss;
+                        TP(indexOpen)=takeProfit;
+                        
                         startingOperation = newState{1};
                         
                         display(['indexOpen =' num2str(indexOpen)]);
@@ -133,6 +151,8 @@ classdef bktOffline < handle
                         
                     elseif updatedOperation == 0 && abs(startingOperation) > 0
                         
+                        jC(indexOpen)=j;
+                        iC(indexOpen)=i;
                         nCandelotto(indexOpen) = i;
                         indexClose = indexClose + 1;
                         closingPrice(indexOpen) = newState{3};
@@ -156,8 +176,22 @@ classdef bktOffline < handle
             openingDateNum = openingDateNum(1:indexClose);
             closingDateNum = closingDateNum(1:indexClose);
             lots = lots(1:indexClose);
+            
+            jC=jC(1:indexClose);
+            iC=iC(1:indexClose);
+            iO=iO(1:indexClose);
+            SL=SL(1:indexClose);
+            TP=TP(1:indexClose);
+            
             l = length(direction);
             
+            obj.jClose=jC;
+            obj.iClose=iC;
+            obj.iOpen=iO;
+            obj.stopL=SL;
+            obj.takeP=TP;
+            
+                        
             obj.outputBktOffline = zeros(l,8);
             
             obj.outputBktOffline(:,1) = nCandelotto(1:l);       % index of stick

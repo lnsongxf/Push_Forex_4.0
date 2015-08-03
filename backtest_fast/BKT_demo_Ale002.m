@@ -1,9 +1,9 @@
 %% Fast backtest using two moving averages, similar to Algo Ale_002
 % cambia i parametri in input qui sotto o fallo girare csi com'è
 
-close all
-clear all
-
+% close all
+% clear all
+% 
 
 %annualScaling = sqrt(250);
 %annualScaling = sqrt(360000);
@@ -47,8 +47,8 @@ end
 
 %% prova semplice
  
-leadlag_Ale002(closeXmins,dateXmins,2,20,cost);
-%leadlag_doppiatimescale_Ale002(hisData(:,4),closeXmins,dateXmins,2,20,newTimeScale,cost);
+%leadlag_Ale002(closeXmins,dateXmins,2,20,cost);
+[outputmio,standev,s,lead,lag] = leadlag_doppiatimescale_Ale002(hisData(:,4),closeXmins,dateXmins,2,20,newTimeScale,cost);
 
 %% Estimate parameters over a range of values
 % Cambia entrambe le frequenze di smoothing per identificare la miglior

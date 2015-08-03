@@ -37,7 +37,7 @@ while i <= length(P)
         display(['ntrade = ' num2str(ntrades+1)]);
         display(['opening i = ' num2str(i+1)]);
         trades(i) = 1;
-        Pbuy = P(i+1);
+        Pbuy = P(i);
         display(['opening price = ' num2str(Pbuy)]);
         devFluct2 = std(fluctuationslag((i-(100-M)-1):(i-1)));
         display(['SL = ', num2str(floor(devFluct2)),' TP =', num2str(floor(5*devFluct2))]);
@@ -47,7 +47,7 @@ while i <= length(P)
         openingPrices(ntrades) = Pbuy;
         OpDates(ntrades) = date(i);
         
-        for j = newTimeScale*(i+1)+1:length(Pminute)
+        for j = newTimeScale*(i)+1:length(Pminute)
             
             indice_I = floor(j/newTimeScale);
             
@@ -90,7 +90,7 @@ while i <= length(P)
         display(['ntrade = ' num2str(ntrades+1)]);
         display(['opening i = ' num2str(i+1)]);
         trades(i) = -1;
-        Pbuy = P(i+1);
+        Pbuy = P(i);
         display(['opening price = ' num2str(Pbuy)]);
         devFluct2 = std(fluctuationslag((i-(100-M)-1):(i-1)));
         display(['SL = ', num2str(floor(devFluct2)),' TP =', num2str(floor(5*devFluct2))]);
@@ -100,7 +100,7 @@ while i <= length(P)
         openingPrices(ntrades) = Pbuy;
         OpDates(ntrades) = date(i);
         
-        for j = newTimeScale*(i+1)+1:length(Pminute)
+        for j = newTimeScale*(i)+1:length(Pminute)
             
             indice_I = floor(j/newTimeScale);
             
