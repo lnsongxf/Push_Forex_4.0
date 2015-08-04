@@ -1,4 +1,4 @@
-function [outputmio,standev,s,lead,lag] = leadlag_doppiatimescale_Ale002(Pminute,P,date,N,M,newTimeScale,cost)
+function [outputmio,iOpen,iClose,jClose,standev,s,lead,lag] = leadlag_doppiatimescale_Ale002(Pminute,P,date,N,M,newTimeScale,cost)
 
 
 %% simula algo Ale002
@@ -26,6 +26,9 @@ closingPrices=zeros(size(P));
 direction=zeros(size(P));
 OpDates=zeros(size(P));
 ClDates=zeros(size(P));
+iOpen=zeros(size(P));
+iClose=zeros(size(P));
+jClose=zeros(size(P));
 i = 101;
 
 
@@ -39,7 +42,7 @@ while i <= length(P)
         trades(i) = 1;
         Pbuy = P(i);
         display(['opening price = ' num2str(Pbuy)]);
-        devFluct2 = std(fluctuationslag((i-(100-M)-1):(i-1)));
+        devFluct2 = std(fluctuationslag((i-(100-M)):(i-1)));
         display(['SL = ', num2str(floor(devFluct2)),' TP =', num2str(floor(5*devFluct2))]);
         ntrades = ntrades + 1;
         direction(ntrades)=1;
@@ -61,6 +64,8 @@ while i <= length(P)
                 display(['closing price= ' num2str(closingPrices(ntrades))]);
                 %closingPrices(ntrades) = Pminute(j);
                 ClDates(ntrades) = date(indice_I); %controlla
+                iClose(ntrades) = indice_I;
+                jClose(ntrades) = j;
                 i = indice_I;
                 display(['closing i = ' num2str(i)]);
                 break
@@ -73,6 +78,8 @@ while i <= length(P)
                 display(['closing price= ' num2str(closingPrices(ntrades))]);
                 %closingPrices(ntrades) = Pminute(j);
                 ClDates(ntrades) = date(indice_I);
+                iClose(ntrades) = indice_I;
+                jClose(ntrades) = j;
                 i = indice_I;
                 display(['closing i = ' num2str(i)]);
                 break
@@ -92,7 +99,7 @@ while i <= length(P)
         trades(i) = -1;
         Pbuy = P(i);
         display(['opening price = ' num2str(Pbuy)]);
-        devFluct2 = std(fluctuationslag((i-(100-M)-1):(i-1)));
+        devFluct2 = std(fluctuationslag((i-(100-M)):(i-1)));
         display(['SL = ', num2str(floor(devFluct2)),' TP =', num2str(floor(5*devFluct2))]);
         ntrades = ntrades + 1;
         direction(ntrades)=-1;
@@ -114,6 +121,8 @@ while i <= length(P)
                 display(['closing price= ' num2str(closingPrices(ntrades))]);
                 %closingPrices(ntrades) = Pminute(j);
                 ClDates(ntrades) = date(indice_I); %controlla
+                iClose(ntrades) = indice_I;
+                jClose(ntrades) = j;
                 i = indice_I;
                 display(['closing i = ' num2str(i)]);
                 break
@@ -126,6 +135,8 @@ while i <= length(P)
                 display(['closing price= ' num2str(closingPrices(ntrades))]);
                 %closingPrices(ntrades) = Pminute(j);
                 ClDates(ntrades) = date(indice_I); %controlla
+                iClose(ntrades) = indice_I;
+                jClose(ntrades) = j;
                 i = indice_I;
                 display(['closing i = ' num2str(i)]);
                 break
@@ -162,6 +173,9 @@ outputmio(:,8) = ClDates(1:ntrades);        % closing date in day to convert use
 outputmio(:,9) = ones(ntrades,1)*1;                           % lots setted for single operation
 
 
+iOpen=chei(1:ntrades);
+iClose=iClose(1:ntrades);
+jClose=jClose(1:ntrades);
 
 
 if nargout == 0 % Plot
