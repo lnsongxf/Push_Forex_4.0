@@ -13,7 +13,8 @@
 
 %input parameters:
 
-hisData=load('EURUSD_smallsample2014_2015.csv');
+hisData=load('EURUSD_2012_2015.csv');
+%hisData=load('EURUSD_smallsample2014_2015.csv');
 actTimeScale = 1;
 newTimeScale = 30;
 cost = 1; % spread
@@ -48,7 +49,7 @@ end
 %% prova semplice
  
 %leadlag_Ale002(closeXmins,dateXmins,2,20,cost);
-[outputmio,standev,s,lead,lag] = leadlag_doppiatimescale_Ale002(hisData(:,4),closeXmins,dateXmins,2,20,newTimeScale,cost);
+ %[outputmio,iOpen,iClose,jClose,standev,s,lead,lag]  = leadlag_doppiatimescale_Ale002(hisData(:,4),closeXmins,dateXmins,2,20,newTimeScale,cost,1,5);
 
 %% Estimate parameters over a range of values
 % Cambia entrambe le frequenze di smoothing per identificare la miglior
@@ -56,27 +57,30 @@ end
 
 % NOTA: devo ancora modificarlo per fargli usare performance05...
 
-% sharpes = nan(100,100);
-% 
-% tic
-% for n = 1:5 
-%     for m = n+(floor(n/2))+1:10
-%         
-%         sharpes(n,m)=leadlag_Ale002(closeXmins,dateXmins,n,m,cost);
-%         
-%     end
-% end
-% toc
+sharpes = nan(10,10);
 
-% visualizza i risultati come surface plot
-%sweepPlotMA(sharpes)
+tic
+for n = 1:10 
+    for m = 1:10
+        
+        [sharpes(n,m),~]=leadlag_doppiatimescale_Ale002(hisData(:,4),closeXmins,dateXmins,2,20,newTimeScale,cost,n,m);
+        
+    end
+end
+toc
+
+%visualizza i risultati come surface plot
+sweepPlotMA(sharpes)
 
 %% Plot best Sharpe ratio
 % occhio che ind2sub deve prender come primo parametro la lunghezza della
 % matrice sharpes, e che lavora solo su matrici quadrate
 
-% [~, bestInd] = max(sharpes(:)); % (Linear) location of max value
-% [bestM, bestN] = ind2sub(100, bestInd); % Lead and lag at best value
-% 
-%  leadlag_Ale002(closeXmins, bestM, bestN,cost)
+ [~, bestInd] = max(sharpes(:)); % (Linear) location of max value
+ [bestN, bestM] = ind2sub(10, bestInd); % Lead and lag at best value
+
+[~,outputmio]= leadlag_doppiatimescale_Ale002(hisData(:,4),closeXmins,dateXmins,2,20,newTimeScale,cost,bestN,bestM);
+
+p = Performance_05;
+obj.performance = p.calcSinglePerformance('Ale002','bktWeb','EURUSD',newTimeScale,cost,10000,10,outputmio);
 

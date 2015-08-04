@@ -93,7 +93,7 @@ classdef Parameters < handle
             obj.set('closeValue',obj.get('openValue_') +obj.get('stopLoss__')*(-operStates.actualOperation));
             operStates.lastOperation    = operStates.actualOperation;
             operStates.actualOperation  = 0;
-            operStates.lock             = 1;
+            operStates.lock             = 0;
             operStates.phase            = 0;
             % obj.set('alfa______',obj.get('newAlfa___'));
             % display (strcat ('Guadagno netto: ',mat2str (-1*abs (obj.get('closeValue') - obj.get('openValue_')))));
@@ -116,7 +116,7 @@ classdef Parameters < handle
             obj.set('closeValue',obj.get('valueTp___'));
             operStates.lastOperation    = operStates.actualOperation;
             operStates.actualOperation  = 0;
-            operStates.lock             = 1;
+            operStates.lock             = 0;
             operStates.phase            = 0;
             % obj.set('alfa___ ___',obj.get('newAlfa___'));
             % display (strcat ('Guadagno netto: ',mat2str (abs (obj.get('closeValue') - obj.get('openValue_')))));
