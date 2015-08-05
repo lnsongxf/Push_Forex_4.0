@@ -73,12 +73,37 @@ classdef Performance_05 < handle
         
         %% Function to calculate all the performance parameters of a single result matrix
         
-        function obj=calcSinglePerformance(obj,nameAlgo_,origin_,cross_,freq_,transCost_,initialStack_,leverage_,inputResultsMatrix_)
+        function obj=calcSinglePerformance(obj,nameAlgo_,origin_,cross_,freq_,transCost_,initialStack_,leverage_,inputResultsMatrix_,plotPerformance)
             
             %
-            % example of the use:
+            % DESCRIPTION:
+            % -------------------------------------------------------------
+            % This function calculates the Performance of the tested Algo
+            %
+            % INPUT parameters:
+            % -------------------------------------------------------------
+            % nameAlgo_             ... name of the tested Algo
+            % origin_               ... origin of the results (ex: bktWeb, demo, bkt)
+            % cross_                ... cross considered (ex: EURUSD)
+            % freq_                 ... frequency of data used (ex: 5 mins)
+            % transCost_            ... transaction cost (spread)
+            % initialStack_         ... starting money
+            % leverage_             ... leverage to use in the real Algo
+            % inputResultsMatrix_   ... matrix of results coming from the test
+            % plotPerformance       ... check variable for plotting (1) or
+            %                           not all the calculated Performance
+            %                           properties
+            %
+            % OUTPUT parameters:
+            % -------------------------------------------------------------
+            %
+            %
+            %
+            % EXAMPLE of use:
+            % -------------------------------------------------------------
             % After having created the object with the name: 'objname'
-            % objname=objname.calcSinglePerformance('real_17','bktWeb','EURUSD',5,1,outputBktWeb)
+            % objname=Performance_05;
+            % objname=objname.calcSinglePerformance('real_17','bktWeb','EURUSD',30,1,1000,10,outputBktWeb,1);
             %
             
             
@@ -103,17 +128,17 @@ classdef Performance_05 < handle
             obj.transCost=transCost_;
             obj.initialStack=initialStack_;
             obj.leverage=leverage_;
-            obj=obj.SharpeRatio(colour);
+            obj=obj.SharpeRatio(colour,plotPerformance);
             obj=obj.RicciRatio;
-            obj=obj.DrawDown;            
+            obj=obj.DrawDown;
             
-        end        
+        end
         
         
         
         %% Function to calculate all the performance parameters
         
-        function obj=calcComparedPerformance(obj,nameAlgo_,origin1_,origin2_,cross_,freq_,transCost1_,transCost2_,inputResultsMatrix1_,inputResultsMatrix2_)
+        function obj=calcComparedPerformance(obj,nameAlgo_,origin1_,origin2_,cross_,freq_,transCost1_,transCost2_,inputResultsMatrix1_,inputResultsMatrix2_,plotPerformance)
             
             %
             % example of the use:
@@ -144,9 +169,9 @@ classdef Performance_05 < handle
             obj.cross=cross_;
             obj.freq=freq_;
             obj.transCost=transCost1_;
-            obj=obj.SharpeRatio(colour);
+            obj=obj.SharpeRatio(colour,plotPerformance);
             obj=obj.RicciRatio;
-            obj=obj.DrawDown; 
+            obj=obj.DrawDown;
             
             [name]=dateNameCreator(obj.period);
             name2=strcat(name,'_',origin1_,'.mat');
@@ -164,51 +189,51 @@ classdef Performance_05 < handle
             
             
             if origin2_ ~= 0
-               
-            if strcmp(origin2_,'bktWeb')
-                obj.inputResultsMatrix=inputResultsMatrix2_;
-                c=1;
-            elseif strcmp(origin2_,'demo')
-                obj.inputResultsMatrix=inputResultsMatrix2_;
-                c=2;
-            elseif strcmp(origin2_,'bkt')
-                obj.inputResultsMatrix=inputResultsMatrix2_;
-                c=3;
-            else
-                h=msgbox('please indicate as origin2: bktWeb, demo, bkt','WARN','warn');
-                waitfor(h)
-                return
-            end
-            
-            colour='k';
-            
-            obj.nameAlgo=nameAlgo_;
-            obj.origin=origin2_;
-            obj.cross=cross_;
-            obj.freq=freq_;
-            obj.transCost=transCost2_;
-            obj=obj.SharpeRatio(colour);
-            obj=obj.RicciRatio;
-            obj=obj.DrawDown;
-            
-            [name]=dateNameCreator(obj.period);
-            name2=strcat(name,'_',origin2_,'.mat');
-            switch c
-                case 1
-                    P_bktWeb2=obj; %#ok<NASGU>
-                    save(name2,'P_bktWeb2')
-                case 2
-                    P_demo2=obj; %#ok<NASGU>
-                    save(name2,'P_demo2')
-                case 3
-                    P_bkt2=obj; %#ok<NASGU>
-                    save(name2,'P_bkt2')
-            end
-
-            
-            end
+                
+                if strcmp(origin2_,'bktWeb')
+                    obj.inputResultsMatrix=inputResultsMatrix2_;
+                    c=1;
+                elseif strcmp(origin2_,'demo')
+                    obj.inputResultsMatrix=inputResultsMatrix2_;
+                    c=2;
+                elseif strcmp(origin2_,'bkt')
+                    obj.inputResultsMatrix=inputResultsMatrix2_;
+                    c=3;
+                else
+                    h=msgbox('please indicate as origin2: bktWeb, demo, bkt','WARN','warn');
+                    waitfor(h)
+                    return
+                end
+                
+                colour='k';
+                
+                obj.nameAlgo=nameAlgo_;
+                obj.origin=origin2_;
+                obj.cross=cross_;
+                obj.freq=freq_;
+                obj.transCost=transCost2_;
+                obj=obj.SharpeRatio(colour,plotPerformance);
+                obj=obj.RicciRatio;
+                obj=obj.DrawDown;
+                
+                [name]=dateNameCreator(obj.period);
+                name2=strcat(name,'_',origin2_,'.mat');
+                switch c
+                    case 1
+                        P_bktWeb2=obj; %#ok<NASGU>
+                        save(name2,'P_bktWeb2')
+                    case 2
+                        P_demo2=obj; %#ok<NASGU>
+                        save(name2,'P_demo2')
+                    case 3
+                        P_bkt2=obj; %#ok<NASGU>
+                        save(name2,'P_bkt2')
+                end
                 
                 
+            end
+            
+            
             
         end
         
@@ -219,7 +244,7 @@ classdef Performance_05 < handle
         
         %% Sharpe Ratio Calculation
         
-        function obj=SharpeRatio(obj,colour)
+        function obj=SharpeRatio(obj,colour,plotPerformance)
             
             [row,~,r] = find(obj.inputResultsMatrix(:,4).*obj.inputResultsMatrix(:,6));
             % Returns=floor(r);
@@ -265,7 +290,7 @@ classdef Performance_05 < handle
             numOper=length(returns);
             dailyNumOper=zeros(day(end),1);
             
-           
+            
             if daysOper<1
                 h=msgbox('insert a BKT longer than 1 day','WARN','warn');
                 waitfor(h)
@@ -287,7 +312,7 @@ classdef Performance_05 < handle
                     dailyNumOper(actDay)=dailyNumOper(actDay)+1;
                 end
             end
-                      
+            
             [~,~,obj.ferialNetReturns]= find(dailyNetReturns);
             [~,~,obj.ferialNetReturnsEuro]= find(dailyNetReturnsEuro);
             [~,~,obj.ferialNetReturnsEuroPerc]= find(dailyNetReturnsEuroPerc);
@@ -316,85 +341,88 @@ classdef Performance_05 < handle
             ProfitLossPips=cumsum(NetReturnsPips);
             ProfitLossEuro=cumsum(NetReturnsEuro);
             
-            %figure
             
-            startDate = datenum(firstDay);
-            endDate = datenum(lastDay);
-            xData = linspace(startDate,endDate,daysOper);
-            lin1=zeros(numOper);
-            lin2=zeros(daysOper);
-            
-            %cLine=strcat('-',colour);
-            cLine=colour;
-            cCurve=colour;
-            
-            
-            figure
-            plot(ProfitLossPips,cLine);
-            title('cumulative Excess of Returns per operation in pips');
-            %axis([0 numOper+2 min(PL)-5 max(PL)+5]);
-            hold on
-            plot(lin1,'-c');
-            
-            figure            
-            plot(ProfitLossEuro,cLine);
-            title('cumulative Excess of Returns per operation in Euro');
-            %axis([0 numOper+2 min(PL)-5 max(PL)+5]);
-            hold on
-            plot(lin1,'-c');
-                       
-            figure;
-            plot(xData,dailyNumOper,cCurve);
-            title('number of operations per day');
-            hold on
-            plot(xData,lin2);                  
-            set(gca,'XTick',xData);
-            datetick('x','dd','keepticks');
-
-                        
-            figure
-                       
-            p(1)=subplot(2,3,1);
-            plot(xData,dailyNetReturns,cCurve);
-            title('daily Excess of Returns');
-            hold on
-            plot(xData,lin2);
-            
-            p(2)=subplot(2,3,4);
-            plot(xData,cumsum(dailyNetReturns),cCurve);
-            title('cumulative Excess of Returns per day');
-            hold on
-            plot(xData,lin2);
-            
-            p(3)=subplot(2,3,2);
-            plot(xData,dailyNetReturnsEuro,cCurve);
-            title('daily Excess of Returns in Euro');
-            hold on
-            plot(xData,lin2);
-            
-            p(4)=subplot(2,3,5);
-            plot(xData,cumsum(dailyNetReturnsEuro)+obj.initialStack,cCurve);
-            title('cumulative Excess of Returns per day in Euro');
-            hold on
-            plot(xData,lin2);
-            
-            p(5)=subplot(2,3,3);
-            plot(xData,dailyNetReturnsEuroPerc,cCurve);
-            title('daily Excess of Returns in %');
-            hold on
-            plot(xData,lin2);
-            
-            p(6)=subplot(2,3,6);
-            plot(xData,cumsum(dailyNetReturnsEuroPerc),cCurve);
-            title('cumulative Excess of Returns per day in %');
-            hold on
-            plot(xData,lin2);
-            
-            set(p,'XTick',xData);
-            for i=1:6
-                datetick(p(i),'x','dd','keepticks');
+            if plotPerformance ==1
+                %figure
+                
+                startDate = datenum(firstDay);
+                endDate = datenum(lastDay);
+                xData = linspace(startDate,endDate,daysOper);
+                lin1=zeros(numOper);
+                lin2=zeros(daysOper);
+                
+                %cLine=strcat('-',colour);
+                cLine=colour;
+                cCurve=colour;
+                
+                
+                figure
+                plot(ProfitLossPips,cLine);
+                title('cumulative Excess of Returns per operation in pips');
+                %axis([0 numOper+2 min(PL)-5 max(PL)+5]);
+                hold on
+                plot(lin1,'-c');
+                
+                figure
+                plot(ProfitLossEuro,cLine);
+                title('cumulative Excess of Returns per operation in Euro');
+                %axis([0 numOper+2 min(PL)-5 max(PL)+5]);
+                hold on
+                plot(lin1,'-c');
+                
+                figure;
+                plot(xData,dailyNumOper,cCurve);
+                title('number of operations per day');
+                hold on
+                plot(xData,lin2);
+                set(gca,'XTick',xData);
+                datetick('x','dd','keepticks');
+                
+                
+                figure
+                
+                p(1)=subplot(2,3,1);
+                plot(xData,dailyNetReturns,cCurve);
+                title('daily Excess of Returns');
+                hold on
+                plot(xData,lin2);
+                
+                p(2)=subplot(2,3,4);
+                plot(xData,cumsum(dailyNetReturns),cCurve);
+                title('cumulative Excess of Returns per day');
+                hold on
+                plot(xData,lin2);
+                
+                p(3)=subplot(2,3,2);
+                plot(xData,dailyNetReturnsEuro,cCurve);
+                title('daily Excess of Returns in Euro');
+                hold on
+                plot(xData,lin2);
+                
+                p(4)=subplot(2,3,5);
+                plot(xData,cumsum(dailyNetReturnsEuro)+obj.initialStack,cCurve);
+                title('cumulative Excess of Returns per day in Euro');
+                hold on
+                plot(xData,lin2);
+                
+                p(5)=subplot(2,3,3);
+                plot(xData,dailyNetReturnsEuroPerc,cCurve);
+                title('daily Excess of Returns in %');
+                hold on
+                plot(xData,lin2);
+                
+                p(6)=subplot(2,3,6);
+                plot(xData,cumsum(dailyNetReturnsEuroPerc),cCurve);
+                title('cumulative Excess of Returns per day in %');
+                hold on
+                plot(xData,lin2);
+                
+                set(p,'XTick',xData);
+                for i=1:6
+                    datetick(p(i),'x','dd','keepticks');
+                end
+                
             end
-            
             
             
         end
@@ -514,7 +542,7 @@ classdef Performance_05 < handle
         end
         
         
-       
+        
     end
     
     
