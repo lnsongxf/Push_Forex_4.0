@@ -210,6 +210,9 @@ function compile(flags, file, outputdir)
     % Inexplicably just using quotes (`sprintf('"%s"', outputfile)` or
     % `['"' outputfile '"']` ) does not work on Windows, even when there are not
     % whitespaces.
+    
+    flags = { ['-I' 'C:\code\Push_Forex_4.0\nodeM\MatlabZeroMQ\matlab-zmq\src'], ['-I' 'C:\PROGRA~1\ZEROMQ~1.4\include'],['-L' 'C:\PROGRA~1\ZEROMQ~1.4\lib\'],['-l' 'libzmq-v120-mt-4_0_4']};
+  
     mex('-largeArrayDims', '-O', flags{:}, deps{:}, file, '-output', outputfile);
   end
 end
