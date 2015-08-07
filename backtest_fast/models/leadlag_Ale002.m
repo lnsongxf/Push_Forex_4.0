@@ -36,7 +36,7 @@ while i <= length(P)
         
         trades(i) = 1;
         Pbuy = P(i);
-        devFluct2 = floor(std(fluctuationslag((i-(100-M)-1):(i-1))));
+        devFluct2 = floor(std(fluctuationslag((i-(100-M)):i)));
         ntrades = ntrades + 1;
         direction(ntrades)=1;
         chei(ntrades)=i;
@@ -52,7 +52,7 @@ while i <= length(P)
             if P(j) >= (Pbuy + 5*devFluct2)
                 
                 %r(j) =  P(j)-Pbuy-cost;
-                r(j) = 5*devFluct2 - cost;
+                r(j) = P(j) - Pbuy  - cost;
                 closingPrices(ntrades) = P(j);
                 ClDates(ntrades) = date(j);
                 i = j;
@@ -62,7 +62,7 @@ while i <= length(P)
             elseif P(j) <=  (Pbuy - devFluct2)
                 
                 %r(j) =  P(j)-Pbuy-cost;
-                r(j) =  - devFluct2 - cost;
+                r(j) =  P(j) - Pbuy  - cost;
                 closingPrices(ntrades) = P(j);
                 ClDates(ntrades) = date(j);
                 i = j;
@@ -81,7 +81,7 @@ while i <= length(P)
         
         trades(i) = -1;
         Pbuy = P(i);
-        devFluct2 = floor(std(fluctuationslag((i-(100-M)-1):(i-1))));
+        devFluct2 = floor(std(fluctuationslag((i-(100-M)):i)));
         ntrades = ntrades + 1;
         direction(ntrades)=-1;
         chei(ntrades)=i;
@@ -97,7 +97,7 @@ while i <= length(P)
             if P(j) <= (Pbuy - 5*devFluct2)
                 
                 %r(j) =  -(P(j)-Pbuy) - cost;
-                r(j) = 5*devFluct2 - cost;
+                r(j) = - ( P(j) - Pbuy )  - cost;
                 closingPrices(ntrades) = P(j);
                 ClDates(ntrades) = date(j);
                 i = j;
@@ -107,7 +107,7 @@ while i <= length(P)
             elseif P(j) >=  (Pbuy + devFluct2)
                 
                 %r(j) =  -(P(j)-Pbuy) - cost;
-                r(j) = - devFluct2 - cost;
+                r(j) = - ( P(j) - Pbuy )  - cost;
                 closingPrices(ntrades) = P(j);
                 ClDates(ntrades) = date(j);
                 i = j;
