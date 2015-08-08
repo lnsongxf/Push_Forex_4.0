@@ -15,6 +15,7 @@
 
 %hisData=load('EURUSD_2012_2015.csv');
 hisData=load('EURUSD_smallsample2014_2015.csv');
+cross = 'EURUSD';
 actTimeScale = 1;
 newTimeScale = 30;
 cost = 1; % spread
@@ -22,6 +23,7 @@ cost = 1; % spread
 
 
 [r,c] = size(hisData);
+
 
 % includi colonna delle date se non esiste nel file di input
 if c == 5
@@ -34,53 +36,102 @@ if c == 5
     
 end
 
+% dividi lo storico in test per ottimizzare l'algo e paper trading
+% (75% dello storico è Test, l'ultimo 25% paper trading)
+rTest = floor(r*0.75);
+hisDataTest = hisData(1:rTest,:);
+hisDataPaperTrad = hisData(rTest+1:end,:);
+
+
 % riscala temporalmente se richiesto
 if newTimeScale > 1
     
     expert = TimeSeriesExpert_11;
-    expert.rescaleData(hisData,actTimeScale,newTimeScale);
+    expert.rescaleData(hisDataTest,actTimeScale,newTimeScale);
     
-    closeXmins = expert.closeVrescaled;
-    dateXmins = expert.openDrescaled;
+    closeXminsTest = expert.closeVrescaled;
+    dateXminsTest = expert.openDrescaled;
+    
+    expert.rescaleData(hisDataPaperTrad,actTimeScale,newTimeScale);
+    
+    closeXminsPaperTrad = expert.closeVrescaled;
+    dateXminsPaperTrad = expert.openDrescaled;
+    
     
 end
 
 
 %% prova semplice
- 
-%leadlag_Ale002(closeXmins,dateXmins,2,20,cost);
- %[outputmio,iOpen,iClose,jClose,standev,s,lead,lag]  = leadlag_doppiatimescale_Ale002(hisData(:,4),closeXmins,dateXmins,2,20,newTimeScale,cost,1,5);
+
+% bktfast2=bkt_fast_Ale002;
+% bktfast2=bktfast2.fast_Ale002(hisDataTest(:,4),closeXminsTest,dateXminsTest,2,20,newTimeScale,cost,1,5,0);
 
 %% Estimate parameters over a range of values
-% Cambia entrambe le frequenze di smoothing per identificare la miglior
-% combinazione (lead è lo smoothing veloce, lag lo smoothing lento)
+% Puoi cambiare o le frequenze di smoothing (2,20 default)
+% oppure il numero di deviazioni standard per SL e TP (1,5 default)
 
 % NOTA: devo ancora modificarlo per fargli usare performance05...
 
-sharpes = nan(10,10);
+R_over_maxDD = nan(10,10);
+
 
 tic
-for n = 1:10 
+for n = 1:10
+    
+    display(['n =', num2str(n)]);
+    
     for m = 1:10
         
-        [sharpes(n,m),~]=leadlag_doppiatimescale_Ale002(hisData(:,4),closeXmins,dateXmins,2,20,newTimeScale,cost,n,m);
+%         display(['n =', num2str(n),' m = ',  num2str(m)]);
+        
+        bktfast=bkt_fast_Ale002;
+        bktfast=bktfast.fast_Ale002(hisDataTest(:,4),closeXminsTest,dateXminsTest,2,20,newTimeScale,cost,n,m,0);
+        
+        p = Performance_05;
+        performance = p.calcSinglePerformance('Ale002','bktWeb',cross,newTimeScale,cost,10000,10,bktfast.outputbkt,0);
+        
+        R_over_maxDD(n,m) = performance.pipsEarned / abs(performance.maxDD);
         
     end
 end
 toc
 
 %visualizza i risultati come surface plot
-sweepPlotMA(sharpes)
+sweepPlot_BKT_Fast(R_over_maxDD)
 
-%% Plot best Sharpe ratio
+
+
+%% Plot best performance from Test
 % occhio che ind2sub deve prender come primo parametro la lunghezza della
-% matrice sharpes, e che lavora solo su matrici quadrate
+% matrice dei risultati, e che lavora solo su matrici quadrate
 
- [~, bestInd] = max(sharpes(:)); % (Linear) location of max value
+ [~, bestInd] = max(R_over_maxDD(:)); % (Linear) location of max value
  [bestN, bestM] = ind2sub(10, bestInd); % Lead and lag at best value
+ 
+ display(['bestN =', num2str(bestN),' bestM =', num2str(bestM)]);
 
-[~,outputmio]= leadlag_doppiatimescale_Ale002(hisData(:,4),closeXmins,dateXmins,2,20,newTimeScale,cost,bestN,bestM);
+bktfastTest=bkt_fast_Ale002;
+bktfastTest=bktfastTest.fast_Ale002(hisDataTest(:,4),closeXminsTest,dateXminsTest,2,20,newTimeScale,cost,bestN,bestM,0);
 
 p = Performance_05;
-obj.performance = p.calcSinglePerformance('Ale002','bktWeb','EURUSD',newTimeScale,cost,10000,10,outputmio);
+performanceTest = p.calcSinglePerformance('Ale002','bktWeb',cross,newTimeScale,cost,10000,10,bktfastTest.outputbkt,0);
+
+risultato = performanceTest.pipsEarned / abs(performanceTest.maxDD);
+
+figure
+plot(cumsum(bktfastTest.outputbkt(:,4)))
+title(['Test Best Result, Final R over maxDD = ',num2str( risultato) ])
+
+%% now the final check using the Paper Trading
+
+bktfastPaperTrading=bkt_fast_Ale002;
+bktfastPaperTrading=bktfastPaperTrading.fast_Ale002(hisDataPaperTrad(:,4),closeXminsPaperTrad,dateXminsPaperTrad,2,20,newTimeScale,cost,bestN,bestM,0);
+
+p = Performance_05;
+performancePaperTrad = p.calcSinglePerformance('Ale002','bktWeb',cross,newTimeScale,cost,10000,10,bktfastPaperTrading.outputbkt,0);
+risultato = performancePaperTrad.pipsEarned / abs(performancePaperTrad.maxDD);
+
+figure
+plot(cumsum(bktfastPaperTrading.outputbkt(:,4)))
+title(['Paper Trading Result, Final R over maxDD = ',num2str( risultato) ])
 
