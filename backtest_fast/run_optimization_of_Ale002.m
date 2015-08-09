@@ -72,7 +72,8 @@ end
 
 % NOTA: devo ancora modificarlo per fargli usare performance05...
 
-R_over_maxDD = nan(10,10);
+matrixsize = 10;
+R_over_maxDD = nan(matrixsize,matrixsize);
 
 
 tic
@@ -106,7 +107,7 @@ sweepPlot_BKT_Fast(R_over_maxDD)
 % matrice dei risultati, e che lavora solo su matrici quadrate
 
  [~, bestInd] = max(R_over_maxDD(:)); % (Linear) location of max value
- [bestN, bestM] = ind2sub(10, bestInd); % Lead and lag at best value
+ [bestN, bestM] = ind2sub(matrixsize, bestInd); % Lead and lag at best value
  
  display(['bestN =', num2str(bestN),' bestM =', num2str(bestM)]);
 

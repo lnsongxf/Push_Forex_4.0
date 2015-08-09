@@ -45,5 +45,5 @@ zlabel('R_over_maxDD');
 colorbar('peer',axes1);
 
 % Create title
-title('R_over_maxDD as a function of the optimized parameters')
+title('R over maxDD as a function of the optimized parameters')
 

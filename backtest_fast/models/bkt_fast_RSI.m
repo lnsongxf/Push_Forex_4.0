@@ -1,4 +1,4 @@
-classdef bkt_fast_Ale002 < handle
+classdef bkt_fast_RSI < handle
     
     
     properties
@@ -18,10 +18,21 @@ classdef bkt_fast_Ale002 < handle
     
     methods
         
-        function obj = fast_Ale002(obj, Pminute,P,date,N,M,newTimeScale,cost,wSL,wTP,plottami)
+        function obj = fast_RSI(obj, Pminute,P,date,N,M,newTimeScale,cost,wSL,wTP,plottami)
             
+            % Pminute = prezzo al minuto
+            % P = prezzo alla new time scale
+            % date = data alla new time scale
+            % N = periodo(relativo all new time scale) su cui si basa l RSI
+            % M = M-period moving average
+            % cost = spread per operazione (calcolato quando chiudi)
+            % wSL = peso per calcolare quando chiuder per SL
+            % wTP = peso per calcolare quando chiuder per TP
             
-            %% simula algo Ale002
+            %% utilizza segnale del relative strength index
+            
+            thresh = [30 70]; % default threshold for the RSI
+            
             
             pandl = zeros(size(P));
             obj.trades = zeros(size(P));
@@ -37,33 +48,33 @@ classdef bkt_fast_Ale002 < handle
             indexClose = 0;
             s = zeros(size(P));
             
+            if M == 0
+                ma = zeros(size(P));
+            else
+                ma = movavg(P,M,M,'e');
+            end
+            ri = rsindex(P - ma, N);
             
             
-            a = (1/N)*ones(1,N);
-            lead = filter(a,1,P);
-            
-            b = (1/M)*ones(1,M);
-            lag = filter(b,1,P);
-            fluctuationslag=abs(P-lag);
-            
-            % signals
-            s(lead>lag) = 1; 
-            s(lag>lead) = -1;
-            
-            
-            
+            indx    = ri < thresh(1);
+            indx    = [false; indx(1:end-1) & ~indx(2:end)];
+            s(indx) = 1;
+            % Crossing the upper threshold
+            indx    = ri > thresh(2);
+            indx    = [false; indx(1:end-1) & ~indx(2:end)];
+            s(indx) = -1;
+
             i = 101;
             
             
             while i <= length(P)
                 
-                % se il trend breve va sotto quello lungo compra long
-                % se il trend breve va sopra quello lungo compra short
-                if ( abs( s(i) - s(i-1) ) == 2 )
+                % se RSI da il segnale, compra (-1 in short, +1 in long)
+                if  abs ( s(i) ) 
                     
-                    segnoOperazione = - sign(s(i) - s(i-1));
+                    segnoOperazione = s(i);
                     ntrades = ntrades + 1;
-                    [obj, Pbuy, devFluct2] = obj.apri(i, P, fluctuationslag, M, ntrades, segnoOperazione, date);
+                    [obj, Pbuy, devFluct2] = obj.apri(i, P, 0, M, ntrades, segnoOperazione, date);
                     
                     for j = newTimeScale*(i):length(Pminute)
                         
@@ -133,18 +144,19 @@ classdef bkt_fast_Ale002 < handle
             if plottami
                 
                 figure
-                ax(1) = subplot(2,1,1);
-                plot([P(M:end),lead(M:end),lag(M:end)],'LineWidth',1); grid on
-                legend('Close',['Lead ',num2str(N)],['Lag ',num2str(M)],'Location','Best')
-                title(['Lead/Lag EMA Results, Final Return = ',num2str(sh,3)])
-                ax(2) = subplot(2,1,2);
-                plot([obj.trades,pandl*10,standev],'LineWidth',1); grid on
-                legend('Position','Returns','standev','Location','Best')
-                title(['NumTrades = ',num2str(indexClose),', Final Return = ',num2str(sum(obj.r),3),' (',num2str(sum(obj.r)/P(1)*100,3),'%)'])
-                xlabel(ax(1), 'Serial index i number');
-                xlabel(ax(2), 'Serial index i number');
-                ylabel(ax(1), 'Price ($)');
-                ylabel(ax(2), 'Returns ($)');
+                ax(1) = subplot(3,1,1);
+                plot([P,ma]), grid on
+                legend('Price',['Moving Average ',num2str(M)])
+                title('RSI Results' )
+                ax(2) = subplot(3,1,2);
+                plot([ri,thresh(1)*ones(size(ri)),thresh(2)*ones(size(ri))])
+                grid on
+                legend(['RSI ',num2str(N)],'Lower Threshold','Upper Threshold')
+                title('RSI')
+                aaa(1) = subplot(3,1,3);
+                plot(cumsum(obj.outputbkt(:,4))), grid on
+                legend('Cumulative Return')
+                title('Cumulative Returns ')
                 linkaxes(ax,'x')
                 
             end %if
@@ -152,11 +164,12 @@ classdef bkt_fast_Ale002 < handle
         end
         
         
-        function [obj, Pbuy, devFluct2] = apri(obj, i, P, fluctuationslag, M, ntrades, segnoOperazione, date)
+        function [obj, Pbuy, devFluct2] = apri(obj, i, P, ~, ~, ntrades, segnoOperazione, date)
             
             obj.trades(i) = 1;
             Pbuy = P(i);
-            devFluct2 = std(fluctuationslag((i-(100-M)):i));
+            devFluct2 = 1; % lo impongo sempre uguale a 1
+            %devFluct2 = std(fluctuationslag((i-(100-M)):i));
             obj.direction(ntrades)= segnoOperazione;
             obj.chei(ntrades)=i;
             obj.openingPrices(ntrades) = Pbuy;
@@ -164,6 +177,26 @@ classdef bkt_fast_Ale002 < handle
             
         end
         
+        % Faster implementation of rsindex found in Financial Toolbox
+        function r=rsindex(x,N)
+            %L = length(x);
+            dx = diff([0;x]);
+            up=dx;
+            down=abs(dx);
+            % up and down moves
+            I=dx<=0;
+            up(I) = 0;
+            down(~I)=0;
+            % calculate exponential moving averages
+            m1 = movavg(up,N,N,'e'); m2 = movavg(down,N,N,'e');
+            warning off
+            r = 100*m1./(m1+m2);
+            %r(isnan(r))=50;
+            I2=~((up+down)>0);
+            r(I2)=50;
+            
+            warning on
+        end
         
         
 %         function [obj] = chiudi_per_SL(obj, Pbuy, indice_I, segnoOperazione, devFluct2, wSL, cost, ntrades, date)
