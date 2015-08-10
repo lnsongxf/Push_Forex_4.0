@@ -1,6 +1,6 @@
-function [operationState, chiusure, params] = takeProfitManager (operationState, chiusure, params)
+function [operationState, chiusure, params] = closeOnNewTimeScaleManager (operationState, chiusure, params)
 
-LastClosePrice = chiusure(end);
+LastClosePrice = chiusure(end-1);
 
 % display(['currentvalue = ', num2str(LastClosePrice),' openvalue =', num2str(params.get('openValue_')), ...
 %     ' op state =', num2str(operationState.actualOperation)]) ;
@@ -12,12 +12,12 @@ cond4 = sign (LastClosePrice - params.get('openValue_')) == sign (operationState
 
 if (cond1 + cond2 == 2)
     
-	operationState = params.closeOnTakeProfit(operationState);
+	operationState = params.closeOnCall(operationState,LastClosePrice);
     display('win');
     
 elseif (cond3 + cond4 == 2)
     
-    operationState = params.closeOnStopLoss(operationState);
+    operationState = params.closeOnCall(operationState,LastClosePrice);
     display('loose');
 
 else
