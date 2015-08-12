@@ -30,6 +30,7 @@ ClDates=zeros(size(P));
 iOpen=zeros(size(P));
 iClose=zeros(size(P));
 jClose=zeros(size(P));
+
 i = 101;
 
 
@@ -38,13 +39,9 @@ while i <= length(P)
     % se il trend breve va sotto quello lungo compra long
     if ( s(i) - s(i-1) == -2 )
   
-        %display(['ntrade = ' num2str(ntrades+1)]);
-        %display(['opening i = ' num2str(i+1)]);
         trades(i) = 1;
         Pbuy = P(i);
-        %display(['opening price = ' num2str(Pbuy)]);
         devFluct2 = std(fluctuationslag((i-(100-M)):i));
-        %display(['SL = ', num2str(floor(devFluct2)),' TP =', num2str(floor(5*devFluct2))]);
         ntrades = ntrades + 1;
         direction(ntrades)=1;
         chei(ntrades)=i;
@@ -59,32 +56,24 @@ while i <= length(P)
             
             if Pminute(j) >= (Pbuy + floor(wTP*devFluct2))
                 
-                %r(j) =  P(j)-Pbuy-cost;
                 r(indice_I) = wTP*devFluct2 - cost;
                 closingPrices(ntrades) = Pbuy + floor(wTP*devFluct2);
-                %display(['closing price= ' num2str(closingPrices(ntrades))]);
-                %closingPrices(ntrades) = Pminute(j);
                 ClDates(ntrades) = date(indice_I); %controlla
                 iClose(ntrades) = indice_I;
                 jClose(ntrades) = j;
                 indexClose = indexClose + 1;
                 i = indice_I;
-                %display(['closing i = ' num2str(i)]);
                 break
                 
             elseif Pminute(j) <=  (Pbuy - floor(wSL*devFluct2))
                 
-                %r(j) =  P(j)-Pbuy-cost;
                 r(indice_I) =  - wSL*devFluct2 - cost;
                 closingPrices(ntrades) = Pbuy - floor(wSL*devFluct2);
-                %display(['closing price= ' num2str(closingPrices(ntrades))]);
-                %closingPrices(ntrades) = Pminute(j);
                 ClDates(ntrades) = date(indice_I);
                 iClose(ntrades) = indice_I;
                 jClose(ntrades) = j;
                 indexClose = indexClose + 1;
                 i = indice_I;
-                %display(['closing i = ' num2str(i)]);
                 break
                 
             end
@@ -97,13 +86,9 @@ while i <= length(P)
     % se il trend breve va sopra quello lungo compra short
     elseif ( s(i) - s(i-1) == 2)
         
-        %display(['ntrade = ' num2str(ntrades+1)]);
-        %display(['opening i = ' num2str(i+1)]);
         trades(i) = -1;
         Pbuy = P(i);
-        %display(['opening price = ' num2str(Pbuy)]);
         devFluct2 = std(fluctuationslag((i-(100-M)):i));
-        %display(['SL = ', num2str(floor(devFluct2)),' TP =', num2str(floor(5*devFluct2))]);
         ntrades = ntrades + 1;
         direction(ntrades)=-1;
         chei(ntrades)=i;
@@ -118,32 +103,24 @@ while i <= length(P)
             
             if Pminute(j) <= (Pbuy - floor(wTP*devFluct2))
                 
-                %r(j) =  -(P(j)-Pbuy) - cost;
                 r(indice_I) = wTP*devFluct2 - cost;
                 closingPrices(ntrades) = Pbuy - floor(wTP*devFluct2);
-                %display(['closing price= ' num2str(closingPrices(ntrades))]);
-                %closingPrices(ntrades) = Pminute(j);
                 ClDates(ntrades) = date(indice_I); %controlla
                 iClose(ntrades) = indice_I;
                 jClose(ntrades) = j;
                 indexClose = indexClose + 1;
                 i = indice_I;
-                %display(['closing i = ' num2str(i)]);
                 break
                 
             elseif Pminute(j) >=  (Pbuy + floor(wSL*devFluct2))
                 
-                %r(j) =  -(P(j)-Pbuy) - cost;
                 r(indice_I) = - wSL*devFluct2 - cost;
                 closingPrices(ntrades) = Pbuy + floor(wSL*devFluct2);
-                %display(['closing price= ' num2str(closingPrices(ntrades))]);
-                %closingPrices(ntrades) = Pminute(j);
                 ClDates(ntrades) = date(indice_I); %controlla
                 iClose(ntrades) = indice_I;
                 jClose(ntrades) = j;
                 indexClose = indexClose + 1;
                 i = indice_I;
-                %display(['closing i = ' num2str(i)]);
                 break
                 
             end
@@ -159,7 +136,6 @@ while i <= length(P)
     
 end
 
-% sh = scaling*sharpe(r,0);
 pandl = cumsum(r);
 sh = pandl(end);
 
@@ -168,15 +144,16 @@ cumprof= cumsum(r(r~=0))*10;
 profittofinale = sum(r);
 
 
-outputmio(:,1) = chei(1:indexClose);       % index of stick
+outputmio(:,1) = chei(1:indexClose);                    % index of stick
 outputmio(:,2) = openingPrices(1:indexClose);      % opening price
 outputmio(:,3) = closingPrices(1:indexClose);        % closing price
-outputmio(:,4) = (closingPrices(1:indexClose) - openingPrices(1:indexClose)).*direction(1:indexClose);                % returns
-outputmio(:,5) = direction(1:indexClose);             % direction
-outputmio(:,6) = ones(indexClose,1);                  % real
-outputmio(:,7) = OpDates(1:indexClose);      % opening date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
-outputmio(:,8) = ClDates(1:indexClose);        % closing date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
-outputmio(:,9) = ones(indexClose,1)*1;                           % lots setted for single operation
+outputmio(:,4) = (closingPrices(1:indexClose) - ...
+    openingPrices(1:indexClose)).*direction(1:indexClose);   % returns
+outputmio(:,5) = direction(1:indexClose);              % direction
+outputmio(:,6) = ones(indexClose,1);                    % real
+outputmio(:,7) = OpDates(1:indexClose);              % opening date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
+outputmio(:,8) = ClDates(1:indexClose);                % closing date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
+outputmio(:,9) = ones(indexClose,1)*1;                 % lots setted for single operation
 
 
 iOpen=chei(1:indexClose);
@@ -184,27 +161,8 @@ iClose=iClose(1:indexClose);
 jClose=jClose(1:indexClose);
 
 
-if nargout == 0 % Plot
-    
-    
-    
-    
-    %display(ntrades);
-    
-    % Plot results
-    
-    %    figure
-    %    plot(trades);
-    %figure
-    %plot(cumprof);
-    %figure
-    %plot(r(r~=0));
-    %    figure
-    %    plot([(lag+standev),(lag-standev)]);
-    % figure
-    %plot(standev);
-    %  figure
-    %  plot(chei);
+% Plot se la funzione viene chiamata senza argomenti in output
+if nargout == 0 
     
     figure
     ax(1) = subplot(2,1,1);
