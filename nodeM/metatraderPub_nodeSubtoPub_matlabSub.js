@@ -88,13 +88,17 @@ var QuotesModule = (function(){
 		  							if (realTimeQuotesObj[key0] != "") {
 		  								tempObj[Object.keys(tempObj)[0]].push(realTimeQuotesObj[key0]);	
 		  								var topic = key1;
-		  								//sockPub.send(['EURUSD@30m@40', message.toString()]);
+		  								//"TIMEFRAMEQUOTE@MT4@ACTIVTRADES   +     @EURUSD     +     @m1     +    @v1 
+		  								var topicToSignalProvider = timeFrameQuotesObj.provider+key1+timeFrame+Object.keys(tempObj)[0];
+		  								sockPub.send([topicToSignalProvider, tempObj[Object.keys(tempObj)[0]].toString()]);
 		  							};
 		  						}else{
 	  								if (realTimeQuotesObj[key0] != "") {
 		  								tempObj[Object.keys(tempObj)[0]].shift();
 		  								tempObj[Object.keys(tempObj)[0]].push(realTimeQuotesObj[key0]);
-		  								//sockPub.send(['EURUSD@30m@40', message.toString()]);
+		  								//"TIMEFRAMEQUOTE@MT4@ACTIVTRADES   +     @EURUSD     +     @m1     +    @v10 
+		  								var topicToSignalProvider = timeFrameQuotesObj.provider+key1+timeFrame+Object.keys(tempObj)[0];
+		  								sockPub.send([topicToSignalProvider, tempObj[Object.keys(tempObj)[0]].toString()]);
 		  							}
 		  						}
 		  						timeFrameQuotesObj[key1][index][timeFrame][j] = tempObj;
@@ -143,26 +147,18 @@ var runningProviderRealTimeObjs = {};
 setInterval(function() {    
 
 
-
-//      INSERIRE ITERATOR dentro runningProviderTopicList, per ogni topic eliminare anche 
-//      LE PROPRIETA DENTRO runningProviderTimeFrameObjs e runningProviderRealTimeObjs
-
-
-	var new_timeFrameQuotesObj = QuotesModule.updateTimeFrameQuotesObj("m1",quotesObj_provider_Mt4,realTimeQuotesObj_provider_Mt4);
-	quotesObj_provider_Mt4 = new_timeFrameQuotesObj;
-	//SEND LAST 80 values at 30m
-  	//.................
-  	//SEND LAST 40 values at 30m
-
-  	
-  	//SEND LAST 20 values at 30m
-  	//...............
-  	//SEND LAST 10 values at 30m
-  	//...............
-  	//SEND LAST 5 values at 30m
-  	//.................
-  	//SEND LAST 1 values at 30m
-
+	if (runningProviderTopicList.length > 0) {
+		for (var i = 0; i < runningProviderTopicList.length; i++) {
+	    	var tmpTopicArr = runningProviderTopicList[i].toString().split("@");
+	    	//TOPIC EXAMPLE: "MT4@ACTIVTRADES@REALTIMEQUOTES";
+	    	var tmpTimeFrameQuoteProperty = "TIMEFRAMEQUOTE$"+tmpTopicArr[0]+"$"+tmpTopicArr[1];
+	    	var tmpRealTimeQuoteProperty = "REALTIMEQUOTE$"+tmpTopicArr[0]+"$"+tmpTopicArr[1];
+	   		var new_timeFrameQuotesObj = QuotesModule.updateTimeFrameQuotesObj("m1",runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty],runningProviderRealTimeObjs[tmpRealTimeQuoteProperty]);
+	   		runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty] = new_timeFrameQuotesObj;
+		}
+		//var new_timeFrameQuotesObj = QuotesModule.updateTimeFrameQuotesObj("m1",quotesObj_provider_Mt4,realTimeQuotesObj_provider_Mt4);
+		//quotesObj_provider_Mt4 = new_timeFrameQuotesObj;
+	}
 
 },5000);  // 1M
 setInterval(function() {         },300000);  // 5M
@@ -180,7 +176,7 @@ sockSubFromQuotesProvider.on('message', function(topic, message) {
 
   	switch (topicArr[0]) {
   		case "NEWTOPICQUOTES":
-
+  			//TOPIC EXAMPLE: "MT4@ACTIVTRADES@REALTIMEQUOTES";
   			if ( runningProviderTopicList.indexOf( message ) == "-1" ) {
 				runningProviderTopicList.push(message);
 				sockSubFromQuotesProvider.subscribe(message);
@@ -188,14 +184,16 @@ sockSubFromQuotesProvider.on('message', function(topic, message) {
 				if ( messageArr[2] == "REALTIMEQUOTES" ||  messageArr[2] == "LISTQUOTES"){
 					var newObjTimeFrameQuote = "TIMEFRAMEQUOTE$"+messageArr[0]+"$"+messageArr[1];
 					var newObjRealTimeQuote = "REALTIMEQUOTE$"+messageArr[0]+"$"+messageArr[1];
-					runningProviderTimeFrameObjs[newObjTimeFrameQuote] = QuotesModule.createTimeFrameQuotesObj(configQuotesList,message);
-					runningProviderRealTimeObjs[newObjRealTimeQuote] = QuotesModule.createRealTimeQuotesObj(configQuotesList,message);
+					var newValuePropertyTimeFrameQuote = "TIMEFRAMEQUOTE@"+messageArr[0]+"@"+messageArr[1];
+					var newValuePropertyRealTimeQuote = "REALTIMEQUOTE@"+messageArr[0]+"@"+messageArr[1];
+					runningProviderTimeFrameObjs[newObjTimeFrameQuote] = QuotesModule.createTimeFrameQuotesObj(configQuotesList,newValuePropertyTimeFrameQuote);
+					runningProviderRealTimeObjs[newObjRealTimeQuote] = QuotesModule.createRealTimeQuotesObj(configQuotesList,newValuePropertyRealTimeQuote);
 				}
 			};
   			break;
 
 		case "DELETETOPICQUOTES":
-
+			//TOPIC EXAMPLE: "MT4@ACTIVTRADES@REALTIMEQUOTES";
 			if ( runningProviderTopicList.indexOf( message ) > -1 ){
 				var index = runningProviderList.indexOf( message );
 				runningProviderList.splice(index, 1);
