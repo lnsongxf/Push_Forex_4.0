@@ -104,7 +104,7 @@ var QuotesModule = (function(){
 		  						timeFrameQuotesObj[key1][index][timeFrame][j] = tempObj;
 	  						};
 	  						//uncomment this file if you want to check how are stored the quotes values
-	  						//console.log("timeFrameQuotesObj[key1][index][timeFrame]: ",timeFrameQuotesObj[key1][index][timeFrame]);
+	  						console.log("timeFrameQuotesObj[key1][index][timeFrame]: ",timeFrameQuotesObj[key1][index][timeFrame]);
 	  					}	
 					}
 				}
@@ -146,18 +146,16 @@ var runningProviderRealTimeObjs = {};
 
 setInterval(function() {    
 
-
 	if (runningProviderTopicList.length > 0) {
 		for (var i = 0; i < runningProviderTopicList.length; i++) {
 	    	var tmpTopicArr = runningProviderTopicList[i].toString().split("@");
 	    	//TOPIC EXAMPLE: "MT4@ACTIVTRADES@REALTIMEQUOTES";
 	    	var tmpTimeFrameQuoteProperty = "TIMEFRAMEQUOTE$"+tmpTopicArr[0]+"$"+tmpTopicArr[1];
 	    	var tmpRealTimeQuoteProperty = "REALTIMEQUOTE$"+tmpTopicArr[0]+"$"+tmpTopicArr[1];
+	    	//EX Time Frame Obj Property: runningProviderTimeFrameObjs["TIMEFRAMEQUOTE$MT4$ACTIVTRADES"];
 	   		var new_timeFrameQuotesObj = QuotesModule.updateTimeFrameQuotesObj("m1",runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty],runningProviderRealTimeObjs[tmpRealTimeQuoteProperty]);
 	   		runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty] = new_timeFrameQuotesObj;
 		}
-		//var new_timeFrameQuotesObj = QuotesModule.updateTimeFrameQuotesObj("m1",quotesObj_provider_Mt4,realTimeQuotesObj_provider_Mt4);
-		//quotesObj_provider_Mt4 = new_timeFrameQuotesObj;
 	}
 
 },5000);  // 1M
@@ -176,10 +174,10 @@ sockSubFromQuotesProvider.on('message', function(topic, message) {
 
   	switch (topicArr[0]) {
   		case "NEWTOPICQUOTES":
-  			//TOPIC EXAMPLE: "MT4@ACTIVTRADES@REALTIMEQUOTES";
-  			if ( runningProviderTopicList.indexOf( message ) == "-1" ) {
-				runningProviderTopicList.push(message);
-				sockSubFromQuotesProvider.subscribe(message);
+  			//TOPIC MESSAGE EXAMPLE: "MT4@ACTIVTRADES@REALTIMEQUOTES";
+  			if ( runningProviderTopicList.indexOf( message.toString() ) == "-1" ) {
+				runningProviderTopicList.push(message.toString());
+				sockSubFromQuotesProvider.subscribe(message.toString());
 
 				if ( messageArr[2] == "REALTIMEQUOTES" ||  messageArr[2] == "LISTQUOTES"){
 					var newObjTimeFrameQuote = "TIMEFRAMEQUOTE$"+messageArr[0]+"$"+messageArr[1];
@@ -194,10 +192,10 @@ sockSubFromQuotesProvider.on('message', function(topic, message) {
 
 		case "DELETETOPICQUOTES":
 			//TOPIC EXAMPLE: "MT4@ACTIVTRADES@REALTIMEQUOTES";
-			if ( runningProviderTopicList.indexOf( message ) > -1 ){
-				var index = runningProviderList.indexOf( message );
-				runningProviderList.splice(index, 1);
-				sockSubFromQuotesProvider.unsubscribe(message);
+			if ( runningProviderTopicList.indexOf( message.toString() ) > -1 ){
+				var index = runningProviderTopicList.indexOf( message.toString() );
+				runningProviderTopicList.splice(index, 1);
+				sockSubFromQuotesProvider.unsubscribe(message.toString());
 
   				var searchObjTimeFrameQuote = "TIMEFRAMEQUOTE$"+messageArr[0]+"$"+messageArr[1];
 				var searchObjRealTimeQuote = "REALTIMEQUOTE$"+messageArr[0]+"$"+messageArr[1];
@@ -207,58 +205,62 @@ sockSubFromQuotesProvider.on('message', function(topic, message) {
 			break;
 
 		default:
-
-			if ( runningProviderTopicList.indexOf( message ) > -1 ){
-  				//var searchObjTimeFrameQuote = "TIMEFRAMEQUOTE$"+topicArr[0]+"$"+messageArr[1];
+			if ( runningProviderTopicList.indexOf( topic.toString() ) > -1 ){
+				//TOPIC EXAMPLE: MT4@ACTIVTRADES@REALTIMEQUOTES;
 				var searchObjRealTimeQuote = "REALTIMEQUOTE$"+topicArr[0]+"$"+topicArr[1];
-				for (var key0 in runningProviderRealTimeObjs) {
-					if (key0 == searchObjRealTimeQuote) {
-		  				for (var key in runningProviderRealTimeObjs[key0]) {
-					  		if (runningProviderRealTimeObjs[key0].hasOwnProperty(key)) {
-					  			if (key == messageArr[0]) {
-					  				runningProviderRealTimeObjs[key0][key] = messageArr[1];
-					  			};	
-					  		}
+				var searchObjTimeFrameQuote = "TIMEFRAMEQUOTE$"+topicArr[0]+"$"+topicArr[1];
+
+				if (messageArr.length == 2) {
+					for (var key0 in runningProviderRealTimeObjs) {
+						if (key0 == searchObjRealTimeQuote) {
+			  				for (var key in runningProviderRealTimeObjs[key0]) {
+						  		if (runningProviderRealTimeObjs[key0].hasOwnProperty(key)) {
+						  			if (key == messageArr[0]) {
+						  				runningProviderRealTimeObjs[key0][key] = messageArr[1];
+						  			};	
+						  		}
+							}
+						}
+					}
+				}
+				else if (messageArr.length > 2) {
+					for (var key0 in runningProviderTimeFrameObjs) {
+						if (key0 == searchObjTimeFrameQuote) {
+							for (var key in runningProviderTimeFrameObjs[key0]) {
+								if (runningProviderTimeFrameObjs[key0].hasOwnProperty(key)) {
+						  			if (key == messageArr[0]) {
+						  				for(var i=0;i<runningProviderTimeFrameObjs[key0][key].length;i++){
+						  					for (var key1 in runningProviderTimeFrameObjs[key0][key][i]) {
+						  						var tmpObjTimeFrameQuote = runningProviderTimeFrameObjs[key0][key][i];
+						  						if ( Object.keys(tmpObjTimeFrameQuote)[0] == messageArr[1] ) {
+						  							var arrfirstQuotesValues = messageArr[2].split("$");
+						  							for(var k=0;k<arrfirstQuotesValues.length;k++){
+						  								for(var j=0;j<tmpObjTimeFrameQuote[Object.keys(tmpObjTimeFrameQuote)[0]].length;j++){
+						  									var tmpObjSetValuesQuote = tmpObjTimeFrameQuote[Object.keys(tmpObjTimeFrameQuote)[0]][j];
+						  									if (tmpObjSetValuesQuote[Object.keys(tmpObjSetValuesQuote)].length < Object.keys(tmpObjSetValuesQuote)[0].split("v")[1] ){
+						  										tmpObjSetValuesQuote[Object.keys(tmpObjSetValuesQuote)].push(arrfirstQuotesValues[k]);
+						  										tmpObjTimeFrameQuote[Object.keys(tmpObjTimeFrameQuote)[0]][j] = tmpObjSetValuesQuote;
+						  										runningProviderTimeFrameObjs[key0][key][i] = tmpObjTimeFrameQuote;
+						  									}else{
+						  										tmpObjSetValuesQuote[Object.keys(tmpObjSetValuesQuote)].shift();
+		  														tmpObjSetValuesQuote[Object.keys(tmpObjSetValuesQuote)].push(arrfirstQuotesValues[k]);
+		  														tmpObjTimeFrameQuote[Object.keys(tmpObjTimeFrameQuote)[0]][j] = tmpObjSetValuesQuote;
+						  										runningProviderTimeFrameObjs[key0][key][i] = tmpObjTimeFrameQuote;
+						  									}
+						  								}
+						  							}	
+						  						}			
+						  					}
+						  				}
+									}
+								}
+							}
 						}
 					}
 				}
 			}
 	}
-}
-
-//sockSubFromQuotesProvider.subscribe('MT4@ACTIVTRADES@REALQUOTES');
-/*sockSubFromQuotesProvider.on('message', function(topic, message) {
-  //console.log('received a message related to:', topic.toString(), 'containing message:', message.toString());
-  
-  	//EX TOPIC: MT4@REALQUOTES
-  	//EX MESSAGE: EURUSD@12.5
-  	//console.log("message.toString(): ",message.toString());
-  	var topicArr = topic.toString().split("@");
-  	var messageArr = message.toString().split("@");
-  	switch (topicArr[0]) {
-	    case "MT4":
-	    	if (topicArr[1] == "ACTIVTRADES") {
-		    	if (topicArr[2] == "REALQUOTES") {
-		    		//console.log("in0");
-		    		for (var key in realTimeQuotesObj_provider_Mt4) {
-				  		if (realTimeQuotesObj_provider_Mt4.hasOwnProperty(key)) {
-				  			//console.log("in1");
-				  			if (key == messageArr[0]) {
-				  				//console.log("in2");
-				  				realTimeQuotesObj_provider_Mt4[key] = messageArr[1];
-				  				//console.log("realTimeQuotesObj_provider_Mt4[key]: ",realTimeQuotesObj_provider_Mt4[key]);
-				  			};	
-				  		}
-					}
-		    	}
-		    }
-	        break;
-	    case "PROVIDER1":
-	    	break;
-	    case "PROVIDER2":
-	    	break;
-	}
-});*/
+});
 
 //----------------------------------------------------------------------------------------------------------------------------
 // MATLAB PUB TO NODEJS TO METATRADER
