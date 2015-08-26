@@ -13,8 +13,8 @@
 
 %input parameters:
 
-%hisData=load('EURUSD_2012_2015.csv');
-hisData=load('EURUSD_smallsample2014_2015.csv');
+hisData=load('EURUSD_2012_2015.csv');
+%hisData=load('EURUSD_smallsample2014_2015.csv');
 cross = 'EURUSD';
 actTimeScale = 1;
 newTimeScale = 30;
@@ -63,8 +63,8 @@ end
 
 %% prova semplice
 
-% bktfast=bkt_fast_macd;
-% bktfast=bktfast.fast_macd(hisDataTest(:,4),closeXminsTest,dateXminsTest,newTimeScale,cost,20,10,1);
+%  bktfast=bkt_fast_macd;
+%  bktfast=bktfast.fast_macd(hisDataTest(:,4),closeXminsTest,dateXminsTest,newTimeScale,cost,20,10,1);
 
 %% Estimate parameters over a range of values
 % Puoi cambiare i TP e SL consigliati
@@ -72,9 +72,12 @@ end
 matrixsize = 50;
 R_over_maxDD = nan(matrixsize,matrixsize);
 
+% se da problemi bisogna andar su Parallel-> Manage Cluster Profiles
+% ed editare il le preferenze per il local 
+matlabpool local 4;  % vecchio comando per parpool
 
 tic
-for n = 5:40
+parfor n = 5:50
     
     display(['n =', num2str(n)]);
     
@@ -93,6 +96,8 @@ for n = 5:40
     end
 end
 toc
+
+matlabpool close;
 
 %visualizza i risultati come surface plot
 sweepPlot_BKT_Fast(R_over_maxDD)

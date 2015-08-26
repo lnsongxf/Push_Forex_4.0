@@ -159,7 +159,7 @@ classdef bkt_fast_supertrend < handle
                 
                 figure
                 ax(1) = subplot(2,1,1);
-                plot(matrixHighLow), grid on
+                plot(P), grid on
                 legend('Price')
                 title('supertrend Results' )
                 ax(2) = subplot(2,1,2);
