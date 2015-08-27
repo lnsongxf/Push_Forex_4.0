@@ -18,7 +18,7 @@ classdef bkt_fast_delphic_phenomenon < handle
     
     methods
         
-        function obj = fast_delphic_phenomenon(obj, P, date, cost, M, N, plottami)
+        function obj = fast_delphic_phenomenon(obj, P, date, cost, N, M, plottami)
             
             % P=chiusure a timescale almeno alla mezz ora
             % date = date delle chiusure P
@@ -84,17 +84,17 @@ classdef bkt_fast_delphic_phenomenon < handle
                         end
                         
                         % se lead>P>lag, potresti aprire in long...
-                        if  ( slead==0 && slag )
+                        if  ( slead(j)==0 && slag(j) )
                             condition1_long = 1;
                             % se invece lag>P>lead, potresti aprire in short...
-                        elseif ( slag==0 && slead )
+                        elseif ( slag(j)==0 && slead(j) )
                             condition1_short = 1;
                         end
                         
                         % se poi P va sopra lead, apri long!
                         if ( condition1_long )
                             
-                            if ( slead)
+                            if ( slead(j) )
                                 
                                 % buy long
                                 ntrades = ntrades + 1;
@@ -104,7 +104,7 @@ classdef bkt_fast_delphic_phenomenon < handle
                                     
                                     i=k;
                                     obj.trades(i) = 1;
-                                    if (slead==0)
+                                    if (slead(k)==0)
                                         
                                         obj.r(i) = P(k) - Pbuy - cost;
                                         obj.closingPrices(ntrades) = P(k);
@@ -122,7 +122,7 @@ classdef bkt_fast_delphic_phenomenon < handle
                             % se poi P va sotto lead, apri short!
                         elseif (condition1_short)
                             
-                            if ( slead==0)
+                            if ( slead(j)==0)
                                 
                                 % sell short
                                 ntrades = ntrades + 1;
@@ -132,7 +132,7 @@ classdef bkt_fast_delphic_phenomenon < handle
                                     
                                     i=k;
                                     obj.trades(i) = 1;
-                                    if (slead)
+                                    if (slead(k))
                                         
                                         obj.r(i) = - ( P(k) - Pbuy ) - cost;
                                         obj.closingPrices(ntrades) = P(k);
@@ -184,8 +184,8 @@ classdef bkt_fast_delphic_phenomenon < handle
                 ax(1)=subplot(2,1,1);
                 plot(P,'black', 'LineWidth',1.5)
                 hold on
-                plot(leadP,'red', 'LineWidth',1.5)
-                plot(lagP,'blue', 'LineWidth',1.5)
+                plot(lead,'red', 'LineWidth',1.5)
+                plot(lag,'blue', 'LineWidth',1.5)
                 grid(ax(1),'on');
                 
                 legend('Price','lead','lag')
