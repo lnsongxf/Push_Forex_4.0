@@ -1,4 +1,4 @@
-classdef bkt_fast_bollinger < handle
+classdef bkt_fast_006_RSI < handle
     
     
     properties
@@ -18,18 +18,21 @@ classdef bkt_fast_bollinger < handle
     
     methods
         
-        function obj = fast_bollinger(obj, Pminute,P,date,N,newTimeScale,cost,wApri,wChiudi,plottami)
+        function obj = fast_RSI(obj, Pminute,P,date,N,M,newTimeScale,cost,wSL,wTP,plottami)
             
             % Pminute = prezzo al minuto
             % P = prezzo alla new time scale
             % date = data alla new time scale
-            % N = lookback period per calcolare media e stdev
+            % N = periodo(relativo all new time scale) su cui si basa l RSI
+            % M = M-period moving average
             % cost = spread per operazione (calcolato quando chiudi)
-            % wApri = deviazione dallo zScore necessaria x aprire operaz
-            % wChiudi = deviazione dallo zScore necessaria x chiuder operaz
+            % wSL = peso per calcolare quando chiuder per SL
+            % wTP = peso per calcolare quando chiuder per TP
             
+            %% utilizza segnale del relative strength index
             
-            %% simula algo Bollinger bands
+            thresh = [30 70]; % default threshold for the RSI
+            
             
             pandl = zeros(size(P));
             obj.trades = zeros(size(P));
@@ -44,48 +47,48 @@ classdef bkt_fast_bollinger < handle
             ntrades = 0;
             indexClose = 0;
             s = zeros(size(P));
-                      
             
-            a = (1/N)*ones(1,N);
-            MA = filter(a,1,P);
-            MSTDEV = movingStd(P, N);
+            if M == 0
+                ma = zeros(size(P));
+            else
+                ma = movavg(P,M,M,'e');
+            end
+            ri = rsindex(P - ma, N);
+            
+            
+            indx    = ri < thresh(1);
+            indx    = [false; indx(1:end-1) & ~indx(2:end)];
+            s(indx) = 1;
+            % Crossing the upper threshold
+            indx    = ri > thresh(2);
+            indx    = [false; indx(1:end-1) & ~indx(2:end)];
+            s(indx) = -1;
 
-            zScore=(P-MA)./MSTDEV;
-            
-            % signals
-            s(zScore < -wApri) = 1; 
-            s(zScore > wApri) = -1;
-            
-            
-%             longsExit=zScore > -exitZscore;
-%             shortsExit=zScore < exitZscore;
-
-            
             i = 101;
             
             
             while i <= length(P)
                 
-                % se Bollinger da il segnale, compra (-1 in short, +1 in long)
+                % se RSI da il segnale, compra (-1 in short, +1 in long)
                 if  abs ( s(i) ) 
                     
                     segnoOperazione = s(i);
                     ntrades = ntrades + 1;
-                    [obj, Pbuy, devFluct2] = obj.apri(i, P, 0, 0, ntrades, segnoOperazione, date);
+                    [obj, Pbuy, devFluct2] = obj.apri(i, P, 0, M, ntrades, segnoOperazione, date);
                     
                     for j = newTimeScale*(i):length(Pminute)
                         
                         indice_I = floor(j/newTimeScale);
                         
-                         cond1 = abs (Pminute(j) - Pbuy) >= floor(wChiudi*devFluct2);
+                        cond1 = abs (Pminute(j) - Pbuy) >= floor(wTP*devFluct2);
                         cond2 = sign (Pminute(j) - Pbuy) == segnoOperazione;
-                        cond3 = abs (Pminute(j) - Pbuy) >= floor(wChiudi*devFluct2);
+                        cond3 = abs (Pminute(j) - Pbuy) >= floor(wSL*devFluct2);
                         cond4 = sign (Pminute(j) - Pbuy) == segnoOperazione*-1;
                         
                         if cond1 && cond2
                             
-                            obj.r(indice_I) = wChiudi*devFluct2 - cost;
-                            obj.closingPrices(ntrades) = Pbuy + segnoOperazione*floor(wChiudi*devFluct2);
+                            obj.r(indice_I) = wTP*devFluct2 - cost;
+                            obj.closingPrices(ntrades) = Pbuy + segnoOperazione*floor(wTP*devFluct2);
                             obj.ClDates(ntrades) = date(indice_I); %controlla
                             %obj = obj.chiudi_per_TP(Pbuy, indice_I, segnoOperazione, devFluct2, wTP, cost, ntrades, date);
                             i = indice_I;
@@ -94,8 +97,8 @@ classdef bkt_fast_bollinger < handle
                             
                         elseif cond3 && cond4
                             
-                            obj.r(indice_I) = - wChiudi*devFluct2 - cost;
-                            obj.closingPrices(ntrades) = Pbuy - segnoOperazione*floor(wChiudi*devFluct2);
+                            obj.r(indice_I) = - wSL*devFluct2 - cost;
+                            obj.closingPrices(ntrades) = Pbuy - segnoOperazione*floor(wSL*devFluct2);
                             obj.ClDates(ntrades) = date(indice_I); %controlla
                             %obj = obj.chiudi_per_SL(Pbuy, indice_I, segnoOperazione, devFluct2, wSL, cost, ntrades, date);
                             i = indice_I;
@@ -144,7 +147,7 @@ classdef bkt_fast_bollinger < handle
                 ax(1) = subplot(3,1,1);
                 plot([P,ma]), grid on
                 legend('Price',['Moving Average ',num2str(M)])
-                title('Bollinger Results' )
+                title('RSI Results' )
                 ax(2) = subplot(3,1,2);
                 plot([ri,thresh(1)*ones(size(ri)),thresh(2)*ones(size(ri))])
                 grid on
@@ -174,6 +177,26 @@ classdef bkt_fast_bollinger < handle
             
         end
         
+        % Faster implementation of rsindex found in Financial Toolbox
+        function r=rsindex(x,N)
+            %L = length(x);
+            dx = diff([0;x]);
+            up=dx;
+            down=abs(dx);
+            % up and down moves
+            I=dx<=0;
+            up(I) = 0;
+            down(~I)=0;
+            % calculate exponential moving averages
+            m1 = movavg(up,N,N,'e'); m2 = movavg(down,N,N,'e');
+            warning off
+            r = 100*m1./(m1+m2);
+            %r(isnan(r))=50;
+            I2=~((up+down)>0);
+            r(I2)=50;
+            
+            warning on
+        end
         
         
 %         function [obj] = chiudi_per_SL(obj, Pbuy, indice_I, segnoOperazione, devFluct2, wSL, cost, ntrades, date)
@@ -191,30 +214,10 @@ classdef bkt_fast_bollinger < handle
 %             obj.ClDates(ntrades) = date(indice_I); %controlla
 %             
 %         end
-
-
-
-function sd=movingStd(x, T)
-    % calculate standard deviation of x over T days. Expect T-1
-    % NaN in the beginning of the series
-    % It creates moving std of lookback
-    % periods. I.e. data is sampled every period.
-    % This uses std which normalizes by N-1.
-    
-    sd=NaN*ones(size(x));
-    
-    for t=T:size(x, 1)
         
-        sd(t, :)=std(x(t-T+1:t, :));
         
     end
-     
-end
     
-
-
-    end
-
 end
 
 

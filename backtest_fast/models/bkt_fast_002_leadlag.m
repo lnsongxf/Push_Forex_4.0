@@ -1,4 +1,4 @@
-classdef bkt_fast_supertrend < handle
+classdef bkt_fast_002_leadlag < handle
     
     
     properties
@@ -18,66 +18,52 @@ classdef bkt_fast_supertrend < handle
     
     methods
         
-        function obj = fast_supertrend(obj, Pminute,matrixNewHisData,N,M,newTimeScale,cost,wSL,wTP,plottami)
+        function obj = fast_Ale002(obj, Pminute,P,date,N,M,newTimeScale,cost,wSL,wTP,plottami)
             
-            % Pminute = prezzo al minuto
-            % matrixNewHisData = matrice con prezzi e date alla new time scale
-            % N = lunghezza storico segnale maxhigh-maxLow
-            % M = lunghezza storico per average price (M<N)
-            % cost = spread per operazione (calcolato quando chiudi)
-            % wSL = peso per calcolare quando chiuder per SL
-            % wTP = peso per calcolare quando chiuder per TP
             
-            %% utilizza segnale del supertrend
-                        
-            high = sort(matrixNewHisData(:,2),'descend');
-            low = sort(matrixNewHisData(:,3),'ascend');
-            P = matrixNewHisData(:,4);
-            date = matrixNewHisData(:,6);
+            %% simula algo Ale002
             
-            sizeStorico = size(matrixNewHisData,1);
-            
-            pandl = zeros(sizeStorico,1);
-            obj.trades = zeros(sizeStorico,1);
-            obj.chei=zeros(sizeStorico,1);
-            obj.openingPrices=zeros(sizeStorico,1);
-            obj.closingPrices=zeros(sizeStorico,1);
-            obj.direction=zeros(sizeStorico,1);
-            obj.OpDates=zeros(sizeStorico,1);
-            obj.ClDates=zeros(sizeStorico,1);
-            obj.r =zeros(sizeStorico,1);
+            pandl = zeros(size(P));
+            obj.trades = zeros(size(P));
+            obj.chei=zeros(size(P));
+            obj.openingPrices=zeros(size(P));
+            obj.closingPrices=zeros(size(P));
+            obj.direction=zeros(size(P));
+            obj.OpDates=zeros(size(P));
+            obj.ClDates=zeros(size(P));
+            obj.r =zeros(size(P));
             
             ntrades = 0;
             indexClose = 0;
-            s = zeros(sizeStorico,1);
-            hl = zeros(sizeStorico,1);
+            s = zeros(size(P));
             
-            for k = N:(sizeStorico)
-                
-                hl = high(k-N+1:k) - low(k-N+1:k);
-                atr = mean(hl);
-                avg = ( mean(high(k-M+1:k)) + mean(low(k-M+1:k)) ) / 2;
-                
-                if P(k)>(avg+atr)
-                    s(k) = 1;
-                elseif P(k)<(avg-atr);
-                    s(k) = -1;
-                end
-                
-            end
             
-
+            
+            a = (1/N)*ones(1,N);
+            lead = filter(a,1,P);
+            
+            b = (1/M)*ones(1,M);
+            lag = filter(b,1,P);
+            fluctuationslag=abs(P-lag);
+            
+            % signals
+            s(lead>lag) = 1; 
+            s(lag>lead) = -1;
+            
+            
+            
             i = 101;
             
             
-            while i <= sizeStorico
+            while i <= length(P)
                 
-                % se il segnale è trending x due volte di seguito, compra (1 in long, -1 in short)
-                if  ( abs( s(i) + s(i-1) ) == 2 )
+                % se il trend breve va sotto quello lungo compra long
+                % se il trend breve va sopra quello lungo compra short
+                if ( abs( s(i) - s(i-1) ) == 2 )
                     
-                    segnoOperazione = s(i);
+                    segnoOperazione = - sign(s(i) - s(i-1));
                     ntrades = ntrades + 1;
-                    [obj, Pbuy, devFluct2] = obj.apri(i, P, 0, ntrades, segnoOperazione, date);
+                    [obj, Pbuy, devFluct2] = obj.apri(i, P, fluctuationslag, M, ntrades, segnoOperazione, date);
                     
                     for j = newTimeScale*(i):length(Pminute)
                         
@@ -87,7 +73,6 @@ classdef bkt_fast_supertrend < handle
                         cond2 = sign (Pminute(j) - Pbuy) == segnoOperazione;
                         cond3 = abs (Pminute(j) - Pbuy) >= floor(wSL*devFluct2);
                         cond4 = sign (Pminute(j) - Pbuy) == segnoOperazione*-1;
-                        cond5 = abs( s(indice_I) - segnoOperazione ) >= 1;
                         
                         if cond1 && cond2
                             
@@ -108,16 +93,6 @@ classdef bkt_fast_supertrend < handle
                             i = indice_I;
                             indexClose = indexClose + 1;
                             break
-                            
-                        elseif cond5
-                            
-                            obj.r(indice_I) = segnoOperazione*(Pminute(j) - Pbuy) - cost;
-                            obj.closingPrices(ntrades) = Pminute(j);
-                            obj.ClDates(ntrades) = date(indice_I); %controlla
-                            i = indice_I;
-                            indexClose = indexClose + 1;
-                            break
-                            
                             
                         end
                         
@@ -159,25 +134,29 @@ classdef bkt_fast_supertrend < handle
                 
                 figure
                 ax(1) = subplot(2,1,1);
-                plot(P), grid on
-                legend('Price')
-                title('supertrend Results' )
+                plot([P(M:end),lead(M:end),lag(M:end)],'LineWidth',1); grid on
+                legend('Close',['Lead ',num2str(N)],['Lag ',num2str(M)],'Location','Best')
+                title(['Lead/Lag EMA Results, Final Return = ',num2str(sh,3)])
                 ax(2) = subplot(2,1,2);
-                plot(cumsum(obj.outputbkt(:,4))), grid on
-                legend('Cumulative Return')
-                title('Cumulative Returns ')
+                plot([obj.trades,pandl*10,standev],'LineWidth',1); grid on
+                legend('Position','Returns','standev','Location','Best')
+                title(['NumTrades = ',num2str(indexClose),', Final Return = ',num2str(sum(obj.r),3),' (',num2str(sum(obj.r)/P(1)*100,3),'%)'])
+                xlabel(ax(1), 'Serial index i number');
+                xlabel(ax(2), 'Serial index i number');
+                ylabel(ax(1), 'Price ($)');
+                ylabel(ax(2), 'Returns ($)');
+                linkaxes(ax,'x')
                 
             end %if
             
         end
         
         
-        function [obj, Pbuy, devFluct2] = apri(obj, i, P, ~, ntrades, segnoOperazione, date)
+        function [obj, Pbuy, devFluct2] = apri(obj, i, P, fluctuationslag, M, ntrades, segnoOperazione, date)
             
             obj.trades(i) = 1;
             Pbuy = P(i);
-            devFluct2 = 1; % lo impongo sempre uguale a 1
-            %devFluct2 = std(fluctuationslag((i-(100-M)):i));
+            devFluct2 = std(fluctuationslag((i-(100-M)):i));
             obj.direction(ntrades)= segnoOperazione;
             obj.chei(ntrades)=i;
             obj.openingPrices(ntrades) = Pbuy;
@@ -185,7 +164,6 @@ classdef bkt_fast_supertrend < handle
             
         end
         
-
         
         
 %         function [obj] = chiudi_per_SL(obj, Pbuy, indice_I, segnoOperazione, devFluct2, wSL, cost, ntrades, date)

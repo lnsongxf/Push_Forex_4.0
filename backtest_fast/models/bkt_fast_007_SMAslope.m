@@ -1,4 +1,4 @@
-classdef bkt_fast_SMAslope < handle
+classdef bkt_fast_007_SMAslope < handle
     
     
     properties

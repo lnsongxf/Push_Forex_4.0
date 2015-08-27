@@ -1,4 +1,4 @@
-function [oper, openValue, closeValue, stopLoss, noLoose, valueTp, real] = Algo_Ivan(matrix, BigPointValue, intialRiskLimit)
+function [oper, openValue, closeValue, stopLoss, noLoose, valueTp, real] = Algo_009test_Ivan(matrix, BigPointValue, intialRiskLimit)
 
 %
 % DESCRIPTION:

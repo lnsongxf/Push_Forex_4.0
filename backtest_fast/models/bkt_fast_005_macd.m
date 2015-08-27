@@ -1,4 +1,4 @@
-classdef bkt_fast_macd < handle
+classdef bkt_fast_005_macd < handle
     
     
     properties

@@ -1,4 +1,4 @@
-function [oper, openValue, closeValue, stopLoss, noLoose, valueTp] = Algo_002_Ale(matrix)
+function [oper, openValue, closeValue, stopLoss, noLoose, valueTp] = Algo_002_leadlag(matrix)
 
 %
 % DESCRIPTION:

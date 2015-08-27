@@ -1,4 +1,4 @@
-function [oper, openValue, closeValue, stopLoss, noLoose, valueTp] = Algo_004_Ale(matrix)
+function [oper, openValue, closeValue, stopLoss, noLoose, valueTp] = Algo_011test_Ale(matrix)
 
 %
 % DESCRIPTION:

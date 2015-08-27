@@ -1,4 +1,4 @@
-classdef bkt_fast_RSI < handle
+classdef bkt_fast_008_supertrend < handle
     
     
     properties
@@ -18,63 +18,66 @@ classdef bkt_fast_RSI < handle
     
     methods
         
-        function obj = fast_RSI(obj, Pminute,P,date,N,M,newTimeScale,cost,wSL,wTP,plottami)
+        function obj = fast_supertrend(obj, Pminute,matrixNewHisData,N,M,newTimeScale,cost,wSL,wTP,plottami)
             
             % Pminute = prezzo al minuto
-            % P = prezzo alla new time scale
-            % date = data alla new time scale
-            % N = periodo(relativo all new time scale) su cui si basa l RSI
-            % M = M-period moving average
+            % matrixNewHisData = matrice con prezzi e date alla new time scale
+            % N = lunghezza storico segnale maxhigh-maxLow
+            % M = lunghezza storico per average price (M<N)
             % cost = spread per operazione (calcolato quando chiudi)
             % wSL = peso per calcolare quando chiuder per SL
             % wTP = peso per calcolare quando chiuder per TP
             
-            %% utilizza segnale del relative strength index
+            %% utilizza segnale del supertrend
+                        
+            high = sort(matrixNewHisData(:,2),'descend');
+            low = sort(matrixNewHisData(:,3),'ascend');
+            P = matrixNewHisData(:,4);
+            date = matrixNewHisData(:,6);
             
-            thresh = [30 70]; % default threshold for the RSI
+            sizeStorico = size(matrixNewHisData,1);
             
-            
-            pandl = zeros(size(P));
-            obj.trades = zeros(size(P));
-            obj.chei=zeros(size(P));
-            obj.openingPrices=zeros(size(P));
-            obj.closingPrices=zeros(size(P));
-            obj.direction=zeros(size(P));
-            obj.OpDates=zeros(size(P));
-            obj.ClDates=zeros(size(P));
-            obj.r =zeros(size(P));
+            pandl = zeros(sizeStorico,1);
+            obj.trades = zeros(sizeStorico,1);
+            obj.chei=zeros(sizeStorico,1);
+            obj.openingPrices=zeros(sizeStorico,1);
+            obj.closingPrices=zeros(sizeStorico,1);
+            obj.direction=zeros(sizeStorico,1);
+            obj.OpDates=zeros(sizeStorico,1);
+            obj.ClDates=zeros(sizeStorico,1);
+            obj.r =zeros(sizeStorico,1);
             
             ntrades = 0;
             indexClose = 0;
-            s = zeros(size(P));
+            s = zeros(sizeStorico,1);
+            hl = zeros(sizeStorico,1);
             
-            if M == 0
-                ma = zeros(size(P));
-            else
-                ma = movavg(P,M,M,'e');
+            for k = N:(sizeStorico)
+                
+                hl = high(k-N+1:k) - low(k-N+1:k);
+                atr = mean(hl);
+                avg = ( mean(high(k-M+1:k)) + mean(low(k-M+1:k)) ) / 2;
+                
+                if P(k)>(avg+atr)
+                    s(k) = 1;
+                elseif P(k)<(avg-atr);
+                    s(k) = -1;
+                end
+                
             end
-            ri = rsindex(P - ma, N);
             
-            
-            indx    = ri < thresh(1);
-            indx    = [false; indx(1:end-1) & ~indx(2:end)];
-            s(indx) = 1;
-            % Crossing the upper threshold
-            indx    = ri > thresh(2);
-            indx    = [false; indx(1:end-1) & ~indx(2:end)];
-            s(indx) = -1;
 
             i = 101;
             
             
-            while i <= length(P)
+            while i <= sizeStorico
                 
-                % se RSI da il segnale, compra (-1 in short, +1 in long)
-                if  abs ( s(i) ) 
+                % se il segnale è trending x due volte di seguito, compra (1 in long, -1 in short)
+                if  ( abs( s(i) + s(i-1) ) == 2 )
                     
                     segnoOperazione = s(i);
                     ntrades = ntrades + 1;
-                    [obj, Pbuy, devFluct2] = obj.apri(i, P, 0, M, ntrades, segnoOperazione, date);
+                    [obj, Pbuy, devFluct2] = obj.apri(i, P, 0, ntrades, segnoOperazione, date);
                     
                     for j = newTimeScale*(i):length(Pminute)
                         
@@ -84,6 +87,7 @@ classdef bkt_fast_RSI < handle
                         cond2 = sign (Pminute(j) - Pbuy) == segnoOperazione;
                         cond3 = abs (Pminute(j) - Pbuy) >= floor(wSL*devFluct2);
                         cond4 = sign (Pminute(j) - Pbuy) == segnoOperazione*-1;
+                        cond5 = abs( s(indice_I) - segnoOperazione ) >= 1;
                         
                         if cond1 && cond2
                             
@@ -104,6 +108,16 @@ classdef bkt_fast_RSI < handle
                             i = indice_I;
                             indexClose = indexClose + 1;
                             break
+                            
+                        elseif cond5
+                            
+                            obj.r(indice_I) = segnoOperazione*(Pminute(j) - Pbuy) - cost;
+                            obj.closingPrices(ntrades) = Pminute(j);
+                            obj.ClDates(ntrades) = date(indice_I); %controlla
+                            i = indice_I;
+                            indexClose = indexClose + 1;
+                            break
+                            
                             
                         end
                         
@@ -144,27 +158,21 @@ classdef bkt_fast_RSI < handle
             if plottami
                 
                 figure
-                ax(1) = subplot(3,1,1);
-                plot([P,ma]), grid on
-                legend('Price',['Moving Average ',num2str(M)])
-                title('RSI Results' )
-                ax(2) = subplot(3,1,2);
-                plot([ri,thresh(1)*ones(size(ri)),thresh(2)*ones(size(ri))])
-                grid on
-                legend(['RSI ',num2str(N)],'Lower Threshold','Upper Threshold')
-                title('RSI')
-                aaa(1) = subplot(3,1,3);
+                ax(1) = subplot(2,1,1);
+                plot(P), grid on
+                legend('Price')
+                title('supertrend Results' )
+                ax(2) = subplot(2,1,2);
                 plot(cumsum(obj.outputbkt(:,4))), grid on
                 legend('Cumulative Return')
                 title('Cumulative Returns ')
-                linkaxes(ax,'x')
                 
             end %if
             
         end
         
         
-        function [obj, Pbuy, devFluct2] = apri(obj, i, P, ~, ~, ntrades, segnoOperazione, date)
+        function [obj, Pbuy, devFluct2] = apri(obj, i, P, ~, ntrades, segnoOperazione, date)
             
             obj.trades(i) = 1;
             Pbuy = P(i);
@@ -177,26 +185,7 @@ classdef bkt_fast_RSI < handle
             
         end
         
-        % Faster implementation of rsindex found in Financial Toolbox
-        function r=rsindex(x,N)
-            %L = length(x);
-            dx = diff([0;x]);
-            up=dx;
-            down=abs(dx);
-            % up and down moves
-            I=dx<=0;
-            up(I) = 0;
-            down(~I)=0;
-            % calculate exponential moving averages
-            m1 = movavg(up,N,N,'e'); m2 = movavg(down,N,N,'e');
-            warning off
-            r = 100*m1./(m1+m2);
-            %r(isnan(r))=50;
-            I2=~((up+down)>0);
-            r(I2)=50;
-            
-            warning on
-        end
+
         
         
 %         function [obj] = chiudi_per_SL(obj, Pbuy, indice_I, segnoOperazione, devFluct2, wSL, cost, ntrades, date)

@@ -1,14 +1,36 @@
-function [oper, openValue, closeValue, stopLoss, noLoose, valueTp] = Algo_003_Lore(matrix)
+function [oper, openValue, closeValue, stopLoss, noLoose, valueTp] = Algo_000test_BktOffline(matrix)
 
 %
 % DESCRIPTION:
 % -----------------------------------------------------------------------
-% Algoritmo semplicissimo per far pratica
-% Chiama 03: DecisionMaker_mean
-% questa si calcola la media e deviaz standard di n dati storici e
-% suggerisce compra/vendi se l'ultimo storico è sopra o sotto 1stdev dalla
-% media
-
+% This is the general modular structure for creating the Algos:
+% 01 - coreState ..................... first filter manager
+% 02a - takeProfitManager ............ manager for TP and SL closing 
+% 03a - decMaker.decisionReal ........ second filter manager for virtual 
+%                                      running mode
+% 02b - takeProfitManager ............ manager for defining TP and SL 
+% 03b - decMaker.decisionDirection ... operative manager for opening
+%                                      direction
+% 03c - decMaker.calcLock ............ lock settings manager
+%
+% INPUT parameters:
+% -----------------------------------------------------------------------
+% matrix ... two-dimensional vector containing the following coloumns: 
+%            1-opening prices
+%            2-min values
+%            3-max values
+%            4-closing prices
+%            5-volumes         
+%
+% OUTPUT parameters:
+% -----------------------------------------------------------------------
+% to do
+%
+%
+% EXAMPLE of use:
+% -----------------------------------------------------------------------
+% to do
+%
 
 global      map;
 % global      log;
@@ -21,11 +43,12 @@ closeValue= 0;
 stopLoss  = 0;
 noLoose   = 0;
 valueTp   = 0;
+%real      = 0;
 
 
 
 cState = coreState_real02;
-decMaker = DecisionMaker_mean;
+decMaker = DecisionMaker_real02;
 
 
 if(isempty(map))
@@ -38,13 +61,13 @@ if(isempty(countCycle) || countCycle == 0)
     countCycle = 1;
     operationState = OperationState;
     params         = Parameters;
-    map('Algo_003_Lore') = RealAlgo(operationState,params);
+    map('Algo_testBktOffline') = RealAlgo(operationState,params);
     oper = 0;
     return;
 end
 
-ra = map('Algo_003_Lore');
-remove(map,'Algo_003_Lore');
+ra = map('Algo_testBktOffline');
+remove(map,'Algo_testBktOffline');
 
 params         = ra.p;
 operationState = ra.os;
@@ -56,7 +79,13 @@ chiusure        = matrix(:,4);
 %volumi          = matrix(:,5);
 
 
+
+% 01
+% -------- coreState filter ------------------ %
+% cState.anderson(matrix,0.6,1);
+% state=cState.state;
 state=1;           % in case of no coreState filter
+
 
 if operationState.lock
     counter = counter + 1;
@@ -74,28 +103,39 @@ else
         if abs(operationState.actualOperation) == 0
             if state
                 
+                % 03a
+                % -------- decMaker filter -------------------------- %
+%                 decMaker.decisionReal4(chiusure);
+%                 real=decMaker.real;
+
+
+
                 % 02b
                 % -------- takeProfitManager: define TP and SL ------ %
+                %                      TO CREATE
                 TakeP=1;
                 StopL=1;
-                params.set('stopLoss__',StopL);
-                params.set('noLoose___',TakeP);
                 
                 % 03b
                 % -------- decMaker direction manager --------------- %
-                [operationState,counter] = decMaker.decisionMeanSdev(chiusure,params,operationState);
+                [params, operationState,counter] = decMaker.decisionDirection1(chiusure,params,operationState,TakeP,StopL);
                 display('operazione aperta');
                 
+                % 03c
+                % -------- decMaker lock manager -------------------- %
+                operationState = decMaker.calcLock(operationState);
                                 
             end
         end
     end
+    
+    
 end
 
 oper = operationState.actualOperation;
 
 real_Algo = RealAlgo(operationState,params);
-map('Algo_003_Lore')     = real_Algo;
+map('Algo_testBktOffline')     = real_Algo;
 
 openValue = params.get('openValue_');
 closeValue= params.get('closeValue');
