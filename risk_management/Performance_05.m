@@ -246,10 +246,9 @@ classdef Performance_05 < handle
         
         function obj=SharpeRatio(obj,colour,plotPerformance)
             
-            [row,~,r] = find(obj.inputResultsMatrix(:,4).*obj.inputResultsMatrix(:,6));
-            % Returns=floor(r);
-            returns=r;
-            [~,~,nOper] = find(obj.inputResultsMatrix(:,1).*obj.inputResultsMatrix(:,6));    % nOper is the index of the operation
+            row = find(obj.inputResultsMatrix(:,6));
+            returns = obj.inputResultsMatrix(row,4);
+            nOper = obj.inputResultsMatrix(row,1);    % nOper is the index of the operation
             lots=obj.inputResultsMatrix(:,9);
             workingStack=lots.*100000;
             pip2EuroConversion=workingStack/10000;
@@ -432,9 +431,8 @@ classdef Performance_05 < handle
         
         function obj=RicciRatio(obj)
             
-            [~,~,r] = find(obj.inputResultsMatrix(:,4).*obj.inputResultsMatrix(:,6));
-            %Returns=floor(r);
-            Returns=r;
+            indx =  find(obj.inputResultsMatrix(:,6));
+            Returns=obj.inputResultsMatrix(indx,4);
             ExReturns=Returns-obj.transCost;
             
             [ip,~,~] = find(ExReturns>0);
@@ -472,9 +470,9 @@ classdef Performance_05 < handle
         
         function obj=DrawDown(obj)
             
-            [~,~,r] = find(obj.inputResultsMatrix(:,4).*obj.inputResultsMatrix(:,6));
+            indx = find(obj.inputResultsMatrix(:,6));
             %Returns=floor(r);
-            Returns=r;
+            Returns=obj.inputResultsMatrix(indx,4);
             ExReturns=Returns-obj.transCost;
             
             %l=leverage;

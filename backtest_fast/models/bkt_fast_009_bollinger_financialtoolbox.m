@@ -1,4 +1,4 @@
-classdef bkt_fast_003_bollinger < handle
+classdef bkt_fast_009_bollinger_financialtoolbox < handle
     
     
     properties
@@ -12,24 +12,25 @@ classdef bkt_fast_003_bollinger < handle
         OpDates;
         closingPrices;
         ClDates;
+        indexClose;
         
     end
     
     
     methods
         
-        function obj = fast_bollinger(obj, Pminute,P,date,N,newTimeScale,cost,wApri,wChiudi,plottami)
+        function obj = fast_bollinger_financialtoolbox(obj, Pminute,P,date,newTimeScale,cost,N,nstd,plottami)
             
             % Pminute = prezzo al minuto
             % P = prezzo alla new time scale
             % date = data alla new time scale
-            % N = lookback period per calcolare media e stdev
             % cost = spread per operazione (calcolato quando chiudi)
-            % wApri = deviazione dallo zScore necessaria x aprire operaz
-            % wChiudi = deviazione dallo zScore necessaria x chiuder operaz
+            % N = lookback period per calcolare media e stdev
+            % nstd = numero di stdev per definire le bande upper e lower (consigliato=2) 
             
             
-            %% simula algo Bollinger bands
+            %% simula algo Bollinger bands usando la funzione del financial toolbox
+            % (invece dell'algo 003_bollinger che implementava secondo E.Chan)
             
             pandl = zeros(size(P));
             obj.trades = zeros(size(P));
@@ -40,25 +41,18 @@ classdef bkt_fast_003_bollinger < handle
             obj.OpDates=zeros(size(P));
             obj.ClDates=zeros(size(P));
             obj.r =zeros(size(P));
+            obj.indexClose = 0;
             
             ntrades = 0;
-            indexClose = 0;
             s = zeros(size(P));
                       
-            
-            a = (1/N)*ones(1,N);
-            MA = filter(a,1,P);
-            MSTDEV = movingStd(P, N);
+            % mid (prezzo smooth), upper band, lower band
+            [mid, uppr, lowr] = bollinger(P, N, 0, nstd);
 
-            zScore=(P-MA)./MSTDEV;
             
             % signals
-            s(zScore < -wApri) = 1; 
-            s(zScore > wApri) = -1;
-            
-            
-%             longsExit=zScore > -exitZscore;
-%             shortsExit=zScore < exitZscore;
+            s(P < lowr) = 1; 
+            s(P > uppr) = -1;
 
             
             i = 101;
@@ -77,29 +71,30 @@ classdef bkt_fast_003_bollinger < handle
                         
                         indice_I = floor(j/newTimeScale);
                         
-                         cond1 = abs (Pminute(j) - Pbuy) >= floor(wChiudi*devFluct2);
-                        cond2 = sign (Pminute(j) - Pbuy) == segnoOperazione;
-                        cond3 = abs (Pminute(j) - Pbuy) >= floor(wChiudi*devFluct2);
+                        % cond1 è se il prezzo tocca la banda opposta
+                        cond1 = s(indice_I) == -segnoOperazione;
+                        % cond3 e 4 son per stop loss
+                        cond3 = abs (Pminute(j) - Pbuy) >= 10;
                         cond4 = sign (Pminute(j) - Pbuy) == segnoOperazione*-1;
                         
-                        if cond1 && cond2
+                        if cond1
                             
-                            obj.r(indice_I) = wChiudi*devFluct2 - cost;
-                            obj.closingPrices(ntrades) = Pbuy + segnoOperazione*floor(wChiudi*devFluct2);
+                            obj.r(indice_I) = (Pminute(j) - Pbuy)*segnoOperazione - cost;
+                            obj.closingPrices(ntrades) = Pminute(j);
                             obj.ClDates(ntrades) = date(indice_I); %controlla
                             %obj = obj.chiudi_per_TP(Pbuy, indice_I, segnoOperazione, devFluct2, wTP, cost, ntrades, date);
                             i = indice_I;
-                            indexClose = indexClose + 1;
+                            obj.indexClose = obj.indexClose + 1;
                             break
                             
                         elseif cond3 && cond4
                             
-                            obj.r(indice_I) = - wChiudi*devFluct2 - cost;
-                            obj.closingPrices(ntrades) = Pbuy - segnoOperazione*floor(wChiudi*devFluct2);
+                            obj.r(indice_I) = - 10 - cost;
+                            obj.closingPrices(ntrades) = Pminute(j);
                             obj.ClDates(ntrades) = date(indice_I); %controlla
                             %obj = obj.chiudi_per_SL(Pbuy, indice_I, segnoOperazione, devFluct2, wSL, cost, ntrades, date);
                             i = indice_I;
-                            indexClose = indexClose + 1;
+                            obj.indexClose = obj.indexClose + 1;
                             break
                             
                         end
@@ -124,16 +119,16 @@ classdef bkt_fast_003_bollinger < handle
             %             profittofinale = sum(r);
             %
             
-            obj.outputbkt(:,1) = obj.chei(1:indexClose);                    % index of stick
-            obj.outputbkt(:,2) = obj.openingPrices(1:indexClose);      % opening price
-            obj.outputbkt(:,3) = obj.closingPrices(1:indexClose);        % closing price
-            obj.outputbkt(:,4) = (obj.closingPrices(1:indexClose) - ...
-                obj.openingPrices(1:indexClose)).*obj.direction(1:indexClose);   % returns
-            obj.outputbkt(:,5) = obj.direction(1:indexClose);              % direction
-            obj.outputbkt(:,6) = ones(indexClose,1);                    % real
-            obj.outputbkt(:,7) = obj.OpDates(1:indexClose);              % opening date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
-            obj.outputbkt(:,8) = obj.ClDates(1:indexClose);                % closing date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
-            obj.outputbkt(:,9) = ones(indexClose,1)*1;                 % lots setted for single operation
+            obj.outputbkt(:,1) = obj.chei(1:obj.indexClose);                    % index of stick
+            obj.outputbkt(:,2) = obj.openingPrices(1:obj.indexClose);      % opening price
+            obj.outputbkt(:,3) = obj.closingPrices(1:obj.indexClose);        % closing price
+            obj.outputbkt(:,4) = (obj.closingPrices(1:obj.indexClose) - ...
+                obj.openingPrices(1:obj.indexClose)).*obj.direction(1:obj.indexClose);   % returns
+            obj.outputbkt(:,5) = obj.direction(1:obj.indexClose);              % direction
+            obj.outputbkt(:,6) = ones(obj.indexClose,1);                    % real
+            obj.outputbkt(:,7) = obj.OpDates(1:obj.indexClose);              % opening date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
+            obj.outputbkt(:,8) = obj.ClDates(1:obj.indexClose);                % closing date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
+            obj.outputbkt(:,9) = ones(obj.indexClose,1)*1;                 % lots setted for single operation
             
             
             
@@ -142,14 +137,18 @@ classdef bkt_fast_003_bollinger < handle
                 
                 figure
                 ax(1) = subplot(2,1,1);
-                plot([P,MA]), grid on
-                legend('Price',['Moving Average ',num2str(M)])
+                plot(P), grid on
+                hold on
+                plot(mid,'black')
+                plot(uppr, 'red')
+                plot(lowr,'red')
+                legend('Price','mid','upper','lower')
                 title(['Bollinger con lookperiod ',num2str(N)])
-                aaa(1) = subplot(2,1,2);
+                ax(2) = subplot(2,1,2);
                 plot(cumsum(obj.outputbkt(:,4))), grid on
                 legend('Cumulative Return')
                 title('Cumulative Returns ')
-                linkaxes(ax,'x')
+                %linkaxes(ax,'x')
                 
             end %if
             
