@@ -1,5 +1,6 @@
 function [operationState, chiusure, params] = closeOnNewTimeScaleManager (operationState, chiusure, params)
-
+   
+operationState.minutesFromOpening = operationState.minutesFromOpening +1;
 LastClosePrice = chiusure(end-1);
 
 % display(['currentvalue = ', num2str(LastClosePrice),' openvalue =', num2str(params.get('openValue_')), ...
@@ -19,11 +20,6 @@ elseif (cond3 + cond4 == 2)
     
     operationState = params.closeOnCall(operationState,LastClosePrice);
     display('loose');
-
-else
-    
-    operationState.counter = operationState.counter + 1;
-    
 end
 
 end

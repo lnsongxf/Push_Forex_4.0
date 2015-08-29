@@ -276,6 +276,7 @@ classdef DecisionMaker_real02 < handle
             params.set('real______',obj.real);
             
             counter = 0;
+            operationState.minutesFromOpening = 0;
             
         end
         

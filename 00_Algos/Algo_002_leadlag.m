@@ -4,7 +4,7 @@ function [oper, openValue, closeValue, stopLoss, noLoose, valueTp] = Algo_002_le
 % DESCRIPTION:
 % -----------------------------------------------------------------------
 % This is the general modular structure for creating the Algos:
-% 01 - coreState ..................... first filter manager
+% 01  - coreState ..................... first filter manager
 % 02a - takeProfitManager ............ manager for TP and SL closing 
 % 03a - decMaker.decisionReal ........ second filter manager for virtual 
 %                                      running mode
@@ -45,8 +45,6 @@ noLoose   = 0;
 valueTp   = 0;
 %real      = 0;
 
-
-
 cState = coreState_real02;
 decMaker = DecisionMaker_real02;
 
@@ -55,8 +53,8 @@ if(isempty(map))
     
     map = containers.Map;
     counter = 0;
-
 end
+
 
 %display(countCycle);
 if(isempty(countCycle) || countCycle == 0)
@@ -67,8 +65,8 @@ if(isempty(countCycle) || countCycle == 0)
     map('Algo_002_Ale') = RealAlgo(operationState,params);
     oper = 0;
     return;
-
 end
+
 
 ra = map('Algo_002_Ale');
 remove(map,'Algo_002_Ale');
@@ -81,7 +79,6 @@ operationState = ra.os;
 %highs          = matrix(:,3);
 chiusure        = matrix(:,4);
 %volumi          = matrix(:,5);
-
 
 
 % 01
@@ -104,11 +101,12 @@ if operationState.lock
     
 else
     
-    if abs(operationState.actualOperation) > 0 
+    if abs(operationState.actualOperation) > 0
         
         % 02a
         % -------- takeProfitManager: close for TP or SL ------ %
         [operationState,~,params] = takeProfitManager(operationState,chiusure,params);
+        % [operationState,~, params] = timeClosureManager (operationState, chiusure, params, 30);
         
     else
         
@@ -132,7 +130,7 @@ else
                 
                 % 03b
                 % -------- decMaker direction manager --------------- %
-                [params, operationState,counter] = decMaker.decisionDirectionByCore(chiusure,params,operationState,cState,TakeP,StopL);
+                [params, operationState, counter] = decMaker.decisionDirectionByCore(chiusure,params,operationState,cState,TakeP,StopL);
 
                 display('operazione aperta');
                 
@@ -175,16 +173,11 @@ clear ma;
 clear state;
 clear ao;
 clear earn;
-%clear w;
-%clear l;
 clear dev;
 
 clear matrix;
 clear ra;
-%clear highs;
-%clear lows;
 
-%display(['oper = ' num2str(oper)]) ;
 
 end
 
