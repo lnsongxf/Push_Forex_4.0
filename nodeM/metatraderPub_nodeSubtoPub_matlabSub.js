@@ -312,11 +312,48 @@ sockSubFromQuotesProvider.on('message', function(topic, message) {
 //----------------------------------------------------------------------------------------------------------------------------
 // MATLAB PUB TO NODEJS TO METATRADER
 
-sockSubFromSignalProvider.subscribe('OPEN$EURUSD');
-sockSubFromSignalProvider.subscribe('CLOSE$EURUSD');
-
+var runningSignalProviderTopicOperationList = [];
+var runningSignalProviderTopicStatusList = [];
+var TopicAlgosOperationListLabel = 'ALGOSOPERATIONLIST'; 
+var TopicAlgosStatusListLabel = 'ALGOSSTATUSLIST'; 
+sockSubFromSignalProvider.subscribe('NEWTOPICFROMSIGNALPROVIDER');
 sockSubFromSignalProvider.on('message', function(messageSub) {
-  var message = messageSub.toString().split(" ");
+  
+	var data = messageSub.toString().split(" ");
+  	console.log('received a message related to:', data[0], 'containing message:', data[1]);
+  	var topic = data[0];
+  	var message = data[1];
+
+  	switch (topic) {
+  		case "NEWTOPICFROMSIGNALPROVIDER":
+
+  			var newTopic = topic.split('@');
+  			if (newTopic[3] == 'OPERATIONS') {
+  				if ( runningSignalProviderTopicOperationList.indexOf( message ) == "-1" ) {
+					//CREATE AND ADD NEW TOPICS (EX: MATLAB@111@EURUSD@OPERATIONS) IN THE ARRAY LIST
+					runningSignalProviderTopicOperationList.push(message); 
+					sockSubFromSignalProvider.subscribe(message);
+					var runningSignalProviderTopicOperationListString = JSON.stringify(runningSignalProviderTopicOperationList);
+					sockPub.send([TopicAlgosOperationListLabel, runningSignalProviderTopicOperationListString];
+				}
+  			}else if (newTopic[3] == 'STATUS'){
+  				if ( runningSignalProviderTopicStatusList.indexOf( message ) == "-1" ) {
+					//CREATE AND ADD NEW TOPICS (EX: MATLAB@111@EURUSD@STATUS) IN THE ARRAY LIST
+					runningSignalProviderTopicStatusList.push(message); 
+					sockSubFromSignalProvider.subscribe(message);
+					var runningSignalProviderTopicStatusListString = JSON.stringify(runningSignalProviderTopicStatusList);
+					sockPub.send([TopicAlgosStatusListLabel, runningSignalProviderTopicStatusListString];
+				}
+  			}
+			break;
+		default:
+			//sdfd
+			break;
+	}
+
+
+
+  /*var message = messageSub.toString().split(" ");
   console.log('received a message related to:', message[0], 'containing message:', message[1]);
 
   if (message[0] == "OPEN@EURUSD") {
@@ -327,9 +364,10 @@ sockSubFromSignalProvider.on('message', function(messageSub) {
   if (message[0] == "CLOSE@EURUSD") {
     console.log("Sending Open trade msg for topic: "+message[0]+ "to Metatrader");
     sockPub.send(message[0] + ";" +message[1]);
-  };
+  };*/
 
 });
+
 
 
 

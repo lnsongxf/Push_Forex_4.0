@@ -4,24 +4,41 @@ function StartAlgo()
     socket = zmq.core.socket(context, 'ZMQ_SUB');
     contextPub = zmq.core.ctx_new();
     socket_pub = zmq.core.socket(contextPub, 'ZMQ_PUB');
-    % Listner
+    % SET LISTENERS
     port = 50026;
     address = sprintf('tcp://127.0.0.1:%d', port);
     zmq.core.connect(socket, address);
     portPub = 50028;
     addressPub = sprintf('tcp://127.0.0.1:%d', portPub);
     zmq.core.connect(socket_pub, addressPub);
-    fileID = fopen('configListeners.txt');
-    C = textscan(fileID,'%s');
-    fclose(fileID);
-    [m,n] = size(C{1});
-    for j = 1:m
-        zmq.core.setsockopt(socket, 'ZMQ_SUBSCRIBE', C{1}{j});
+    
+    % SETTING TOPICS PUB - EX: MATLAB@111@EURUSD@OPERATIONS
+    fileIdPub = fopen('configPublishers.txt');
+    ListP = textscan(fileIdPub,'%s');
+    fclose(fileIdPub);
+    [k,z] = size(ListP{1});
+    for w = 1:k
+        newTopicPub = 'NEWTOPICOPERATION';
+        messagePubOperation = sprintf('%s %s', newTopicPub, ListP{1}{w});
+        zmq.core.send(socket_pub, uint8(messagePubOperation));
     end
+    
+    % SETTING TOPICS SUB - 
+    % EX: TIMEFRAMEQUOTE@MT4@ACTIVTRADES@EURUSD@m1@v1
+    % EX: MATLAB@111@EURUSD@STATUS
+    fileIdSub = fopen('configListeners.txt');
+    ListS = textscan(fileIdSub,'%s');
+    fclose(fileIdSub);
+    [m,n] = size(ListS{1});
+    for j = 1:m
+        zmq.core.setsockopt(socket, 'ZMQ_SUBSCRIBE', ListS{1}{j});
+    end
+    
+    
     topicName = 'null';
     while 1
             message = char(zmq.core.recv(socket));
-            isMember = any(ismember(C{1},message));
+            isMember = any(ismember(ListS{1},message));
             if isMember == 1
                 topicName = message;
             else
