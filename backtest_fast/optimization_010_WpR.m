@@ -1,4 +1,4 @@
-%% Fast optimization of supertrend parameters
+%% Fast optimization of Williams %R
 % cambia i parametri in input qui sotto o fallo girare csi com'è
 
 % close all
@@ -71,40 +71,38 @@ end
 
 %% prova semplice
 
-% bktfast=bkt_fast_supertrend;
-% bktfast=bktfast.fast_supertrend(hisDataTest(:,4),newHisDataTest,10,3,newTimeScale,cost,20,10,1);
+% bktfast=bkt_fast_010_WpR;
+% bktfast=bktfast.fast_WpR(hisDataTest(:,4),newHisDataTest,11,newTimeScale,cost,10,10,1);
 
 %% Estimate parameters over a range of values
 % Puoi cambiare i TP e SL consigliati
-% oppure la lunghezza dei parametri N e M del supertrend
+% oppure la lunghezza di lookback nperiods
 
-matrixsize = 20;
-R_over_maxDD = nan(matrixsize,matrixsize);
+matrixsize = 50;
+R_over_maxDD = nan(matrixsize,1);
 
 
 tic
-for n = 3:15
+for n = 3:50
     
     display(['n =', num2str(n)]);
     
-    for m = 1:n
-        
-%         display(['n =', num2str(n),' m = ',  num2str(m)]);
-        
-        bktfast=bkt_fast_supertrend;
-        bktfast=bktfast.fast_supertrend(hisDataTest(:,4),newHisDataTest,n,m,newTimeScale,cost,100,100,0);
-        
-        p = Performance_05;
-        performance = p.calcSinglePerformance('supertrend','bktWeb',cross,newTimeScale,0,10000,10,bktfast.outputbkt,0);
-        
-        R_over_maxDD(n,m) = performance.pipsEarned / abs(performance.maxDD);
-        
-    end
+    
+    bktfast=bkt_fast_010_WpR;
+    bktfast=bktfast.fast_WpR(hisDataTest(:,4),newHisDataTest,n,newTimeScale,cost,10,10,0);
+    
+    p = Performance_05;
+    performance = p.calcSinglePerformance('WpR','bktWeb',cross,newTimeScale,0,10000,10,bktfast.outputbkt,0);
+    
+    R_over_maxDD(n) = performance.pipsEarned / abs(performance.maxDD);
+    
+    
 end
 toc
 
 %visualizza i risultati come surface plot
-sweepPlot_BKT_Fast(R_over_maxDD)
+figure
+plot(R_over_maxDD)
 
 
 
@@ -112,16 +110,15 @@ sweepPlot_BKT_Fast(R_over_maxDD)
 % occhio che ind2sub deve prender come primo parametro la lunghezza della
 % matrice dei risultati, e che lavora solo su matrici quadrate
 
- [~, bestInd] = max(R_over_maxDD(:)); % (Linear) location of max value
- [bestN, bestM] = ind2sub(matrixsize, bestInd); % Lead and lag at best value
- 
- display(['bestN =', num2str(bestN),' bestM =', num2str(bestM)]);
+ [~, bestN] = max(R_over_maxDD(:)); % (Linear) location of max value
 
-bktfastTest=bkt_fast_supertrend;
-bktfastTest=bktfastTest.fast_supertrend(hisDataTest(:,4),newHisDataTest,bestN,bestM,newTimeScale,cost,100,100,0);
+ display(['bestN =', num2str(bestN)]);
+
+bktfastTest=bkt_fast_010_WpR;
+bktfastTest=bktfastTest.fast_WpR(hisDataTest(:,4),newHisDataTest,bestN,newTimeScale,cost,10,10,0);
 
 p = Performance_05;
-performanceTest = p.calcSinglePerformance('supertrend','bktWeb',cross,newTimeScale,0,10000,10,bktfastTest.outputbkt,0);
+performanceTest = p.calcSinglePerformance('WpR','bktWeb',cross,newTimeScale,0,10000,10,bktfastTest.outputbkt,0);
 
 risultato = performanceTest.pipsEarned / abs(performanceTest.maxDD);
 
@@ -131,11 +128,11 @@ title(['Test Best Result, Final R over maxDD = ',num2str( risultato) ])
 
 %% now the final check using the Paper Trading
 
-bktfastPaperTrading=bkt_fast_supertrend;
-bktfastPaperTrading=bktfastPaperTrading.fast_supertrend(hisDataPaperTrad(:,4),newHisDataPaperTrad,bestN,bestM,newTimeScale,cost,100,100,0);
+bktfastPaperTrading=bkt_fast_010_WpR;
+bktfastPaperTrading=bktfastPaperTrading.fast_WpR(hisDataPaperTrad(:,4),newHisDataPaperTrad,bestN,newTimeScale,cost,10,10,0);
 
 p = Performance_05;
-performancePaperTrad = p.calcSinglePerformance('supertrend','bktWeb',cross,newTimeScale,0,10000,10,bktfastPaperTrading.outputbkt,0);
+performancePaperTrad = p.calcSinglePerformance('WpR','bktWeb',cross,newTimeScale,0,10000,10,bktfastPaperTrading.outputbkt,0);
 risultato = performancePaperTrad.pipsEarned / abs(performancePaperTrad.maxDD);
 
 figure
