@@ -15,12 +15,6 @@ int init()
    
    context = zmq_init(1);
    speaker = zmq_socket(context, ZMQ_PUB);
-  
-   /*if (zmq_bind(speaker,"tcp://127.0.0.1:50025") == -1) 
-   {
-      Print("Error binding the speaker!");
-      return(-1);  
-   }*/
    
    if (zmq_connect(speaker,"tcp://127.0.0.1:50025") == -1)
    {
@@ -28,8 +22,25 @@ int init()
       return(-1);
    }
    
+   // Publish new quotes topic from MT4 ActiveTrades
+   string new_quotes_topic_message = "MT4@ACTIVTRADES@REALTIMEQUOTES";
+   string topic0 = "NEWTOPICQUOTES";
+   s_sendmore(speaker, topic0);
+   if(s_send(speaker, new_quotes_topic_message) == -1)
+      Print("Error sending message: " + new_quotes_topic_message);
+   else
+      Print("Published message new topic: " + new_quotes_topic_message);
+   /////////////////////////////////////////////////////////////////////////////////////////////
    
-   
+   // Publish first array data for EURUSD,m1,v5
+   string current_m1_5v_tick = "EURUSD@m1@" + Bid + ";" + Ask + ";" + Time[0] + "$" + Bid + ";" + Ask + ";" + Time[0] + "$" + Bid + ";" + Ask + ";" + Time[0] + "$" + Bid + ";" + Ask + ";" + Time[0] + "$" + Bid + ";" + Ask + ";" + Time[0] + "$" + Bid + ";" + Ask + ";" + Time[0];
+   string topic1 = "MT4@ACTIVTRADES@REALTIMEQUOTES";
+   s_sendmore(speaker, topic1);
+   if(s_send(speaker, current_m1_5v_tick) == -1)
+      Print("Error sending message: " + current_m1_5v_tick);
+   else
+      Print("Published message array first data: " + current_m1_5v_tick);
+   /////////////////////////////////////////////////////////////////////////////////////////////
    return(0);
   }
 
@@ -50,10 +61,9 @@ int start()
   {
 
    // Publish current tick value.
-   string current_tick = "tick " + Bid + " " + Ask + " " + Time[0];
-   
-   string topic = "EURUSD@30m@40";
-   s_sendmore(speaker, topic);
+   string current_tick = "EURUSD@" + Bid + ";" + Ask + ";" + Time[0];
+   string topic2 = "MT4@ACTIVTRADES@REALTIMEQUOTES";
+   s_sendmore(speaker, topic2);
    if(s_send(speaker, current_tick) == -1)
       Print("Error sending message: " + current_tick);
    else

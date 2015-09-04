@@ -239,7 +239,7 @@ var startTask0 = schedule.scheduleJob(date_start_schedule, function(){
 
 sockSubFromQuotesProvider.subscribe('NEWTOPICQUOTES');
 sockSubFromQuotesProvider.subscribe('DELETETOPICQUOTES');
-sockSubFromQuotesProvider.subscribe('');
+//sockSubFromQuotesProvider.subscribe('');
 sockSubFromQuotesProvider.on('message', function(topic, message) {
 	var topicArr = topic.toString().split("@");
   	var messageArr = message.toString().split("@");
@@ -336,7 +336,8 @@ sockSubFromSignalProvider.on('message', function(messageSub) {
 					var runningSignalProviderTopicOperationListString = JSON.stringify(runningSignalProviderTopicOperationList);
 					sockPub.send([TopicAlgosOperationListLabel, runningSignalProviderTopicOperationListString];
 				}
-  			}else if (newTopic[3] == 'STATUS'){
+  			}
+  			else if (newTopic[3] == 'STATUS'){
   				if ( runningSignalProviderTopicStatusList.indexOf( message ) == "-1" ) {
 					//CREATE AND ADD NEW TOPICS (EX: MATLAB@111@EURUSD@STATUS) IN THE ARRAY LIST
 					runningSignalProviderTopicStatusList.push(message); 
