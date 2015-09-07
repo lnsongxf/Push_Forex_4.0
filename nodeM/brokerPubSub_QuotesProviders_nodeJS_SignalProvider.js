@@ -1,6 +1,49 @@
 var http = require('http');
 var zmq = require('zmq'); 
 var schedule = require('node-schedule');
+var bunyan = require('bunyan');
+
+var logger = bunyan.createLogger({name: 'PushForex4.0'});
+var logger = bunyan.createLogger({
+    name: 'PushForex4.0',
+    streams: [
+    	{
+	        type: 'rotating-file',
+	        path: '/forexLog/info/broker.log',
+	        period: '1d',   // daily rotation
+	        count: 30        // keep 3 back copies
+	        level: "info"
+    	},
+    	{
+	        type: 'rotating-file',
+	        path: '/forexLog/warn/broker.log',
+	        period: '1d',   // daily rotation
+	        count: 30        // keep 3 back copies
+	        level: "warn"
+    	},
+    	{
+	        type: 'rotating-file',
+	        path: '/forexLog/error/broker.log',
+	        period: '1d',   // daily rotation
+	        count: 30        // keep 3 back copies
+	        level: "error"
+    	},
+    	{
+	        type: 'rotating-file',
+	        path: '/forexLog/fatal/broker.log',
+	        period: '1d',   // daily rotation
+	        count: 30        // keep 3 back copies
+	        level: "fatal"
+    	},
+    ]
+});
+
+/*
+"fatal" (60): The service/app is going to stop or become unusable now. An operator should definitely look into this soon.
+"error" (50): Fatal for a particular request, but the service/app continues servicing other requests. An operator should look at this soon(ish).
+"warn" (40): A note on something that should probably be looked at by an operator eventually.
+"info" (30): Detail on regular operation.
+*/
 
 var QuotesModule = (function(){
 
@@ -63,6 +106,11 @@ var QuotesModule = (function(){
 	};
 
 	var _updateTimeFrameQuotesObj = function(timeFrame,timeFrameQuotesObj,realTimeQuotesObj){
+
+		if (timeFrame == null || timeFrame == undefined || timeFrameQuotesObj == null || timeFrameQuotesObj == undefined || realTimeQuotesObj == null || realTimeQuotesObj == undefined ) {
+			logger.error('In _updateTimeFrameQuotesObj timeframe or timeFrameQuotesObj or realTimeQuotesObj is notDefined/null');
+		};
+
 		var index = "";
 		switch (timeFrame){
 			case "m1":
@@ -106,21 +154,42 @@ var QuotesModule = (function(){
 		  								var topic = key1;
 		  								//"TIMEFRAMEQUOTE@MT4@ACTIVTRADES   +     @EURUSD     +     @m1     +    @v1 
 		  								var topicToSignalProvider = timeFrameQuotesObj.provider+key1+timeFrame+Object.keys(tempObj)[0];
+		  								if (topicToSignalProvider == null || topicToSignalProvider == undefined ) {
+											logger.error({'timeFrameQuotesObjProvider':timeFrameQuotesObj.provider},{'key1':key1},{'timeFrame':timeFrame},{'totValues':Object.keys(tempObj)[0] },'In _updateTimeFrameQuotesObj topicToSignalProvider is notDefined/null');
+										};
+										if (tempObj[Object.keys(tempObj)[0]].toString()] == null || tempObj[Object.keys(tempObj)[0]].toString()] == undefined ) {
+											logger.error({'objWithMessageToSend':tempObj},' _updateTimeFrameQuotesObj is sending a message (Quotes) notDefined/null');
+										};
 		  								sockPub.send([topicToSignalProvider, tempObj[Object.keys(tempObj)[0]].toString()]);
-		  							};
+		  							}else{
+		  								//if (topicToSignalProvider == null || topicToSignalProvider == undefined ) {
+										//	logger.error('In _updateTimeFrameQuotesObj, realTimeQuotesObj[key0] is null');
+										//};
+		  							}
 		  						}else{
 	  								if (realTimeQuotesObj[key0] != "") {
 		  								tempObj[Object.keys(tempObj)[0]].shift();
 		  								tempObj[Object.keys(tempObj)[0]].push(realTimeQuotesObj[key0]);
 		  								//"TIMEFRAMEQUOTE@MT4@ACTIVTRADES   +     @EURUSD     +     @m1     +    @v10 
 		  								var topicToSignalProvider = timeFrameQuotesObj.provider+key1+timeFrame+Object.keys(tempObj)[0];
+		  								if (topicToSignalProvider == null || topicToSignalProvider == undefined ) {
+											logger.error({'timeFrameQuotesObjProvider':timeFrameQuotesObj.provider},{'key1':key1},{'timeFrame':timeFrame},{'totValues':Object.keys(tempObj)[0] },'In _updateTimeFrameQuotesObj topicToSignalProvider is notDefined/null');
+										};
+										if (tempObj[Object.keys(tempObj)[0]].toString()] == null || tempObj[Object.keys(tempObj)[0]].toString()] == undefined ) {
+											logger.error({'objWithMessageToSend':tempObj},' _updateTimeFrameQuotesObj is sending a message (Quotes) notDefined/null');
+										};
 		  								sockPub.send([topicToSignalProvider, tempObj[Object.keys(tempObj)[0]].toString()]);
+		  							}else{
+		  								//if (topicToSignalProvider == null || topicToSignalProvider == undefined ) {
+										//	logger.error('In _updateTimeFrameQuotesObj, realTimeQuotesObj[key0] is null');
+										//};
 		  							}
 		  						}
 		  						timeFrameQuotesObj[key1][index][timeFrame][j] = tempObj;
 	  						};
 	  						//uncomment this file if you want to check how are stored the quotes values
-	  						console.log("timeFrameQuotesObj[key1][index][timeFrame]: ",timeFrameQuotesObj[key1][index][timeFrame]);
+	  						log.info({'timeFrameQuotesObj[key1][index][timeFrame]': timeFrameQuotesObj[key1][index][timeFrame] }, 'TimeFrame Obj Updated');
+	  						//console.log("timeFrameQuotesObj[key1][index][timeFrame]: ",timeFrameQuotesObj[key1][index][timeFrame]);
 	  					}	
 					}
 				}
@@ -210,17 +279,25 @@ var runningProviderRealTimeObjs = {};
 
 // THE CODE BELOW SET THE SUBTASK TO UPDATED THE TIMEFRAME DATA EACH 1M,5M,15M ETC.. 
 var startSchedule = serverSetting.serverSettingList[0].startScheduleTime.split(",");
+if (startSchedule == null || startSchedule == undefined){
+	logger.fatal('The start date in the Server is not defined or is null, check the server_setting.json file');
+}else if ( startSchedule != null || startSchedule != undefined ) {
+	logger.info({'startSchedule': startSchedule}, 'Server Start Date');
+};
 var date_start_schedule = new Date(startSchedule[0],startSchedule[1],startSchedule[2],startSchedule[3],startSchedule[4],startSchedule[5]);
 var minutesList=[{'m1':60000},{'m5':300000},{'m15':900000},{'m30':1800000},{'h1':3600000},{'h4':14400000},{'d1':86400000},{'w1':604800000}];
 var startTask0 = schedule.scheduleJob(date_start_schedule, function(){
     //console.log('Start Scheduling! Scheduled Time:'+startSchedule+'   Current Time: '+Date());
     for (var i = minutesList.length - 1; i >= 0; i--) {
-    	console.log("subtasks: ",minutesList[i][Object.keys(minutesList[i])[0]]," ",Object.keys(minutesList[i])[0]);
-    
+    	//console.log("subtasks: ",minutesList[i][Object.keys(minutesList[i])[0]]," ",Object.keys(minutesList[i])[0]);
+    	
+    	logger.info({'setIntervalTask': minutesList[i][Object.keys(minutesList[i])[0]] }, 'Setting task every %s to update the timeframe Objs',minutesList[i][Object.keys(minutesList[i])[0]] );
+
     	setInterval(function() {  
-	    	console.log('Start Scheduling 1M! Current Time: '+Date());  
+	    	//console.log('Start Scheduling 1M! Current Time: '+Date());  
 
 			if (runningProviderTopicList.length > 0) {
+				logger.info({'startTaskUpdateTimeFrame': minutesList[i][Object.keys(minutesList[i])[0]] }, {'currentRunningTopicList':runningProviderTopicList}, 'Start Task , updating TimeFrame %s',minutesList[i][Object.keys(minutesList[i])[0]] );
 				for (var i = 0; i < runningProviderTopicList.length; i++) {
 			    	var tmpTopicArr = runningProviderTopicList[i].toString().split("@");
 			    	//TOPIC EXAMPLE: "MT4@ACTIVTRADES@REALTIMEQUOTES";
@@ -228,14 +305,15 @@ var startTask0 = schedule.scheduleJob(date_start_schedule, function(){
 			    	var tmpRealTimeQuoteProperty = "REALTIMEQUOTE$"+tmpTopicArr[0]+"$"+tmpTopicArr[1];
 			    	//EX Time Frame Obj Property: runningProviderTimeFrameObjs["TIMEFRAMEQUOTE$MT4$ACTIVTRADES"];
 			   		var new_timeFrameQuotesObj = QuotesModule.updateTimeFrameQuotesObj(Object.keys(minutesList[i])[0],runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty],runningProviderRealTimeObjs[tmpRealTimeQuoteProperty]);
+			   		if ( new_timeFrameQuotesObj == null || new_timeFrameQuotesObj == undefined) {
+			   			logger.error({ 'timeFrameObjToUpdate:': runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty] },{ 'CurrentRealTimeObj:': runningProviderRealTimeObjs[tmpRealTimeQuoteProperty] },'new_timeFrameQuotesObj is null or undefined. TimeFrame %s is not updated',minutesList[i][Object.keys(minutesList[i])[0]]
+			   		};
 			   		runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty] = new_timeFrameQuotesObj;
 				}
 			}
-		},minutesList[i][Object.keys(minutesList[i])[0]]);  // 1M
+		},minutesList[i][Object.keys(minutesList[i])[0]]);  // 1M 5M etc..
     };
 });
-
-
 
 sockSubFromQuotesProvider.subscribe('NEWTOPICQUOTES');
 sockSubFromQuotesProvider.subscribe('DELETETOPICQUOTES');
