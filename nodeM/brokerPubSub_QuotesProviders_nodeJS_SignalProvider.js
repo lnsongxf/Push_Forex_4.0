@@ -248,12 +248,9 @@ sockSubFromQuotesProvider.on('message', function(topic, message) {
   		case "NEWTOPICQUOTES":
   			//TOPIC MESSAGE EXAMPLE: "MT4@ACTIVTRADES@REALTIMEQUOTES";
   			if ( runningProviderTopicList.indexOf( message.toString() ) == "-1" ) {
-  				var operationFeedbackStatusTopic = messageArr[0]+"@"+messageArr[1]+"@OPERATIONSTATUS";
-				//CREATE AND ADD NEW TOPICS (EX: MT4@ACTIVTRADES@REALTIMEQUOTES, MT4@ACTIVTRADES@OPERATIONSTATUS) IN THE ARRAY LIST
+				//CREATE AND ADD NEW TOPICS (EX: MT4@ACTIVTRADES@REALTIMEQUOTES) IN THE ARRAY LIST
 				runningProviderTopicList.push(message.toString());
-				runningProviderTopicList.push(operationFeedbackStatusTopic); 
 				sockSubFromQuotesProvider.subscribe(message.toString());
-				sockSubFromQuotesProvider.subscribe(operationFeedbackStatusTopic);
 
 				if ( messageArr[2] == "REALTIMEQUOTES" ||  messageArr[2] == "LISTQUOTES"){
 					var newObjTimeFrameQuote = "TIMEFRAMEQUOTE$"+messageArr[0]+"$"+messageArr[1];
@@ -273,12 +270,6 @@ sockSubFromQuotesProvider.on('message', function(topic, message) {
 				var index = runningProviderTopicList.indexOf( message.toString() );
 				runningProviderTopicList.splice(index, 1);
 				sockSubFromQuotesProvider.unsubscribe(message.toString());
-
-				//REMOVE TOPICS (EX: MT4@ACTIVTRADES@OPERATIONSTATUS) IN THE ARRAY LIST
-				var operationFeedbackStatusTopic = messageArr[0]+"@"+messageArr[1]+"@OPERATIONSTATUS";
-				var index_operation_status_topic = runningProviderTopicList.indexOf( operationFeedbackStatusTopic );
-				runningProviderTopicList.splice(index_operation_status_topic, 1);
-				sockSubFromQuotesProvider.unsubscribe( operationFeedbackStatusTopic );
 
   				var searchObjTimeFrameQuote = "TIMEFRAMEQUOTE$"+messageArr[0]+"$"+messageArr[1];
 				var searchObjRealTimeQuote = "REALTIMEQUOTE$"+messageArr[0]+"$"+messageArr[1];
@@ -310,7 +301,7 @@ sockSubFromQuotesProvider.on('message', function(topic, message) {
 });
 
 //----------------------------------------------------------------------------------------------------------------------------
-// MATLAB PUB TO NODEJS TO METATRADER
+// SIGNAL pROVIDE PUB TO NODEJS TO QUOTES PROVIDER
 
 var runningSignalProviderTopicOperationList = [];
 var runningSignalProviderTopicStatusList = [];
@@ -327,14 +318,14 @@ sockSubFromSignalProvider.on('message', function(messageSub) {
   	switch (topic) {
   		case "NEWTOPICFROMSIGNALPROVIDER":
 
-  			var newTopic = topic.split('@');
+  			var newTopic = message.split('@');
   			if (newTopic[3] == 'OPERATIONS') {
   				if ( runningSignalProviderTopicOperationList.indexOf( message ) == "-1" ) {
 					//CREATE AND ADD NEW TOPICS (EX: MATLAB@111@EURUSD@OPERATIONS) IN THE ARRAY LIST
 					runningSignalProviderTopicOperationList.push(message); 
 					sockSubFromSignalProvider.subscribe(message);
 					var runningSignalProviderTopicOperationListString = JSON.stringify(runningSignalProviderTopicOperationList);
-					sockPub.send([TopicAlgosOperationListLabel, runningSignalProviderTopicOperationListString];
+					sockPub.send([TopicAlgosOperationListLabel, runningSignalProviderTopicOperationListString]);
 				}
   			}
   			else if (newTopic[3] == 'STATUS'){
@@ -343,29 +334,48 @@ sockSubFromSignalProvider.on('message', function(messageSub) {
 					runningSignalProviderTopicStatusList.push(message); 
 					sockSubFromSignalProvider.subscribe(message);
 					var runningSignalProviderTopicStatusListString = JSON.stringify(runningSignalProviderTopicStatusList);
-					sockPub.send([TopicAlgosStatusListLabel, runningSignalProviderTopicStatusListString];
+					sockPub.send([TopicAlgosStatusListLabel, runningSignalProviderTopicStatusListString]);
 				}
   			}
 			break;
+
+		case "DELETETOPICQUOTES":
+			//EX TOPIC: MATLAB@111@EURUSD@OPERATIONS, MATLAB@111@EURUSD@STATUS
+			var deleteTopic = message.split('@');
+  			if (deleteTopic[3] == 'OPERATIONS') {
+				if ( runningSignalProviderTopicOperationList.indexOf( message ) > -1 ){
+					//REMOVE TOPICS (EX: MATLAB@111@EURUSD@OPERATIONS) IN THE ARRAY LIST
+					var index = runningSignalProviderTopicOperationList.indexOf( message );
+					runningSignalProviderTopicOperationList.splice(index, 1);
+					sockSubFromSignalProvider.unsubscribe( message );
+				}
+			}
+			else if (deleteTopic[3] == 'STATUS'){
+  				if ( runningSignalProviderTopicStatusList.indexOf( message ) == "-1" ) {
+  					//REMOVE TOPICS (EX:MATLAB@111@EURUSD@STATUS) IN THE ARRAY LIST
+
+  					var index = runningSignalProviderTopicStatusList.indexOf( message );
+					runningSignalProviderTopicStatusList.splice(index, 1);
+					sockSubFromSignalProvider.unsubscribe( message );
+  				}
+  			}
+			break;
+
 		default:
-			//sdfd
+		 	//EX: MATLAB@111@EURUSD@OPERATIONS, MATLAB@111@EURUSD@STATUS
+			var topicType = topic.split('@');
+  			if (topicType[3] == 'OPERATIONS') {
+  				if ( runningSignalProviderTopicOperationList.indexOf( topic ) > -1 ) {
+					sockPub.send([topic, message]);
+				}
+			}
+			else if (topic[3] == 'STATUS'){
+  				if ( runningSignalProviderTopicStatusList.indexOf( topic ) > -1 ) {
+  					sockPub.send([topic, message]);	
+  				}
+  			}
 			break;
 	}
-
-
-
-  /*var message = messageSub.toString().split(" ");
-  console.log('received a message related to:', message[0], 'containing message:', message[1]);
-
-  if (message[0] == "OPEN@EURUSD") {
-    console.log("Sending Open trade msg for topic: "+message[0]+ "to Metatrader");
-    sockPub.send(message[0] + ";" +message[1]);
-  };
-  
-  if (message[0] == "CLOSE@EURUSD") {
-    console.log("Sending Open trade msg for topic: "+message[0]+ "to Metatrader");
-    sockPub.send(message[0] + ";" +message[1]);
-  };*/
 
 });
 
