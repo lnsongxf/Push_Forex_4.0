@@ -301,12 +301,30 @@ sockSubFromQuotesProvider.on('message', function(topic, message) {
 });
 
 //----------------------------------------------------------------------------------------------------------------------------
-// SIGNAL pROVIDE PUB TO NODEJS TO QUOTES PROVIDER
+// SIGNAL PROVIDE PUB TO NODEJS TO QUOTES PROVIDER
 
 var runningSignalProviderTopicOperationList = [];
 var runningSignalProviderTopicStatusList = [];
 var TopicAlgosOperationListLabel = 'ALGOSOPERATIONLIST'; 
 var TopicAlgosStatusListLabel = 'ALGOSSTATUSLIST'; 
+
+
+setInterval(function(){
+	if ( runningSignalProviderTopicOperationList.length > 0 ){
+		var runningSignalProviderTopicOperationListString = JSON.stringify(runningSignalProviderTopicOperationList);
+		sockPub.send([TopicAlgosOperationListLabel, runningSignalProviderTopicOperationListString]);
+	}else{
+		//log arr empty
+	}
+
+	if ( runningSignalProviderTopicStatusList.length > 0 ) {
+		var runningSignalProviderTopicStatusListString = JSON.stringify(runningSignalProviderTopicStatusList);
+		sockPub.send([TopicAlgosStatusListLabel, runningSignalProviderTopicStatusListString]);
+	}else{
+		//log arr empty
+	}
+},10000);
+
 sockSubFromSignalProvider.subscribe('NEWTOPICFROMSIGNALPROVIDER');
 sockSubFromSignalProvider.on('message', function(messageSub) {
   
