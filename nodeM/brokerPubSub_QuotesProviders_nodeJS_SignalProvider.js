@@ -53,7 +53,9 @@ var QuotesModule = (function(){
 	};
 
 	var _createTimeFrameQuotesObj = function(quotes_list,providerName){
-
+		if (quotes_list == null || quotes_list == undefined || providerName == null || providerName == undefined) {
+			logger.error('quotes_list %s or providerName %s null or not defined into _createTimeFrameQuotesObj',quotes_list,providerName);
+		};
 		var _quotesObj = new _timeFrameQuotes(providerName);
 
 		var arr = quotes_list.quotes;
@@ -77,6 +79,9 @@ var QuotesModule = (function(){
 	};
 
 	var _createRealTimeQuotesObj = function(quotes_list,providerName){
+		if (quotes_list == null || quotes_list == undefined || providerName == null || providerName == undefined) {
+			logger.error('quotes_list %s or providerName %s null or not defined into _createRealTimeQuotesObj',quotes_list,providerName);
+		};
 		var _realTimeQuotesObj = new _realTimeQuotes(providerName);
 
 		var arr = quotes_list.quotes;
@@ -269,6 +274,12 @@ sockPub.bindSync('tcp://127.0.0.1:50027');
 // QUOTES PROVIDER PUB TO NODEJS TO SIGNAL PROVIDER
 
 var configQuotesList = require('./config_quotes');
+if (configQuotesList == null || configQuotesList == undefined){
+	logger.fatal('The file confing_quotes.json is not in the path or is empty ');
+}
+if (configQuotesList.quotes.length < 0){
+	logger.fatal('The quotes list in the file config_quotes.json is empty');	
+}
 //REMEMBER THAT THE MONTH IN THE SERVER SETTING JSON START FROM 0 TO 11
 //Month: Integer value representing the month, beginning with 0 for January to 11 for December
 var serverSetting = require('./server_setting');
@@ -297,7 +308,7 @@ var startTask0 = schedule.scheduleJob(date_start_schedule, function(){
 	    	//console.log('Start Scheduling 1M! Current Time: '+Date());  
 
 			if (runningProviderTopicList.length > 0) {
-				logger.info({'startTaskUpdateTimeFrame': minutesList[i][Object.keys(minutesList[i])[0]] }, {'currentRunningTopicList':runningProviderTopicList}, 'Start Task , updating TimeFrame %s',minutesList[i][Object.keys(minutesList[i])[0]] );
+				logger.info({'startTaskUpdateTimeFrame': minutesList[i][Object.keys(minutesList[i])[0]] }, {'currentRunningProviderTopicList':runningProviderTopicList}, 'Start Task , updating TimeFrame %s',minutesList[i][Object.keys(minutesList[i])[0]] );
 				for (var i = 0; i < runningProviderTopicList.length; i++) {
 			    	var tmpTopicArr = runningProviderTopicList[i].toString().split("@");
 			    	//TOPIC EXAMPLE: "MT4@ACTIVTRADES@REALTIMEQUOTES";
@@ -327,18 +338,28 @@ sockSubFromQuotesProvider.on('message', function(topic, message) {
   			//TOPIC MESSAGE EXAMPLE: "MT4@ACTIVTRADES@REALTIMEQUOTES";
   			if ( runningProviderTopicList.indexOf( message.toString() ) == "-1" ) {
 				//CREATE AND ADD NEW TOPICS (EX: MT4@ACTIVTRADES@REALTIMEQUOTES) IN THE ARRAY LIST
-				runningProviderTopicList.push(message.toString());
-				sockSubFromQuotesProvider.subscribe(message.toString());
-
 				if ( messageArr[2] == "REALTIMEQUOTES" ||  messageArr[2] == "LISTQUOTES"){
+					runningProviderTopicList.push(message.toString());
+					sockSubFromQuotesProvider.subscribe(message.toString());
+					logger.info({'topic': topicArr[0]}, 'Added new topic: %s ',message.toString() );
 					var newObjTimeFrameQuote = "TIMEFRAMEQUOTE$"+messageArr[0]+"$"+messageArr[1];
 					var newObjRealTimeQuote = "REALTIMEQUOTE$"+messageArr[0]+"$"+messageArr[1];
 					var newValuePropertyTimeFrameQuote = "TIMEFRAMEQUOTE@"+messageArr[0]+"@"+messageArr[1];
 					var newValuePropertyRealTimeQuote = "REALTIMEQUOTE@"+messageArr[0]+"@"+messageArr[1];
 					runningProviderTimeFrameObjs[newObjTimeFrameQuote] = QuotesModule.createTimeFrameQuotesObj(configQuotesList,newValuePropertyTimeFrameQuote);
+					if (runningProviderTimeFrameObjs[newObjTimeFrameQuote] == null || runningProviderTimeFrameObjs[newObjTimeFrameQuote] == undefined) {
+						logger.error( {'topic': topicArr[0]}, {'message': message.toString() }, {'runningProviderTimeFrameObjs[newObjTimeFrameQuote]': runningProviderTimeFrameObjs[newObjTimeFrameQuote] }, 'TimeFrame Obj is not created for topic: %s !',message.toString() );
+					};
 					runningProviderRealTimeObjs[newObjRealTimeQuote] = QuotesModule.createRealTimeQuotesObj(configQuotesList,newValuePropertyRealTimeQuote);
+					if (runningProviderRealTimeObjs[newObjRealTimeQuote] == null || runningProviderRealTimeObjs[newObjRealTimeQuote] == undefined) {
+						logger.error( {'topic': topicArr[0]}, {'message': message.toString() }, {'runningProviderTimeFrameObjs[newObjTimeFrameQuote]': runningProviderRealTimeObjs[newObjRealTimeQuote] }, 'RealTime Obj is not created for topic: %s !',message.toString() );
+					};
+				}else{
+					logger.error({'topic': topicArr[0]}, 'New topic: %s wrong format. The new Topic form Quotes Provider should ending with LISTQUOTES or REALTIMEQUOTES',message.toString() );
 				}
-			};
+			}else{
+				logger.error({'topic': topicArr[0]}, 'Its not possible to add this topic name %s because the topic already exist',message.toString() );
+			}
   			break;
 
 		case "DELETETOPICQUOTES":
@@ -348,11 +369,18 @@ sockSubFromQuotesProvider.on('message', function(topic, message) {
 				var index = runningProviderTopicList.indexOf( message.toString() );
 				runningProviderTopicList.splice(index, 1);
 				sockSubFromQuotesProvider.unsubscribe(message.toString());
-
+				logger.info({'topic': topicArr[0]}, 'Deleted topic: %s ',message.toString() );
   				var searchObjTimeFrameQuote = "TIMEFRAMEQUOTE$"+messageArr[0]+"$"+messageArr[1];
 				var searchObjRealTimeQuote = "REALTIMEQUOTE$"+messageArr[0]+"$"+messageArr[1];
-				delete runningProviderTimeFrameObjs[searchObjTimeFrameQuote];
-				delete runningProviderRealTimeObjs[searchObjRealTimeQuote];
+				if (runningProviderTimeFrameObjs[searchObjTimeFrameQuote] != null && runningProviderTimeFrameObjs[searchObjTimeFrameQuote] != undefined && runningProviderRealTimeObjs[searchObjRealTimeQuote] != null && runningProviderRealTimeObjs[searchObjRealTimeQuote] != undefined) {
+					delete runningProviderTimeFrameObjs[searchObjTimeFrameQuote];
+					delete runningProviderRealTimeObjs[searchObjRealTimeQuote];
+				}else{
+					logger.error({'topic': topicArr[0]},{'TimeFrameObj':runningProviderTimeFrameObjs[searchObjTimeFrameQuote]},{'RealTimeObj':runningProviderRealTimeObjs[searchObjRealTimeQuote];} 'Its not possible to delete the TimeFrameObj and RealTimeObj for the topic %s',message.toString() );
+				}
+				
+			}else{
+				logger.error({'topic': topicArr[0]}, 'Its not possible to delete this topic %s because this topic doesnt exist',message.toString() );
 			}
 			break;
 
@@ -368,11 +396,19 @@ sockSubFromQuotesProvider.on('message', function(topic, message) {
 						if (result) {}else{console.log("error update real time Obj")};
 					}else if (messageArr[2] == "OPERATIONSTATUS") {
 						//SEND OPERATION MESSAGE ON OPERATION TOPIC
-					};
+					}else{
+						logger.error({'topic': topicArr[0]},{'message' : message.toString()}, 'Error type of message %s form Quotes Provider', message.toString() );
+					}
 				}
 				else if (messageArr.length > 2) {
 					var result = QuotesModule.importHistoryTimeFrameQuotesObj(searchObjTimeFrameQuote,messageArr);
-					if (result) {}else{console.log("error update timeFrame Obj")};
+					if (result == null || result == undefined) {
+						logger.error({'topic': topicArr[0]},{'message' : message.toString()},'Error to import HistoryData for message: %s', message.toString() );
+					}else{
+						logger.error( {'topic': topicArr[0]},{'message' : message.toString()},{'updatedHistoryQuotes':result} );
+					}
+				}else{
+					logger.error({'topic': topicArr[0]},{'message' : message.toString()}, 'Error in message received from Quotes provider. Message %s length is not right',message.toString() );
 				}
 			}
 	}
