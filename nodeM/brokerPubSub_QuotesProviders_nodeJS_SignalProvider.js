@@ -96,6 +96,9 @@ var QuotesModule = (function(){
 	};
 
 	var _updateRealTimeQuotesObj = function(searchObjRealTimeQuote,messageArr){
+		if (searchObjRealTimeQuote == null || searchObjRealTimeQuote == undefined || messageArr == null || messageArr == undefined) {
+			logger.error('searchObjRealTimeQuote %s or messageArr %s null or not defined into _updateRealTimeQuotesObj',searchObjRealTimeQuote,messageArr);
+		};
 		for (var key0 in runningProviderRealTimeObjs) {
 			if (key0 == searchObjRealTimeQuote) {
   				for (var key in runningProviderRealTimeObjs[key0]) {
@@ -205,6 +208,9 @@ var QuotesModule = (function(){
 	};
 
 	var _importHistoryTimeFrameQuotesObj = function(searchObjRealTimeQuote,messageArr){
+		if (searchObjRealTimeQuote == null || searchObjRealTimeQuote == undefined || messageArr == null || messageArr == undefined ) {
+			logger.error('In _updateTimeFrameQuotesObj timeframe or timeFrameQuotesObj or realTimeQuotesObj is notDefined/null');
+		};
 		for (var key0 in runningProviderTimeFrameObjs) {
 			if (key0 == searchObjTimeFrameQuote) {
 				for (var key in runningProviderTimeFrameObjs[key0]) {
@@ -385,32 +391,61 @@ sockSubFromQuotesProvider.on('message', function(topic, message) {
 			break;
 
 		default:
-			if ( runningProviderTopicList.indexOf( topic.toString() ) > -1 ){
-				//TOPIC EXAMPLE: MT4@ACTIVTRADES@REALTIMEQUOTES;
-				var searchObjRealTimeQuote = "REALTIMEQUOTE$"+topicArr[0]+"$"+topicArr[1];
-				var searchObjTimeFrameQuote = "TIMEFRAMEQUOTE$"+topicArr[0]+"$"+topicArr[1];
 
-				if (messageArr.length == 2) {
-					if (messageArr[2] == "REALTIMEQUOTES" ) {
-						var result = QuotesModule.updateRealTimeQuotesObj(searchObjRealTimeQuote,messageArr);
-						if (result) {}else{console.log("error update real time Obj")};
-					}else if (messageArr[2] == "OPERATIONSTATUS") {
-						//SEND OPERATION MESSAGE ON OPERATION TOPIC
+			//EX: MT4@ACTIVTRADES@REALTIMEQUOTES, MATLAB@111@EURUSD@STATUS
+			var topicType = topic.split('@');
+			
+			if (topicType <= 3) {
+  				//EX: MT4@ACTIVTRADES@REALTIMEQUOTES
+				if (topicType[2] == 'REALTIMEQUOTES'){
+					if ( runningProviderTopicList.indexOf( topic.toString() ) > -1 ){
+						//TOPIC EXAMPLE: MT4@ACTIVTRADES@REALTIMEQUOTES;
+						var searchObjRealTimeQuote = "REALTIMEQUOTE$"+topicArr[0]+"$"+topicArr[1];
+						var searchObjTimeFrameQuote = "TIMEFRAMEQUOTE$"+topicArr[0]+"$"+topicArr[1];
+
+						if (messageArr.length == 2) {
+							if (messageArr[2] == "REALTIMEQUOTES" ) {
+								var result = QuotesModule.updateRealTimeQuotesObj(searchObjRealTimeQuote,messageArr);
+								if (result == null || result == undefined) {
+									logger.error({'topic': topicArr[0]},{'message' : message.toString()}, 'the realTimeQuoteObj is not update' );
+								}else{
+									//logger.info({'topic': topicArr[0]},{'message' : message.toString()}, 'the realTimeQuoteObj is updated with the last Value %s.',message.toString() );
+								}
+							}else{
+								logger.error({'topic': topicArr[0]},{'message' : message.toString()}, 'Error type of message %s from Quotes Provider for topic %s', message.toString(),topic.toString() );
+							}
+						}
+						else if (messageArr.length > 2) {
+							var result = QuotesModule.importHistoryTimeFrameQuotesObj(searchObjTimeFrameQuote,messageArr);
+							if (result == null || result == undefined) {
+								logger.error({'topic': topicArr[0]},{'message' : message.toString()},'Error to import HistoryData for message: %s', message.toString() );
+							}else{
+								logger.info( {'topic': topicArr[0]},{'message' : message.toString()},{'updatedHistoryQuotes':result} );
+							}
+						}else{
+							logger.error({'topic': topicArr[0]},{'message' : message.toString()}, 'Error in message received from Quotes provider. Message %s length is not right',message.toString() );
+						}
 					}else{
-						logger.error({'topic': topicArr[0]},{'message' : message.toString()}, 'Error type of message %s form Quotes Provider', message.toString() );
-					}
-				}
-				else if (messageArr.length > 2) {
-					var result = QuotesModule.importHistoryTimeFrameQuotesObj(searchObjTimeFrameQuote,messageArr);
-					if (result == null || result == undefined) {
-						logger.error({'topic': topicArr[0]},{'message' : message.toString()},'Error to import HistoryData for message: %s', message.toString() );
-					}else{
-						logger.error( {'topic': topicArr[0]},{'message' : message.toString()},{'updatedHistoryQuotes':result} );
+						logger.error({'topic': topic.toString()},{'message' : message.toString()}, 'Error in message received from Quotes provider. The Quotes Provider wants to publish a new message quote %s on topic %s, but the topic doesnt exist ',message.toString(),topic.toString() );
 					}
 				}else{
-					logger.error({'topic': topicArr[0]},{'message' : message.toString()}, 'Error in message received from Quotes provider. Message %s length is not right',message.toString() );
+					logger.error({'topic': topic.toString()},{'message' : message.toString()}, 'Error in message received from Quotes Provider. The Quotes Provider wants to publish a new message quote %s,but the topic %s is not valid', message.toString(), topic.toString() );
 				}
-			}
+			}else if (topicType > 3) {
+				//EX: MATLAB@111@EURUSD@STATUS		
+				if (topic[3] == 'STATUS'){
+	  				if ( runningSignalProviderTopicStatusList.indexOf( topic ) > -1 ) {
+	  					sockPub.send([topic, message]);	
+	  				}else{
+	  					logger.error({'topic': topic},{'message': message}, 'Execution/Quotes provider wants to publish one STATUS operation message %s on topic $s, but the STATUS TOPIC doesnt exist.', message.toString(), topic.toString() );
+	  				}
+	  			}else{
+	  				logger.error({'topic': topic.toString()},{'message' : message.toString()}, 'Error in message received from Quotes Provider. The Quotes Provider wants to publish a new STATUS message %s, but the topic %s is not valid', message.toString(), topic.toString() );
+	  			}
+	  		}else{
+	  			logger.error({'topic': topic.toString()},{'message' : message.toString()}, 'Error in message received from Quotes Provider. The topic %s format/length is not valid.',topic.toString() );
+	  		}
+	  		break;
 	}
 });
 
@@ -437,7 +472,7 @@ setInterval(function(){
 	}else{
 		//log arr empty
 	}
-},10000);
+},5000);
 
 sockSubFromSignalProvider.subscribe('NEWTOPICFROMSIGNALPROVIDER');
 sockSubFromSignalProvider.on('message', function(messageSub) {
@@ -458,16 +493,21 @@ sockSubFromSignalProvider.on('message', function(messageSub) {
 					sockSubFromSignalProvider.subscribe(message);
 					var runningSignalProviderTopicOperationListString = JSON.stringify(runningSignalProviderTopicOperationList);
 					sockPub.send([TopicAlgosOperationListLabel, runningSignalProviderTopicOperationListString]);
+				}else{
+  					logger.error({'topic': topic},{'message': message}, 'Signal provider wants to create the new topic %s but the topic already exist', message);
 				}
-  			}
-  			else if (newTopic[3] == 'STATUS'){
+  			}else if (newTopic[3] == 'STATUS'){
   				if ( runningSignalProviderTopicStatusList.indexOf( message ) == "-1" ) {
 					//CREATE AND ADD NEW TOPICS (EX: MATLAB@111@EURUSD@STATUS) IN THE ARRAY LIST
 					runningSignalProviderTopicStatusList.push(message); 
 					sockSubFromSignalProvider.subscribe(message);
 					var runningSignalProviderTopicStatusListString = JSON.stringify(runningSignalProviderTopicStatusList);
 					sockPub.send([TopicAlgosStatusListLabel, runningSignalProviderTopicStatusListString]);
+				}else{
+					logger.error({'topic': topic},{'message': message}, 'Signal provider wants to create a new topic %s but the topic already exist', message);	
 				}
+  			}else{
+  				logger.error({'topic': topic},{'message': message}, 'message format from Signal Provider is not valid. Signal provider wants to create the new topic %s but the format is not valid', message);
   			}
 			break;
 
@@ -480,6 +520,8 @@ sockSubFromSignalProvider.on('message', function(messageSub) {
 					var index = runningSignalProviderTopicOperationList.indexOf( message );
 					runningSignalProviderTopicOperationList.splice(index, 1);
 					sockSubFromSignalProvider.unsubscribe( message );
+				}else{
+					logger.error({'topic': topic},{'message': message}, 'Signal provider wants to delete one operation topic %s,but the topic doesnt exist', message);
 				}
 			}
 			else if (deleteTopic[3] == 'STATUS'){
@@ -489,23 +531,26 @@ sockSubFromSignalProvider.on('message', function(messageSub) {
   					var index = runningSignalProviderTopicStatusList.indexOf( message );
 					runningSignalProviderTopicStatusList.splice(index, 1);
 					sockSubFromSignalProvider.unsubscribe( message );
+  				}else{
+  					logger.error({'topic': topic},{'message': message}, 'Signal provider wants to delete one STATUS TOPIC %s but the topic doesnt exist', message);
   				}
+  			}else{
+  				logger.error({'topic': topic},{'message': message}, 'Signal provider wants to delete one TOPIC $s but this topic format is not valid. Accepted only OPERATIONS/STATUS TOPICS', message);
   			}
 			break;
 
 		default:
-		 	//EX: MATLAB@111@EURUSD@OPERATIONS, MATLAB@111@EURUSD@STATUS
+		 	//EX: MATLAB@111@EURUSD@OPERATIONS
 			var topicType = topic.split('@');
   			if (topicType[3] == 'OPERATIONS') {
   				if ( runningSignalProviderTopicOperationList.indexOf( topic ) > -1 ) {
 					sockPub.send([topic, message]);
+				}else{
+					logger.error({'topic': topic},{'message': message}, 'Signal provider wants to publish a new operation on Topic %s but the topic doesnt exist. Create the topic before to push data on it',topic);
 				}
+			}else{
+				logger.error({'topic': topic},{'message': message}, 'Signal provider wants to publish a new data on TOPIC $s, but this topic format is not valid ',message);
 			}
-			else if (topic[3] == 'STATUS'){
-  				if ( runningSignalProviderTopicStatusList.indexOf( topic ) > -1 ) {
-  					sockPub.send([topic, message]);	
-  				}
-  			}
 			break;
 	}
 
