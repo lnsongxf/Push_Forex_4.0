@@ -10,12 +10,13 @@ classdef bktOffline < handle
         takeP
         outputBktOffline
         performance
+        performanceDistribution
     end
     
     methods
         
         function [obj] = spin(obj,nameAlgo,cross,nData,histName,actTimeScale, ...
-                newTimeScale,transCost,initialStack,leverage,plotPerformance)
+                newTimeScale,transCost,initialStack,leverage,plotPerformance,plotPerDistribution)
             
             %
             % per salvare lo storico:
@@ -210,7 +211,8 @@ classdef bktOffline < handle
             
             p = Performance_05;
             obj.performance = p.calcSinglePerformance(nameAlgo,'bktWeb',cross,newTimeScale,transCost,initialStack,leverage,obj.outputBktOffline,plotPerformance);
-            
+            pD = PerformanceDistribution_03;
+            obj.performanceDistribution = pD.calcPerformanceDistr(nameAlgo,'bktWeb',cross,newTimeScale,transCost,obj.outputBktOffline,obj.starthisData,obj.newHisData,15,10,10,plotPerDistribution);
             
         end
         

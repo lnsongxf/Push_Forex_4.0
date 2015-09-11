@@ -23,7 +23,7 @@ classdef PerformanceDistribution_03 < handle
         
         %%
         
-        function obj=calcPerformanceDistr(obj,nameAlgo_,origin_,cross_,freq_,transCost_,inputResultsMatrix_,HistData_1min_,HistData_freq_,nstep,nstepeq,dimCluster)
+        function obj=calcPerformanceDistr(obj,nameAlgo_,origin_,cross_,freq_,transCost_,inputResultsMatrix_,HistData_1min_,HistData_freq_,nstep,nstepeq,dimCluster,plotPerDistribution)
             
             %
             % DESCRIPTION:
@@ -144,12 +144,23 @@ classdef PerformanceDistribution_03 < handle
             obj.rowResp=resp(iresp);
             obj.rowResn=resn(iresn);
             
-            
-            obj=obj.analysisMacroParams;
-            obj=obj.analysisMicroParams(nstep);
-            obj=obj.analysisReturnsPattern(nstepeq,dimCluster);
-            obj=obj.plotOperationOnHystorical;
-            
+            switch plotPerDistribution
+                case 0
+                    
+                case 1
+                    obj=obj.analysisMicroParams(nstep);
+                case 2
+                    obj=obj.analysisMacroParams;
+                case 3
+                    obj=obj.analysisReturnsPattern(nstepeq,dimCluster);
+                case 4
+                    obj=obj.plotOperationOnHystorical;
+                case 5
+                    obj=obj.analysisMicroParams(nstep);
+                    obj=obj.analysisMacroParams;
+                    obj=obj.analysisReturnsPattern(nstepeq,dimCluster);
+                    obj=obj.plotOperationOnHystorical;
+            end
             
             toc
             

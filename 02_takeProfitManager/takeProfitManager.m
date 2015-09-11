@@ -1,6 +1,6 @@
 function [operationState, chiusure, params] = takeProfitManager (operationState, chiusure, params)
 
-operationState.counter = operationState.counter + 1;
+operationState.minutesFromOpening = operationState.minutesFromOpening + 1;
 LastClosePrice = chiusure(end);
 
 % display(['currentvalue = ', num2str(LastClosePrice),' openvalue =', num2str(params.get('openValue_')), ...

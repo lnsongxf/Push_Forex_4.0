@@ -375,7 +375,8 @@ classdef Performance_05 < handle
                 hold on
                 plot(xData,lin2);
                 set(gca,'XTick',xData);
-                datetick('x','dd','keepticks');
+                datetick('x','dd/mm/yyyy HH:MM','keepticks');
+                
                 
                 
                 figure
@@ -418,7 +419,7 @@ classdef Performance_05 < handle
                 
                 set(p,'XTick',xData);
                 for i=1:6
-                    datetick(p(i),'x','dd','keepticks');
+                    datetick(p(i),'x','dd/mm/yyyy HH:MM','keepticks');
                 end
                 
             end
