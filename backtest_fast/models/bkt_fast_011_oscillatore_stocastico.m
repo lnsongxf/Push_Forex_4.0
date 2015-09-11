@@ -18,12 +18,12 @@ classdef bkt_fast_011_oscillatore_stocastico < handle
     
     methods
         
-        function obj = fast_oscillatore_stocastico(obj, Pminute,matrixNewHisData, kperiods, nperiods ,newTimeScale,cost,wSL,wTP,plottami)
+        function obj = fast_oscillatore_stocastico(obj, Pminute,matrixNewHisData, kperiods, dperiods ,newTimeScale,cost,wSL,wTP,plottami)
             
             % Pminute = prezzo al minuto
             % matrixNewHisData = matrice con prezzi e date alla new time scale
             % kperiods = numero di periodi %K (consigliato = 10)
-            % nperiods = numero di periodi %N (consigliato = 3)
+            % dperiods = numero di periodi %D (consigliato = 3)
             % cost = spread per operazione (calcolato quando chiudi)
             % wSL = peso per calcolare quando chiuder per SL
             % wTP = peso per calcolare quando chiuder per TP
@@ -53,13 +53,13 @@ classdef bkt_fast_011_oscillatore_stocastico < handle
             s = zeros(sizeStorico,1);
            
             stosc = stochosc(high, low, P, kperiods, dperiods);
-            s(stosc>-20) = -1;
-            s(stosc<-80) = 1;
+            s(stosc<20) = 1;
+            s(stosc>80) = -1;
 
             
             
 
-            i = nperiods + 1;
+            i = kperiods + 1;
             
             
             while i <= sizeStorico
@@ -153,13 +153,13 @@ classdef bkt_fast_011_oscillatore_stocastico < handle
                 ax(1) = subplot(3,1,1);
                 plot(P), grid on
                 legend('Price')
-                title('W%R Results' )
+                title('stochastic oscill. Results' )
                 ax(2) = subplot(3,1,2);
                 plot(stosc)
                 hold on
-                plot(xlim, [1 1]*-20, '-r')
-                plot(xlim, [1 1]*-80, '-r')
-                legend('W%R')
+                plot(xlim, [1 1]*20, '-r')
+                plot(xlim, [1 1]*80, '-r')
+                legend('Stochastic oscill signal')
                 ax(3) = subplot(3,1,3);
                 plot(cumsum(obj.outputbkt(:,4))), grid on
                 legend('Cumulative Return')
