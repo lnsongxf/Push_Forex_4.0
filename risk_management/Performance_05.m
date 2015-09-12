@@ -433,7 +433,7 @@ classdef Performance_05 < handle
         function obj=RicciRatio(obj)
             
             indx =  find(obj.inputResultsMatrix(:,6));
-            Returns=obj.inputResultsMatrix(indx,4);
+            Returns=obj.inputResultsMatrix(indx,4); %#ok<*FNDSB>
             ExReturns=Returns-obj.transCost;
             
             [ip,~,~] = find(ExReturns>0);

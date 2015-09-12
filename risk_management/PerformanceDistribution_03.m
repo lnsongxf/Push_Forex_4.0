@@ -46,8 +46,9 @@ classdef PerformanceDistribution_03 < handle
             %                           use the function [outputHyst]=fromRawHystToHistorical
             % HistData_freq_        ... 5mins-hystorical data correspondet to the period of test
             % nstep                 ... number of binnig steps
-            % nstepeq               ... distance between a given wrong/correct operation and the next
-            % dimCluster            ... number of wrong/correct subsequent operations (dimension of cluster)
+            % nstepeq               ... pattern of returns: distance
+            %                           between a given wrong/correct operation and the next one
+            % dimCluster            ... pattern of returns: number of wrong/correct subsequent operations (dimension of cluster)
             %
             % OUTPUT parameters:
             % -------------------------------------------------------------
@@ -70,7 +71,8 @@ classdef PerformanceDistribution_03 < handle
                 for i = 1: dim(2)
                     oneMatrix(:,i)=real;
                 end
-                [~,~,matrix] = find(inputResultsMatrix_.*oneMatrix);
+                %[~,~,matrix] = find(inputResultsMatrix_.*oneMatrix);
+                [~,~,matrix] = find(oneMatrix);
                 obj.inputResultsMatrix=reshape(matrix,nRows,dim(2));
             elseif strcmp(origin_,'demo')
                 dim=size(inputResultsMatrix_);
@@ -80,7 +82,8 @@ classdef PerformanceDistribution_03 < handle
                 for i = 1: dim(2)
                     oneMatrix(:,i)=real;
                 end
-                [~,~,matrix] = find(inputResultsMatrix_.*oneMatrix);
+                %[~,~,matrix] = find(inputResultsMatrix_.*oneMatrix);
+                [~,~,matrix] = find(oneMatrix);
                 obj.inputResultsMatrix=reshape(matrix,nRows,dim(2));
             elseif strcmp(origin_,'bkt')
                 dim=size(inputResultsMatrix_);
@@ -90,7 +93,8 @@ classdef PerformanceDistribution_03 < handle
                 for i = 1: dim(2)
                     oneMatrix(:,i)=real;
                 end
-                [~,~,matrix] = find(inputResultsMatrix_.*oneMatrix);
+                %[~,~,matrix] = find(inputResultsMatrix_.*oneMatrix);
+                [~,~,matrix] = find(oneMatrix);
                 obj.inputResultsMatrix=reshape(matrix,nRows,dim(2));
             else
                 h=msgbox('please indicate as origin: bktWeb, demo, bkt','WARN','warn');
