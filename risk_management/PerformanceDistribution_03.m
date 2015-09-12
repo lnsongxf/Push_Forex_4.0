@@ -57,8 +57,8 @@ classdef PerformanceDistribution_03 < handle
             %
             % EXAMPLE of use:
             % -------------------------------------------------------------
-            % objname=PerformanceDistribution_03;
-            % objname=objname.calcPerformanceDistr('real_17','bktWeb','EURUSD',5,1,outputBktWeb,history_1min,history_5min,12,10,10);
+            % pd=PerformanceDistribution_03;
+            % pd=pd.calcPerformanceDistr('real_17','bktWeb','EURUSD',5,1,bkt_Algo002.outputBktOffline,bkt_Algo002.starthisData,bkt_Algo002.newHisData,12,10,10,5)
             %
             
             
@@ -71,8 +71,7 @@ classdef PerformanceDistribution_03 < handle
                 for i = 1: dim(2)
                     oneMatrix(:,i)=real;
                 end
-                %[~,~,matrix] = find(inputResultsMatrix_.*oneMatrix);
-                [~,~,matrix] = find(oneMatrix);
+                [~,~,matrix] = find(inputResultsMatrix_.*oneMatrix);
                 obj.inputResultsMatrix=reshape(matrix,nRows,dim(2));
             elseif strcmp(origin_,'demo')
                 dim=size(inputResultsMatrix_);
@@ -82,8 +81,7 @@ classdef PerformanceDistribution_03 < handle
                 for i = 1: dim(2)
                     oneMatrix(:,i)=real;
                 end
-                %[~,~,matrix] = find(inputResultsMatrix_.*oneMatrix);
-                [~,~,matrix] = find(oneMatrix);
+                [~,~,matrix] = find(inputResultsMatrix_.*oneMatrix);
                 obj.inputResultsMatrix=reshape(matrix,nRows,dim(2));
             elseif strcmp(origin_,'bkt')
                 dim=size(inputResultsMatrix_);
@@ -93,8 +91,7 @@ classdef PerformanceDistribution_03 < handle
                 for i = 1: dim(2)
                     oneMatrix(:,i)=real;
                 end
-                %[~,~,matrix] = find(inputResultsMatrix_.*oneMatrix);
-                [~,~,matrix] = find(oneMatrix);
+                [~,~,matrix] = find(inputResultsMatrix_.*oneMatrix);
                 obj.inputResultsMatrix=reshape(matrix,nRows,dim(2));
             else
                 h=msgbox('please indicate as origin: bktWeb, demo, bkt','WARN','warn');

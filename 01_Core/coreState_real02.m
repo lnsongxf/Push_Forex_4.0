@@ -259,19 +259,12 @@ classdef coreState_real02 < handle
             windowSize1 = 2;
             a = (1/windowSize1)*ones(1,windowSize1);
             smoothClose1 = filter(a,1,closePrice);
-            %             fluctuations1=abs(closure-smoothClose1);
-%             devFluct1=std(fluctuations1(windowSize1:end));
-%             actualFluct1=closure(end)-smoothClose1(end);
-%             signDirection1=sign(actualFluct1);
             
             windowSize2 = 20;
             b = (1/windowSize2)*ones(1,windowSize2);
             smoothClose2 = filter(b,1,closePrice);
             fluctuations2=abs(closePrice-smoothClose2);
             devFluct2=std(fluctuations2(windowSize2:end));
-            
-            %             actualFluct2=closure(end)-smoothClose2(end);
-            %             signDirection2=sign(actualFluct2);
             
 %             figure
 %             plot(closure,'ob')
@@ -296,12 +289,8 @@ classdef coreState_real02 < handle
             if inversion<0 %&& devFluct2 > 4
                 obj.state=1;
                 obj.suggestedDirection=-newSign;
-%                 if devFluct2 > 20
-%                     devFluct2 = 20;
-%                 end
                 obj.suggestedTP=5*devFluct2;
                 obj.suggestedSL=devFluct2;
-                %obj.suggestedSL=2*devFluct2;
             else
                 obj.state=0;
             end
