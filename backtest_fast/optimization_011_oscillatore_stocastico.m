@@ -71,9 +71,9 @@ end
 
 %% prova semplice
 
-% bktfast=bkt_fast_011_oscillatore_stocastico;
-% bktfast=bktfast.fast_oscillatore_stocastico(hisDataTest(:,4),newHisDataTest,10,3,newTimeScale,cost,10,10,1);
-
+ bktfast=bkt_fast_011_oscillatore_stocastico;
+ bktfast=bktfast.fast_oscillatore_stocastico(hisDataTest(:,4),newHisDataTest,5,3,newTimeScale,cost,10,10,1);
+ 
 %% Estimate parameters over a range of values
 % Puoi cambiare i TP e SL consigliati
 % oppure la lunghezza di lookback nperiods
@@ -129,6 +129,11 @@ risultato = performanceTest.pipsEarned / abs(performanceTest.maxDD);
 figure
 plot(cumsum(bktfastTest.outputbkt(:,4)))
 title(['Test Best Result, Final R over maxDD = ',num2str( risultato) ])
+
+
+% pD = PerformanceDistribution_03;
+% obj.performanceDistribution = pD.calcPerformanceDistr('oscillatore_stocastico','bktWeb',cross,newTimeScale,0,bktfastTest.outputbkt,hisDataTest,newHisDataTest,15,10,10,5);          
+
 
 %% now the final check using the Paper Trading
 
