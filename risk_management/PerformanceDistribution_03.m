@@ -63,41 +63,10 @@ classdef PerformanceDistribution_03 < handle
             
             
             tic
-            if strcmp(origin_,'bktWeb')
-                dim=size(inputResultsMatrix_);
-                real=inputResultsMatrix_(:,6);
-                nRows=sum(real(:));
-                oneMatrix=zeros(dim(1),dim(2));
-                for i = 1: dim(2)
-                    oneMatrix(:,i)=real;
-                end
-                [~,~,matrix] = find(inputResultsMatrix_.*oneMatrix);
-                obj.inputResultsMatrix=reshape(matrix,nRows,dim(2));
-            elseif strcmp(origin_,'demo')
-                dim=size(inputResultsMatrix_);
-                real=inputResultsMatrix_(:,6);
-                nRows=sum(real(:));
-                oneMatrix=zeros(dim(1),dim(2));
-                for i = 1: dim(2)
-                    oneMatrix(:,i)=real;
-                end
-                [~,~,matrix] = find(inputResultsMatrix_.*oneMatrix);
-                obj.inputResultsMatrix=reshape(matrix,nRows,dim(2));
-            elseif strcmp(origin_,'bkt')
-                dim=size(inputResultsMatrix_);
-                real=inputResultsMatrix_(:,6);
-                nRows=sum(real(:));
-                oneMatrix=zeros(dim(1),dim(2));
-                for i = 1: dim(2)
-                    oneMatrix(:,i)=real;
-                end
-                [~,~,matrix] = find(inputResultsMatrix_.*oneMatrix);
-                obj.inputResultsMatrix=reshape(matrix,nRows,dim(2));
-            else
-                h=msgbox('please indicate as origin: bktWeb, demo, bkt','WARN','warn');
-                waitfor(h)
-                return
-            end
+            
+            matrix = find(inputResultsMatrix_(:,6));
+            obj.inputResultsMatrix=inputResultsMatrix_(matrix,:);
+            
             
             obj.nameAlgo=nameAlgo_;
             obj.origin=origin_;
@@ -412,12 +381,13 @@ classdef PerformanceDistribution_03 < handle
             rowHistDatafreq=start:stop;
             operHistDatafreq=obj.HistDatafreq(start:stop,1);
             
-            plot(rowHistDatafreq,operHistDatafreq,'-k')
+            plot(rowHistDatafreq,operHistDatafreq,'-k','LineWidth',1)
             hold on
             plot(rowHistfreqOpenp,obj.inputResultsMatrix(obj.rowResp,2),'ob')
             plot(rowHistfreqClosep,obj.inputResultsMatrix(obj.rowResp,3),'*b')
             plot(rowHistfreqOpenn,obj.inputResultsMatrix(obj.rowResn,2),'or')
             plot(rowHistfreqClosen,obj.inputResultsMatrix(obj.rowResn,3),'*r')
+            legend('Price','openP win','closeP win','openP lost','closeP lost')
             % plotyy(cumsum(obj.inputResultsMatrix(:,4)-obj.transCost),'plot');
         end
         
