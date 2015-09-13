@@ -38,6 +38,9 @@ classdef bktOffline < handle
             % transCost: costo dello spread in pips, ad es: 1
             % initialStack: capitale iniziale, ad es: 10000
             % leverage: la leva che usi, es: 10
+            % plotPerformance: 1 se vuoi plottare le perfomance
+            % plotPerDistribution: 1-microanalisi 2-macroanalisi 3-pattern ritorni
+            %                      4-plot operazioni su storico 5-plotta tutto
             %
             % OUTPUT parameters:
             % -------------------------------------------------------------
@@ -46,8 +49,8 @@ classdef bktOffline < handle
             %
             % EXAMPLE of use:
             % -------------------------------------------------------------
-            % clear all; bkt_AlgoX=bktOffline
-            % bkt_AlgoX=bkt_AlgoX.spin('Algo_Ale_02','EURUSD',100,'EURUSD_2012_2015.csv',1,5,1,10000,10)
+            % clear all; bkt_Algo_002=bktOffline
+            % bkt_Algo_002=bkt_AlgoX.spin('Algo_002_leadlag','EURUSD',100,'EURUSD_2012_2015.csv',1,5,1,10000,10,1,5)
             %
             
             hisData = csvread(histName);
