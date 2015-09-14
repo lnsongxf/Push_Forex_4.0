@@ -63,7 +63,7 @@ classdef bktOffline < handle
             % per salvare lo storico:   dlmwrite('EURUSD_2012_2015.csv', data, '-append') ;
             %            
             
-            obj.nData=nData_
+            obj.nData=nData_;
             
             hisData = csvread(histName);
             [r,c] = size(hisData);
