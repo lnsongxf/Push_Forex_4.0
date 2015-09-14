@@ -11,6 +11,7 @@ classdef bktOffline < handle
         outputBktOffline
         performance
         performanceDistribution
+        timeSeriesProperties
     end
     
     methods
@@ -19,39 +20,47 @@ classdef bktOffline < handle
                 newTimeScale,transCost,initialStack,leverage,plotPerformance,plotPerDistribution)
             
             %
-            % per salvare lo storico:
-            % dlmwrite('EURUSD_2012_2015.csv', data, '-append') ;
-            %
             % DESCRIPTION:
             % -------------------------------------------------------------
             % This function runs the offline backtest on given historical data
             %
-            %
             % INPUT parameters:
             % -------------------------------------------------------------
-            % nameAlgo: nome dell'algoritmo che usi
-            % cross: ad es 'EURUSD'
-            % nData: numero di dati in input di storico per ciclo
-            % histName: nome dello storico, es: 'nome_storico.csv'
-            % actTimeScale: scala temporale dello storico in input
-            % newTimeScale: scala temporale su cui vuoi lavorare (in minuti)
-            % transCost: costo dello spread in pips, ad es: 1
-            % initialStack: capitale iniziale, ad es: 10000
-            % leverage: la leva che usi, es: 10
-            % plotPerformance: 1 se vuoi plottare le perfomance
-            % plotPerDistribution: 1-microanalisi 2-macroanalisi 3-pattern ritorni
-            %                      4-plot operazioni su storico 5-plotta tutto
+            % nameAlgo:                 nome dell'algoritmo che usi
+            % cross:                    ad es 'EURUSD'
+            % nData:                    numero di dati in input di storico per ciclo
+            % histName:                 nome dello storico, es: 'nome_storico.csv'
+            % actTimeScale:             scala temporale dello storico in input
+            % newTimeScale:             scala temporale su cui vuoi lavorare (in minuti)
+            % transCost:                costo dello spread in pips, ad es: 1
+            % initialStack:             capitale iniziale, ad es: 10000
+            % leverage:                 la leva che usi, es: 10
+            % plotPerformance:          1 se vuoi plottare le perfomance
+            % plotPerDistribution:      1-microanalisi 2-macroanalisi 3-pattern ritorni
+            %                           4-plot operazioni su storico 5-plotta tutto
             %
             % OUTPUT parameters:
             % -------------------------------------------------------------
-            %
-            %
+            %starthisData
+            % newHisData
+            % iCloseActTimeScale
+            % iCloseNewTimeScale
+            % iOpenNewTimeScale
+            % stopL
+            % takeP
+            % outputBktOffline
+            % performance
+            % performanceDistribution
             %
             % EXAMPLE of use:
             % -------------------------------------------------------------
             % clear all; bkt_Algo_002=bktOffline
             % bkt_Algo_002=bkt_AlgoX.spin('Algo_002_leadlag','EURUSD',100,'EURUSD_2012_2015.csv',1,5,1,10000,10,1,5)
             %
+            % NOTE 
+            % -------------------------------------------------------------
+            % per salvare lo storico:   dlmwrite('EURUSD_2012_2015.csv', data, '-append') ;
+            %            
             
             hisData = csvread(histName);
             [r,c] = size(hisData);
@@ -88,8 +97,7 @@ classdef bktOffline < handle
                 obj.newHisData = hisData;
                 
             end
-            
-            
+                     
             lhisData = length(hisData);
             lnewHisData = length(obj.newHisData);
             direction = zeros(floor(lnewHisData/2), 1);
@@ -165,8 +173,7 @@ classdef bktOffline < handle
                         startingOperation = 0;
                         display('operation closed');
                         display(['i Close =' num2str(i)]);
-                        
-                        
+                   
                     end
                     
                 end
@@ -198,19 +205,16 @@ classdef bktOffline < handle
                         
             obj.outputBktOffline = zeros(l,8);
             
-            obj.outputBktOffline(:,1) = nCandelotto(1:l);       % index of stick
-            obj.outputBktOffline(:,2) = openingPrice(1:l);      % opening price
-            obj.outputBktOffline(:,3) = closingPrice(1:l);        % closing price
+            obj.outputBktOffline(:,1) = nCandelotto(1:l);           % index of stick
+            obj.outputBktOffline(:,2) = openingPrice(1:l);          % opening price
+            obj.outputBktOffline(:,3) = closingPrice(1:l);          % closing price
             obj.outputBktOffline(:,4) = (closingPrice(1:l) ...
-                - openingPrice(1:l)) .* direction(1:l);                % returns
+                - openingPrice(1:l)) .* direction(1:l);             % returns
             obj.outputBktOffline(:,5) = direction(1:l);             % direction
             obj.outputBktOffline(:,6) = ones(l,1);                  % real
-            obj.outputBktOffline(:,7) = openingDateNum;      % opening date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
-            obj.outputBktOffline(:,8) = closingDateNum;        % closing date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
-            obj.outputBktOffline(:,9) = lots;                           % lots setted for single operation
-            
-            %             p = Performance_04;
-            %             obj.performance = p.calcSinglePerformance(nameAlgo,'bktWeb',cross,newTimeScale,transCost,obj.outputBktOffline);
+            obj.outputBktOffline(:,7) = openingDateNum;             % opening date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
+            obj.outputBktOffline(:,8) = closingDateNum;             % closing date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
+            obj.outputBktOffline(:,9) = lots;                       % lots setted for single operation
             
             p = Performance_05;
             obj.performance = p.calcSinglePerformance(nameAlgo,'bktWeb',cross,newTimeScale,transCost,initialStack,leverage,obj.outputBktOffline,plotPerformance);

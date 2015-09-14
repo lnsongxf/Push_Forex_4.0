@@ -65,9 +65,8 @@ classdef PerformanceDistribution_03 < handle
             tic
             
             matrix = find(inputResultsMatrix_(:,6));
-            obj.inputResultsMatrix=inputResultsMatrix_(matrix,:);
-            
-            
+            obj.inputResultsMatrix=inputResultsMatrix_(matrix,:); %#ok<FNDSB>
+
             obj.nameAlgo=nameAlgo_;
             obj.origin=origin_;
             obj.cross=cross_;

@@ -4,7 +4,8 @@ function [oper, openValue, closeValue, stopLoss, noLoose, valueTp] = Algo_002_le
 % DESCRIPTION:
 % -----------------------------------------------------------------------
 % This is the general modular structure for creating the Algos:
-% 01  - coreState ..................... first filter manager
+% 01a - coreState .................... first filter manager
+% 01b - stationarity ................. stationarity Test
 % 02a - takeProfitManager ............ manager for TP and SL closing 
 % 03a - decMaker.decisionReal ........ second filter manager for virtual 
 %                                      running mode
@@ -47,6 +48,7 @@ valueTp   = 0;
 
 cState = coreState_real02;
 decMaker = DecisionMaker_real02;
+st = stationarity;
 
 
 if(isempty(map))
@@ -81,11 +83,14 @@ chiusure        = matrix(:,4);
 %volumi          = matrix(:,5);
 
 
-% 01
+% 01a
 % -------- coreState filter ------------------ %
 cState.Algo_002_Ale(chiusure,params);
 state = cState.state;
 
+% 01b
+% -------- stationarity Test ------------------ %
+st.stationarityTests(chiusure,1,0);
 
 
 if operationState.lock
@@ -100,7 +105,7 @@ if operationState.lock
     end
     
 else
-    
+
     if abs(operationState.actualOperation) > 0
         
         % 02a
