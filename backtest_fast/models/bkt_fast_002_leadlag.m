@@ -18,10 +18,10 @@ classdef bkt_fast_002_leadlag < handle
     
     methods
         
-        function obj = fast_Ale002(obj, Pminute,P,date,N,M,newTimeScale,cost,wSL,wTP,plottami)
+        function obj = fast_002_leadlag(obj, Pminute,P,date,N,M,newTimeScale,cost,wSL,wTP,plottami)
             
             
-            %% simula algo Ale002
+            %% simula leadlag con TP e SL a seconda della volatilità
             
             pandl = zeros(size(P));
             obj.trades = zeros(size(P));
