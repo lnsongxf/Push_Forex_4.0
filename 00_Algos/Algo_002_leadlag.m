@@ -1,4 +1,4 @@
-function [oper, openValue, closeValue, stopLoss, noLoose, valueTp,st] = Algo_002_leadlag(matrix)
+function [oper, openValue, closeValue, stopLoss, noLoose, valueTp,st] = Algo_002_leadlag(matrix,newTimeScalePoint)
 
 %
 % DESCRIPTION:
@@ -82,15 +82,17 @@ operationState = ra.os;
 chiusure        = matrix(:,4);
 %volumi          = matrix(:,5);
 
-
-% 01a
-% -------- coreState filter ------------------ %
-cState.Algo_002_Ale(chiusure,params);
+if newTimeScalePoint==1 % controlla se ho dei nuovi dati sulla newTimeScale
+    % 01a
+    % -------- coreState filter ------------------ %
+    cState.Algo_002_Ale(chiusure,params);
+    
+    
+    % 01b
+    % -------- stationarity Test ------------------ %
+    st.stationarityTests(chiusure(1:end-1),30,0);
+end
 state = cState.state;
-
-% 01b
-% -------- stationarity Test ------------------ %
-st.stationarityTests(chiusure,30,0);
 
 
 if operationState.lock

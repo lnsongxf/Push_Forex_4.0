@@ -4,6 +4,7 @@ classdef PerformanceDistribution_04 < handle
         nameAlgo;
         origin;
         cross;
+        nData;
         freq;
         transCost;
         inputResultsMatrix
@@ -28,7 +29,7 @@ classdef PerformanceDistribution_04 < handle
         
         %%
         
-        function obj=calcPerformanceDistr(obj,nameAlgo_,origin_,cross_,freq_,transCost_,inputResultsMatrix_,HistData_1min_,HistData_freq_,nstep,nstepeq,dimCluster,plotPerDistribution)
+        function obj=calcPerformanceDistr(obj,nameAlgo_,origin_,cross_,nData_,freq_,transCost_,inputResultsMatrix_,timeSeriesProperties_,HistData_1min_,HistData_freq_,nstep,nstepeq,dimCluster,plotPerDistribution)
             
             %
             % DESCRIPTION:
@@ -47,6 +48,8 @@ classdef PerformanceDistribution_04 < handle
             % freq_                 ... frequency of data used (ex: 5 mins)
             % transCost_            ... transaction cost (spread)
             % inputResultsMatrix_   ... matrix of results coming from the test
+            % timeSeriesProperties_ ... properties calculated during the
+            %                           bkt
             % HistData_1min_        ... 1min-hystorical data correspondent to the period of test
             %                           use the function [outputHyst]=fromRawHystToHistorical
             % HistData_freq_        ... 5mins-hystorical data correspondet to the period of test
@@ -63,7 +66,7 @@ classdef PerformanceDistribution_04 < handle
             % EXAMPLE of use:
             % -------------------------------------------------------------
             % pd=PerformanceDistribution_04;
-            % pd=pd.calcPerformanceDistr('real_17','bktWeb','EURUSD',5,1,bkt_Algo002.outputBktOffline,bkt_Algo002.starthisData,bkt_Algo002.newHisData,12,10,10,5)
+            % pd=pd.calcPerformanceDistr('real_17','bktWeb','EURUSD',100,5,1,bkt_Algo002.outputBktOffline,bkt_Algo002.starthisData,bkt_Algo002.newHisData,12,10,10,5)
             %
             
             
@@ -75,6 +78,7 @@ classdef PerformanceDistribution_04 < handle
             obj.nameAlgo=nameAlgo_;
             obj.origin=origin_;
             obj.cross=cross_;
+            obj.nData=nData_;
             obj.freq=freq_;
             obj.transCost=transCost_;
             obj.HistData1min=HistData_1min_;
@@ -121,7 +125,7 @@ classdef PerformanceDistribution_04 < handle
                     obj=obj.analysisMicroParams(nstep);
                     obj=obj.analysisMacroParams;
                     obj=obj.analysisReturnsPattern(nstepeq,dimCluster);
-                    obj=obj.plotOperationOnHystorical;
+                    obj=obj.plotOperationOnHystorical(timeSeriesProperties_);
             end
             
             toc
@@ -362,9 +366,10 @@ classdef PerformanceDistribution_04 < handle
         
         
         %%
-        function obj=plotOperationOnHystorical(obj)
+        function obj=plotOperationOnHystorical(obj,timeSeriesProperties_)
             
             figure
+            subplot(2,1,1)
             plot(obj.HistData1min(:,4),'k','LineWidth',1)
             hold on
             plot(obj.rowHistpOp,obj.HistData1min(obj.rowHistpOp,4),'ob')
@@ -374,6 +379,12 @@ classdef PerformanceDistribution_04 < handle
             plot(obj.rowHistnCl,obj.HistData1min(obj.rowHistnCl,4),'*r')
             
             legend('Price','Open win','Close win','Open lost','Close lost')
+            
+            subplot(2,1,2)
+            lnewTimeScale=length(timeSeriesProperties_,1);
+            stop=lnewTimeScale-1-obj.nData/obj.freq;
+            xProperties=obj.nData*obj.freq:obj.freq:stop;
+            plot(xProperties,timeSeriesProperties_,'-k');
             
             % plotyy(cumsum(obj.inputResultsMatrix(:,4)-obj.transCost),'plot');
         end

@@ -1,6 +1,7 @@
 classdef bktOffline < handle
     
     properties
+        nData
         starthisData
         newHisData
         iCloseActTimeScale
@@ -16,7 +17,7 @@ classdef bktOffline < handle
     
     methods
         
-        function [obj] = spin(obj,nameAlgo,cross,nData,histName,actTimeScale, ...
+        function [obj] = spin(obj,nameAlgo,cross,nData_,histName,actTimeScale, ...
                 newTimeScale,transCost,initialStack,leverage,plotPerformance,plotPerDistribution)
             
             %
@@ -61,6 +62,8 @@ classdef bktOffline < handle
             % -------------------------------------------------------------
             % per salvare lo storico:   dlmwrite('EURUSD_2012_2015.csv', data, '-append') ;
             %            
+            
+            obj.nData=nData_
             
             hisData = csvread(histName);
             [r,c] = size(hisData);
@@ -114,19 +117,19 @@ classdef bktOffline < handle
             SL = zeros(floor(lnewHisData/2), 1);
             TP = zeros(floor(lnewHisData/2), 1);
             obj.timeSeriesProperties=zeros(lhisData,3);
-            matrix=zeros(nData+1, 6);
+            matrix=zeros(obj.nData+1, 6);
             
             % da qui inizia il core dello spin
             tic
             
-            for i = nData:lnewHisData
-                indexNewHisData=i-(nData-1);
-                matrix(1:nData,:) = obj.newHisData(indexNewHisData:i,:);
+            for i = obj.nData:lnewHisData
+                indexNewHisData=i-(obj.nData-1);
+                matrix(1:obj.nData,:) = obj.newHisData(indexNewHisData:i,:);
+                newTimeScalePoint=1; % controlla se ho dei nuovi dati sulla newTimeScale
+                k=k+1;
                 
                 for j = 1:newTimeScale
-                    
-                    k=k+1;
-                    
+                     
                     indexHisData=i*newTimeScale+j-1;
                     
                     if indexHisData > lhisData
@@ -134,18 +137,26 @@ classdef bktOffline < handle
                     end
 
                     matrix(end,:) = hisData(indexHisData,:);
-                    [oper, openValue, closeValue, stopLoss, takeProfit, valueTp, st] = Algo_002_leadlag(matrix);
+                    [oper, openValue, closeValue, stopLoss, takeProfit, valueTp, st] = Algo_002_leadlag(matrix,newTimeScalePoint);
                     
+                    newTimeScalePoint=0;
                     newState{1} = oper;
                     newState{2} = openValue;
                     newState{3} = closeValue;
                     newState{4} = stopLoss;
                     newState{5} = takeProfit;
                     newState{6} = valueTp;
-                    obj.timeSeriesProperties(k,1)=st.HurstExponent;
-                    obj.timeSeriesProperties(k,2)=st.pValue;
-                    obj.timeSeriesProperties(k,3)=st.halflife;
 
+                    a=st.HurstExponent;
+                    b=st.pValue;
+                    c=st.halflife;
+                    if newTimeScalePoint
+                        display(k)
+                        obj.timeSeriesProperties(k,1)=a;
+                        obj.timeSeriesProperties(k,2)=b;
+                        obj.timeSeriesProperties(k,3)=c;
+                    end
+                    
                     updatedOperation = newState{1};
                     
                     if abs(updatedOperation) > 0 && startingOperation == 0
@@ -179,8 +190,10 @@ classdef bktOffline < handle
                         startingOperation = 0;
                         display('operation closed');
                         display(['i Close =' num2str(i)]);
-                   
+                        
                     end
+                    
+
                     
                 end
                 
@@ -223,8 +236,8 @@ classdef bktOffline < handle
             
             p = Performance_05;
             obj.performance = p.calcSinglePerformance(nameAlgo,'bktWeb',cross,newTimeScale,transCost,initialStack,leverage,obj.outputBktOffline,plotPerformance);
-            pD = PerformanceDistribution_03;
-            obj.performanceDistribution = pD.calcPerformanceDistr(nameAlgo,'bktWeb',cross,newTimeScale,transCost,obj.outputBktOffline,obj.starthisData,obj.newHisData,15,10,10,plotPerDistribution);
+            pD = PerformanceDistribution_04;
+            obj.performanceDistribution = pD.calcPerformanceDistr(nameAlgo,'bktWeb',cross,obj.nData,newTimeScale,transCost,obj.outputBktOffline,obj.starthisData,obj.newHisData,15,10,10,plotPerDistribution);
             
         end
         

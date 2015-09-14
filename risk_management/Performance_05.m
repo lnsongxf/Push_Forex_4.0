@@ -377,8 +377,7 @@ classdef Performance_05 < handle
                 set(gca,'XTick',xData);
                 datetick('x','dd/mm/yyyy HH:MM','keepticks');
                 
-                
-                
+
                 figure
                 
                 p(1)=subplot(2,3,1);
