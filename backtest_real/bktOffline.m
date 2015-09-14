@@ -154,8 +154,7 @@ classdef bktOffline < handle
                         display(['i Open =' num2str(i)]);
                         display(['startingOperation =' num2str(startingOperation)]);
                         
-                        
-                        
+         
                         direction(indexOpen) = newState{1};
                         openingPrice(indexOpen) = newState{2};
                         openingDateNum(indexOpen) = obj.newHisData(i,6);
