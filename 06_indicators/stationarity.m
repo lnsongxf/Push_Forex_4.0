@@ -44,7 +44,7 @@ classdef stationarity <handle
             
             %% Find Hurst exponent
             
-            obj.HurstExponent=genhurst(log(closeprices), 1);
+            obj.HurstExponent=genhurst(log(closeprices));
             if plotValues
                 %             display('---Generalized Hurst exponent---')
                 %             display('(H2 < 0.5 -> mean reverting)')

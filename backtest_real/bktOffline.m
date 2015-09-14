@@ -67,6 +67,7 @@ classdef bktOffline < handle
             startingOperation = 0;
             indexOpen = 0;
             indexClose = 0;
+            k=0;
             
             % includi colonna delle date se non esiste nel file di input
             if c == 5
@@ -112,7 +113,8 @@ classdef bktOffline < handle
             iO = zeros(floor(lnewHisData/2), 1);
             SL = zeros(floor(lnewHisData/2), 1);
             TP = zeros(floor(lnewHisData/2), 1);
-            matrix=zeros(nData+1,6);
+            obj.timeSeriesProperties=zeros(lhisData,3);
+            matrix=zeros(nData+1, 6);
             
             % da qui inizia il core dello spin
             tic
@@ -123,6 +125,8 @@ classdef bktOffline < handle
                 
                 for j = 1:newTimeScale
                     
+                    k=k+1;
+                    
                     indexHisData=i*newTimeScale+j-1;
                     
                     if indexHisData > lhisData
@@ -130,7 +134,7 @@ classdef bktOffline < handle
                     end
 
                     matrix(end,:) = hisData(indexHisData,:);
-                    [oper, openValue, closeValue, stopLoss, takeProfit, valueTp] = Algo_002_leadlag(matrix);
+                    [oper, openValue, closeValue, stopLoss, takeProfit, valueTp, st] = Algo_002_leadlag(matrix);
                     
                     newState{1} = oper;
                     newState{2} = openValue;
@@ -138,7 +142,10 @@ classdef bktOffline < handle
                     newState{4} = stopLoss;
                     newState{5} = takeProfit;
                     newState{6} = valueTp;
-                    
+                    obj.timeSeriesProperties(k,1)=st.HurstExponent;
+                    obj.timeSeriesProperties(k,2)=st.pValue;
+                    obj.timeSeriesProperties(k,3)=st.halflife;
+
                     updatedOperation = newState{1};
                     
                     if abs(updatedOperation) > 0 && startingOperation == 0
@@ -200,8 +207,7 @@ classdef bktOffline < handle
             obj.iOpenNewTimeScale=iO;
             obj.stopL=SL;
             obj.takeP=TP;
-            
-                        
+                       
             obj.outputBktOffline = zeros(l,8);
             
             obj.outputBktOffline(:,1) = nCandelotto(1:l);           % index of stick

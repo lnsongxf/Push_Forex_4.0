@@ -1,4 +1,4 @@
-function [oper, openValue, closeValue, stopLoss, noLoose, valueTp] = Algo_002_leadlag(matrix)
+function [oper, openValue, closeValue, stopLoss, noLoose, valueTp,st] = Algo_002_leadlag(matrix)
 
 %
 % DESCRIPTION:
@@ -90,7 +90,7 @@ state = cState.state;
 
 % 01b
 % -------- stationarity Test ------------------ %
-st.stationarityTests(chiusure,1,0);
+st.stationarityTests(chiusure,30,0);
 
 
 if operationState.lock
