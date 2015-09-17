@@ -310,7 +310,7 @@ classdef coreState_real02 < handle
             
             % non uso i dati al minuto per le valutazioni dello
             % state
-            closePrice=closure(1:end-1);
+            closePrice=closure;
             
             windowSize1 = 5;
             a = (1/windowSize1)*ones(1,windowSize1);
@@ -325,7 +325,7 @@ classdef coreState_real02 < handle
             smoothClose2 = filter(b,1,closePrice);
             fluctuations2=abs(closePrice-smoothClose2);
             meanFluct2=mean(fluctuations2(windowSize2:end));
-            devFluct2=std(fluctuations2(windowSize2:end));
+            %             devFluct2=std(fluctuations2(windowSize2:end));
             %             actualFluct2=closure(end)-smoothClose2(end);
             %             signDirection2=sign(actualFluct2);
             

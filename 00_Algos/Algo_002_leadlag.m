@@ -85,7 +85,7 @@ chiusure        = matrix(:,4);
 if newTimeScalePoint==1 % controlla se ho dei nuovi dati sulla newTimeScale
     % 01a
     % -------- coreState filter ------------------ %
-    cState.Algo_002_Ale(chiusure,params);
+    cState.Algo_002_Ale(chiusure(1:end-1),params);
     
     
     % 01b
