@@ -66,7 +66,7 @@ classdef PerformanceDistribution_04 < handle
             % EXAMPLE of use:
             % -------------------------------------------------------------
             % pd=PerformanceDistribution_04;
-            % pd=pd.calcPerformanceDistr('real_17','bktWeb','EURUSD',100,5,1,bkt_Algo002.outputBktOffline,bkt_Algo002.starthisData,bkt_Algo002.newHisData,12,10,10,5)
+            % pd=pd.calcPerformanceDistr('real_17','bktWeb','EURUSD',100,5,1,bkt_Algo002.outputBktOffline,bkt_Algo002.timeSeriesProperties,bkt_Algo002.starthisData,bkt_Algo002.newHisData,12,10,10,5)
             %
             
             
@@ -369,7 +369,7 @@ classdef PerformanceDistribution_04 < handle
         function obj=plotOperationOnHystorical(obj,timeSeriesProperties_)
             
             figure
-            subplot(2,1,1)
+            s(1)=subplot(2,1,1);
             plot(obj.HistData1min(:,4),'k','LineWidth',1)
             hold on
             plot(obj.rowHistpOp,obj.HistData1min(obj.rowHistpOp,4),'ob')
@@ -380,11 +380,19 @@ classdef PerformanceDistribution_04 < handle
             
             legend('Price','Open win','Close win','Open lost','Close lost')
             
-            subplot(2,1,2)
-            lnewTimeScale=length(timeSeriesProperties_,1);
-            stop=lnewTimeScale-1-obj.nData/obj.freq;
-            xProperties=obj.nData*obj.freq:obj.freq:stop;
-            plot(xProperties,timeSeriesProperties_,'-k');
+            s(2)=subplot(2,1,2);
+            H=timeSeriesProperties_(:,1);
+            lnewTimeScale=length(H);
+            start=(obj.nData+1)*obj.freq;
+            stop=(lnewTimeScale+obj.nData)*obj.freq;
+            xProperties=start:obj.freq:stop;
+            plot(xProperties,timeSeriesProperties_(:,1),'-k');
+            hold on
+            lin1=zeros(length(xProperties))+0.5;
+            plot(xProperties,lin1,'-r');
+            legend('hurst exponent','random-walk line','H2 < 0.5 -> mean reverting -- H2 > 0.5 -> trending');
+            
+            linkaxes(s,'x');
             
             % plotyy(cumsum(obj.inputResultsMatrix(:,4)-obj.transCost),'plot');
         end

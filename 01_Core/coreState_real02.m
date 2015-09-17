@@ -266,11 +266,11 @@ classdef coreState_real02 < handle
             fluctuations2=abs(closePrice-smoothClose2);
             devFluct2=std(fluctuations2(windowSize2:end));
             
-%             figure
-%             plot(closure,'ob')
-%             hold on
-%             plot(smoothClose1,'-b')
-%             plot(smoothClose2,'-r')
+            cla
+            plot(closure,'ob')
+            hold on
+            plot(smoothClose1,'-b')
+            plot(smoothClose2,'-r')
             
             newSmoothClose1=smoothClose1(end);
             newSmoothClose2=smoothClose2(end);

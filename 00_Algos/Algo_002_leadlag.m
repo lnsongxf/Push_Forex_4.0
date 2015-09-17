@@ -126,8 +126,6 @@ else
 %                 decMaker.decisionReal4(chiusure);
 %                 real=decMaker.real;
 
-
-
                 % 02b
                 % -------- takeProfitManager: define TP and SL ------ %
                 %                      TO CREATE

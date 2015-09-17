@@ -56,12 +56,12 @@ classdef bktOffline < handle
             % EXAMPLE of use:
             % -------------------------------------------------------------
             % clear all; bkt_Algo_002=bktOffline
-            % bkt_Algo_002=bkt_AlgoX.spin('Algo_002_leadlag','EURUSD',100,'EURUSD_2012_2015.csv',1,5,1,10000,10,1,5)
+            % bkt_Algo_002=bkt_Algo_002.spin('Algo_002_leadlag','EURUSD',100,'EURUSD_2012_2015.csv',1,5,1,10000,10,1,5)
             %
-            % NOTE 
+            % NOTE
             % -------------------------------------------------------------
             % per salvare lo storico:   dlmwrite('EURUSD_2012_2015.csv', data, '-append') ;
-            %            
+            %
             
             obj.nData=nData_;
             
@@ -101,7 +101,7 @@ classdef bktOffline < handle
                 obj.newHisData = hisData;
                 
             end
-                     
+            
             lhisData = length(hisData);
             lnewHisData = length(obj.newHisData);
             direction = zeros(floor(lnewHisData/2), 1);
@@ -116,7 +116,9 @@ classdef bktOffline < handle
             iO = zeros(floor(lnewHisData/2), 1);
             SL = zeros(floor(lnewHisData/2), 1);
             TP = zeros(floor(lnewHisData/2), 1);
-            obj.timeSeriesProperties=zeros(lhisData,3);
+            
+            ltimeSeriesproperties=floor(lhisData/newTimeScale)-(obj.nData*newTimeScale);
+            obj.timeSeriesProperties=zeros(ltimeSeriesproperties,3);
             matrix=zeros(obj.nData+1, 6);
             
             % da qui inizia il core dello spin
@@ -129,71 +131,71 @@ classdef bktOffline < handle
                 k=k+1;
                 
                 for j = 1:newTimeScale
-                     
+                    
                     indexHisData=i*newTimeScale+j-1;
                     
                     if indexHisData > lhisData
                         break
                     end
-
-                    matrix(end,:) = hisData(indexHisData,:);
-                    [oper, openValue, closeValue, stopLoss, takeProfit, valueTp, st] = Algo_002_leadlag(matrix,newTimeScalePoint);
                     
-                    newTimeScalePoint=0;
-                    newState{1} = oper;
-                    newState{2} = openValue;
-                    newState{3} = closeValue;
-                    newState{4} = stopLoss;
-                    newState{5} = takeProfit;
-                    newState{6} = valueTp;
-
-                    a=st.HurstExponent;
-                    b=st.pValue;
-                    c=st.halflife;
-                    if newTimeScalePoint
-                        display(k)
-                        obj.timeSeriesProperties(k,1)=a;
-                        obj.timeSeriesProperties(k,2)=b;
-                        obj.timeSeriesProperties(k,3)=c;
+                    if isfinite(hisData(indexHisData,1))
+                        matrix(end,:) = hisData(indexHisData,:);
+                        [oper, openValue, closeValue, stopLoss, takeProfit, valueTp, st] = Algo_002_leadlag(matrix,newTimeScalePoint);
+                        
+                        newState{1} = oper;
+                        newState{2} = openValue;
+                        newState{3} = closeValue;
+                        newState{4} = stopLoss;
+                        newState{5} = takeProfit;
+                        newState{6} = valueTp;
+                        
+                        a=st.HurstExponent;
+                        b=st.pValue;
+                        c=st.halflife;
+                        if newTimeScalePoint && k>1;
+                            obj.timeSeriesProperties(k-1,1)=a;
+                            obj.timeSeriesProperties(k-1,2)=b;
+                            obj.timeSeriesProperties(k-1,3)=c;
+                        end
+                        
+                        newTimeScalePoint=0;
+                        updatedOperation = newState{1};
+                        
+                        if abs(updatedOperation) > 0 && startingOperation == 0
+                            
+                            indexOpen = indexOpen + 1;
+                            iO(indexOpen)=i;
+                            SL(indexOpen)=stopLoss;
+                            TP(indexOpen)=takeProfit;
+                            
+                            startingOperation = newState{1};
+                            
+                            display(['indexOpen =' num2str(indexOpen)]);
+                            display(['i Open =' num2str(i)]);
+                            display(['startingOperation =' num2str(startingOperation)]);
+                            
+                            
+                            direction(indexOpen) = newState{1};
+                            openingPrice(indexOpen) = newState{2};
+                            openingDateNum(indexOpen) = obj.newHisData(i,6);
+                            lots(indexOpen) = 1;
+                            
+                        elseif updatedOperation == 0 && abs(startingOperation) > 0
+                            
+                            jC(indexOpen)=indexHisData;
+                            iC(indexOpen)=i;
+                            nCandelotto(indexOpen) = i;
+                            indexClose = indexClose + 1;
+                            closingPrice(indexOpen) = newState{3};
+                            closingDateNum(indexOpen) = obj.newHisData(i,6);
+                            display(['closeValue =' num2str(closeValue)]);
+                            startingOperation = 0;
+                            display('operation closed');
+                            display(['i Close =' num2str(i)]);
+                            
+                        end
+                        
                     end
-                    
-                    updatedOperation = newState{1};
-                    
-                    if abs(updatedOperation) > 0 && startingOperation == 0
-                        
-                        indexOpen = indexOpen + 1;
-                        iO(indexOpen)=i;
-                        SL(indexOpen)=stopLoss;
-                        TP(indexOpen)=takeProfit;
-                        
-                        startingOperation = newState{1};
-                        
-                        display(['indexOpen =' num2str(indexOpen)]);
-                        display(['i Open =' num2str(i)]);
-                        display(['startingOperation =' num2str(startingOperation)]);
-                        
-         
-                        direction(indexOpen) = newState{1};
-                        openingPrice(indexOpen) = newState{2};
-                        openingDateNum(indexOpen) = obj.newHisData(i,6);
-                        lots(indexOpen) = 1;
-                        
-                    elseif updatedOperation == 0 && abs(startingOperation) > 0
-                        
-                        jC(indexOpen)=indexHisData;
-                        iC(indexOpen)=i;
-                        nCandelotto(indexOpen) = i;
-                        indexClose = indexClose + 1;
-                        closingPrice(indexOpen) = newState{3};
-                        closingDateNum(indexOpen) = obj.newHisData(i,6);
-                        display(['closeValue =' num2str(closeValue)]);
-                        startingOperation = 0;
-                        display('operation closed');
-                        display(['i Close =' num2str(i)]);
-                        
-                    end
-                    
-
                     
                 end
                 
@@ -206,7 +208,7 @@ classdef bktOffline < handle
             openingDateNum = openingDateNum(1:indexClose);
             closingDateNum = closingDateNum(1:indexClose);
             lots = lots(1:indexClose);
-            
+                      
             jC=jC(1:indexClose);
             iC=iC(1:indexClose);
             iO=iO(1:indexClose);
@@ -220,7 +222,7 @@ classdef bktOffline < handle
             obj.iOpenNewTimeScale=iO;
             obj.stopL=SL;
             obj.takeP=TP;
-                       
+            
             obj.outputBktOffline = zeros(l,8);
             
             obj.outputBktOffline(:,1) = nCandelotto(1:l);           % index of stick
@@ -234,10 +236,14 @@ classdef bktOffline < handle
             obj.outputBktOffline(:,8) = closingDateNum;             % closing date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
             obj.outputBktOffline(:,9) = lots;                       % lots setted for single operation
             
+%             obj.timeSeriesProperties(:,1)=st.HurstExponent;
+%             obj.timeSeriesProperties(:,1)=st.pValue;
+%             obj.timeSeriesProperties(:,1)=st.halflife;
+            
             p = Performance_05;
             obj.performance = p.calcSinglePerformance(nameAlgo,'bktWeb',cross,newTimeScale,transCost,initialStack,leverage,obj.outputBktOffline,plotPerformance);
             pD = PerformanceDistribution_04;
-            obj.performanceDistribution = pD.calcPerformanceDistr(nameAlgo,'bktWeb',cross,obj.nData,newTimeScale,transCost,obj.outputBktOffline,obj.starthisData,obj.newHisData,15,10,10,plotPerDistribution);
+            obj.performanceDistribution = pD.calcPerformanceDistr(nameAlgo,'bktWeb',cross,obj.nData,newTimeScale,transCost,obj.outputBktOffline,obj.timeSeriesProperties,obj.starthisData,obj.newHisData,15,10,10,plotPerDistribution);
             
         end
         
