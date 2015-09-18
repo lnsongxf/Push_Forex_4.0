@@ -1,4 +1,4 @@
-function [oper, openValue, closeValue, stopLoss, noLoose, valueTp,st] = Algo_002_leadlag(matrix,newTimeScalePoint)
+function [oper, openValue, closeValue, stopLoss, noLoose, valueTp,st] = Algo_004_statTrend(matrix,newTimeScalePoint)
 
 %
 % DESCRIPTION:
@@ -85,14 +85,20 @@ chiusure        = matrix(:,4);
 if newTimeScalePoint==1 % controlla se ho dei nuovi dati sulla newTimeScale
     % 01a
     % -------- coreState filter ------------------ %
-    cState.core_Algo_002_leadlag(chiusure(1:end-1),params);
+    cState.core_Algo_004_statTrend(chiusure(1:end-1),params);
     
     
     % 01b
     % -------- stationarity Test ------------------ %
     st.stationarityTests(chiusure(1:end-1),30,0);
 end
-state = cState.state;
+stateC = cState.state;
+if st.HurstExponent>0.5
+    stateH=1;
+else
+    stateH=0;
+end
+state=stateC*stateH;
 
 
 if operationState.lock
@@ -112,8 +118,8 @@ else
         
         % 02a
         % -------- takeProfitManager: close for TP or SL ------ %
-        [operationState,~,params] = takeProfitManager(operationState,chiusure,params);
-        % [operationState,~, params] = timeClosureManager (operationState, chiusure, params, 30);
+        %[operationState,~,params] = takeProfitManager(operationState,chiusure,params);
+        [operationState,~, params] = timeClosureManager (operationState, chiusure, params,5000);
         
     else
         

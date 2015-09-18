@@ -140,7 +140,7 @@ classdef bktOffline < handle
                     
                     if isfinite(hisData(indexHisData,1))
                         matrix(end,:) = hisData(indexHisData,:);
-                        [oper, openValue, closeValue, stopLoss, takeProfit, valueTp, st] = Algo_002_leadlag(matrix,newTimeScalePoint);
+                        [oper, openValue, closeValue, stopLoss, takeProfit, valueTp, st] = Algo_004_statTrend(matrix,newTimeScalePoint);
                         
                         newState{1} = oper;
                         newState{2} = openValue;
