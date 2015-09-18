@@ -33,6 +33,7 @@ var QuotesModule = (function(){
 		        }
 		    }
 		}
+		logger.trace("created new TimeFrameQuotesObj: "+JSON.stringify(_quotesObj)+ " providerName: "+providerName);  
 		return _quotesObj
 	};
 
@@ -55,6 +56,7 @@ var QuotesModule = (function(){
 		        _realTimeQuotesObj[attrValue]="";
 		    }
 		}
+		logger.trace("created new realTimeQuotesObj: "+JSON.stringify( _realTimeQuotesObj)+ " providerName: "+providerName);
 		return _realTimeQuotesObj
 	};
 
@@ -68,6 +70,7 @@ var QuotesModule = (function(){
 			  		if (runningProviderRealTimeObjs[key0].hasOwnProperty(key)) {
 			  			if (key == messageArr[0]) {
 			  				runningProviderRealTimeObjs[key0][key] = messageArr[1];
+			  				logger.info("Updated realTimeQuotesObj with the last value: "+runningProviderRealTimeObjs[key0][key] +" ,key0: "+key0+ " ,key: "+key);
 			  				return true;
 			  			};	
 			  		}
@@ -122,17 +125,18 @@ var QuotesModule = (function(){
 		  						if (tempObj[Object.keys(tempObj)[0]].length < Object.keys(tempObj)[0].split("v")[1] ){
 		  							if (realTimeQuotesObj[key0] != "") {
 		  								tempObj[Object.keys(tempObj)[0]].push(realTimeQuotesObj[key0]);	
+		  								logger.trace('Updated timeFrameQuotesObj(operation:adding) : ' + tempObj[Object.keys(tempObj)[0]].toString() + ' for TimeFrame: '+timeFrame+ ' for number of values: '+Object.keys(tempObj)[0]+' on Cross: '+key1 );
 		  								var topic = key1;
 		  								//"TIMEFRAMEQUOTE@MT4@ACTIVTRADES   +     @EURUSD     +     @m1     +    @v1 
-		  								var topicToSignalProvider = timeFrameQuotesObj.provider+key1+timeFrame+Object.keys(tempObj)[0];
+		  								var topicToSignalProvider = timeFrameQuotesObj.provider+"@"+key1+"@"+timeFrame+"@"+Object.keys(tempObj)[0];
 		  								if (topicToSignalProvider == null || topicToSignalProvider == undefined ) {
-											logger.error('timeFrameQuotesObjProvider: ' +JSON.stringify(timeFrameQuotesObj.provider) + ' key1: ' + JSON.stringify(key1) + ' timeFrame: ' +JSON.stringify(timeFrame) + ' totValues: ' + JSON.stringify( Object.keys(tempObj)[0] ) + ' In _updateTimeFrameQuotesObj topicToSignalProvider is notDefined/null');
+											logger.error('timeFrameQuotesObjProvider: ' +JSON.stringify(timeFrameQuotesObj.provider) + ' key1: ' + key1 + ' timeFrame: ' +timeFrame + ' totValues: ' + JSON.stringify( Object.keys(tempObj)[0] ) + ' In _updateTimeFrameQuotesObj topicToSignalProvider is notDefined/null');
 										};
-										if (tempObj[Object.keys(tempObj)[0]].toString()] == null || tempObj[Object.keys(tempObj)[0]].toString()] == undefined ) {
+										if (tempObj[Object.keys(tempObj)[0]].toString() == null || tempObj[Object.keys(tempObj)[0]].toString() == undefined ) {
 											logger.error('objWithMessageToSend: '+ JSON.stringify(tempObj) + ' _updateTimeFrameQuotesObj is sending a message (Quotes) notDefined/null');
 										};
 		  								sockPub.send([topicToSignalProvider, tempObj[Object.keys(tempObj)[0]].toString()]);
-		  								logger.info('Sent message: '+tempObj[Object.keys(tempObj)[0]].toString()+ 'on topic: '+topicToSignalProvider);
+		  								logger.info('Sent new timeFrame value message: '+tempObj[Object.keys(tempObj)[0]].toString()+ 'for TimeFrame: '+timeFrame+ 'for Cross: '+key1+' on topic: '+topicToSignalProvider);
 		  							}else{
 		  								//if (topicToSignalProvider == null || topicToSignalProvider == undefined ) {
 										//	logger.error('In _updateTimeFrameQuotesObj, realTimeQuotesObj[key0] is null');
@@ -142,16 +146,17 @@ var QuotesModule = (function(){
 	  								if (realTimeQuotesObj[key0] != "") {
 		  								tempObj[Object.keys(tempObj)[0]].shift();
 		  								tempObj[Object.keys(tempObj)[0]].push(realTimeQuotesObj[key0]);
+		  								logger.trace('Updated timeFrameQuotesObj(operation:shifting) : ' + tempObj[Object.keys(tempObj)[0]].toString() + 'for TimeFrame: '+timeFrame+ ' for number of values: '+Object.keys(tempObj)[0]+' for Cross: '+key1 );
 		  								//"TIMEFRAMEQUOTE@MT4@ACTIVTRADES   +     @EURUSD     +     @m1     +    @v10 
-		  								var topicToSignalProvider = timeFrameQuotesObj.provider+key1+timeFrame+Object.keys(tempObj)[0];
+		  								var topicToSignalProvider = timeFrameQuotesObj.provider+"@"+key1+"@"+timeFrame+"@"+Object.keys(tempObj)[0];
 		  								if (topicToSignalProvider == null || topicToSignalProvider == undefined ) {
-											logger.error('timeFrameQuotesObjProvider: '+ JSON.stringify(timeFrameQuotesObj.provider) + ' key1: ' + JSON.stringify(key1) + ' timeFrame: '+ JSON.stringify(timeFrame) + 'totValues: ' + JSON.stringify(Object.keys(tempObj)[0]) +' In _updateTimeFrameQuotesObj topicToSignalProvider is notDefined/null');
+											logger.error('timeFrameQuotesObjProvider: '+ JSON.stringify(timeFrameQuotesObj.provider) + ' key1: ' + key1 + ' timeFrame: '+ timeFrame + 'totValues: ' + JSON.stringify(Object.keys(tempObj)[0]) +' In _updateTimeFrameQuotesObj topicToSignalProvider is notDefined/null');
 										};
-										if (tempObj[Object.keys(tempObj)[0]].toString()] == null || tempObj[Object.keys(tempObj)[0]].toString()] == undefined ) {
+										if (tempObj[Object.keys(tempObj)[0]].toString() == null || tempObj[Object.keys(tempObj)[0]].toString() == undefined ) {
 											logger.error('objWithMessageToSend: ' + JSON.stringify(tempObj) + ' _updateTimeFrameQuotesObj is sending a message (Quotes) notDefined/null');
 										};
 		  								sockPub.send([topicToSignalProvider, tempObj[Object.keys(tempObj)[0]].toString()]);
-		  								logger.info('Sent message: '+tempObj[Object.keys(tempObj)[0]].toString()+ 'on topic: '+topicToSignalProvider);
+		  								logger.info('Sent new timeFrame value message: '+tempObj[Object.keys(tempObj)[0]].toString()+ 'for TimeFrame: '+timeFrame+ 'for Cross: '+key1+' on topic: '+topicToSignalProvider);
 		  							}else{
 		  								//if (topicToSignalProvider == null || topicToSignalProvider == undefined ) {
 										//	logger.error('In _updateTimeFrameQuotesObj, realTimeQuotesObj[key0] is null');
@@ -161,7 +166,7 @@ var QuotesModule = (function(){
 		  						timeFrameQuotesObj[key1][index][timeFrame][j] = tempObj;
 	  						};
 	  						//uncomment this file if you want to check how are stored the quotes values
-	  						logger.trace('Updated timeFrameQuotesObj[key1][index][timeFrame]: ' + JSON.stringify(timeFrameQuotesObj[key1][index][timeFrame] ) +  ' TimeFrame Obj Updated');
+	  						//logger.trace('Updated timeFrameQuotesObj[key1][index][timeFrame]: ' + JSON.stringify(timeFrameQuotesObj[key1][index][timeFrame] ) +  ' TimeFrame Obj Updated');
 	  						//console.log("timeFrameQuotesObj[key1][index][timeFrame]: ",timeFrameQuotesObj[key1][index][timeFrame]);
 	  					}	
 					}
@@ -172,18 +177,22 @@ var QuotesModule = (function(){
 		return timeFrameQuotesObj;
 	};
 
-	var _importHistoryTimeFrameQuotesObj = function(searchObjRealTimeQuote,messageArr){
-		if (searchObjRealTimeQuote == null || searchObjRealTimeQuote == undefined || messageArr == null || messageArr == undefined ) {
+	var _importHistoryTimeFrameQuotesObj = function(searchObjTimeFrameQuote,messageArr){
+		// EX: REALTIMEQUOTES@MT4@ACTIVTRADES
+		if (searchObjTimeFrameQuote == null || searchObjTimeFrameQuote == undefined || messageArr == null || messageArr == undefined ) {
 			logger.error('In _updateTimeFrameQuotesObj timeframe or timeFrameQuotesObj or realTimeQuotesObj is notDefined/null');
 		};
 		for (var key0 in runningProviderTimeFrameObjs) {
 			if (key0 == searchObjTimeFrameQuote) {
 				for (var key in runningProviderTimeFrameObjs[key0]) {
 					if (runningProviderTimeFrameObjs[key0].hasOwnProperty(key)) {
+						// EX message:"EURUSD@m1@" + Bid + ";" + Ask + ";" + Time[0] + "$...
+						//Check for 'EURUSD'...
 			  			if (key == messageArr[0]) {
 			  				for(var i=0;i<runningProviderTimeFrameObjs[key0][key].length;i++){
 			  					for (var key1 in runningProviderTimeFrameObjs[key0][key][i]) {
 			  						var tmpObjTimeFrameQuote = runningProviderTimeFrameObjs[key0][key][i];
+			  						//Check for 'm1'...
 			  						if ( Object.keys(tmpObjTimeFrameQuote)[0] == messageArr[1] ) {
 			  							var arrfirstQuotesValues = messageArr[2].split("$");
 			  							for(var k=0;k<arrfirstQuotesValues.length;k++){
@@ -193,16 +202,18 @@ var QuotesModule = (function(){
 			  										tmpObjSetValuesQuote[Object.keys(tmpObjSetValuesQuote)].push(arrfirstQuotesValues[k]);
 			  										tmpObjTimeFrameQuote[Object.keys(tmpObjTimeFrameQuote)[0]][j] = tmpObjSetValuesQuote;
 			  										runningProviderTimeFrameObjs[key0][key][i] = tmpObjTimeFrameQuote;
-			  										return true;
-			  									}else{
+			  										
+			  									}else if (tmpObjSetValuesQuote[Object.keys(tmpObjSetValuesQuote)].length >= Object.keys(tmpObjSetValuesQuote)[0].split("v")[1]) {
 			  										tmpObjSetValuesQuote[Object.keys(tmpObjSetValuesQuote)].shift();
 													tmpObjSetValuesQuote[Object.keys(tmpObjSetValuesQuote)].push(arrfirstQuotesValues[k]);
 													tmpObjTimeFrameQuote[Object.keys(tmpObjTimeFrameQuote)[0]][j] = tmpObjSetValuesQuote;
 			  										runningProviderTimeFrameObjs[key0][key][i] = tmpObjTimeFrameQuote;
-			  										return true;
+
 			  									}
 			  								}
-			  							}	
+			  							}
+			  							logger.trace("Updated TimeFrameObj with History Quotes. Key0(Quote Provider Name): "+key0+" ,Cross: "+key+" ,Values: "+JSON.stringify( runningProviderTimeFrameObjs[key0][key][i] ) );
+			  							return true;	
 			  						}			
 			  					}
 			  				}
@@ -235,15 +246,18 @@ var QuotesModule = (function(){
 
 var logger = (function(){
 
-	var topicLogFatal="FATAL";
-	var topicLogError="ERROR";
-	var topicLogInfo="INFO";
-	var topicLogTrace="TRACE";
+	var topicLogFatal="LOGS@FATAL";
+	var topicLogError="LOGS@ERROR";
+	var topicLogInfo="LOGS@INFO";
+	var topicLogTrace="LOGS@TRACE";
 
 	var fatal = function(message){ sockLog.send([topicLogFatal, message]); }
 	var error = function(message){ sockLog.send([topicLogError, message]); }
 	var info = function(message){ sockLog.send([topicLogInfo, message]); }
-	var trace = function(message){ sockLog.send([topicLogTrace, message]); }
+	var trace = function(message){ 
+		console.log("sending logs..");
+		sockLog.send([topicLogTrace, message]);
+    }
 
 	return{
 		fatal: function(message){ fatal(message) },
@@ -252,7 +266,7 @@ var logger = (function(){
 		trace: function(message){ trace(message) }
 	}
 
-}();
+})();
 
 var sockPub = zmq.socket('pub');
 var sockSubFromQuotesProvider = zmq.socket('sub');
@@ -264,7 +278,9 @@ sockSubFromSignalProvider.bindSync('tcp://127.0.0.1:50026');
 sockPub.bindSync('tcp://127.0.0.1:50027');  
 sockLog.bindSync('tcp://127.0.0.1:50028');
 
-
+setInterval(function(){
+	logger.trace("running logger...");
+},30000);
 
 //-------------------------------------------------------------------------------------------------------------------------------
 // QUOTES PROVIDER PUB TO NODEJS TO SIGNAL PROVIDER
@@ -292,40 +308,47 @@ if (startSchedule == null || startSchedule == undefined){
 	logger.info('Server Start Date'+serverSetting.serverSettingList[0].startScheduleTime);
 };
 var date_start_schedule = new Date(startSchedule[0],startSchedule[1],startSchedule[2],startSchedule[3],startSchedule[4],startSchedule[5]);
-var minutesList=[{'m1':60000},{'m5':300000},{'m15':900000},{'m30':1800000},{'h1':3600000},{'h4':14400000},{'d1':86400000},{'w1':604800000}];
-var startTask0 = schedule.scheduleJob(date_start_schedule, function(){
+var minutesList=[{'m1':6000},{'m5':300000},{'m15':900000},{'m30':1800000},{'h1':3600000},{'h4':14400000},{'d1':86400000},{'w1':604800000}];
+
+
+var updatingTimeFrameTaskFunction = function(timeFrameToUpdate){
+
+	if (runningProviderTopicList.length > 0) {
+
+		logger.trace( '//////////////////////////////////////////////////////////////////////Start Task , updating TimeFrame: '+timeFrameToUpdate +' ////////////////////////////////////////////////////////////////////////////////////////////////');//+minutesList[i][Object.keys(minutesList[i])[0]] );
+		for (var i = 0; i < runningProviderTopicList.length; i++) {
+	    	var tmpTopicArr = runningProviderTopicList[i].toString().split("@");
+	    	//TOPIC EXAMPLE: "MT4@ACTIVTRADES@REALTIMEQUOTES";
+	    	var tmpTimeFrameQuoteProperty = "TIMEFRAMEQUOTE$"+tmpTopicArr[0]+"$"+tmpTopicArr[1];
+	    	var tmpRealTimeQuoteProperty = "REALTIMEQUOTE$"+tmpTopicArr[0]+"$"+tmpTopicArr[1];
+	    	//EX Time Frame Obj Property: runningProviderTimeFrameObjs["TIMEFRAMEQUOTE$MT4$ACTIVTRADES"];
+	   		var new_timeFrameQuotesObj = QuotesModule.updateTimeFrameQuotesObj(timeFrameToUpdate,runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty],runningProviderRealTimeObjs[tmpRealTimeQuoteProperty]);
+	   		if ( new_timeFrameQuotesObj == null || new_timeFrameQuotesObj == undefined) {
+	   			logger.error('timeFrameObjToUpdate: '+JSON.stringify(runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty])+ ' CurrentRealTimeObj: '+JSON.stringify(runningProviderRealTimeObjs[tmpRealTimeQuoteProperty] ) + ' new_timeFrameQuotesObj is null or undefined. TimeFrame' +minutesList[i][Object.keys(minutesList[i])[0]]+ 'is not updated' );
+	   		};
+	   		runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty] = new_timeFrameQuotesObj;
+		}
+	}
+}
+
+//var startTask0 = schedule.scheduleJob(date_start_schedule, function(){
     //console.log('Start Scheduling! Scheduled Time:'+startSchedule+'   Current Time: '+Date());
     for (var i = minutesList.length - 1; i >= 0; i--) {
     	//console.log("subtasks: ",minutesList[i][Object.keys(minutesList[i])[0]]," ",Object.keys(minutesList[i])[0]);
     	
+    	console.log("prova: "+minutesList[i][Object.keys(minutesList[i])[0]] );
     	logger.info( 'Setting tasks each' +minutesList[i][Object.keys(minutesList[i])[0]]+ 'to update the timeframe Objs' );
 
-    	setInterval(function() {  
-	    	//console.log('Start Scheduling 1M! Current Time: '+Date());  
-
-			if (runningProviderTopicList.length > 0) {
-				logger.trace( 'Start Task , updating TimeFrame' +minutesList[i][Object.keys(minutesList[i])[0]] );
-				for (var i = 0; i < runningProviderTopicList.length; i++) {
-			    	var tmpTopicArr = runningProviderTopicList[i].toString().split("@");
-			    	//TOPIC EXAMPLE: "MT4@ACTIVTRADES@REALTIMEQUOTES";
-			    	var tmpTimeFrameQuoteProperty = "TIMEFRAMEQUOTE$"+tmpTopicArr[0]+"$"+tmpTopicArr[1];
-			    	var tmpRealTimeQuoteProperty = "REALTIMEQUOTE$"+tmpTopicArr[0]+"$"+tmpTopicArr[1];
-			    	//EX Time Frame Obj Property: runningProviderTimeFrameObjs["TIMEFRAMEQUOTE$MT4$ACTIVTRADES"];
-			   		var new_timeFrameQuotesObj = QuotesModule.updateTimeFrameQuotesObj(Object.keys(minutesList[i])[0],runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty],runningProviderRealTimeObjs[tmpRealTimeQuoteProperty]);
-			   		if ( new_timeFrameQuotesObj == null || new_timeFrameQuotesObj == undefined) {
-			   			logger.error('timeFrameObjToUpdate: '+JSON.stringify(runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty])+ ' CurrentRealTimeObj: '+JSON.stringify(runningProviderRealTimeObjs[tmpRealTimeQuoteProperty] ) + ' new_timeFrameQuotesObj is null or undefined. TimeFrame' +minutesList[i][Object.keys(minutesList[i])[0]]+ 'is not updated' );
-			   		};
-			   		runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty] = new_timeFrameQuotesObj;
-				}
-			}
-		},minutesList[i][Object.keys(minutesList[i])[0]]);  // 1M 5M etc..
+    	setInterval( updatingTimeFrameTaskFunction.bind(this) ,minutesList[i][Object.keys(minutesList[i])[0]], Object.keys(minutesList[i])[0]   );  // 1M 5M etc..
     };
-});
+//});
 
 sockSubFromQuotesProvider.subscribe('NEWTOPICQUOTES');
 sockSubFromQuotesProvider.subscribe('DELETETOPICQUOTES');
 //sockSubFromQuotesProvider.subscribe('');
 sockSubFromQuotesProvider.on('message', function(topic, message) {
+	console.log("mess: ",message.toString());
+	console.log("topic: ",topic.toString());
 	logger.info('Received message from Quotes Provider: '+message+ 'on topic: '+topic);
 	var topicArr = topic.toString().split("@");
   	var messageArr = message.toString().split("@");
@@ -349,7 +372,7 @@ sockSubFromQuotesProvider.on('message', function(topic, message) {
 					};
 					runningProviderRealTimeObjs[newObjRealTimeQuote] = QuotesModule.createRealTimeQuotesObj(configQuotesList,newValuePropertyRealTimeQuote);
 					if (runningProviderRealTimeObjs[newObjRealTimeQuote] == null || runningProviderRealTimeObjs[newObjRealTimeQuote] == undefined) {
-						logger.error( 'topic: '+ JSON.stringify(topicArr[0]) + 'message:' + JSON.stringify(message.toString()) +'runningProviderTimeFrameObjs[newObjTimeFrameQuote]:' JSON.stringify(runningProviderRealTimeObjs[newObjRealTimeQuote]) + 'RealTime Obj is not created for topic: '+message.toString() );
+						logger.error( 'topic: '+ JSON.stringify(topicArr[0]) + 'message:' + JSON.stringify(message.toString()) +'runningProviderTimeFrameObjs[newObjTimeFrameQuote]: ' +JSON.stringify(runningProviderRealTimeObjs[newObjRealTimeQuote]) + 'RealTime Obj is not created for topic: '+message.toString() );
 					};
 				}else{
 					logger.error('topic: ' + JSON.stringify(topicArr[0]) + ' New topic: '+message.toString()+' wrong format. The new Topic form Quotes Provider should ending with LISTQUOTES or REALTIMEQUOTES' );
@@ -384,26 +407,20 @@ sockSubFromQuotesProvider.on('message', function(topic, message) {
 		default:
 
 			//EX: MT4@ACTIVTRADES@REALTIMEQUOTES, MATLAB@111@EURUSD@STATUS
-			var topicType = topic.split('@');
-			
-			if (topicType <= 3) {
+			if (topicArr.length <= 3) {
   				//EX: MT4@ACTIVTRADES@REALTIMEQUOTES
-				if (topicType[2] == 'REALTIMEQUOTES'){
+				if (topicArr[2] == 'REALTIMEQUOTES'){
 					if ( runningProviderTopicList.indexOf( topic.toString() ) > -1 ){
 						//TOPIC EXAMPLE: MT4@ACTIVTRADES@REALTIMEQUOTES;
 						var searchObjRealTimeQuote = "REALTIMEQUOTE$"+topicArr[0]+"$"+topicArr[1];
 						var searchObjTimeFrameQuote = "TIMEFRAMEQUOTE$"+topicArr[0]+"$"+topicArr[1];
 
 						if (messageArr.length == 2) {
-							if (messageArr[2] == "REALTIMEQUOTES" ) {
-								var result = QuotesModule.updateRealTimeQuotesObj(searchObjRealTimeQuote,messageArr);
-								if (result == null || result == undefined) {
-									logger.error('topic: ' + JSON.stringify(topicArr[0]) + ' message: ' + JSON.stringify(message.toString()) + ' the realTimeQuoteObj is not update' );
-								}else{
-									logger.trace('topic: ' + JSON.stringify(topicArr[0]) + ' message: ' + JSON.stringify(message.toString()) + ' the realTimeQuoteObj is updated with the last Value' +message.toString() );
-								}
+							var result = QuotesModule.updateRealTimeQuotesObj(searchObjRealTimeQuote,messageArr);
+							if (result == null || result == undefined) {
+								logger.error('topic: ' + JSON.stringify(topicArr[0]) + ' message: ' + JSON.stringify(message.toString()) + ' the realTimeQuoteObj is not update' );
 							}else{
-								logger.error('topic: ' + JSON.stringify(topicArr[0]) + ' message: ' +JSON.stringify(message.toString()) + ' Error type of message '+message.toString()+' from Quotes Provider for topic ' +topic.toString() );
+								//logger.trace('topic: ' + JSON.stringify(topicArr[0]) + ' message: ' + JSON.stringify(message.toString()) + ' the realTimeQuoteObj is updated with the last Value' +message.toString() );
 							}
 						}
 						else if (messageArr.length > 2) {
@@ -411,7 +428,7 @@ sockSubFromQuotesProvider.on('message', function(topic, message) {
 							if (result == null || result == undefined) {
 								logger.error('topic: ' + JSON.stringify(topicArr[0]) + ' message: ' + JSON.stringify(message.toString()) + ' Error to import HistoryData for message '+message.toString() );
 							}else{
-								logger.trace('topic: ' +JSON.stringify(topicArr[0]) + ' message: ' + JSON.stringify(message.toString()) + ' updatedHistoryQuotes: '+result );
+								//logger.trace('topic: ' +JSON.stringify(topicArr[0]) + ' message: ' + JSON.stringify(message.toString()) + ' updatedHistoryQuotes: '+result );
 							}
 						}else{
 							logger.error('topic: ' + JSON.stringify(topicArr[0]) + ' message: ' + JSON.stringify(message.toString()) + ' Error in message received from Quotes provider. Message '+message.toString()+' length is not right' );
@@ -422,20 +439,20 @@ sockSubFromQuotesProvider.on('message', function(topic, message) {
 				}else{
 					logger.error('topic: ' + JSON.stringify(topic.toString()) + ' message: ' + JSON.stringify(message.toString()) + 'Error in message received from Quotes Provider. The Quotes Provider wants to publish a new message quote '+message.toString()+',but the topic '+topic.toString()+' is not valid' );
 				}
-			}else if (topicType > 3) {
+			}else if (topicArr.length > 3) {
 				//EX: MATLAB@111@EURUSD@STATUS		
-				if (topic[3] == 'STATUS'){
-	  				if ( runningSignalProviderTopicStatusList.indexOf( topic ) > -1 ) {
-	  					sockPub.send([topic, message]);	
-	  					logger.info('Sent message: '+message+ 'on topic: '+topic);
+				if (topicArr[3] == 'STATUS'){
+	  				if ( runningSignalProviderTopicStatusList.indexOf( topic.toString() ) > -1 ) {
+	  					sockPub.send([topic.toString(), message]);	
+	  					logger.info('Sent Status message: '+message+ 'on topic: '+topic.toString() );
 	  				}else{
-	  					logger.error('topic: ' + JSON.stringify(topic) + 'message: ' + JSON.stringify(message) + 'Execution/Quotes provider wants to publish one STATUS operation message '+message.toString()+' on topic '+topic.toString()+', but the STATUS TOPIC doesnt exist.' );
+	  					logger.error('topic: ' + JSON.stringify(topic.toString() ) + 'message: ' + JSON.stringify(message) + 'Execution/Quotes provider wants to publish one STATUS operation message '+message.toString()+' on topic '+topic.toString()+', but the STATUS TOPIC doesnt exist.' );
 	  				}
 	  			}else{
 	  				logger.error('topic: ' + JSON.stringify(topic.toString()) + ' message: ' + JSON.stringify(message.toString()) + ' Error in message received from Quotes Provider. The Quotes Provider wants to publish a new STATUS message '+message.toString()+', but the topic '+topic.toString()+' is not valid' );
 	  			}
 	  		}else{
-	  			logger.error('topic: ' + JSON.stringify(topic.toString()) + ' message: ' + message.toString()) + ' Error in message received from Quotes Provider. The topic '+topic.toString()+' format/length is not valid.' );
+	  			logger.error('topic: ' + JSON.stringify(topic.toString()) + ' message: ' + JSON.stringify(message.toString()) + ' Error in message received from Quotes Provider. The topic '+topic.toString()+' format/length is not valid.' );
 	  		}
 	  		break;
 	}
@@ -449,12 +466,11 @@ var runningSignalProviderTopicStatusList = [];
 var TopicAlgosOperationListLabel = 'ALGOSOPERATIONLIST'; 
 var TopicAlgosStatusListLabel = 'ALGOSSTATUSLIST'; 
 
-
-setInterval(function(){
+var updatingSignalProviderTopicOperationListAndTopicStatusList = function(){
 	if ( runningSignalProviderTopicOperationList.length > 0 ){
 		var runningSignalProviderTopicOperationListString = JSON.stringify(runningSignalProviderTopicOperationList);
 		sockPub.send([TopicAlgosOperationListLabel, runningSignalProviderTopicOperationListString]);
-		logger.info('Sent message: '+runningSignalProviderTopicOperationListString+ 'on topic: '+runningSignalProviderTopicOperationListString);
+		logger.info('New Topic Operation List, Sent message: '+runningSignalProviderTopicOperationListString+ 'on topic: '+runningSignalProviderTopicOperationListString);
 	}else{
 		//log arr empty
 	}
@@ -462,11 +478,14 @@ setInterval(function(){
 	if ( runningSignalProviderTopicStatusList.length > 0 ) {
 		var runningSignalProviderTopicStatusListString = JSON.stringify(runningSignalProviderTopicStatusList);
 		sockPub.send([TopicAlgosStatusListLabel, runningSignalProviderTopicStatusListString]);
-		logger.info('Sent message: '+runningSignalProviderTopicStatusListString+ 'on topic: '+TopicAlgosStatusListLabel);
+		logger.info('New Topic Status List, Sent message: '+runningSignalProviderTopicStatusListString+ 'on topic: '+TopicAlgosStatusListLabel);
 	}else{
 		//log arr empty
 	}
-},5000);
+}
+
+//Permit to update (every 5 sec) and sending on topic the updated list for TopicStatus and TopicOperations
+setInterval(function(){ updatingSignalProviderTopicOperationListAndTopicStatusList.bind(this)  },5000);
 
 sockSubFromSignalProvider.subscribe('NEWTOPICFROMSIGNALPROVIDER');
 sockSubFromSignalProvider.on('message', function(messageSub) {
@@ -488,7 +507,7 @@ sockSubFromSignalProvider.on('message', function(messageSub) {
 					sockSubFromSignalProvider.subscribe(message);
 					var runningSignalProviderTopicOperationListString = JSON.stringify(runningSignalProviderTopicOperationList);
 					sockPub.send([TopicAlgosOperationListLabel, runningSignalProviderTopicOperationListString]);
-					logger.info('Sent message: '+runningSignalProviderTopicOperationListString+ 'on topic: '+TopicAlgosOperationListLabel);
+					logger.info('New Topic OPERATION From Signal Provider, Sent message: '+runningSignalProviderTopicOperationListString+ 'on topic: '+TopicAlgosOperationListLabel);
 				}else{
   					logger.error('topic: ' +JSON.stringify(topic) + ' message: ' + JSON.stringify(message) + ' Signal provider wants to create the new topic '+message+' but the topic already exist');
 				}
@@ -499,7 +518,7 @@ sockSubFromSignalProvider.on('message', function(messageSub) {
 					sockSubFromSignalProvider.subscribe(message);
 					var runningSignalProviderTopicStatusListString = JSON.stringify(runningSignalProviderTopicStatusList);
 					sockPub.send([TopicAlgosStatusListLabel, runningSignalProviderTopicStatusListString]);
-					logger.info('Sent message: '+runningSignalProviderTopicStatusListString+ 'on topic: '+TopicAlgosStatusListLabel);
+					logger.info('New Topic STATUS from Signal Provider, Sent message: '+runningSignalProviderTopicStatusListString+ 'on topic: '+TopicAlgosStatusListLabel);
 				}else{
 					logger.error('topic: ' + JSON.stringify(topic) + ' message: ' + JSON.stringify(message) + ' Signal provider wants to create a new topic '+message+' but the topic already exist');	
 				}
@@ -542,7 +561,7 @@ sockSubFromSignalProvider.on('message', function(messageSub) {
   			if (topicType[3] == 'OPERATIONS') {
   				if ( runningSignalProviderTopicOperationList.indexOf( topic ) > -1 ) {
 					sockPub.send([topic, message]);
-					logger.info('Sent message: '+message+ 'on topic: '+topic);
+					logger.info('New Operation: '+message+ 'from (on topic): '+topic);
 				}else{
 					logger.error('topic: ' + JSON.stringify(topic) + ' message: ' + JSON.stringify(message) + ' Signal provider wants to publish a new operation on Topic '+topic+' but the topic doesnt exist. Create the topic before to push data on it');
 				}
