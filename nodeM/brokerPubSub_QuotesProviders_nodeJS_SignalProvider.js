@@ -19,6 +19,7 @@ var QuotesModule = (function(){
 	var _createTimeFrameQuotesObj = function(quotes_list,providerName){
 		if (quotes_list == null || quotes_list == undefined || providerName == null || providerName == undefined) {
 			logger.error('quotes_list %s or providerName '+quotes_list,providerName+' null or not defined into _createTimeFrameQuotesObj');
+			return null;
 		};
 		var _quotesObj = new _timeFrameQuotes(providerName);
 
@@ -45,6 +46,7 @@ var QuotesModule = (function(){
 	var _createRealTimeQuotesObj = function(quotes_list,providerName){
 		if (quotes_list == null || quotes_list == undefined || providerName == null || providerName == undefined) {
 			logger.error('quotes_list '+quotes_list+' or providerName '+providerName+' null or not defined into _createRealTimeQuotesObj');
+			return null;
 		};
 		var _realTimeQuotesObj = new _realTimeQuotes(providerName);
 
@@ -63,6 +65,7 @@ var QuotesModule = (function(){
 	var _updateRealTimeQuotesObj = function(searchObjRealTimeQuote,messageArr){
 		if (searchObjRealTimeQuote == null || searchObjRealTimeQuote == undefined || messageArr == null || messageArr == undefined) {
 			logger.error('searchObjRealTimeQuote '+searchObjRealTimeQuote+' or messageArr '+messageArr+' null or not defined into _updateRealTimeQuotesObj');
+			return null;
 		};
 		for (var key0 in runningProviderRealTimeObjs) {
 			if (key0 == searchObjRealTimeQuote) {
@@ -83,6 +86,7 @@ var QuotesModule = (function(){
 
 		if (timeFrame == null || timeFrame == undefined || timeFrameQuotesObj == null || timeFrameQuotesObj == undefined || realTimeQuotesObj == null || realTimeQuotesObj == undefined ) {
 			logger.error('In _updateTimeFrameQuotesObj timeframe or timeFrameQuotesObj or realTimeQuotesObj is notDefined/null');
+			return null;
 		};
 
 		var index = "";
@@ -131,12 +135,12 @@ var QuotesModule = (function(){
 		  								var topicToSignalProvider = timeFrameQuotesObj.provider+"@"+key1+"@"+timeFrame+"@"+Object.keys(tempObj)[0];
 		  								if (topicToSignalProvider == null || topicToSignalProvider == undefined ) {
 											logger.error('timeFrameQuotesObjProvider: ' +JSON.stringify(timeFrameQuotesObj.provider) + ' key1: ' + key1 + ' timeFrame: ' +timeFrame + ' totValues: ' + JSON.stringify( Object.keys(tempObj)[0] ) + ' In _updateTimeFrameQuotesObj topicToSignalProvider is notDefined/null');
-										};
-										if (tempObj[Object.keys(tempObj)[0]].toString() == null || tempObj[Object.keys(tempObj)[0]].toString() == undefined ) {
+										}else if (tempObj[Object.keys(tempObj)[0]].toString() == null || tempObj[Object.keys(tempObj)[0]].toString() == undefined ) {
 											logger.error('objWithMessageToSend: '+ JSON.stringify(tempObj) + ' _updateTimeFrameQuotesObj is sending a message (Quotes) notDefined/null');
-										};
-		  								sockPub.send([topicToSignalProvider, tempObj[Object.keys(tempObj)[0]].toString()]);
-		  								logger.info('Sent new timeFrame value message: '+tempObj[Object.keys(tempObj)[0]].toString()+ 'for TimeFrame: '+timeFrame+ 'for Cross: '+key1+' on topic: '+topicToSignalProvider);
+										}else{
+		  									sockPub.send([topicToSignalProvider, tempObj[Object.keys(tempObj)[0]].join(";")]);
+											logger.info('Sent new timeFrame value message: '+tempObj[Object.keys(tempObj)[0]].join(";")+ 'for TimeFrame: '+timeFrame+ 'for Cross: '+key1+' on topic: '+topicToSignalProvider);
+		  								}
 		  							}else{
 		  								//if (topicToSignalProvider == null || topicToSignalProvider == undefined ) {
 										//	logger.error('In _updateTimeFrameQuotesObj, realTimeQuotesObj[key0] is null');
@@ -151,12 +155,12 @@ var QuotesModule = (function(){
 		  								var topicToSignalProvider = timeFrameQuotesObj.provider+"@"+key1+"@"+timeFrame+"@"+Object.keys(tempObj)[0];
 		  								if (topicToSignalProvider == null || topicToSignalProvider == undefined ) {
 											logger.error('timeFrameQuotesObjProvider: '+ JSON.stringify(timeFrameQuotesObj.provider) + ' key1: ' + key1 + ' timeFrame: '+ timeFrame + 'totValues: ' + JSON.stringify(Object.keys(tempObj)[0]) +' In _updateTimeFrameQuotesObj topicToSignalProvider is notDefined/null');
-										};
-										if (tempObj[Object.keys(tempObj)[0]].toString() == null || tempObj[Object.keys(tempObj)[0]].toString() == undefined ) {
+										}else if (tempObj[Object.keys(tempObj)[0]].toString() == null || tempObj[Object.keys(tempObj)[0]].toString() == undefined ) {
 											logger.error('objWithMessageToSend: ' + JSON.stringify(tempObj) + ' _updateTimeFrameQuotesObj is sending a message (Quotes) notDefined/null');
-										};
-		  								sockPub.send([topicToSignalProvider, tempObj[Object.keys(tempObj)[0]].toString()]);
-		  								logger.info('Sent new timeFrame value message: '+tempObj[Object.keys(tempObj)[0]].toString()+ 'for TimeFrame: '+timeFrame+ 'for Cross: '+key1+' on topic: '+topicToSignalProvider);
+										}else{
+		  									sockPub.send([topicToSignalProvider, tempObj[Object.keys(tempObj)[0]].join(";")]);
+		  									logger.info('Sent new timeFrame value message: '+tempObj[Object.keys(tempObj)[0]].join(";")+ 'for TimeFrame: '+timeFrame+ 'for Cross: '+key1+' on topic: '+topicToSignalProvider);
+		  								}
 		  							}else{
 		  								//if (topicToSignalProvider == null || topicToSignalProvider == undefined ) {
 										//	logger.error('In _updateTimeFrameQuotesObj, realTimeQuotesObj[key0] is null');
@@ -273,10 +277,10 @@ var sockSubFromQuotesProvider = zmq.socket('sub');
 var sockSubFromSignalProvider = zmq.socket('sub');
 var sockLog = zmq.socket('pub');
 
-sockSubFromQuotesProvider.bindSync('tcp://127.0.0.1:50025');
-sockSubFromSignalProvider.bindSync('tcp://127.0.0.1:50026');    
-sockPub.bindSync('tcp://127.0.0.1:50027');  
-sockLog.bindSync('tcp://127.0.0.1:50028');
+sockSubFromQuotesProvider.bindSync('tcp://192.168.0.11:50025');
+sockSubFromSignalProvider.bindSync('tcp://192.168.0.11:50026');    
+sockPub.bindSync('tcp://192.168.0.11:50027');  
+sockLog.bindSync('tcp://192.168.0.11:50028');
 
 setInterval(function(){
 	logger.trace("running logger...");
