@@ -254,7 +254,7 @@ classdef coreState_real02 < handle
             
             % non uso i dati al minuto per le valutazioni dello
             % state
-            closePrice=closure(1:end-1);
+            closePrice=closure;
             
             windowSize1 = 2;
             a = (1/windowSize1)*ones(1,windowSize1);
@@ -290,7 +290,7 @@ classdef coreState_real02 < handle
                 obj.state=1;
                 obj.suggestedDirection=-newSign;
                 obj.suggestedTP=5*devFluct2;
-                obj.suggestedSL=5*devFluct2;
+                obj.suggestedSL=1*devFluct2;
             else
                 obj.state=0;
             end
