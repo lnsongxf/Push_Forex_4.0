@@ -1,5 +1,7 @@
 function []=fillMissingDataFromHistorical(input_file_name)
 
+% il nome dell'output ha come label: "_corretto"
+
 fid = fopen(input_file_name);
 data = textscan(fid,'%s %s %f %f %f %f %f','Delimiter',',','HeaderLines',0);
 hisdata = cell2mat(data(3:end));
@@ -56,7 +58,7 @@ for i=2:length_storico
         
         j=j+N;
             
-    elseif ( N > 1440 ) % se il buco è più grande di un gg, è festa o venerdì
+    elseif ( N > 1440 && strcmp(datestr(numdate(i),'ddd'),'Mon')) % se il buco è più grande di un gg, è festa o venerdì
         
         oraVenerdi = datestr(corrected_dates(j-1,1),'HH:MM');
         oraLunedi =  datestr(numdate(i),'HH:MM');
@@ -75,13 +77,6 @@ for i=2:length_storico
             
             j=j+N_venerdi;
             
-            if ( N_lunedi == 0 ) % se il lune parte da 00:00 scrivici il valore, se no aspetta
-                corrected_hist(j,:) = hisdata(i,:);
-                corrected_dates(j) = numdate(i);
-                j=j+1;
-            end
-            
-            
         end
         
         if ( N_lunedi > 0 ) % tappa il buco con NaN dalle 00:00 del lunedi
@@ -91,6 +86,12 @@ for i=2:length_storico
             end
             
             j=j+N_lunedi;
+            corrected_hist(j,:) = hisdata(i,:);
+            corrected_dates(j) = numdate(i);
+            j=j+1;
+        
+        else
+            
             corrected_hist(j,:) = hisdata(i,:);
             corrected_dates(j) = numdate(i);
             j=j+1;
