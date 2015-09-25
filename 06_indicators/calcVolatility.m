@@ -66,73 +66,36 @@ end
 
 [newRighe,newColonne] = size(MatriceNewTimeScale);
 
-newColonne = 50; % cancellami
+newColonne = 50; % SOVRASCRITTO PERCHE' GLI ULTIMI PUNTI DELLO STORICO SN DA RIVEDERE 
 
 price_i =  MatriceNewTimeScale(2:end,:);
 price_j =  MatriceNewTimeScale(1:end-1,:);
 ritorni_i = (price_i - price_j ) ./ price_j ;
 
-volat2 = zeros(newRighe,newColonne);
+volat = zeros(newRighe,newColonne);
 
 for col = 1 : newColonne
     
     for i = 10 : newRighe-1
         
-        volat2(i,col) = var ( log ( 1 + ritorni_i(i-9:i,col) ) );
+        volat(i,col) = var ( log ( 1 + ritorni_i(i-9:i,col) ) );
         
     end
     
-end
-
-
-%%
-
-dati_inp = hisDataTest(1963:end,4);
-%dati = dati_inp(1:10:end);
-dati = dati_inp;
-daypoints = 1436; %nr di dati ogni gg
-
-sizeH = length(dati);
-volat2 = zeros(sizeH,1);
-
-
-price_i =  dati(2:end);
-price_j =  dati(1:end-1);
-ritorni_i = (price_i - price_j ) ./ price_j ;
-
-for i = 10 : sizeH-1
-    
-    volat2(i) = var ( log ( 1 + ritorni_i(i-9:i) ) );
-
-end
-
-ngg = 50;
-%ngg = floor(length(volat2)/daypoints);
-
-
-volat_day = zeros(daypoints,1);
-volat_day_mat = zeros(daypoints,ngg);
-
-
-
-for j = 0 : ngg-1
-    
-    iniz = j*daypoints +1;
-    fine = (j+1)*daypoints;
-    
-    volat_day = volat_day + volat2(iniz:fine);
-    volat_day_mat(:,j+1) = volat2(iniz:fine);
+    area = trapz(1:newRighe-1,volat(:,col)); % CONTROLLA!!!!!!!
+    volat(:,col)  = volat(:,col)/area*100;
     
 end
 
-volat_day = volat_day/ ngg;
 
-area=trapz(1:daypoints,volat_day);
-timeaxis = transpose(1:daypoints)/daypoints*24;
+%% plotta
+
+%timeaxis = transpose(1:238)/daypoints*24; % CAMBIA NUMERI CON VARIABILI!!!!!
 
 cla
-pcolor(transpose(volat_day_mat/area*100));figure(gcf)
+pcolor(transpose(volat));figure(gcf)
 shading interp
+
 
 % figure
 % plot(timeaxis,volat_day/area*100)
