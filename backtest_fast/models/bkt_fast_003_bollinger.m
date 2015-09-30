@@ -89,6 +89,7 @@ classdef bkt_fast_003_bollinger < handle
                             obj.ClDates(ntrades) = date(indice_I); %controlla
                             %obj = obj.chiudi_per_TP(Pbuy, indice_I, segnoOperazione, devFluct2, wTP, cost, ntrades, date);
                             i = indice_I;
+                            obj.chei(ntrades)=i;
                             indexClose = indexClose + 1;
                             break
                             
@@ -99,6 +100,7 @@ classdef bkt_fast_003_bollinger < handle
                             obj.ClDates(ntrades) = date(indice_I); %controlla
                             %obj = obj.chiudi_per_SL(Pbuy, indice_I, segnoOperazione, devFluct2, wSL, cost, ntrades, date);
                             i = indice_I;
+                            obj.chei(ntrades)=i;
                             indexClose = indexClose + 1;
                             break
                             
@@ -163,7 +165,6 @@ classdef bkt_fast_003_bollinger < handle
             devFluct2 = 1; % lo impongo sempre uguale a 1
             %devFluct2 = std(fluctuationslag((i-(100-M)):i));
             obj.direction(ntrades)= segnoOperazione;
-            obj.chei(ntrades)=i;
             obj.openingPrices(ntrades) = Pbuy;
             obj.OpDates(ntrades) = date(i);
             

@@ -3,52 +3,99 @@ clear volat_day
 clear price_i
 clear price_j
 
-dati_inp = hisDataTest(1963:end,4);
-%dati = dati_inp(1:10:end);
-dati = dati_inp;
-daypoints = 1436; %nr di dati ogni gg
+%% input data
+[~, ~, hisData] = xlsread('EURUSD_2012_2015_withDate_corretto.csv');
+%hisData(cellfun(@(x) ~isempty(x) && isnumeric(x) && isnan(x),hisData)) = {'NaN'};
+actTimeScale = 1;
+newTimeScale = 30;
 
-sizeH = length(dati);
-volat2 = zeros(sizeH,1);
+[RigheStorico,ColonneStorico] = size(hisData);
 
 
-price_i =  dati(2:end);
-price_j =  dati(1:end-1);
+% incazzati se non esiste colonna 6 delle date nello storico
+if ColonneStorico < 6
+    
+display('NON VEDO LE DATE!!')
+% stoppa tutto...
+    
+end
+
+%% crea matrice divisa per settimane
+
+nSetti = 7141; % numero di punti al minuto ogni settimana
+Settimane = ceil(RigheStorico/nSetti); % numero di settimane
+MatriceSettimane=NaN(nSetti,Settimane);
+gg=1;
+chiusure=cell2mat(hisData( : , 4 ));
+
+while gg < RigheStorico
+
+    if strcmp(datestr(hisData{gg,6},'ddd'),'Mon')
+
+        for c=1:floor((RigheStorico-gg)/nSetti)
+            
+            MatriceSettimane(1:nSetti,c) = chiusure( (gg+(c-1)*nSetti+1):(gg+c*nSetti) );
+            display(hisData{(gg+(c-1)*nSetti+1),6})
+            %display(hisData{(gg+c*nSetti),6})
+
+        end
+        
+        break
+
+    end
+    
+    gg=gg+1;
+        
+end
+    
+MatriceSettimane(MatriceSettimane==0)=NaN;
+
+%% riscala temporalmente la matrice se richiesto
+    
+if newTimeScale > 1
+    
+    MatriceNewTimeScale = MatriceSettimane(1:newTimeScale:end,:);
+
+else
+    
+    MatriceNewTimeScale = MatriceSettimane;
+    
+end
+
+%% calcola volatilità settimanale
+
+[newRighe,newColonne] = size(MatriceNewTimeScale);
+
+newColonne = 50; % SOVRASCRITTO PERCHE' GLI ULTIMI PUNTI DELLO STORICO SN DA RIVEDERE 
+
+price_i =  MatriceNewTimeScale(2:end,:);
+price_j =  MatriceNewTimeScale(1:end-1,:);
 ritorni_i = (price_i - price_j ) ./ price_j ;
 
-for i = 10 : sizeH-1
+volat = zeros(newRighe,newColonne);
+
+for col = 1 : newColonne
     
-    volat2(i) = var ( log ( 1 + ritorni_i(i-9:i) ) );
-
-end
-
-ngg = 50;
-%ngg = floor(length(volat2)/daypoints);
-
-
-volat_day = zeros(daypoints,1);
-volat_day_mat = zeros(daypoints,ngg);
-
-
-
-for j = 0 : ngg-1
+    for i = 10 : newRighe-1
+        
+        volat(i,col) = var ( log ( 1 + ritorni_i(i-9:i,col) ) );
+        
+    end
     
-    iniz = j*daypoints +1;
-    fine = (j+1)*daypoints;
-    
-    volat_day = volat_day + volat2(iniz:fine);
-    volat_day_mat(:,j+1) = volat2(iniz:fine);
+    area = trapz(1:newRighe-1,volat(:,col)); % CONTROLLA!!!!!!!
+    volat(:,col)  = volat(:,col)/area*100;
     
 end
 
-volat_day = volat_day/ ngg;
 
-area=trapz(1:daypoints,volat_day);
-timeaxis = transpose(1:daypoints)/daypoints*24;
+%% plotta
+
+%timeaxis = transpose(1:238)/daypoints*24; % CAMBIA NUMERI CON VARIABILI!!!!!
 
 cla
-pcolor(transpose(volat_day_mat/area*100));figure(gcf)
+pcolor(transpose(volat));figure(gcf)
 shading interp
+
 
 % figure
 % plot(timeaxis,volat_day/area*100)

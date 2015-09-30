@@ -60,7 +60,6 @@ end
 
 %display(countCycle);
 if(isempty(countCycle) || countCycle == 0)
-
     countCycle = 1;
     operationState = OperationState;
     params = Parameters;
@@ -86,8 +85,7 @@ if newTimeScalePoint==1 % controlla se ho dei nuovi dati sulla newTimeScale
     % 01a
     % -------- coreState filter ------------------ %
     cState.core_Algo_002_leadlag(chiusure(1:end-1),params);
-    
-    
+  
     % 01b
     % -------- stationarity Test ------------------ %
     st.stationarityTests(chiusure(1:end-1),30,0);
