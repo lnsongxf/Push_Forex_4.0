@@ -1,2 +1,4 @@
 
 *.asv
+
+**/node_module/
