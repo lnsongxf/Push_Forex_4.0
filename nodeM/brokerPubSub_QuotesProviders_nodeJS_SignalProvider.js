@@ -277,14 +277,14 @@ var sockSubFromQuotesProvider = zmq.socket('sub');
 var sockSubFromSignalProvider = zmq.socket('sub');
 var sockLog = zmq.socket('pub');
 
-sockSubFromQuotesProvider.bindSync('tcp://192.168.0.11:50025');
-sockSubFromSignalProvider.bindSync('tcp://192.168.0.11:50026');    
-sockPub.bindSync('tcp://192.168.0.11:50027');  
-sockLog.bindSync('tcp://192.168.0.11:50028');
+sockSubFromQuotesProvider.bindSync('tcp://192.168.53.69:50025');
+sockSubFromSignalProvider.bindSync('tcp://192.168.53.69:50026');    
+sockPub.bindSync('tcp://192.168.53.69:50027');  
+sockLog.bindSync('tcp://192.168.53.69:50028');
 
 setInterval(function(){
 	logger.trace("running logger...");
-},30000);
+},100);
 
 //-------------------------------------------------------------------------------------------------------------------------------
 // QUOTES PROVIDER PUB TO NODEJS TO SIGNAL PROVIDER

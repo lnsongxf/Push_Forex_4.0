@@ -3,7 +3,7 @@ var zmq = require('zmq');
 
 var sockSub = zmq.socket('sub');
 
-sockSub.connect('tcp://192.168.0.11:50028');
+sockSub.connect('tcp://192.168.53.69:50028');
 
 sockSub.subscribe('LOGS');
 sockSub.on('message', function(topic, message) {
