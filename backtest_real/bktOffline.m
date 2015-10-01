@@ -68,9 +68,10 @@ classdef bktOffline < handle
             hisData = csvread(histName);
             [r,c] = size(hisData);
             startingOperation = 0;
-            indexOpen = 0;
-            indexClose = 0;
-            k=0;
+            openValueReal     = 0;
+            indexOpen         = 0;
+            indexClose        = 0;
+            k                 = 0;
             
             % includi colonna delle date se non esiste nel file di input
             if c == 5
@@ -140,7 +141,7 @@ classdef bktOffline < handle
                     
                     if isfinite(hisData(indexHisData,1))
                         matrix(end,:) = hisData(indexHisData,:);
-                        [oper, openValue, closeValue, stopLoss, takeProfit, valueTp, st] = Algo_002_leadlag(matrix,newTimeScalePoint);
+                        [oper, openValue, closeValue, stopLoss, takeProfit, valueTp, st] = Algo_002_leadlag(matrix,newTimeScalePoint,openValueReal);
                         
                         newState{1} = oper;
                         newState{2} = openValue;
@@ -161,26 +162,30 @@ classdef bktOffline < handle
                         newTimeScalePoint=0;
                         updatedOperation = newState{1};
                         
-                        if abs(updatedOperation) > 0 && startingOperation == 0
+                        %opening
+                        if abs(updatedOperation) > 0 && startingOperation == 0 
+                            
+                            openValueReal             = newState{2};
+                            startingOperation         = newState{1};
                             
                             indexOpen = indexOpen + 1;
                             iO(indexOpen)=i;
                             SL(indexOpen)=stopLoss;
                             TP(indexOpen)=takeProfit;
-                            
-                            startingOperation = newState{1};
-                            
+
                             display(['indexOpen =' num2str(indexOpen)]);
                             display(['i Open =' num2str(i)]);
                             display(['startingOperation =' num2str(startingOperation)]);
                             
-                            
-                            direction(indexOpen) = newState{1};
-                            openingPrice(indexOpen) = newState{2};
+                            direction(indexOpen)      = newState{1};
+                            openingPrice(indexOpen)   = newState{2};                            
                             openingDateNum(indexOpen) = obj.newHisData(i,6);
-                            lots(indexOpen) = 1;
+                            lots(indexOpen)           = 1;
+                        
+                        % closing
+                        elseif updatedOperation == 0 && abs(startingOperation) > 0 
                             
-                        elseif updatedOperation == 0 && abs(startingOperation) > 0
+                            openValueReal             = 0;
                             
                             jC(indexOpen)=indexHisData;
                             iC(indexOpen)=i;

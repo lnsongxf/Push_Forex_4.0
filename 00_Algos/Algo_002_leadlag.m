@@ -1,4 +1,4 @@
-function [oper, openValue, closeValue, stopLoss, noLoose, valueTp,st] = Algo_002_leadlag(matrix,newTimeScalePoint)
+function [oper, openValue, closeValue, stopLoss, noLoose, valueTp,st] = Algo_002_leadlag(matrix,newTimeScalePoint,openValueReal)
 
 %
 % DESCRIPTION:
@@ -34,10 +34,9 @@ function [oper, openValue, closeValue, stopLoss, noLoose, valueTp,st] = Algo_002
 %
 
 global      map;
-% global      log;
 persistent  counter;
 persistent  countCycle;
-
+% global      log;
 
 openValue = 0;
 closeValue= 0;
@@ -52,7 +51,6 @@ st = stationarity;
 
 
 if(isempty(map))
-    
     map = containers.Map;
     counter = 0;
 end
@@ -110,8 +108,14 @@ else
         
         % 02a
         % -------- takeProfitManager: close for TP or SL ------ %
+        if openValueReal > 0
+        params.set('openValue_',openValueReal);
         [operationState,~,params] = takeProfitManager(operationState,chiusure,params);
         % [operationState,~, params] = timeClosureManager (operationState, chiusure, params, 30);
+        else
+        operationState = params.resetStatusOnFailureOpening (operationState);
+        display('reset Algo status');
+        end
         
     else
         
@@ -135,7 +139,7 @@ else
                 % -------- decMaker direction manager --------------- %
                 [params, operationState, counter] = decMaker.decisionDirectionByCore(chiusure,params,operationState,cState,TakeP,StopL);
 
-                display('operazione aperta');
+                display('Matlab ha deciso di aprire');
                 
                 % 03c
                 % -------- decMaker lock manager -------------------- %

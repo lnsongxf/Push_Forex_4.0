@@ -258,12 +258,12 @@ classdef DecisionMaker_real02 < handle
         %%
         function [params,operationState,counter] = decisionDirectionByCore (obj,closurePrices,params,operationState,cState,TakeP,StopL)
             
-            p=closurePrices;
-
             obj.direction = cState.suggestedDirection;
-
+            
+            p=closurePrices;
             currValue = p(end);
-            display(['opening price = ' num2str(currValue)]) ;
+
+            display(['theoretical opening price = ' num2str(currValue)]) ;
             operationState.actualOperation = obj.direction;
             
             params.set('openValue_',currValue);

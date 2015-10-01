@@ -122,6 +122,17 @@ classdef Parameters < handle
             % display (strcat ('Guadagno netto: ',mat2str (abs (obj.get('closeValue') - obj.get('openValue_')))));
         end
         
+        function operStates = resetStatusOnFailureOpening (obj,operStates)      
+            obj.set('openValue_',-1);
+            obj.set('closeValue',-1);
+            obj.set('percTp____',0);
+            obj.set('maxValue__',0);
+            operStates.lastOperation    = 0;
+            operStates.actualOperation  = 0;
+            operStates.lock             = 0;
+            operStates.phase            = 0;
+        end
+
         function operStates = updateParamsCounterIncrease (obj,operStates)
             operStates.counter  = operStates.counter + 1;
             obj.set('percTp____',min (obj.get('maxPercTp_'),obj.get('percTp____') + 0.01/60*operStates.counter));
