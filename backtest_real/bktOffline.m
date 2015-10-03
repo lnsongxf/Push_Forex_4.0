@@ -56,7 +56,7 @@ classdef bktOffline < handle
             % EXAMPLE of use:
             % -------------------------------------------------------------
             % clear all; bkt_Algo_002=bktOffline
-            % bkt_Algo_002=bkt_Algo_002.spin('Algo_002_leadlag','EURUSD',100,'EURUSD_2012_2015.csv',1,5,1,10000,10,1,5)
+            % bkt_Algo_002=bkt_Algo_002.spin('Algo_002_leadlag','EURUSD',100,'EURUSD_2012_2015.csv',1,30,1,10000,10,1,5)
             %
             % NOTE
             % -------------------------------------------------------------
@@ -68,18 +68,22 @@ classdef bktOffline < handle
             hisData = csvread(histName);
             [r,c] = size(hisData);
             startingOperation = 0;
-            openValueReal     = 0;
-            indexOpen         = 0;
-            indexClose        = 0;
-            k                 = 0;
+            openValueReal = 0;
+            indexOpen = 0;
+            indexClose = 0;
+            k = 0;
             
             % includi colonna delle date se non esiste nel file di input
             if c == 5
+                
                 hisData(1,6) = datenum('01/01/2015 00:00', 'mm/dd/yyyy HH:MM');
                 
                 for j = 2:r;
+                    
                     hisData(j,6) = hisData(1,6) + ( (actTimeScale/1440)*(j-1) );
+                    
                 end
+                
             end
             
             obj.starthisData=hisData;
@@ -112,34 +116,41 @@ classdef bktOffline < handle
             closingDateNum = zeros(floor(lnewHisData/2), 1);
             nCandelotto = zeros(floor(lnewHisData/2), 1);
             lots = zeros(floor(lnewHisData/2), 1);
-            jC = zeros(floor(lnewHisData/2), 1);
-            iC = zeros(floor(lnewHisData/2), 1);
-            iO = zeros(floor(lnewHisData/2), 1);
-            SL = zeros(floor(lnewHisData/2), 1);
-            TP = zeros(floor(lnewHisData/2), 1);
+            jC = zeros(floor(lnewHisData/2), 1);  % index j close
+            iC = zeros(floor(lnewHisData/2), 1);   % index i close
+            iO = zeros(floor(lnewHisData/2), 1);   % index i open
+            SL = zeros(floor(lnewHisData/2), 1);   % stop loss
+            TP = zeros(floor(lnewHisData/2), 1);   % take profit
             
             ltimeSeriesproperties=floor(lhisData/newTimeScale)-(obj.nData*newTimeScale);
             obj.timeSeriesProperties=zeros(ltimeSeriesproperties,3);
             matrix=zeros(obj.nData+1, 6);
             
-            % da qui inizia il core dello spin
+            
+            % ---  da qui inizia il core dello spin ---
             tic
             
+            % l'indice i è sui dati alla new time scale
             for i = obj.nData:lnewHisData
+                
                 indexNewHisData=i-(obj.nData-1);
                 matrix(1:obj.nData,:) = obj.newHisData(indexNewHisData:i,:);
                 newTimeScalePoint=1; % controlla se ho dei nuovi dati sulla newTimeScale
-                k=k+1;
+                k=k+1; % serve solo nel calcolo della probabilità di mean reversion etc...
                 
+                % l'indice j è sui dati al minuto (alla time scale più veloce)
                 for j = 1:newTimeScale
                     
                     indexHisData=i*newTimeScale+j-1;
                     
+                    % check se ho sforato oltre l'ultimo punto dello storico
                     if indexHisData > lhisData
                         break
                     end
                     
+                    % se nn ho un buco NaN nello storico...
                     if isfinite(hisData(indexHisData,1))
+                        
                         matrix(end,:) = hisData(indexHisData,:);
                         [oper, openValue, closeValue, stopLoss, takeProfit, valueTp, st] = Algo_002_leadlag(matrix,newTimeScalePoint,openValueReal);
                         
@@ -150,6 +161,7 @@ classdef bktOffline < handle
                         newState{5} = takeProfit;
                         newState{6} = valueTp;
                         
+                        % calcola probabilità di mean reversion etc 
                         a=st.HurstExponent;
                         b=st.pValue;
                         c=st.halflife;

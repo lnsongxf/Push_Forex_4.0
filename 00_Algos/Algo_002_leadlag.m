@@ -16,21 +16,33 @@ function [oper, openValue, closeValue, stopLoss, noLoose, valueTp,st] = Algo_002
 %
 % INPUT parameters:
 % -----------------------------------------------------------------------
-% matrix ... two-dimensional vector containing the following coloumns: 
+% matrix: two-dimensional vector containing the following coloumns: 
 %            1-opening prices
 %            2-min values
 %            3-max values
 %            4-closing prices
-%            5-volumes         
+%            5-volumes       
+%         the last row of the matrix contains the last price, which is only used to check 
+%         wheter to close an open operation        
+%
+% newTimeScalePoint: if = 1 and no operations are open, the algo will compute the indicator,
+%         otherwhise it will only check if closing conditions are satisfied
+%
+% openValueReal: opening price if an operation is open
 %
 % OUTPUT parameters:
 % -----------------------------------------------------------------------
-% to do
-%
+% oper:
+% openValue:
+% closeValue:
+% stopLoss:
+% noLoose:
+% valueTp:
+% st:
 %
 % EXAMPLE of use:
 % -----------------------------------------------------------------------
-% to do
+% to be used in bktOffline or in demo/live mode
 %
 
 global      map;
@@ -79,7 +91,9 @@ operationState = ra.os;
 chiusure        = matrix(:,4);
 %volumi          = matrix(:,5);
 
-if newTimeScalePoint==1 % controlla se ho dei nuovi dati sulla newTimeScale
+% controlla se ho dei nuovi dati sulla newTimeScale
+if newTimeScalePoint==1
+    
     % 01a
     % -------- coreState filter ------------------ %
     cState.core_Algo_002_leadlag(chiusure(1:end-1),params);
@@ -87,9 +101,10 @@ if newTimeScalePoint==1 % controlla se ho dei nuovi dati sulla newTimeScale
     % 01b
     % -------- stationarity Test ------------------ %
     st.stationarityTests(chiusure(1:end-1),30,0);
+    
 end
-state = cState.state;
 
+state = cState.state;
 
 if operationState.lock
     
@@ -109,12 +124,16 @@ else
         % 02a
         % -------- takeProfitManager: close for TP or SL ------ %
         if openValueReal > 0
-        params.set('openValue_',openValueReal);
-        [operationState,~,params] = takeProfitManager(operationState,chiusure,params);
-        % [operationState,~, params] = timeClosureManager (operationState, chiusure, params, 30);
+            
+            params.set('openValue_',openValueReal);
+            [operationState,~,params] = takeProfitManager(operationState,chiusure,params);
+            % [operationState,~, params] = timeClosureManager (operationState, chiusure, params, 30);
+            
         else
-        operationState = params.resetStatusOnFailureOpening (operationState);
-        display('reset Algo status');
+            
+            operationState = params.resetStatusOnFailureOpening (operationState);
+            display('reset Algo status');
+            
         end
         
     else
@@ -123,14 +142,8 @@ else
             
             if state
 
-                % 03a
-                % -------- decMaker filter -------------------------- %
-%                 decMaker.decisionReal4(chiusure);
-%                 real=decMaker.real;
-
                 % 02b
                 % -------- takeProfitManager: define TP and SL ------ %
-                %                      TO CREATE
                 TakeP = floor(cState.suggestedTP);
                 StopL = floor(cState.suggestedSL);
                 display(['SL = ' num2str(StopL),' TP = ' num2str(TakeP)]) ;
