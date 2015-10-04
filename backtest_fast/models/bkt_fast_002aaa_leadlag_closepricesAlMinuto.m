@@ -1,4 +1,4 @@
-classdef bkt_fast_002b_leadlag_dynamicalSL < handle
+classdef bkt_fast_002aaa_leadlag_closepricesAlMinuto < handle
     
     
     properties
@@ -18,7 +18,7 @@ classdef bkt_fast_002b_leadlag_dynamicalSL < handle
     
     methods
         
-        function obj = fast_002b_leadlag(obj, Pminute,P,date,N,M,newTimeScale,cost,wSL,wTP,plottami)
+        function obj = fast_002aaa_leadlag(obj, Pminute,P,date,N,M,newTimeScale,cost,wSL,wTP,plottami)
             
             
             %% simula leadlag con TP e SL a seconda della volatilità
@@ -67,20 +67,10 @@ classdef bkt_fast_002b_leadlag_dynamicalSL < handle
                     
                     TakeProfitPrice = Pbuy + segnoOperazione*floor(wTP*devFluct2);
                     StopLossPrice =  Pbuy - segnoOperazione*floor(wSL*devFluct2);
-                    newStopLossPrice = StopLossPrice;
-                    dynamical = 0;
                     
                     for j = newTimeScale*(i):length(Pminute)
                         
                         indice_I = floor(j/newTimeScale);
-                        
-                        %dynamical SL
-                        if abs( (Pminute(j) - TakeProfitPrice) ) < abs( (Pbuy - TakeProfitPrice ) / 2 ) 
-                            
-                            newStopLossPrice = Pminute(j) - segnoOperazione*floor(wSL*devFluct2);
-                            dynamical = 1;
-                            
-                        end
                         
                         % brutale!!
                         cond1 = Pminute(j) >= TakeProfitPrice && segnoOperazione == 1;
@@ -89,10 +79,7 @@ classdef bkt_fast_002b_leadlag_dynamicalSL < handle
                         cond3 = Pminute(j) <= TakeProfitPrice && segnoOperazione == -1;
                         cond4 = Pminute(j) >= StopLossPrice && segnoOperazione == -1;
                         
-                        cond5 = Pminute(j) <= newStopLossPrice && segnoOperazione == 1 && dynamical;
-                        cond6 = Pminute(j) >= newStopLossPrice && segnoOperazione == -1 && dynamical;
-                        
-                        if cond1 || cond2 || cond3 || cond4 || cond5 || cond6
+                        if cond1 || cond2 || cond3 || cond4
                             
                             obj.r(indice_I) = (Pminute(j)-Pbuy)*segnoOperazione - cost;
                             obj.closingPrices(ntrades) = Pminute(j);

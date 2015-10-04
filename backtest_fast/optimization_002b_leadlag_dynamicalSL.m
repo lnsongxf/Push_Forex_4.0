@@ -13,8 +13,8 @@
 
 %input parameters:
 
-%hisData=load('EURUSD_2012_2015.csv');
-hisData=load('EURUSD_smallsample2014_2015.csv');
+hisData=load('EURUSD_2012_2015.csv');
+%hisData=load('EURUSD_smallsample2014_2015.csv');
 cross = 'EURUSD';
 actTimeScale = 1;
 newTimeScale = 30;
