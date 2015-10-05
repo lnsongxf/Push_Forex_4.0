@@ -25,15 +25,12 @@ listener1 = strcmp(topicSub,'TIMEFRAMEQUOTE@MT4@ACTIVTRADES@EURUSD@m30@v80');
 listener2 = strcmp(topicSub,'TIMEFRAMEQUOTE@MT4@ACTIVTRADES@EURUSD@m1@v1');
 listener3 = strcmp(topicSub,'MATLAB@111@EURUSD@STATUS');
 if listener1 %new 30minutes data array
-    
-    newData = textscan(messageSub,'%d %d %d %d %d %s','Delimiter',','); % messageSub: open,max,min,close,volume,data
-    newDataMatrix = cell2mat(newData(1:5));
-    matrix(1:end-1,1)= newDataMatrix(:,1);
-    matrix(1:end-1,2)= newDataMatrix(:,2);
-    matrix(1:end-1,3)= newDataMatrix(:,3);
-    matrix(1:end-1,4)= newDataMatrix(:,4);
-    matrix(1:end-1,5)= newDataMatrix(:,5);
-    matrix(1:end-1,6)=datenum(newData{6}(:),'mm/dd/yyyy HH:MM');
+    myData = strsplit(messageSub, ';');
+    for i = 1:length(myData)
+        cells = strsplit(myData{i},',');
+        matrix(i,1:5) = str2double(cells(1:5));
+        matrix(i, 6) = datenum(cells{6},'mm/dd/yyyy HH:MM');
+    end
     newTimeScalePoint=1; % controlla se ho dei nuovi dati sulla newTimeScale
     
 elseif listener2 %new 1minute data point
@@ -104,7 +101,7 @@ elseif listener3 %new status
         end
         
     end
-
+end
     
     if listener1
         
@@ -150,8 +147,7 @@ elseif listener3 %new status
             
         end
     else
-        display(topicSub + ': ' + messageSub);
-        
+        display(strcat(topicSub,': ',messageSub));
     end
     
 end
