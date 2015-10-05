@@ -5,8 +5,9 @@ persistent newTimeScalePoint;
 persistent startingOperation;
 persistent openValueReal;
 persistent trial;
-
-nData=100;
+topicPub = '';
+messagePub = '';
+nData=80;
 
 indexOpen = 0;
 indexClose = 0;
@@ -20,30 +21,32 @@ if(isempty (openValueReal))
     openValueReal = 0;
 end
 
-listener1 = strcmp(topicSub,'TIMEFRAMEQUOTE@MT4@ACTIVTRADES@EURUSD@m30@v100');
+listener1 = strcmp(topicSub,'TIMEFRAMEQUOTE@MT4@ACTIVTRADES@EURUSD@m30@v80');
 listener2 = strcmp(topicSub,'TIMEFRAMEQUOTE@MT4@ACTIVTRADES@EURUSD@m1@v1');
 listener3 = strcmp(topicSub,'MATLAB@111@EURUSD@STATUS');
-
 if listener1 %new 30minutes data array
     
     newData = textscan(messageSub,'%d %d %d %d %d %s','Delimiter',','); % messageSub: open,max,min,close,volume,data
-    matrix(1:end-1,1)= newData(:,1);
-    matrix(1:end-1,2)= newData(:,2);
-    matrix(1:end-1,3)= newData(:,3);
-    matrix(1:end-1,4)= newData(:,4);
-    matrix(1:end-1,5)= newData(:,5);
+    newDataMatrix = cell2mat(newData(1:5));
+    matrix(1:end-1,1)= newDataMatrix(:,1);
+    matrix(1:end-1,2)= newDataMatrix(:,2);
+    matrix(1:end-1,3)= newDataMatrix(:,3);
+    matrix(1:end-1,4)= newDataMatrix(:,4);
+    matrix(1:end-1,5)= newDataMatrix(:,5);
     matrix(1:end-1,6)=datenum(newData{6}(:),'mm/dd/yyyy HH:MM');
     newTimeScalePoint=1; % controlla se ho dei nuovi dati sulla newTimeScale
     
 elseif listener2 %new 1minute data point
     
     newData = textscan(messageSub,'%d %d %d %d %d %s','Delimiter',','); % messageSub: open,max,min,close,volume,data
-    matrix(end,1)= newData(:,1);
-    matrix(end,2)= newData(:,2);
-    matrix(end,3)= newData(:,3);
-    matrix(end,4)= newData(:,4);
-    matrix(end,5)= newData(:,5);
+    newDataMatrix = cell2mat(newData(1:5));
+    matrix(end,1)= newDataMatrix(:,1);
+    matrix(end,2)= newDataMatrix(:,2);
+    matrix(end,3)= newDataMatrix(:,3);
+    matrix(end,4)= newDataMatrix(:,4);
+    matrix(end,5)= newDataMatrix(:,5);
     matrix(end,6)=datenum(newData{6}(:),'mm/dd/yyyy HH:MM');
+    
     
 elseif listener3 %new status
     
@@ -146,6 +149,8 @@ elseif listener3 %new status
             [topicPub,messagePub,startingOperation]=onlineClose(closeValue,ticket,indexClose);
             
         end
+    else
+        display(topicSub + ': ' + messageSub);
         
     end
     

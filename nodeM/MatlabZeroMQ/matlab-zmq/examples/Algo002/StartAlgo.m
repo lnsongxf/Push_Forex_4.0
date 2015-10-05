@@ -4,11 +4,12 @@ function StartAlgo()
     socket = zmq.core.socket(context, 'ZMQ_SUB');
     contextPub = zmq.core.ctx_new();
     socket_pub = zmq.core.socket(contextPub, 'ZMQ_PUB');
+
     % SET LISTENERS
-    port = 50026;
+    port = 50027;
     address = sprintf('tcp://127.0.0.1:%d', port);
     zmq.core.connect(socket, address);
-    portPub = 50028;
+    portPub = 50026;
     addressPub = sprintf('tcp://127.0.0.1:%d', portPub);
     zmq.core.connect(socket_pub, addressPub);
     
@@ -33,16 +34,20 @@ function StartAlgo()
     for j = 1:m
         zmq.core.setsockopt(socket, 'ZMQ_SUBSCRIBE', ListS{1}{j});
     end
+    zmq.core.setsockopt(socket_pub, 'ZMQ_RCVBUF', 102400);
+    zmq.core.setsockopt(socket, 'ZMQ_RCVBUF', 102400);
     
+    display(zmq.core.getsockopt(socket_pub, 'ZMQ_RCVBUF'));
+    display(zmq.core.getsockopt(socket, 'ZMQ_RCVBUF'));
     
     topicName = 'null';
     while 1
-            message = char(zmq.core.recv(socket));
+            message = char(zmq.core.recv(socket, 102400));
             isMember = any(ismember(ListS{1},message));
             if isMember == 1
                 topicName = message;
             else
-                [topicPub, messagePub]=AlgoTest(topicName,message);
+                [topicPub, messagePub]=onlineAlgo002(topicName,message);
                 messagePub1 = sprintf('%s %s', topicPub, messagePub);
                 zmq.core.send(socket_pub, uint8(messagePub1));
                 topicName = 0;
