@@ -277,14 +277,14 @@ var sockSubFromQuotesProvider = zmq.socket('sub');
 var sockSubFromSignalProvider = zmq.socket('sub');
 var sockLog = zmq.socket('pub');
 
-sockSubFromQuotesProvider.bindSync('tcp://192.168.53.69:50025');
-sockSubFromSignalProvider.bindSync('tcp://192.168.53.69:50026');    
-sockPub.bindSync('tcp://192.168.53.69:50027');  
-sockLog.bindSync('tcp://192.168.53.69:50028');
+sockSubFromQuotesProvider.bindSync('tcp://*:50025');
+sockSubFromSignalProvider.bindSync('tcp://*:50026');    
+sockPub.bindSync('tcp://*:50027');  
+sockLog.bindSync('tcp://*:50028');
 
 setInterval(function(){
 	logger.trace("running logger...");
-},100);
+},60000);
 
 //-------------------------------------------------------------------------------------------------------------------------------
 // QUOTES PROVIDER PUB TO NODEJS TO SIGNAL PROVIDER
@@ -312,7 +312,7 @@ if (startSchedule == null || startSchedule == undefined){
 	logger.info('Server Start Date'+serverSetting.serverSettingList[0].startScheduleTime);
 };
 var date_start_schedule = new Date(startSchedule[0],startSchedule[1],startSchedule[2],startSchedule[3],startSchedule[4],startSchedule[5]);
-var minutesList=[{'m1':6000},{'m5':300000},{'m15':900000},{'m30':1800000},{'h1':3600000},{'h4':14400000},{'d1':86400000},{'w1':604800000}];
+var minutesList=[{'m1':6000},{'m5':300000},{'m15':900000},{'m30':18000},{'h1':3600000},{'h4':14400000},{'d1':86400000},{'w1':604800000}];
 
 
 var updatingTimeFrameTaskFunction = function(timeFrameToUpdate){

@@ -15,6 +15,7 @@ k=0;
 
 if(isempty(matrix))
     matrix = zeros(nData+1,6);
+    startingOperation = 0;
 end
 
 if(isempty (openValueReal))
@@ -141,13 +142,10 @@ end
             
             
         elseif updatedOperation == 0 && abs(startingOperation) > 0
-            
             % Closing request
             [topicPub,messagePub,startingOperation]=onlineClose(closeValue,ticket,indexClose);
             
         end
-    else
-        display(strcat(topicSub,': ',messageSub));
     end
     
 end
