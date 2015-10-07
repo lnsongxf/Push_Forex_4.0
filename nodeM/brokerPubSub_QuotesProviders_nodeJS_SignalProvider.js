@@ -272,15 +272,76 @@ var logger = (function(){
 
 })();
 
-var sockPub = zmq.socket('pub');
+var sockPub = zmq.socket('xpub');
 var sockSubFromQuotesProvider = zmq.socket('sub');
 var sockSubFromSignalProvider = zmq.socket('sub');
 var sockLog = zmq.socket('pub');
+
+// Register to monitoring events
+sockPub.on('connect', function(fd, ep) {console.log('connect, endpoint:', ep);});
+sockPub.on('connect_delay', function(fd, ep) {console.log('connect_delay, endpoint:', ep);});
+sockPub.on('connect_retry', function(fd, ep) {console.log('connect_retry, endpoint:', ep);});
+sockPub.on('listen', function(fd, ep) {console.log('listen, endpoint:', ep);});
+sockPub.on('bind_error', function(fd, ep) {console.log('bind_error, endpoint:', ep);});
+sockPub.on('accept', function(fd, ep) {console.log('accept, endpoint:', ep);});
+sockPub.on('accept_error', function(fd, ep) {console.log('accept_error, endpoint:', ep);});
+sockPub.on('close', function(fd, ep) {console.log('close, endpoint:', ep);});
+sockPub.on('close_error', function(fd, ep) {console.log('close_error, endpoint:', ep);});
+sockPub.on('disconnect', function(fd, ep) {console.log('disconnect, endpoint:', ep);});
+
+// Call monitor, check for events every 500ms and get all available events.
+console.log('Start monitoring...');
+sockPub.monitor(500, 0);
+
+// Register to monitoring events
+sockSubFromSignalProvider.on('connect', function(fd, ep) {console.log('connect, endpoint:', ep);});
+sockSubFromSignalProvider.on('connect_delay', function(fd, ep) {console.log('connect_delay, endpoint:', ep);});
+sockSubFromSignalProvider.on('connect_retry', function(fd, ep) {console.log('connect_retry, endpoint:', ep);});
+sockSubFromSignalProvider.on('listen', function(fd, ep) {console.log('listen, endpoint:', ep);});
+sockSubFromSignalProvider.on('bind_error', function(fd, ep) {console.log('bind_error, endpoint:', ep);});
+sockSubFromSignalProvider.on('accept', function(fd, ep) {console.log('accept, endpoint:', ep);});
+sockSubFromSignalProvider.on('accept_error', function(fd, ep) {console.log('accept_error, endpoint:', ep);});
+sockSubFromSignalProvider.on('close', function(fd, ep) {console.log('close, endpoint:', ep);});
+sockSubFromSignalProvider.on('close_error', function(fd, ep) {console.log('close_error, endpoint:', ep);});
+sockSubFromSignalProvider.on('disconnect', function(fd, ep) {console.log('disconnect, endpoint:', ep);});
+
+// Call monitor, check for events every 500ms and get all available events.
+console.log('Start monitoring...');
+sockSubFromSignalProvider.monitor(500, 0);
+
+// Register to monitoring events
+sockLog.on('connect', function(fd, ep) {console.log('connect, endpoint:', fd);});
+sockLog.on('connect_delay', function(fd, ep) {console.log('connect_delay, endpoint:', fd);});
+sockLog.on('connect_retry', function(fd, ep) {console.log('connect_retry, endpoint:', fd);});
+sockLog.on('listen', function(fd, ep) {console.log('listen, endpoint:', fd);});
+sockLog.on('bind_error', function(fd, ep) {console.log('bind_error, endpoint:', fd);});
+sockLog.on('accept', function(fd, ep) {console.log('accept, endpoint:', fd);});
+sockLog.on('accept_error', function(fd, ep) {console.log('accept_error, endpoint:', fd);});
+sockLog.on('close', function(fd, ep) {console.log('close, endpoint:', fd);});
+sockLog.on('close_error', function(fd, ep) {console.log('close_error, endpoint:', fd);});
+sockLog.on('disconnect', function(fd, ep) {console.log('disconnect, endpoint:', fd);});
+
+// Call monitor, check for events every 500ms and get all available events.
+console.log('Start monitoring...');
+sockLog.monitor(500, 0);
 
 sockSubFromQuotesProvider.bindSync('tcp://*:50025');
 sockSubFromSignalProvider.bindSync('tcp://*:50026');    
 sockPub.bindSync('tcp://*:50027');  
 sockLog.bindSync('tcp://*:50028');
+
+
+// When Pubsock receives a message , it's subscribe requests
+sockLog.on('message', function(data, bla) {
+  // The data is a slow Buffer
+  // The first byte is the subscribe (1) /unsubscribe flag (0)
+  var type = data[0]===0 ? 'unsubscribe' : 'subscribe';
+  // The channel name is the rest of the buffer
+  var channel = data.slice(1).toString();
+  console.log(type + ':' + channel);
+  console.log("bla: ",bla);
+
+});
 
 setInterval(function(){
 	logger.trace("running logger...");
@@ -340,7 +401,7 @@ var updatingTimeFrameTaskFunction = function(timeFrameToUpdate){
     for (var i = minutesList.length - 1; i >= 0; i--) {
     	//console.log("subtasks: ",minutesList[i][Object.keys(minutesList[i])[0]]," ",Object.keys(minutesList[i])[0]);
     	
-    	console.log("prova: "+minutesList[i][Object.keys(minutesList[i])[0]] );
+    	//console.log("prova: "+minutesList[i][Object.keys(minutesList[i])[0]] );
     	logger.info( 'Setting tasks each' +minutesList[i][Object.keys(minutesList[i])[0]]+ 'to update the timeframe Objs' );
 
     	setInterval( updatingTimeFrameTaskFunction.bind(this) ,minutesList[i][Object.keys(minutesList[i])[0]], Object.keys(minutesList[i])[0]   );  // 1M 5M etc..
@@ -351,8 +412,8 @@ sockSubFromQuotesProvider.subscribe('NEWTOPICQUOTES');
 sockSubFromQuotesProvider.subscribe('DELETETOPICQUOTES');
 //sockSubFromQuotesProvider.subscribe('');
 sockSubFromQuotesProvider.on('message', function(topic, message) {
-	console.log("mess: ",message.toString());
-	console.log("topic: ",topic.toString());
+	//console.log("mess: ",message.toString());
+	//console.log("topic: ",topic.toString());
 	logger.info('Received message from Quotes Provider: '+message+ 'on topic: '+topic);
 	var topicArr = topic.toString().split("@");
   	var messageArr = message.toString().split("@");
@@ -410,7 +471,7 @@ sockSubFromQuotesProvider.on('message', function(topic, message) {
 
 		default:
 
-			//EX: MT4@ACTIVTRADES@REALTIMEQUOTES, MATLAB@111@EURUSD@STATUS
+			//EX: MT4@ACTIVTRADES@REALTIMEQUOTES, STATUS@EURUSD@111
 			if (topicArr.length <= 3) {
   				//EX: MT4@ACTIVTRADES@REALTIMEQUOTES
 				if (topicArr[2] == 'REALTIMEQUOTES'){
@@ -418,6 +479,12 @@ sockSubFromQuotesProvider.on('message', function(topic, message) {
 						//TOPIC EXAMPLE: MT4@ACTIVTRADES@REALTIMEQUOTES;
 						var searchObjRealTimeQuote = "REALTIMEQUOTE$"+topicArr[0]+"$"+topicArr[1];
 						var searchObjTimeFrameQuote = "TIMEFRAMEQUOTE$"+topicArr[0]+"$"+topicArr[1];
+
+
+
+							//TODO  check if message e' solo 1 valore altrimenti dai errore
+
+
 
 						if (messageArr.length == 2) {
 							var result = QuotesModule.updateRealTimeQuotesObj(searchObjRealTimeQuote,messageArr);
@@ -440,21 +507,12 @@ sockSubFromQuotesProvider.on('message', function(topic, message) {
 					}else{
 						logger.error('topic: ' + JSON.stringify(topic.toString()) + ' message: ' + JSON.stringify(message.toString()) + 'Error in message received from Quotes provider. The Quotes Provider wants to publish a new message quote '+message.toString()+' on topic '+topic.toString()+', but the topic doesnt exist ' );
 					}
-				}else{
+				}else if (topicArr[0] == 'STATUS'){
+					//EX: STATUS@EURUSD@111		
+	  				sockPub.send([topic.toString(), message]);	
+	  			}else{
 					logger.error('topic: ' + JSON.stringify(topic.toString()) + ' message: ' + JSON.stringify(message.toString()) + 'Error in message received from Quotes Provider. The Quotes Provider wants to publish a new message quote '+message.toString()+',but the topic '+topic.toString()+' is not valid' );
 				}
-			}else if (topicArr.length > 3) {
-				//EX: MATLAB@111@EURUSD@STATUS		
-				if (topicArr[3] == 'STATUS'){
-	  				if ( runningSignalProviderTopicStatusList.indexOf( topic.toString() ) > -1 ) {
-	  					sockPub.send([topic.toString(), message]);	
-	  					logger.info('Sent Status message: '+message+ 'on topic: '+topic.toString() );
-	  				}else{
-	  					logger.error('topic: ' + JSON.stringify(topic.toString() ) + 'message: ' + JSON.stringify(message) + 'Execution/Quotes provider wants to publish one STATUS operation message '+message.toString()+' on topic '+topic.toString()+', but the STATUS TOPIC doesnt exist.' );
-	  				}
-	  			}else{
-	  				logger.error('topic: ' + JSON.stringify(topic.toString()) + ' message: ' + JSON.stringify(message.toString()) + ' Error in message received from Quotes Provider. The Quotes Provider wants to publish a new STATUS message '+message.toString()+', but the topic '+topic.toString()+' is not valid' );
-	  			}
 	  		}else{
 	  			logger.error('topic: ' + JSON.stringify(topic.toString()) + ' message: ' + JSON.stringify(message.toString()) + ' Error in message received from Quotes Provider. The topic '+topic.toString()+' format/length is not valid.' );
 	  		}
@@ -465,12 +523,12 @@ sockSubFromQuotesProvider.on('message', function(topic, message) {
 //----------------------------------------------------------------------------------------------------------------------------
 // SIGNAL PROVIDE PUB TO NODEJS TO QUOTES PROVIDER
 
-var runningSignalProviderTopicOperationList = [];
-var runningSignalProviderTopicStatusList = [];
-var TopicAlgosOperationListLabel = 'ALGOSOPERATIONLIST'; 
-var TopicAlgosStatusListLabel = 'ALGOSSTATUSLIST'; 
+//var runningSignalProviderTopicOperationList = [];
+//var runningSignalProviderTopicStatusList = [];
+//var TopicAlgosOperationListLabel = 'ALGOSOPERATIONLIST'; 
+//var TopicAlgosStatusListLabel = 'ALGOSSTATUSLIST'; 
 
-var updatingSignalProviderTopicOperationListAndTopicStatusList = function(){
+/*var updatingSignalProviderTopicOperationListAndTopicStatusList = function(){
 	if ( runningSignalProviderTopicOperationList.length > 0 ){
 		var runningSignalProviderTopicOperationListString = JSON.stringify(runningSignalProviderTopicOperationList);
 		sockPub.send([TopicAlgosOperationListLabel, runningSignalProviderTopicOperationListString]);
@@ -489,14 +547,14 @@ var updatingSignalProviderTopicOperationListAndTopicStatusList = function(){
 }
 
 //Permit to update (every 5 sec) and sending on topic the updated list for TopicStatus and TopicOperations
-setInterval(function(){ updatingSignalProviderTopicOperationListAndTopicStatusList.bind(this)  },5000);
+setInterval(function(){ updatingSignalProviderTopicOperationListAndTopicStatusList.bind(this)  },5000);*/
 
 sockSubFromSignalProvider.subscribe('NEWTOPICFROMSIGNALPROVIDER');
 sockSubFromSignalProvider.on('message', function(messageSub) {
   
   	logger.info('Received message from Signal Provider: '+message+ 'on topic: '+topic);
 	var data = messageSub.toString().split(" ");
-  	console.log('received a message related to:', data[0], 'containing message:', data[1]);
+  	//console.log('received a message related to:', data[0], 'containing message:', data[1]);
   	var topic = data[0];
   	var message = data[1];
 
@@ -504,71 +562,44 @@ sockSubFromSignalProvider.on('message', function(messageSub) {
   		case "NEWTOPICFROMSIGNALPROVIDER":
 
   			var newTopic = message.split('@');
-  			if (newTopic[3] == 'OPERATIONS') {
-  				if ( runningSignalProviderTopicOperationList.indexOf( message ) == "-1" ) {
-					//CREATE AND ADD NEW TOPICS (EX: MATLAB@111@EURUSD@OPERATIONS) IN THE ARRAY LIST
-					runningSignalProviderTopicOperationList.push(message); 
-					sockSubFromSignalProvider.subscribe(message);
-					var runningSignalProviderTopicOperationListString = JSON.stringify(runningSignalProviderTopicOperationList);
-					sockPub.send([TopicAlgosOperationListLabel, runningSignalProviderTopicOperationListString]);
-					logger.info('New Topic OPERATION From Signal Provider, Sent message: '+runningSignalProviderTopicOperationListString+ 'on topic: '+TopicAlgosOperationListLabel);
-				}else{
-  					logger.error('topic: ' +JSON.stringify(topic) + ' message: ' + JSON.stringify(message) + ' Signal provider wants to create the new topic '+message+' but the topic already exist');
-				}
-  			}else if (newTopic[3] == 'STATUS'){
-  				if ( runningSignalProviderTopicStatusList.indexOf( message ) == "-1" ) {
-					//CREATE AND ADD NEW TOPICS (EX: MATLAB@111@EURUSD@STATUS) IN THE ARRAY LIST
-					runningSignalProviderTopicStatusList.push(message); 
-					sockSubFromSignalProvider.subscribe(message);
-					var runningSignalProviderTopicStatusListString = JSON.stringify(runningSignalProviderTopicStatusList);
-					sockPub.send([TopicAlgosStatusListLabel, runningSignalProviderTopicStatusListString]);
-					logger.info('New Topic STATUS from Signal Provider, Sent message: '+runningSignalProviderTopicStatusListString+ 'on topic: '+TopicAlgosStatusListLabel);
-				}else{
-					logger.error('topic: ' + JSON.stringify(topic) + ' message: ' + JSON.stringify(message) + ' Signal provider wants to create a new topic '+message+' but the topic already exist');	
-				}
+  			if (newTopic[0] == 'OPERATIONS') {
+  				//EX: OPERATIONS@ACTIVTRADES@EURUSD
+				sockSubFromSignalProvider.subscribe(message);
+				logger.info('New Topic OPERATION From Signal Provider: '+message);
+  			}else if (newTopic[0] == 'STATUS'){
+  				//EX: STATUS@EURUSD@111		
+				sockSubFromQuotesProvider.subscribe(message);
+				logger.info('New Topic STATUS from Signal Provider: '+message);
   			}else{
   				logger.error('topic: ' + JSON.stringify(topic) + ' message: ' + JSON.stringify(message) + ' message format from Signal Provider is not valid. Signal provider wants to create the new topic '+message+' but the format is not valid');
   			}
 			break;
 
 		case "DELETETOPICQUOTES":
-			//EX TOPIC: MATLAB@111@EURUSD@OPERATIONS, MATLAB@111@EURUSD@STATUS
+			//EX: OPERATIONS@ACTIVTRADES@EURUSD STATUS@EURUSD@111	
 			var deleteTopic = message.split('@');
-  			if (deleteTopic[3] == 'OPERATIONS') {
-				if ( runningSignalProviderTopicOperationList.indexOf( message ) > -1 ){
-					//REMOVE TOPICS (EX: MATLAB@111@EURUSD@OPERATIONS) IN THE ARRAY LIST
-					var index = runningSignalProviderTopicOperationList.indexOf( message );
-					runningSignalProviderTopicOperationList.splice(index, 1);
-					sockSubFromSignalProvider.unsubscribe( message );
-				}else{
-					logger.error('topic: ' + JSON.stringify(topic) + ' message: ' + JSON.stringify(message) + ' Signal provider wants to delete one operation topic '+message+',but the topic doesnt exist');
-				}
-			}
-			else if (deleteTopic[3] == 'STATUS'){
-  				if ( runningSignalProviderTopicStatusList.indexOf( message ) == "-1" ) {
-  					//REMOVE TOPICS (EX:MATLAB@111@EURUSD@STATUS) IN THE ARRAY LIST
-
-  					var index = runningSignalProviderTopicStatusList.indexOf( message );
-					runningSignalProviderTopicStatusList.splice(index, 1);
-					sockSubFromSignalProvider.unsubscribe( message );
-  				}else{
-  					logger.error('topic: ' + JSON.stringify(topic) + ' message: ' + JSON.stringify(message) + ' Signal provider wants to delete one STATUS TOPIC '+message+' but the topic doesnt exist');
-  				}
+  			if (deleteTopic[0] == 'OPERATIONS') {
+				sockSubFromSignalProvider.unsubscribe( message );
+				logger.info('Unsubscribe Topic Operation: '+message);
+			}else if (deleteTopic[0] == 'STATUS'){
+				sockSubFromQuotesProvider.unsubscribe( message );
+				logger.info('Unsubscribe Topic Status: '+message);
   			}else{
   				logger.error('topic: ' + JSON.stringify(topic) + ' message: ' + JSON.stringify(message) + ' Signal provider wants to delete one TOPIC '+message+' but this topic format is not valid. Accepted only OPERATIONS/STATUS TOPICS');
   			}
 			break;
 
 		default:
+
 		 	//EX: MATLAB@111@EURUSD@OPERATIONS
 			var topicType = topic.split('@');
-  			if (topicType[3] == 'OPERATIONS') {
-  				if ( runningSignalProviderTopicOperationList.indexOf( topic ) > -1 ) {
+  			if (topicType[0] == 'OPERATIONS') {
+  				//if ( runningSignalProviderTopicOperationList.indexOf( topic ) > -1 ) {
 					sockPub.send([topic, message]);
 					logger.info('New Operation: '+message+ 'from (on topic): '+topic);
-				}else{
-					logger.error('topic: ' + JSON.stringify(topic) + ' message: ' + JSON.stringify(message) + ' Signal provider wants to publish a new operation on Topic '+topic+' but the topic doesnt exist. Create the topic before to push data on it');
-				}
+				//}else{
+				//	logger.error('topic: ' + JSON.stringify(topic) + ' message: ' + JSON.stringify(message) + ' Signal provider wants to publish a new operation on Topic '+topic+' but the topic doesnt exist. Create the topic before to push data on it');
+				//}
 			}else{
 				logger.error('topic: ' + JSON.stringify(topic) + ' message: ' + JSON.stringify(message) + ' Signal provider wants to publish a new data on TOPIC '+message+', but this topic format is not valid');
 			}
