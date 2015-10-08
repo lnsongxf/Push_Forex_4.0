@@ -272,58 +272,16 @@ var logger = (function(){
 
 })();
 
-var sockPub = zmq.socket('xpub');
+var sockPub = zmq.socket('pub');
 var sockSubFromQuotesProvider = zmq.socket('sub');
 var sockSubFromSignalProvider = zmq.socket('sub');
+
+//var hwm = 1000;
+//var verbose = 0;
 var sockLog = zmq.socket('pub');
-
-// Register to monitoring events
-sockPub.on('connect', function(fd, ep) {console.log('connect, endpoint:', ep);});
-sockPub.on('connect_delay', function(fd, ep) {console.log('connect_delay, endpoint:', ep);});
-sockPub.on('connect_retry', function(fd, ep) {console.log('connect_retry, endpoint:', ep);});
-sockPub.on('listen', function(fd, ep) {console.log('listen, endpoint:', ep);});
-sockPub.on('bind_error', function(fd, ep) {console.log('bind_error, endpoint:', ep);});
-sockPub.on('accept', function(fd, ep) {console.log('accept, endpoint:', ep);});
-sockPub.on('accept_error', function(fd, ep) {console.log('accept_error, endpoint:', ep);});
-sockPub.on('close', function(fd, ep) {console.log('close, endpoint:', ep);});
-sockPub.on('close_error', function(fd, ep) {console.log('close_error, endpoint:', ep);});
-sockPub.on('disconnect', function(fd, ep) {console.log('disconnect, endpoint:', ep);});
-
-// Call monitor, check for events every 500ms and get all available events.
-console.log('Start monitoring...');
-sockPub.monitor(500, 0);
-
-// Register to monitoring events
-sockSubFromSignalProvider.on('connect', function(fd, ep) {console.log('connect, endpoint:', ep);});
-sockSubFromSignalProvider.on('connect_delay', function(fd, ep) {console.log('connect_delay, endpoint:', ep);});
-sockSubFromSignalProvider.on('connect_retry', function(fd, ep) {console.log('connect_retry, endpoint:', ep);});
-sockSubFromSignalProvider.on('listen', function(fd, ep) {console.log('listen, endpoint:', ep);});
-sockSubFromSignalProvider.on('bind_error', function(fd, ep) {console.log('bind_error, endpoint:', ep);});
-sockSubFromSignalProvider.on('accept', function(fd, ep) {console.log('accept, endpoint:', ep);});
-sockSubFromSignalProvider.on('accept_error', function(fd, ep) {console.log('accept_error, endpoint:', ep);});
-sockSubFromSignalProvider.on('close', function(fd, ep) {console.log('close, endpoint:', ep);});
-sockSubFromSignalProvider.on('close_error', function(fd, ep) {console.log('close_error, endpoint:', ep);});
-sockSubFromSignalProvider.on('disconnect', function(fd, ep) {console.log('disconnect, endpoint:', ep);});
-
-// Call monitor, check for events every 500ms and get all available events.
-console.log('Start monitoring...');
-sockSubFromSignalProvider.monitor(500, 0);
-
-// Register to monitoring events
-sockLog.on('connect', function(fd, ep) {console.log('connect, endpoint:', fd);});
-sockLog.on('connect_delay', function(fd, ep) {console.log('connect_delay, endpoint:', fd);});
-sockLog.on('connect_retry', function(fd, ep) {console.log('connect_retry, endpoint:', fd);});
-sockLog.on('listen', function(fd, ep) {console.log('listen, endpoint:', fd);});
-sockLog.on('bind_error', function(fd, ep) {console.log('bind_error, endpoint:', fd);});
-sockLog.on('accept', function(fd, ep) {console.log('accept, endpoint:', fd);});
-sockLog.on('accept_error', function(fd, ep) {console.log('accept_error, endpoint:', fd);});
-sockLog.on('close', function(fd, ep) {console.log('close, endpoint:', fd);});
-sockLog.on('close_error', function(fd, ep) {console.log('close_error, endpoint:', fd);});
-sockLog.on('disconnect', function(fd, ep) {console.log('disconnect, endpoint:', fd);});
-
-// Call monitor, check for events every 500ms and get all available events.
-console.log('Start monitoring...');
-sockLog.monitor(500, 0);
+//sockLog.identity = 'publisher' + process.pid;
+//sockLog.setsockopt(zmq.ZMQ_SNDHWM, hwm);
+//sockLog.setsockopt(zmq.ZMQ_XPUB_VERBOSE, verbose);
 
 sockSubFromQuotesProvider.bindSync('tcp://*:50025');
 sockSubFromSignalProvider.bindSync('tcp://*:50026');    
@@ -331,17 +289,11 @@ sockPub.bindSync('tcp://*:50027');
 sockLog.bindSync('tcp://*:50028');
 
 
-// When Pubsock receives a message , it's subscribe requests
-sockLog.on('message', function(data, bla) {
-  // The data is a slow Buffer
-  // The first byte is the subscribe (1) /unsubscribe flag (0)
+/*sockLog.on('message', function(data, bla) {
   var type = data[0]===0 ? 'unsubscribe' : 'subscribe';
-  // The channel name is the rest of the buffer
   var channel = data.slice(1).toString();
   console.log(type + ':' + channel);
-  console.log("bla: ",bla);
-
-});
+});*/
 
 setInterval(function(){
 	logger.trace("running logger...");
@@ -552,11 +504,12 @@ setInterval(function(){ updatingSignalProviderTopicOperationListAndTopicStatusLi
 sockSubFromSignalProvider.subscribe('NEWTOPICFROMSIGNALPROVIDER');
 sockSubFromSignalProvider.on('message', function(messageSub) {
   
-  	logger.info('Received message from Signal Provider: '+message+ 'on topic: '+topic);
+  	
 	var data = messageSub.toString().split(" ");
   	//console.log('received a message related to:', data[0], 'containing message:', data[1]);
   	var topic = data[0];
   	var message = data[1];
+  	logger.info('Received message from Signal Provider: '+message+ 'on topic: '+topic);
 
   	switch (topic) {
   		case "NEWTOPICFROMSIGNALPROVIDER":
