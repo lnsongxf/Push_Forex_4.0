@@ -325,7 +325,7 @@ if (startSchedule == null || startSchedule == undefined){
 	logger.info('Server Start Date'+serverSetting.serverSettingList[0].startScheduleTime);
 };
 var date_start_schedule = new Date(startSchedule[0],startSchedule[1],startSchedule[2],startSchedule[3],startSchedule[4],startSchedule[5]);
-var minutesList=[{'m1':6000},{'m5':300000},{'m15':900000},{'m30':18000},{'h1':3600000},{'h4':14400000},{'d1':86400000},{'w1':604800000}];
+var minutesList=[{'m1':60000},{'m5':300000},{'m15':900000},{'m30':1800000},{'h1':3600000},{'h4':14400000},{'d1':86400000},{'w1':604800000}];
 
 
 var updatingTimeFrameTaskFunction = function(timeFrameToUpdate){
