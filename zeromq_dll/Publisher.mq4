@@ -33,10 +33,10 @@ bool first_time = true;
    bool period_daily  = false;
    bool period_4hour  = false;
    bool period_1hour  = false;
-   bool period_30min  = false;
+   bool period_30min  = true;
    bool period_15min  = false;
    bool period_5min   = false;
-   bool period_1min   = true;
+   bool period_1min   = false;
    
    //PERMESSI DI SCRITTURA
    bool writedata = true;
@@ -63,7 +63,8 @@ int OnInit()
       else
          Print("Published message new topic: " + new_quotes_topic_message);
       
-      write_history(5);
+      write_history(30);
+      write_history(1);
       
       first_time = false;
    
@@ -113,7 +114,7 @@ int OnCalculate(const int rates_total,
             }
             string year = Year();
             string date = s_month+"/"+s_day+"/"+year;
-      string strline7 = TimeToStr  (TimeCurrent(),TIME_SECONDS);
+      string strline7 = TimeToStr  (TimeCurrent(),TIME_MINUTES);
 
       double strline_intero=StrToDouble(strline);
       double strline_intero2=StrToDouble(strline2);
@@ -122,12 +123,12 @@ int OnCalculate(const int rates_total,
       double strline_intero5=StrToDouble(strline5);
       double strline_intero6=StrToDouble(strline6);
 
-      int history_data_close  = strline_intero*100000;
-      int history_data_open   = strline_intero2*100000;
-      int history_data_high   = strline_intero3*100000;
-      int history_data_low    = strline_intero4*100000;
+      int history_data_close  = strline_intero*10000;
+      int history_data_open   = strline_intero2*10000;
+      int history_data_high   = strline_intero3*10000;
+      int history_data_low    = strline_intero4*10000;
       int history_data_volume = strline_intero5;
-      int history_data_bid    = strline_intero6*100000;
+      int history_data_bid    = strline_intero6*10000;
       string current_tick = Symbol()+"@"+history_data_open+","+history_data_high+","+history_data_low+","+history_data_bid+","+history_data_volume+","+date + " " + strline7;
 
       string topic2 = "MT4@ACTIVTRADES@REALTIMEQUOTES";
@@ -139,17 +140,7 @@ int OnCalculate(const int rates_total,
   
       return(rates_total);
   }
-//+------------------------------------------------------------------+
-//| ChartEvent function                                              |
-//+------------------------------------------------------------------+
-void OnChartEvent(const int id,
-                  const long &lparam,
-                  const double &dparam,
-                  const string &sparam)
-  {
-//---
-   
-  }
+
 //+------------------------------------------------------------------+
 
 
@@ -162,48 +153,48 @@ void write_history(int period) {
 
       switch(period) {
          case 10080 :
-         period_string = "W1";
+         period_string = "w1";
          period_string_file = "10080";
          break;
 
          case 1440 :
-         period_string = "D1";
+         period_string = "d1";
          period_string_file = "1440";
          break;
 
          case 240 :
-         period_string = "H4";
+         period_string = "h4";
          period_string_file = "240";
          break;
 
          case 60 :
-         period_string = "H1";
+         period_string = "h1";
          period_string_file = "60";
          break;
 
          case 30 :
-         period_string = "M30";
+         period_string = "m30";
          period_string_file = "30";
          break;
 
          case 15 :
-         period_string = "M15";
+         period_string = "m15";
          period_string_file = "15";
          break;
 
          case 5 :
-         period_string = "M5";
+         period_string = "m5";
          period_string_file = "5";
          break;
       
          case 1 :
-         period_string = "M1";
+         period_string = "m1";
          period_string_file = "1";
          break;
       }  // end swith
 
       //RESETTO STRINGA
-      string message = "";
+      string message = Symbol() + "@" + period_string + "@";
       //LEGGO L ESISTENZA DEI RECORDO SUL FILE
       for (cnt = number_bars; cnt >= shift; cnt--) {
          //VERIFICO L ANNO
@@ -249,8 +240,9 @@ void write_history(int period) {
             //Alert("1 minuto: " ,history_data_close);  
          
             //SCRIVO I CONTENUTI
-            message += Symbol()+"@"+history_data_open+","+history_data_high+","+history_data_low+","+history_data_close+","+history_data_volume+","+date +" "+strline6;
-            message += "$";
+            
+            message += history_data_open+","+history_data_high+","+history_data_low+","+history_data_close+","+history_data_volume+","+date +" "+strline6;
+            if(cnt != shift) message += "$";
             //FileWrite(handle, history_data_open+","+history_data_high+","+history_data_low+","+history_data_close+","+history_data_volume);
             
           } // end if
