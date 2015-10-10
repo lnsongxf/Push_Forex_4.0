@@ -1,0 +1,11 @@
+{
+  "name": "nodeM_package_json",
+  "description": "npm modules for node broker",
+  "version": "0.9.1",
+  "private": true,
+  "dependencies": {
+    "node-gyp": "*",
+    "node-schedule": "*",
+    "zmq": "*"
+  }
+}

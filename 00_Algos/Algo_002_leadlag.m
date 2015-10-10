@@ -1,4 +1,4 @@
-function [oper, openValue, closeValue, stopLoss, noLoose, valueTp,st] = Algo_002_leadlag(matrix)
+function [oper, openValue, closeValue, stopLoss, noLoose, valueTp,st] = Algo_002_leadlag(matrix,newTimeScalePoint,openValueReal)
 
 %
 % DESCRIPTION:
@@ -6,38 +6,49 @@ function [oper, openValue, closeValue, stopLoss, noLoose, valueTp,st] = Algo_002
 % This is the general modular structure for creating the Algos:
 % 01a - coreState .................... first filter manager
 % 01b - stationarity ................. stationarity Test
-% 02a - takeProfitManager ............ manager for TP and SL closing 
-% 03a - decMaker.decisionReal ........ second filter manager for virtual 
+% 02a - takeProfitManager ............ manager for TP and SL closing
+% 03a - decMaker.decisionReal ........ second filter manager for virtual
 %                                      running mode
-% 02b - takeProfitManager ............ manager for defining TP and SL 
+% 02b - takeProfitManager ............ manager for defining TP and SL
 % 03b - decMaker.decisionDirection ... operative manager for opening
 %                                      direction
 % 03c - decMaker.calcLock ............ lock settings manager
 %
 % INPUT parameters:
 % -----------------------------------------------------------------------
-% matrix ... two-dimensional vector containing the following coloumns: 
+% matrix: two-dimensional vector containing the following coloumns:
 %            1-opening prices
 %            2-min values
 %            3-max values
 %            4-closing prices
-%            5-volumes         
+%            5-volumes
+%         the last row of the matrix contains the last price, which is only used to check
+%         wheter to close an open operation
+%
+% newTimeScalePoint: if = 1 and no operations are open, the algo will compute the indicator,
+%         otherwhise it will only check if closing conditions are satisfied
+%
+% openValueReal: opening price if an operation is open
 %
 % OUTPUT parameters:
 % -----------------------------------------------------------------------
-% to do
-%
+% oper: sign of operation
+% openValue: suggested opening price
+% closeValue: suggested closing price
+% stopLoss: suggested SL
+% noLoose: suggested TP                                         <-  THIS IS CONFUSING
+% valueTp: NOT USED IN THE MAIN PROGRAM !!!!     <- THIS IS CONFUSING
+% st: output from the stationarity test
 %
 % EXAMPLE of use:
 % -----------------------------------------------------------------------
-% to do
+% to be used in bktOffline or in demo/live mode
 %
 
 global      map;
-% global      log;
 persistent  counter;
 persistent  countCycle;
-
+% global      log;
 
 openValue = 0;
 closeValue= 0;
@@ -52,7 +63,6 @@ st = stationarity;
 
 
 if(isempty(map))
-    
     map = containers.Map;
     counter = 0;
 end
@@ -60,7 +70,6 @@ end
 
 %display(countCycle);
 if(isempty(countCycle) || countCycle == 0)
-
     countCycle = 1;
     operationState = OperationState;
     params = Parameters;
@@ -82,16 +91,20 @@ operationState = ra.os;
 chiusure        = matrix(:,4);
 %volumi          = matrix(:,5);
 
+% controlla se ho dei nuovi dati sulla newTimeScale
+if newTimeScalePoint
+    
+    % 01a
+    % -------- coreState filter ------------------ %
+    cState.core_Algo_002_leadlag(chiusure(1:end-1),params);
+    
+    % 01b
+    % -------- stationarity Test ------------------ %
+    st.stationarityTests(chiusure(1:end-1),30,0);
+    
+end
 
-% 01a
-% -------- coreState filter ------------------ %
-cState.Algo_002_Ale(chiusure,params);
 state = cState.state;
-
-% 01b
-% -------- stationarity Test ------------------ %
-st.stationarityTests(chiusure,30,0);
-
 
 if operationState.lock
     
@@ -105,45 +118,43 @@ if operationState.lock
     end
     
 else
-
+    
     if abs(operationState.actualOperation) > 0
         
         % 02a
         % -------- takeProfitManager: close for TP or SL ------ %
-        [operationState,~,params] = takeProfitManager(operationState,chiusure,params);
-        % [operationState,~, params] = timeClosureManager (operationState, chiusure, params, 30);
-        
-    else
-        
-        if abs(operationState.actualOperation) == 0
+        if openValueReal > 0
             
-            if state
-                
-                % 03a
-                % -------- decMaker filter -------------------------- %
-%                 decMaker.decisionReal4(chiusure);
-%                 real=decMaker.real;
-
-
-
-                % 02b
-                % -------- takeProfitManager: define TP and SL ------ %
-                %                      TO CREATE
-                TakeP = floor(cState.suggestedTP);
-                StopL = floor(cState.suggestedSL);
-                display(['SL = ' num2str(StopL),' TP = ' num2str(TakeP)]) ;
-                
-                % 03b
-                % -------- decMaker direction manager --------------- %
-                [params, operationState, counter] = decMaker.decisionDirectionByCore(chiusure,params,operationState,cState,TakeP,StopL);
-
-                display('operazione aperta');
-                
-                % 03c
-                % -------- decMaker lock manager -------------------- %
-                operationState = decMaker.calcLock(operationState);
-                                
-            end
+            params.set('openValue_',openValueReal);
+            [operationState,~,params] = takeProfitManager(operationState,chiusure,params);
+            % [operationState,~, params] = timeClosureManager (operationState, chiusure, params, 30);
+            
+        else
+            
+            operationState = params.resetStatusOnFailureOpening (operationState);
+            display('reset Algo status');
+            
+        end
+        
+    elseif abs(operationState.actualOperation) == 0
+        
+        if state
+            
+            % 02b
+            % -------- takeProfitManager: define TP and SL ------ %
+            TakeP = floor(cState.suggestedTP);
+            StopL = floor(cState.suggestedSL);
+            display(['SL = ' num2str(StopL),' TP = ' num2str(TakeP)]) ;
+            
+            % 03b
+            % -------- decMaker direction manager --------------- %
+            [params, operationState, counter] = decMaker.decisionDirectionByCore(chiusure,params,operationState,cState,TakeP,StopL);
+            
+            display('Matlab ha deciso di aprire');
+            
+            % 03c
+            % -------- decMaker lock manager -------------------- %
+            operationState = decMaker.calcLock(operationState);
             
         end
         

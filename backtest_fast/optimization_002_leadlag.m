@@ -47,6 +47,11 @@ hisDataPaperTrad = hisData(rTest+1:end,:);
 if newTimeScale > 1
     
     expert = TimeSeriesExpert_11;
+    expert.rescaleData(hisData,actTimeScale,newTimeScale);
+    
+    closeXminsHisData = expert.closeVrescaled;
+    dateXminsHisData = expert.openDrescaled;
+
     expert.rescaleData(hisDataTest,actTimeScale,newTimeScale);
     
     closeXminsTest = expert.closeVrescaled;
@@ -63,8 +68,8 @@ end
 
 %% prova semplice
 
-% bktfast2=bkt_fast_Ale002;
-% bktfast2=bktfast2.fast_Ale002(hisDataTest(:,4),closeXminsTest,dateXminsTest,2,20,newTimeScale,cost,1,5,0);
+% bktfast2=bkt_fast_002_leadlag;
+% bktfast2=bktfast2.fast_002_leadlag(hisDataTest(:,4),closeXminsTest,dateXminsTest,2,20,newTimeScale,cost,1,5,0);
 
 %% Estimate parameters over a range of values
 % Puoi cambiare o le frequenze di smoothing (2,20 default)
@@ -85,8 +90,8 @@ for n = 1:10
         
 %         display(['n =', num2str(n),' m = ',  num2str(m)]);
         
-        bktfast=bkt_fast_Ale002;
-        bktfast=bktfast.fast_Ale002(hisDataTest(:,4),closeXminsTest,dateXminsTest,2,20,newTimeScale,cost,n,m,0);
+        bktfast=bkt_fast_002_leadlag;
+        bktfast=bktfast.fast_002_leadlag(hisDataTest(:,4),closeXminsTest,dateXminsTest,2,20,newTimeScale,cost,n,m,0);
         
         p = Performance_05;
         performance = p.calcSinglePerformance('Ale002','bktWeb',cross,newTimeScale,cost,10000,10,bktfast.outputbkt,0);
@@ -111,8 +116,8 @@ sweepPlot_BKT_Fast(R_over_maxDD)
  
  display(['bestN =', num2str(bestN),' bestM =', num2str(bestM)]);
 
-bktfastTest=bkt_fast_Ale002;
-bktfastTest=bktfastTest.fast_Ale002(hisDataTest(:,4),closeXminsTest,dateXminsTest,2,20,newTimeScale,cost,bestN,bestM,0);
+bktfastTest=bkt_fast_002_leadlag;
+bktfastTest=bktfastTest.fast_002_leadlag(hisDataTest(:,4),closeXminsTest,dateXminsTest,2,20,newTimeScale,cost,bestN,bestM,0);
 
 p = Performance_05;
 performanceTest = p.calcSinglePerformance('Ale002','bktWeb',cross,newTimeScale,cost,10000,10,bktfastTest.outputbkt,0);
@@ -125,8 +130,8 @@ title(['Test Best Result, Final R over maxDD = ',num2str( risultato) ])
 
 %% now the final check using the Paper Trading
 
-bktfastPaperTrading=bkt_fast_Ale002;
-bktfastPaperTrading=bktfastPaperTrading.fast_Ale002(hisDataPaperTrad(:,4),closeXminsPaperTrad,dateXminsPaperTrad,2,20,newTimeScale,cost,bestN,bestM,0);
+bktfastPaperTrading=bkt_fast_002_leadlag;
+bktfastPaperTrading=bktfastPaperTrading.fast_002_leadlag(hisDataPaperTrad(:,4),closeXminsPaperTrad,dateXminsPaperTrad,2,20,newTimeScale,cost,bestN,bestM,0);
 
 p = Performance_05;
 performancePaperTrad = p.calcSinglePerformance('Ale002','bktWeb',cross,newTimeScale,cost,10000,10,bktfastPaperTrading.outputbkt,0);
