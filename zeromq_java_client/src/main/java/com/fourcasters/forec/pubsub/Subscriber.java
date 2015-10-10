@@ -19,14 +19,16 @@ public class Subscriber {
 	private final static Executor executor = Executors.newSingleThreadExecutor();
 	private static final Logger LOG = LogManager.getLogger(Subscriber.class);
 	private static String password;
+	private static String address;
 	public static void main (String[] args) {
 		password = args[0];
+		address = args[1];
         // Prepare our context and subscriber
         Context context = ZMQ.context(1);
         Socket subscriber = context.socket(ZMQ.SUB);
         Socket mailSender = context.socket(ZMQ.SUB);
-        subscriber.connect("tcp://192.168.53.138:50028");
-        mailSender.connect("tcp://192.168.53.138:50027");
+        subscriber.connect(address + ":50028");
+        mailSender.connect(address + ":50027");
         subscriber.subscribe("LOGS".getBytes());
         mailSender.subscribe("STATUS".getBytes());
         LOG.info("Connected");
