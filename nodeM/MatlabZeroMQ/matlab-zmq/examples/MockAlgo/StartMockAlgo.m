@@ -18,6 +18,7 @@ function StartMockAlgo()
     ListP = textscan(fileIdPub,'%s');
     fclose(fileIdPub);
     [k,z] = size(ListP{1});
+    pause(5);
     for w = 1:k
         newTopicPub = 'NEWTOPICFROMSIGNALPROVIDER';
         %messagePubOperation = sprintf('%s %s', newTopicPub, ListP{1}{w});
