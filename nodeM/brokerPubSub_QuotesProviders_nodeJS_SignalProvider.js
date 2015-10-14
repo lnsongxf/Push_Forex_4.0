@@ -500,15 +500,17 @@ sockSubFromQuotesProvider.on('message', function(topic, message) {
 
 //Permit to update (every 5 sec) and sending on topic the updated list for TopicStatus and TopicOperations
 setInterval(function(){ updatingSignalProviderTopicOperationListAndTopicStatusList.bind(this)  },5000);*/
-
 sockSubFromSignalProvider.subscribe('NEWTOPICFROMSIGNALPROVIDER');
-sockSubFromSignalProvider.on('message', function(messageSub) {
+sockSubFromSignalProvider.on('message', function() {
   
-  	
-	var data = messageSub.toString().split(" ");
-  	//console.log('received a message related to:', data[0], 'containing message:', data[1]);
+  	console.log('Message from signal provider: ' + arguments);
+	var data = [];//messageSub.toString().split(" ");
+	Array.prototype.slice.call(arguments).forEach(function(arg) {
+        data.push(arg.toString());
+    });
   	var topic = data[0];
   	var message = data[1];
+  	console.log('received a message related to:', data[0], ' containing message: ', data[1]);
   	logger.info('Received message from Signal Provider: '+message+ 'on topic: '+topic);
 
   	switch (topic) {
