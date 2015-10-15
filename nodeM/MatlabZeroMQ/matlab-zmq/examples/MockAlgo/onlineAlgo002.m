@@ -18,13 +18,13 @@ if isempty(counter)
     lastState = -1;
     current_value = -1;
     ticket = -1;
-    matrix = zeros(40, 6);
+    matrix = zeros(100, 6);
     last_derivative = 0;
     firstTime = 1;
 end
 
-listener = strcmp(topicSub,'TIMEFRAMEQUOTE@MT4@ACTIVTRADES@EURUSD@m1@v1');
-listener2 = strcmp(topicSub,'TIMEFRAMEQUOTE@MT4@ACTIVTRADES@EURUSD@m1@v40');
+listener2 = strcmp(topicSub,'TIMEFRAMEQUOTE@MT4@ACTIVTRADES@EURUSD@m1@v100');
+listener = strcmp(topicSub,'TIMEFRAMEQUOTE@MT4@ACTIVTRADES@EURUSD@m30@v100');
 listener3 = strcmp(topicSub,'STATUS@EURUSD@619');
 
 if listener3 %new status
@@ -38,7 +38,7 @@ if listener3 %new status
         ticket= abc;
         display(strcat('Ticket: ', ticket));
     end
-elseif listener2 %v40
+elseif listener %v40
     counter = counter + 1;
     display(strcat('Counter = ', num2str(counter)));
     myData = strsplit(messageSub, ';');
@@ -47,11 +47,11 @@ elseif listener2 %v40
         matrix(i,1:5) = str2double(cells(1:5));
         matrix(i, 6) = datenum(cells{6},'mm/dd/yyyy HH:MM');
     end
-    current_value = matrix(end, 4);
+    %current_value = matrix(end, 4);
     close_vector = matrix(:,4);
     step = 0.05;
-    x = 1 : 40;
-    xx = 1 : step : 40;
+    x = 1 : 100;
+    xx = 1 : step : 100;
     yy = csaps(x, close_vector, .2, xx);
     yy_ = diff(yy)/step;
     derivative = yy_(end);
@@ -75,10 +75,16 @@ elseif listener2 %v40
         end
         last_derivative = derivative;
     end  
-elseif listener %v1
-    newData = textscan(messageSub,'%d %d %d %d %d %s','Delimiter',','); % messageSub: open,max,min,close,volume,data
-    newDataMatrix = cell2mat(newData(1:5));
-    current_value = newDataMatrix(:,4);
+elseif listener2 %v1
+    my_matrix = zeros(100,6);
+    display('minute data');
+    myData = strsplit(messageSub, ';');
+    for i = 1:length(myData)
+        cells = strsplit(myData{i},',');
+        my_matrix(i,1:5) = str2double(cells(1:5));
+        my_matrix(i, 6) = datenum(cells{6},'mm/dd/yyyy HH:MM');
+    end
+    current_value = my_matrix(end, 4);
 end
 
 %{
