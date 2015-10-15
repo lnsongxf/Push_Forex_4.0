@@ -7,27 +7,32 @@ function StartAlgo()
 
     % SET LISTENERS
     port = 50027;
-    address = sprintf('tcp://127.0.0.1:%d', port);
+    address = sprintf('tcp://2.125.222.249:%d', port);
     zmq.core.connect(socket, address);
     portPub = 50026;
-    addressPub = sprintf('tcp://127.0.0.1:%d', portPub);
+    addressPub = sprintf('tcp://2.125.222.249:%d', portPub);
     zmq.core.connect(socket_pub, addressPub);
     
-    % SETTING TOPICS PUB - EX: MATLAB@111@EURUSD@OPERATIONS
-    fileIdPub = fopen('configPublishers.txt');
+    % SETTING TOPICS PUB
+    fileIdPub = fopen('configPublishers002.txt');
     ListP = textscan(fileIdPub,'%s');
     fclose(fileIdPub);
     [k,z] = size(ListP{1});
+    pause(5);
     for w = 1:k
-        newTopicPub = 'NEWTOPICOPERATION';
-        messagePubOperation = sprintf('%s %s', newTopicPub, ListP{1}{w});
-        zmq.core.send(socket_pub, uint8(messagePubOperation));
+        newTopicPub = 'NEWTOPICFROMSIGNALPROVIDER';
+        %messagePubOperation = sprintf('%s %s', newTopicPub, ListP{1}{w});
+        %zmq.core.send(socket_pub, uint8(messagePubOperation));
+        messageBody = ListP{1}{w};
+        zmq.core.send(socket_pub, uint8(newTopicPub), 'ZMQ_SNDMORE');
+        zmq.core.send(socket_pub, uint8(messageBody));
     end
     
     % SETTING TOPICS SUB - 
     % EX: TIMEFRAMEQUOTE@MT4@ACTIVTRADES@EURUSD@m1@v1
     % EX: MATLAB@111@EURUSD@STATUS
-    fileIdSub = fopen('configListeners.txt');
+    
+    fileIdSub = fopen('configListeners002.txt');
     ListS = textscan(fileIdSub,'%s');
     fclose(fileIdSub);
     [m,n] = size(ListS{1});
@@ -36,21 +41,24 @@ function StartAlgo()
     end
     zmq.core.setsockopt(socket_pub, 'ZMQ_RCVBUF', 102400);
     zmq.core.setsockopt(socket, 'ZMQ_RCVBUF', 102400);
-    
-    display(zmq.core.getsockopt(socket_pub, 'ZMQ_RCVBUF'));
-    display(zmq.core.getsockopt(socket, 'ZMQ_RCVBUF'));
-    
-    topicName = 'null';
+
     while 1
             message = char(zmq.core.recv(socket, 102400));
             isMember = any(ismember(ListS{1},message));
             if isMember == 1
                 topicName = message;
-            else
-                [topicPub, messagePub]=onlineAlgo002(topicName,message);
-                messagePub1 = sprintf('%s %s', topicPub, messagePub);
-                zmq.core.send(socket_pub, uint8(messagePub1));
-                topicName = 0;
+                messageBody = char(zmq.core.recv(socket, 102400));
+                [topicPub, messagePub]=onlineAlgo002(topicName,messageBody);
+                if (~isempty( messagePub) && strcmp(messagePub,'') ==0)
+                    display(strcat('Topic: ', topicPub));
+                    display(strcat('Message: ', messagePub));
+                    %messagePub1 = sprintf('%s %s', topicPub, messagePub);
+                    %zmq.core.send(socket_pub, uint8(messagePub1));
+                    zmq.core.send(socket_pub, uint8(topicPub), 'ZMQ_SNDMORE');
+                    zmq.core.send(socket_pub, uint8(messagePub));
+                    
+                end
+                
             end
     end
     zmq.core.disconnect(socket, address);
