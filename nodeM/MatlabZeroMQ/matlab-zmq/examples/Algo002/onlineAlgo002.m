@@ -29,7 +29,7 @@ end
 
 listener1 = strcmp(topicSub,'TIMEFRAMEQUOTE@MT4@ACTIVTRADES@EURUSD@m30@v100');
 listener2 = strcmp(topicSub,'TIMEFRAMEQUOTE@MT4@ACTIVTRADES@EURUSD@m1@v1');
-listener3 = strcmp(topicSub,'STATUS@EURUSD@720');
+listener3 = strcmp(topicSub,'STATUS@EURUSD@002');
 
 if listener1 %new 30minutes data array
     

@@ -7,7 +7,7 @@ price=strcat('price=',num2str(closeValue));
 lots=strcat('lots=',num2str(1));                                           % for the moment we consider always lot=1
 slippage=strcat('slippage=',num2str(0.2));                                 % for the opening slippage=1.5 pips
 ticket=strcat('ticket=',num2str(ticket));                                  % ticket logic still to implement
-topicPub='OPERATIONS@ACTIVTRADES@EURUSD@720';
+topicPub='OPERATIONS@ACTIVTRADES@EURUSD@002';
 messagePub=strcat(price,',',lots,',',slippage,',',ticket,',',op);
 
 indexClose = indexClose + 1;

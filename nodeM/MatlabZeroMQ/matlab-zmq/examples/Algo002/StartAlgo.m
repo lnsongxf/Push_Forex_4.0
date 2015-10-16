@@ -40,7 +40,7 @@ function StartAlgo()
         zmq.core.setsockopt(socket, 'ZMQ_SUBSCRIBE', ListS{1}{j});
     end
     zmq.core.setsockopt(socket_pub, 'ZMQ_RCVBUF', 102400);
-    zmq.core.setsockopt(socket, 'ZMQ_RCVBUF', 102400);
+    zmq.core.setsockopt(socket_pub, 'ZMQ_RCVTIMEO', 185000);
     zmq.core.setsockopt(socket, 'ZMQ_RCVBUF', 102400);
     zmq.core.setsockopt(socket, 'ZMQ_RCVTIMEO', 185000);
 
