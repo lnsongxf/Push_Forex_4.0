@@ -23,8 +23,8 @@ if isempty(counter)
     firstTime = 1;
 end
 
-listener2 = strcmp(topicSub,'TIMEFRAMEQUOTE@MT4@ACTIVTRADES@EURUSD@m1@v100');
-listener = strcmp(topicSub,'TIMEFRAMEQUOTE@MT4@ACTIVTRADES@EURUSD@m30@v100');
+listener2 = strcmp(topicSub,'TIMEFRAMEQUOTE@MT4@ACTIVTRADES@EURUSD@m15@v100');
+listener = strcmp(topicSub,'TIMEFRAMEQUOTE@MT4@ACTIVTRADES@EURUSD@m1@v100');
 listener3 = strcmp(topicSub,'STATUS@EURUSD@619');
 
 if listener3 %new status
@@ -47,7 +47,7 @@ elseif listener %v40
         matrix(i,1:5) = str2double(cells(1:5));
         matrix(i, 6) = datenum(cells{6},'mm/dd/yyyy HH:MM');
     end
-    %current_value = matrix(end, 4);
+    current_value = matrix(end, 4);
     close_vector = matrix(:,4);
     step = 0.05;
     x = 1 : 100;
@@ -84,7 +84,6 @@ elseif listener2 %v1
         my_matrix(i,1:5) = str2double(cells(1:5));
         my_matrix(i, 6) = datenum(cells{6},'mm/dd/yyyy HH:MM');
     end
-    current_value = my_matrix(end, 4);
 end
 
 %{
