@@ -41,13 +41,27 @@ function StartAlgo()
     end
     zmq.core.setsockopt(socket_pub, 'ZMQ_RCVBUF', 102400);
     zmq.core.setsockopt(socket, 'ZMQ_RCVBUF', 102400);
+    zmq.core.setsockopt(socket, 'ZMQ_RCVBUF', 102400);
+    zmq.core.setsockopt(socket, 'ZMQ_RCVTIMEO', 185000);
 
     while 1
-            message = char(zmq.core.recv(socket, 102400));
+            try
+                message = char(zmq.core.recv(socket, 102400));
+            catch ME
+                display(ME.identifier);
+                zmq.core.disconnect(socket, address);
+                zmq.core.disconnect(socket_pub, addressPub);
+
+                zmq.core.connect(socket, address);
+                zmq.core.connect(socket_pub, addressPub);
+                display('Reconnecting...')
+                continue;
+            end
             isMember = any(ismember(ListS{1},message));
             if isMember == 1
                 topicName = message;
                 messageBody = char(zmq.core.recv(socket, 102400));
+                
                 [topicPub, messagePub]=onlineAlgo002(topicName,messageBody);
                 if (~isempty( messagePub) && strcmp(messagePub,'') ==0)
                     display(strcat('Topic: ', topicPub));

@@ -146,7 +146,10 @@ updatedOperation = newState{1};
 if abs(updatedOperation) > 0 && startingOperation == 0
     
     % Opening request
-    [topicPub,messagePub,startingOperation]=onlineOpen002(oper,openValue,50,50,indexOpen);
+    % ACHTUNG: The SL and TP values are sent as tenths of pips, so we have
+    % to multiply by 10 to get the correct pips. I also incremented the
+    % numbers to avoid Metatrader to close automatically
+    [topicPub,messagePub,startingOperation]=onlineOpen002(oper,openValue,stopLoss*10+500,takeProfit*10+1000,indexOpen);
     pause(10); % just to be sure to wait enough before restarting
     
     

@@ -286,7 +286,7 @@ classdef coreState_real02 < handle
             
             inversion=oldSign*newSign;
             
-            if inversion<0 %&& devFluct2 > 4
+            if inversion<0 && devFluct2 > 4 % I don't start if fluctuations are too small
                 obj.state=1;
                 obj.suggestedDirection=-newSign;
                 obj.suggestedTP=5*devFluct2;
