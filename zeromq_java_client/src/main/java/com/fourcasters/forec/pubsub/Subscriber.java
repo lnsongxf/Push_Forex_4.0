@@ -21,8 +21,10 @@ public class Subscriber {
 	private static String password;
 	private static String address;
 	public static void main (String[] args) {
-		password = args[0];
-		address = args[1];
+		if (args.length > 1) {
+			password = args[1];
+		}
+		address = args[0];
         // Prepare our context and subscriber
         Context context = ZMQ.context(1);
         Socket subscriber = context.socket(ZMQ.SUB);
@@ -30,7 +32,7 @@ public class Subscriber {
         subscriber.connect(address + ":50028");
         mailSender.connect(address + ":50027");
         subscriber.subscribe("LOGS".getBytes());
-        mailSender.subscribe("STATUS".getBytes());
+        mailSender.subscribe("OPERATION".getBytes());
         LOG.info("Connected");
         while (!Thread.currentThread ().isInterrupted ()) {
             // Read envelope with address
@@ -50,6 +52,9 @@ public class Subscriber {
     }
 
 	private static void sendEmail(String address, String contents) {
+		if (password == null) {
+			return;
+		}
 		String algoId = parseAlgoId(address);
 		executor.execute(new Runnable() {
 			@Override
@@ -82,4 +87,49 @@ public class Subscriber {
 		String[] tokens = address.split("@");
 		return tokens[tokens.length - 1];
 	}
+	/**
+	 package com.fourcasters.forec.pubsub;
+
+import java.nio.charset.Charset;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+
+import org.apache.commons.mail.DefaultAuthenticator;
+import org.apache.commons.mail.Email;
+import org.apache.commons.mail.EmailException;
+import org.apache.commons.mail.SimpleEmail;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.zeromq.ZMQ;
+import org.zeromq.ZMQ.Context;
+import org.zeromq.ZMQ.Socket;
+
+public class Subscriber {
+
+	private final static Executor executor = Executors.newSingleThreadExecutor();
+	private static final Logger LOG = LogManager.getLogger(Subscriber.class);
+	private static String password;
+	private static String address;
+	public static void main (String[] args) {
+		
+		address = args[0];
+        // Prepare our context and subscriber
+        Context context = ZMQ.context(1);
+        Socket subscriber = context.socket(ZMQ.SUB);
+        subscriber.bind(address + ":50026");
+        subscriber.subscribe("OPERATIONS".getBytes());
+        LOG.info("Connected");
+        while (!Thread.currentThread ().isInterrupted ()) {
+            // Read envelope with address
+            String address = subscriber.recvStr(Charset.defaultCharset());
+            String contents = subscriber.recvStr (Charset.defaultCharset());
+            LOG.info(address + " = " + contents);
+        }
+        subscriber.close ();
+        context.term ();
+    }
+
+}
+
+	  */
 }
