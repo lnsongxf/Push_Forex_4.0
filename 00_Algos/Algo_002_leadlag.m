@@ -126,9 +126,9 @@ else
         if openValueReal > 0
             
             params.set('openValue_',openValueReal);
-            params = dynamicalTPandSLManager(operationState, chiusure, params);
-            [operationState,~,params] = takeProfitManager(operationState,chiusure,params);
-            % [operationState,~, params] = timeClosureManager (operationState, chiusure, params, 30);
+            [params,TakeProfitPrice,StopLossPrice] = dynamicalTPandSLManager(operationState, chiusure, params);
+            [operationState,~, params] = directTakeProfitManager (operationState, chiusure, params,TakeProfitPrice,StopLossPrice);
+            %[operationState,~, params] = takeProfitManager (operationState, chiusure, params);
             
         else
             
