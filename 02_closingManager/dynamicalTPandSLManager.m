@@ -2,36 +2,43 @@ function [params,TakeProfitPrice,StopLossPrice] = dynamicalTPandSLManager(operat
 
 operationState.minutesFromOpening = operationState.minutesFromOpening + 1;
 LastClosePrice = chiusure(end);
+direction=operationState.actualOperation;
 
 OpenPrice = params.get('openValue_');
 TakeP = params.get('noLoose___');
 StopL = params.get('stopLoss__');
 
-TakeProfitPrice = OpenPrice + operationState.actualOperation*TakeP;
-StopLossPrice   = OpenPrice - operationState.actualOperation*StopL;
+TakeProfitPrice = OpenPrice + direction * TakeP;
+StopLossPrice   = OpenPrice - direction * StopL;
 
-% If the current price is above half TakeP, re-set the StopL and TakeP
-if TakeProfitPrice
+% If the current price is more than SL above the opening prcice, re-set
+if abs( (LastClosePrice - StopLossPrice) ) > abs(StopL)*4
     
-    newTakeP = TakeP;
+    distance = floor(abs(LastClosePrice - StopLossPrice)/2);
     
-    params.set('noLoose___',newTakeP);
-    %display('dynamical TP');
+    newStopL =  - direction * ( (LastClosePrice - OpenPrice) - direction * distance );
     
-    TakeProfitPrice = OpenPrice + operationState.actualOperation*newTakeP;
+    params.set('stopLoss__',newStopL);
+    display(strcat('dynamical SL, the new SL is',' ',num2str(newStopL)));
+    
+    StopLossPrice    = OpenPrice - direction * newStopL;
     
 end
 
-% If the current price is more than SL above the opening prcice, re-set
-if abs( (LastClosePrice - StopLossPrice) ) > abs(StopL)*1.2
+% If the current price is above half TakeP, re-set the StopL and TakeP
+if ( (LastClosePrice - TakeProfitPrice) * direction ) >= 0
     
-    newStopL = -floor(abs(LastClosePrice - OpenPrice)/2);
+    newTakeP = TakeP + 4 + abs(LastClosePrice - TakeProfitPrice);
+    params.set('noLoose___',newTakeP);
     
+    TakeProfitPrice = OpenPrice + direction * newTakeP;
+    
+    newStopL = - TakeP + 2;
     params.set('stopLoss__',newStopL);
-    display('dynamical SL');
+    display(strcat('dynamical TP = ',num2str(newTakeP),'/','dynamical SL = ',num2str(newStopL)));
     
-    StopLossPrice    = OpenPrice - operationState.actualOperation*newStopL;
-    
+    StopLossPrice    = OpenPrice - direction * newStopL;
+
 end
 
 end

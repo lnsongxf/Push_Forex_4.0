@@ -1,7 +1,7 @@
 function [topicPub,messagePub] = onlineAlgo002(topicSub,messageSub)
 
 persistent matrix;
-% persistent newTimeScalePoint;
+persistent newTimeScalePoint;
 persistent startingOperation;
 persistent updatedOperation;
 persistent openValueReal;
@@ -20,7 +20,8 @@ if(isempty(matrix))
     matrix = zeros(nData+1,6);
     startingOperation = 0;
     ticket = -1;
-    updatedOperation = 0;
+    updatedOperation = 0; %#ok<NASGU>
+    newTimeScalePoint = 0;
 end
 
 if(isempty (openValueReal))
@@ -35,6 +36,7 @@ if listener1 %new 30minutes data array
     
     display('new data array at 30min');
     myData = strsplit(messageSub, ';');
+    newTimeScalePoint = 1;
     
     for i = 1:length(myData)
         
@@ -120,7 +122,7 @@ elseif listener3 %new status
     end
 end
 
-[oper, openValue, closeValue, stopLoss, takeProfit, valueTp, st] = Algo_002_leadlag(matrix,1,openValueReal);
+[oper, openValue, closeValue, stopLoss, takeProfit, valueTp, st] = Algo_002_leadlag(matrix,newTimeScalePoint,openValueReal);
 
 newState{1} = oper;
 newState{2} = openValue;
@@ -129,6 +131,7 @@ newState{4} = stopLoss;
 newState{5} = takeProfit;
 newState{6} = valueTp;
 
+newTimeScalePoint = 0;
 updatedOperation = newState{1};
 
 %     a=st.HurstExponent;
