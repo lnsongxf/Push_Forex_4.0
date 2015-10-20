@@ -100,8 +100,11 @@ if newTimeScalePoint
     
     % 01b
     % -------- stationarity Test ------------------ %
-    st.stationarityTests(chiusure(1:end-1),30,0);
-    
+    %st.stationarityTests(chiusure(1:end-1),30,0);
+    st.HurstExponent=0;
+    st.pValue=0;
+    st.halflife=0;
+
 end
 
 state = cState.state;
