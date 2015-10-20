@@ -17,19 +17,19 @@ cost = 1; % spread
 
 %% Input data:
 
-% Import the data with dates as 6th columns
-[~, ~, raw] = xlsread('C:\Users\lory\Documents\GitHub\Push_Forex_4.0\EURUSD_2012_2015_withDate_corretto.csv','EURUSD_2012_2015_withDate_corre');
-% Replace non-numeric cells with 0.0
-R = cellfun(@(x) ~isnumeric(x) || isnan(x),raw); % Find non-numeric cells
-raw(R) = {0.0}; % Replace non-numeric cells
-% Create output variable
-hisDataRaw = cell2mat(raw);
-hisDataRaw(:,1:4)=hisDataRaw(:,1:4)*10000;
-% Clear temporary variables
-clearvars raw R;
+% % Import the data with dates as 6th columns
+% [~, ~, raw] = xlsread('C:\Users\lory\Documents\GitHub\Push_Forex_4.0\EURUSD_2012_2015_withDate_corretto.csv','EURUSD_2012_2015_withDate_corre');
+% % Replace non-numeric cells with 0.0
+% R = cellfun(@(x) ~isnumeric(x) || isnan(x),raw); % Find non-numeric cells
+% raw(R) = {0.0}; % Replace non-numeric cells
+% % Create output variable
+% hisDataRaw = cell2mat(raw);
+% hisDataRaw(:,1:4)=hisDataRaw(:,1:4)*10000;
+% % Clear temporary variables
+% clearvars raw R;
 
 
-%hisDataRaw=load('EURUSD_2012_2015.csv');
+hisDataRaw=load('EURUSD_2012_2015.csv');
 %hisDataRaw=load('EURUSD_smallsample2014_2015.csv');
 
 %% check historical
