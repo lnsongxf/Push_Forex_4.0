@@ -8,19 +8,34 @@
 %annualScaling = sqrt(250);
 %annualScaling = sqrt(360000);
 
-%out=importdata('table.csv',',',1);
-%adjCl=out.data(:,6);
+%% Initial parameters
 
-%input parameters:
-
-%hisData=load('EURUSD_2012_2015.csv');
-hisData=load('EURUSD_smallsample2014_2015.csv');
 cross = 'EURUSD';
 actTimeScale = 1;
 newTimeScale = 30;
 cost = 1; % spread
 
+%% Input data:
 
+% Import the data with dates as 6th columns
+[~, ~, raw] = xlsread('C:\Users\lory\Documents\GitHub\Push_Forex_4.0\EURUSD_2012_2015_withDate_corretto.csv','EURUSD_2012_2015_withDate_corre');
+% Replace non-numeric cells with 0.0
+R = cellfun(@(x) ~isnumeric(x) || isnan(x),raw); % Find non-numeric cells
+raw(R) = {0.0}; % Replace non-numeric cells
+% Create output variable
+hisDataRaw = cell2mat(raw);
+hisDataRaw(:,1:4)=hisDataRaw(:,1:4)*10000;
+% Clear temporary variables
+clearvars raw R;
+
+
+%hisDataRaw=load('EURUSD_2012_2015.csv');
+%hisDataRaw=load('EURUSD_smallsample2014_2015.csv');
+
+%% check historical
+
+% remove lines with no data (holes)
+hisData = hisDataRaw( (hisDataRaw(:,1) ~=0), : );
 
 [r,c] = size(hisData);
 
@@ -35,6 +50,8 @@ if c == 5
     end
     
 end
+
+%% Split historical into testdata for optimization and paper trading
 
 % dividi lo storico in test per ottimizzare l'algo e paper trading
 % (75% dello storico è Test, l'ultimo 25% paper trading)
@@ -69,7 +86,7 @@ end
 %% prova semplice
 
 % bktfast2=bkt_fast_002_leadlag;
-% bktfast2=bktfast2.fast_002_leadlag(hisDataTest(:,4),closeXminsTest,dateXminsTest,2,20,newTimeScale,cost,1,5,0);
+% bktfast2=bktfast2.fast_002_leadlag(hisDataTest(:,4),closeXminsTest,dateXminsTest,2,20,newTimeScale,cost,1,5,1);
 
 %% Estimate parameters over a range of values
 % Puoi cambiare o le frequenze di smoothing (2,20 default)
