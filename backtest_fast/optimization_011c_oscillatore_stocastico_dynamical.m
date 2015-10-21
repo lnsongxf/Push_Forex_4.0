@@ -102,41 +102,39 @@ end
 
 %% prova semplice
 
-%  bktfast=bkt_fast_011b_oscillatore_stocastico_CloseOnCall;
-%  bktfast=bktfast.fast_oscillatore_stocastico(hisDataTest(:,4),newHisDataTest,5,3,newTimeScale,cost,10,10,1);
+%  bktfast=bkt_fast_011c_oscillatore_stocastico_dynamicalAsBktReal;
+%  bktfast=bktfast.fast_oscillatore_stocastico(hisDataTest(:,4),newHisDataTest,5,3,newTimeScale,cost,200,200,1);
  
 %% Estimate parameters over a range of values
 % Puoi cambiare i TP e SL consigliati
 % oppure la lunghezza di lookback nperiods
 
 matrixsize = 20;
-R_over_maxDD = nan(matrixsize,matrixsize);
+R_over_maxDD = nan(matrixsize,1);
 
 
 tic
 for n = 3:18
     
     display(['n =', num2str(n)]);
+
     
-    for m = n+2:20
     
-    
-    bktfast=bkt_fast_011b_oscillatore_stocastico_CloseOnCall;
-    bktfast=bktfast.fast_oscillatore_stocastico(hisDataTest(:,4),newHisDataTest,m,n,newTimeScale,cost,10,10,0);
+    bktfast=bkt_fast_011c_oscillatore_stocastico_dynamicalAsBktReal;
+    bktfast=bktfast.fast_oscillatore_stocastico(hisDataTest(:,4),newHisDataTest,n,n,newTimeScale,cost,200,200,0);
     
     p = Performance_05;
     performance = p.calcSinglePerformance('oscillatore_stocastico','bktWeb',cross,newTimeScale,0,10000,10,bktfast.outputbkt,0);
     
-    R_over_maxDD(n,m) = performance.pipsEarned / abs(performance.maxDD);
+    R_over_maxDD(n) = performance.pipsEarned / abs(performance.maxDD);
 
-    end
     
 end
 toc
 
 %visualizza i risultati come surface plot
 figure
-sweepPlot_BKT_Fast(R_over_maxDD)
+plot(R_over_maxDD)
 
 
 
@@ -144,13 +142,13 @@ sweepPlot_BKT_Fast(R_over_maxDD)
 % occhio che ind2sub deve prender come primo parametro la lunghezza della
 % matrice dei risultati, e che lavora solo su matrici quadrate
 
- [~, bestInd] = max(R_over_maxDD(:)); % (Linear) location of max value
- [bestN, bestM] = ind2sub(matrixsize, bestInd); % Lead and lag at best value
+ [~, bestN] = max(R_over_maxDD); % (Linear) location of max value
  
- display(['bestDperiods =', num2str(bestN),' bestKperiods =', num2str(bestM)]);
+ 
+ display(['bestDperiods =', num2str(bestN)]);
 
-bktfastTest=bkt_fast_011b_oscillatore_stocastico_CloseOnCall;
-bktfastTest=bktfastTest.fast_oscillatore_stocastico(hisDataTest(:,4),newHisDataTest,bestM,bestN,newTimeScale,cost,10,10,0);
+bktfastTest=bkt_fast_011c_oscillatore_stocastico_dynamicalAsBktReal;
+bktfastTest=bktfastTest.fast_oscillatore_stocastico(hisDataTest(:,4),newHisDataTest,bestN,bestN,newTimeScale,cost,200,200,0);
 
 p = Performance_05;
 performanceTest = p.calcSinglePerformance('oscillatore_stocastico','bktWeb',cross,newTimeScale,0,10000,10,bktfastTest.outputbkt,0);
@@ -168,8 +166,8 @@ title(['Test Best Result, Final R over maxDD = ',num2str( risultato) ])
 
 %% now the final check using the Paper Trading
 
-bktfastPaperTrading=bkt_fast_011b_oscillatore_stocastico_CloseOnCall;
-bktfastPaperTrading=bktfastPaperTrading.fast_oscillatore_stocastico(hisDataPaperTrad(:,4),newHisDataPaperTrad,bestM,bestN,newTimeScale,cost,10,10,0);
+bktfastPaperTrading=bkt_fast_011c_oscillatore_stocastico_dynamicalAsBktReal;
+bktfastPaperTrading=bktfastPaperTrading.fast_oscillatore_stocastico(hisDataPaperTrad(:,4),newHisDataPaperTrad,bestN,bestN,newTimeScale,cost,200,200,0);
 
 p = Performance_05;
 performancePaperTrad = p.calcSinglePerformance('oscillatore_stocastico','bktWeb',cross,newTimeScale,0,10000,10,bktfastPaperTrading.outputbkt,0);

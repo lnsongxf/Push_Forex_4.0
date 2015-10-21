@@ -67,6 +67,17 @@ hisDataPaperTrad = hisData(rTest+1:end,:);
 if newTimeScale > 1
     
     expert = TimeSeriesExpert_11;
+    
+    expert.rescaleData(hisData,actTimeScale,newTimeScale);
+    
+    newHisData(:,1) = expert.openVrescaled;
+    newHisData(:,2) = expert.maxVrescaled;
+    newHisData(:,3) = expert.minVrescaled;
+    newHisData(:,4) = expert.closeVrescaled;
+    newHisData(:,5) = expert.volrescaled;
+    newHisData(:,6) = expert.openDrescaled;
+    
+    
     expert.rescaleData(hisDataTest,actTimeScale,newTimeScale);
     
     newHisDataTest(:,1) = expert.openVrescaled;
@@ -75,6 +86,7 @@ if newTimeScale > 1
     newHisDataTest(:,4) = expert.closeVrescaled;
     newHisDataTest(:,5) = expert.volrescaled;
     newHisDataTest(:,6) = expert.openDrescaled;
+    
     
     expert.rescaleData(hisDataPaperTrad,actTimeScale,newTimeScale);
     
@@ -91,8 +103,8 @@ end
 
 %% prova semplice
 
- bktfast=bkt_fast_011_oscillatore_stocastico;
- bktfast=bktfast.fast_oscillatore_stocastico(hisDataTest(:,4),newHisDataTest,5,3,newTimeScale,cost,10,10,1);
+%  bktfast=bkt_fast_011_oscillatore_stocastico;
+%  bktfast=bktfast.fast_oscillatore_stocastico(hisDataTest(:,4),newHisDataTest,5,3,newTimeScale,cost,10,10,1);
  
 %% Estimate parameters over a range of values
 % Puoi cambiare i TP e SL consigliati
