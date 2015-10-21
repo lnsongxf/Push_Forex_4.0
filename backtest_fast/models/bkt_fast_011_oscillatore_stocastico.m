@@ -54,11 +54,12 @@ classdef bkt_fast_011_oscillatore_stocastico < handle
             s = zeros(sizeStorico,1);
            
             stosc = stochosc(high, low, P, kperiods, dperiods);
-            s(stosc<20) = 1;
-            s(stosc>80) = -1;
-
+            FpK = stosc(:,1);
+            %FpD = stosc(:,2);
             
-            
+            % I use a single oscillator as signal generator
+            s(FpK<20) = 1;
+            s(FpK>80) = -1;
 
             i = kperiods + 1;
             
@@ -104,15 +105,15 @@ classdef bkt_fast_011_oscillatore_stocastico < handle
                             indexClose = indexClose + 1;
                             break
                             
-                        elseif cond5
-                            
-                            obj.r(indice_I) = segnoOperazione*(Pminute(j) - Pbuy) - cost;
-                            obj.closingPrices(ntrades) = Pminute(j);
-                            obj.ClDates(ntrades) = date(indice_I); %controlla
-                            i = indice_I;
-                            obj.chei(ntrades)=i;
-                            indexClose = indexClose + 1;
-                            break
+%                         elseif cond5
+%                             
+%                             obj.r(indice_I) = segnoOperazione*(Pminute(j) - Pbuy) - cost;
+%                             obj.closingPrices(ntrades) = Pminute(j);
+%                             obj.ClDates(ntrades) = date(indice_I); %controlla
+%                             i = indice_I;
+%                             obj.chei(ntrades)=i;
+%                             indexClose = indexClose + 1;
+%                             break
                             
                             
                         end

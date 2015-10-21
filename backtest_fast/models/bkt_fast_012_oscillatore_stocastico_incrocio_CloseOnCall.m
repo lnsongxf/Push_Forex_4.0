@@ -58,12 +58,12 @@ classdef bkt_fast_011b_oscillatore_stocastico_CloseOnCall < handle
             
             stosc = stochosc(high, low, P, kperiods, dperiods);
             FpK = stosc(:,1);
-            %FpD = stosc(:,2);
+            FpD = stosc(:,2);
             
-            % I use a single oscillator as signal generator
             s(FpK<20) = 1;
             s(FpK>80) = -1;
             
+            incrocio = sign(FpK-FpD);
             
             obj.signal = s;
             
@@ -75,7 +75,7 @@ classdef bkt_fast_011b_oscillatore_stocastico_CloseOnCall < handle
             while i <= sizeStorico
                 
                 % se il segnale passa da ipercomprato/venduto a non, compra (1 in long, -1 in short)
-                if  ( abs( s(i-1) ) && s(i)==0 )
+                if  ( abs( s(i) ) && incrocio(i-1)~=incrocio(i) )
                     
                     segnoOperazione = s(i-1);
                     ntrades = ntrades + 1;
@@ -129,15 +129,15 @@ classdef bkt_fast_011b_oscillatore_stocastico_CloseOnCall < handle
                             indexClose = indexClose + 1;
                             break
                             
-%                         elseif cond5
-%                             
-%                             obj.r(indice_I) = segnoOperazione*(Pminute(j) - Pbuy) - cost;
-%                             obj.closingPrices(ntrades) = Pminute(j);
-%                             obj.ClDates(ntrades) = date(indice_I); %controlla
-%                             i = indice_I;
-%                             obj.chei(ntrades)=i;
-%                             indexClose = indexClose + 1;
-%                             break
+                        elseif cond5
+                            
+                            obj.r(indice_I) = segnoOperazione*(Pminute(j) - Pbuy) - cost;
+                            obj.closingPrices(ntrades) = Pminute(j);
+                            obj.ClDates(ntrades) = date(indice_I); %controlla
+                            i = indice_I;
+                            obj.chei(ntrades)=i;
+                            indexClose = indexClose + 1;
+                            break
                             
                             
                         end
