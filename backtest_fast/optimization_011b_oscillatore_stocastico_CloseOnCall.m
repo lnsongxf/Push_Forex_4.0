@@ -91,8 +91,8 @@ end
 
 %% prova semplice
 
- bktfast=bkt_fast_011_oscillatore_stocastico;
- bktfast=bktfast.fast_oscillatore_stocastico(hisDataTest(:,4),newHisDataTest,5,3,newTimeScale,cost,10,10,1);
+%  bktfast=bkt_fast_011b_oscillatore_stocastico_CloseOnCall;
+%  bktfast=bktfast.fast_oscillatore_stocastico(hisDataTest(:,4),newHisDataTest,5,3,newTimeScale,cost,10,10,1);
  
 %% Estimate parameters over a range of values
 % Puoi cambiare i TP e SL consigliati
@@ -110,7 +110,7 @@ for n = 3:18
     for m = n+2:20
     
     
-    bktfast=bkt_fast_011_oscillatore_stocastico;
+    bktfast=bkt_fast_011b_oscillatore_stocastico_CloseOnCall;
     bktfast=bktfast.fast_oscillatore_stocastico(hisDataTest(:,4),newHisDataTest,m,n,newTimeScale,cost,10,10,0);
     
     p = Performance_05;
@@ -138,7 +138,7 @@ sweepPlot_BKT_Fast(R_over_maxDD)
  
  display(['bestDperiods =', num2str(bestN),' bestKperiods =', num2str(bestM)]);
 
-bktfastTest=bkt_fast_011_oscillatore_stocastico;
+bktfastTest=bkt_fast_011b_oscillatore_stocastico_CloseOnCall;
 bktfastTest=bktfastTest.fast_oscillatore_stocastico(hisDataTest(:,4),newHisDataTest,bestM,bestN,newTimeScale,cost,10,10,0);
 
 p = Performance_05;
@@ -157,7 +157,7 @@ title(['Test Best Result, Final R over maxDD = ',num2str( risultato) ])
 
 %% now the final check using the Paper Trading
 
-bktfastPaperTrading=bkt_fast_011_oscillatore_stocastico;
+bktfastPaperTrading=bkt_fast_011b_oscillatore_stocastico_CloseOnCall;
 bktfastPaperTrading=bktfastPaperTrading.fast_oscillatore_stocastico(hisDataPaperTrad(:,4),newHisDataPaperTrad,bestM,bestN,newTimeScale,cost,10,10,0);
 
 p = Performance_05;

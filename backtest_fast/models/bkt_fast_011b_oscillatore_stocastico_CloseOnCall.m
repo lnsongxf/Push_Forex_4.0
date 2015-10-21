@@ -1,4 +1,4 @@
-classdef bkt_fast_011_oscillatore_stocastico < handle
+classdef bkt_fast_011b_oscillatore_stocastico_CloseOnCall < handle
     
     
     properties
@@ -84,8 +84,8 @@ classdef bkt_fast_011_oscillatore_stocastico < handle
                         
                         if cond1 && cond2
                             
-                            obj.r(indice_I) = wTP*devFluct2 - cost;
-                            obj.closingPrices(ntrades) = Pbuy + segnoOperazione*floor(wTP*devFluct2);
+                            obj.r(indice_I) = segnoOperazione*(Pminute(j) - Pbuy) - cost;
+                            obj.closingPrices(ntrades) = Pminute(j);
                             obj.ClDates(ntrades) = date(indice_I); %controlla
                             %obj = obj.chiudi_per_TP(Pbuy, indice_I, segnoOperazione, devFluct2, wTP, cost, ntrades, date);
                             i = indice_I;
@@ -95,8 +95,8 @@ classdef bkt_fast_011_oscillatore_stocastico < handle
                             
                         elseif cond3 && cond4
                             
-                            obj.r(indice_I) = - wSL*devFluct2 - cost;
-                            obj.closingPrices(ntrades) = Pbuy - segnoOperazione*floor(wSL*devFluct2);
+                            obj.r(indice_I) = segnoOperazione*(Pminute(j) - Pbuy) - cost;
+                            obj.closingPrices(ntrades) = Pminute(j);
                             obj.ClDates(ntrades) = date(indice_I); %controlla
                             %obj = obj.chiudi_per_SL(Pbuy, indice_I, segnoOperazione, devFluct2, wSL, cost, ntrades, date);
                             i = indice_I;
