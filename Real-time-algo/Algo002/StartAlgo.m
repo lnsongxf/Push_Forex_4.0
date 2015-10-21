@@ -17,7 +17,7 @@ function StartAlgo()
     fileIdPub = fopen('configPublishers002.txt');
     ListP = textscan(fileIdPub,'%s');
     fclose(fileIdPub);
-    [k,z] = size(ListP{1});
+    [k,~] = size(ListP{1});
     pause(5);
     for w = 1:k
         newTopicPub = 'NEWTOPICFROMSIGNALPROVIDER';
@@ -35,7 +35,7 @@ function StartAlgo()
     fileIdSub = fopen('configListeners002.txt');
     ListS = textscan(fileIdSub,'%s');
     fclose(fileIdSub);
-    [m,n] = size(ListS{1});
+    [m,~] = size(ListS{1});
     for j = 1:m
         zmq.core.setsockopt(socket, 'ZMQ_SUBSCRIBE', ListS{1}{j});
     end

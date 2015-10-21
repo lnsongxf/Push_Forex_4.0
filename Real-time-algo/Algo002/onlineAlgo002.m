@@ -14,7 +14,6 @@ nData=100;
 
 indexOpen = 0;
 indexClose = 0;
-k=0;
 
 if(isempty(matrix))
     matrix = zeros(nData+1,6);
@@ -28,9 +27,9 @@ if(isempty (openValueReal))
     openValueReal = 0;
 end
 
-listener1 = strcmp(topicSub,'TIMEFRAMEQUOTE@MT4@ACTIVTRADES@EURUSD@m30@v100');
-listener2 = strcmp(topicSub,'TIMEFRAMEQUOTE@MT4@ACTIVTRADES@EURUSD@m1@v1');
-listener3 = strcmp(topicSub,'STATUS@EURUSD@002');
+listener1 = strcmp(topicSub,'TIMEFRAMEQUOTE@MT4@ACTIVTRADES@EURUSD@m1@v100');
+listener2 = strcmp(topicSub,'TIMEFRAMEQUOTE@MT4@ACTIVTRADES@EURUSD@m30@v1');
+listener3 = strcmp(topicSub,'STATUS@EURUSD@1002');
 
 if listener1 %new 30minutes data array
     
@@ -120,9 +119,11 @@ elseif listener3 %new status
         end
         
     end
+else
+    display('WTF? Received message on unknown topic ', topicSub);
 end
 
-[oper, openValue, closeValue, stopLoss, takeProfit, valueTp, st] = Algo_002_leadlag(matrix,newTimeScalePoint,openValueReal);
+[oper, openValue, closeValue, stopLoss, takeProfit, valueTp, ~] = Algo_002_leadlag(matrix,newTimeScalePoint,openValueReal);
 
 newState{1} = oper;
 newState{2} = openValue;
@@ -131,35 +132,19 @@ newState{4} = stopLoss;
 newState{5} = takeProfit;
 newState{6} = valueTp;
 
-newTimeScalePoint = 0;
 updatedOperation = newState{1};
 
-%     a=st.HurstExponent;
-%     b=st.pValue;
-%     c=st.halflife;
-%
-%     if  k>1;
-%
-%         timeSeriesProperties(k-1,1)=a;
-%         timeSeriesProperties(k-1,2)=b;
-%         timeSeriesProperties(k-1,3)=c;
-%
-%     end
-
 if abs(updatedOperation) > 0 && startingOperation == 0
-    
     % Opening request
     % ACHTUNG: The SL and TP values are sent as tenths of pips, so we have
     % to multiply by 10 to get the correct pips. I also incremented the
     % numbers to avoid Metatrader to close automatically
     [topicPub,messagePub,startingOperation]=onlineOpen002(oper,openValue,stopLoss*10+500,takeProfit*10+1000,indexOpen);
-    pause(10); % just to be sure to wait enough before restarting
     
     
 elseif updatedOperation == 0 && abs(startingOperation) > 0
     % Closing request
     [topicPub,messagePub,startingOperation]=onlineClose002(closeValue,ticket,indexClose);
-    pause(10); % just to be sure to wait enough before restarting
     
 end
 
