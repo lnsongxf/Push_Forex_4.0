@@ -1,4 +1,4 @@
-classdef bkt_fast_011b_oscillatore_stocastico_CloseOnCall < handle
+classdef bkt_fast_012_oscillatore_stocastico_incrocio_CloseOnCall < handle
     
     
     properties
