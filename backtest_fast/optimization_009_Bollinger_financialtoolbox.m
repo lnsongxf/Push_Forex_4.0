@@ -13,8 +13,8 @@
 
 %input parameters:
 
-hisData=load('EURUSD_2012_2015.csv');
-%hisData=load('EURUSD_smallsample2014_2015.csv');
+%hisData=load('EURUSD_2012_2015.csv');
+hisData=load('EURUSD_smallsample2014_2015.csv');
 cross = 'EURUSD';
 actTimeScale = 1;
 newTimeScale = 30;
@@ -94,7 +94,8 @@ for n = 5:30
             
         p = Performance_05;
         performance = p.calcSinglePerformance('Bollinger_financialtoolbox','bktWeb',cross,newTimeScale,0,10000,10,bktfast.outputbkt,0);
-        display(['pipsEarned =', num2str(performance.pipsEarned),'; maxdd = ',  num2str(abs(performance.maxDD)), '; numOperaz =', num2str(bktfast.indexClose)]);    
+        display(['pipsEarned = ', num2str(performance.pipsEarned),'; maxdd = ',  num2str(abs(performance.maxDD)), '; numOperaz = ', num2str(bktfast.indexClose) ...
+                        '; avg.pips/operaz = ', num2str( (performance.pipsEarned/ bktfast.indexClose) ) ]);    
         R_over_maxDD(n,nstd) = performance.pipsEarned / abs(performance.maxDD);
         
         end
