@@ -7,10 +7,10 @@ function StartAlgo()
 
     % SET LISTENERS
     port = 50027;
-    address = sprintf('tcp://2.223.143.185:%d', port);
+    address = sprintf('tcp://2.221.107.14:%d', port);
     zmq.core.connect(socket, address);
     portPub = 50026;
-    addressPub = sprintf('tcp://2.223.143.185:%d', portPub);
+    addressPub = sprintf('tcp://2.221.107.14:%d', portPub);
     zmq.core.connect(socket_pub, addressPub);
     
     % SETTING TOPICS PUB

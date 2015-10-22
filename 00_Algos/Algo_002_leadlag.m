@@ -122,7 +122,7 @@ if operationState.lock
     
 else
     
-    if abs(operationState.actualOperation) > 0
+    if abs(operationState.actualOperation) > 0 && newTimeScalePoint == 0 ;
         
         % 02a
         % -------- takeProfitManager: close for TP or SL ------ %
@@ -133,7 +133,7 @@ else
             [operationState,~, params] = directTakeProfitManager (operationState, chiusure, params,TakeProfitPrice,StopLossPrice);
 %             [operationState,~, params] = takeProfitManager (operationState, chiusure, params);
             
-        else
+        elseif openValueReal < 0
             
             operationState = params.resetStatusOnFailureOpening (operationState);
             display('reset Algo status');

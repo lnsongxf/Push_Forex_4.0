@@ -28,7 +28,7 @@ if(isempty (openValueReal))
 end
 
 listener1 = strcmp(topicSub,'TIMEFRAMEQUOTE@MT4@ACTIVTRADES@EURUSD@m1@v100');
-listener2 = strcmp(topicSub,'TIMEFRAMEQUOTE@MT4@ACTIVTRADES@EURUSD@m30@v1');
+listener2 = strcmp(topicSub,'TIMEFRAMEQUOTE@MT4@ACTIVTRADES@EURUSD@m1@v1');
 listener3 = strcmp(topicSub,'STATUS@EURUSD@1002');
 
 if listener1 %new 30minutes data array
@@ -48,7 +48,7 @@ if listener1 %new 30minutes data array
     matrix(:,end)=matrix(:,end-1); % copio l'ultima mezz ora cm se fosse il dato al minuto
     
 elseif listener2 %new 1minute data point
-    
+
     display('new data point at 1min');
     newData = textscan(messageSub,'%d %d %d %d %d %s','Delimiter',','); % messageSub: open,max,min,close,volume,data
     newDataMatrix = cell2mat(newData(1:5));
@@ -132,14 +132,15 @@ newState{4} = stopLoss;
 newState{5} = takeProfit;
 newState{6} = valueTp;
 
-updatedOperation = newState{1};
+newTimeScalePoint = 0;
+updatedOperation  = newState{1};
 
 if abs(updatedOperation) > 0 && startingOperation == 0
     % Opening request
     % ACHTUNG: The SL and TP values are sent as tenths of pips, so we have
     % to multiply by 10 to get the correct pips. I also incremented the
     % numbers to avoid Metatrader to close automatically
-    [topicPub,messagePub,startingOperation]=onlineOpen002(oper,openValue,stopLoss*10+500,takeProfit*10+1000,indexOpen);
+    [topicPub,messagePub,startingOperation]=onlineOpen002(oper,openValue,stopLoss*10+50,takeProfit*10+50,indexOpen);
     
     
 elseif updatedOperation == 0 && abs(startingOperation) > 0
