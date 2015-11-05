@@ -1,4 +1,4 @@
-function StartAlgo()
+function StartAlgo(password)
     % tcp://127.0.0.1:50026
     context = zmq.core.ctx_new();
     socket = zmq.core.socket(context, 'ZMQ_SUB');
@@ -7,10 +7,10 @@ function StartAlgo()
 
     % SET LISTENERS
     port = 50027;
-    address = sprintf('tcp://2.221.107.14:%d', port);
+    address = sprintf('tcp://2.125.221.150:%d', port);
     zmq.core.connect(socket, address);
     portPub = 50026;
-    addressPub = sprintf('tcp://2.221.107.14:%d', portPub);
+    addressPub = sprintf('tcp://2.125.221.150:%d', portPub);
     zmq.core.connect(socket_pub, addressPub);
     
     % SETTING TOPICS PUB
@@ -61,7 +61,7 @@ function StartAlgo()
                 topicName = message;
                 messageBody = char(zmq.core.recv(socket, 102400));
                 
-                [topicPub, messagePub]=onlineAlgo002(topicName,messageBody);
+                [topicPub, messagePub]=onlineAlgo002(topicName,messageBody,password);
                 if (~isempty( messagePub) && strcmp(messagePub,'') ==0)
                     display(strcat('Topic: ', topicPub));
                     display(strcat('Message: ', messagePub));
