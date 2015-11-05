@@ -8,19 +8,34 @@
 %annualScaling = sqrt(250);
 %annualScaling = sqrt(360000);
 
-%out=importdata('table.csv',',',1);
-%adjCl=out.data(:,6);
+%% Initial parameters
 
-%input parameters:
-
-hisData=load('EURUSD_2012_2015.csv');
-%hisData=load('EURUSD_smallsample2014_2015.csv');
 cross = 'EURUSD';
 actTimeScale = 1;
 newTimeScale = 30;
 cost = 1; % spread
 
+%% Input data:
 
+% Import the data with dates as 6th columns
+[~, ~, raw] = xlsread('C:\Users\lory\Documents\GitHub\Push_Forex_4.0\EURUSD_2012_2015_withDate_corretto.csv','EURUSD_2012_2015_withDate_corre');
+% Replace non-numeric cells with 0.0
+R = cellfun(@(x) ~isnumeric(x) || isnan(x),raw); % Find non-numeric cells
+raw(R) = {0.0}; % Replace non-numeric cells
+% Create output variable
+hisDataRaw = cell2mat(raw);
+hisDataRaw(:,1:4)=hisDataRaw(:,1:4)*10000;
+% Clear temporary variables
+clearvars raw R;
+
+
+%hisDataRaw=load('EURUSD_2012_2015.csv');
+%hisDataRaw=load('EURUSD_smallsample2014_2015.csv');
+
+%% check historical
+
+% remove lines with no data (holes)
+hisData = hisDataRaw( (hisDataRaw(:,1) ~=0), : );
 
 [r,c] = size(hisData);
 
@@ -35,6 +50,8 @@ if c == 5
     end
     
 end
+
+%% Split historical into testdata for optimization and paper trading
 
 % dividi lo storico in test per ottimizzare l'algo e paper trading
 % (75% dello storico è Test, l'ultimo 25% paper trading)
@@ -63,7 +80,7 @@ end
 
 %% prova semplice
 
-%  bktfast=bkt_fast_macd;
+%  bktfast=bkt_fast_005_macd;
 %  bktfast=bktfast.fast_macd(hisDataTest(:,4),closeXminsTest,dateXminsTest,newTimeScale,cost,20,10,1);
 
 %% Estimate parameters over a range of values
@@ -85,7 +102,7 @@ parfor n = 5:50
         
 %         display(['n =', num2str(n),' m = ',  num2str(m)]);
         
-        bktfast=bkt_fast_macd;
+        bktfast=bkt_fast_005_macd;
         bktfast=bktfast.fast_macd(hisDataTest(:,4),closeXminsTest,dateXminsTest,newTimeScale,cost,n,m,0);
         
         p = Performance_05;
@@ -113,7 +130,7 @@ sweepPlot_BKT_Fast(R_over_maxDD)
  
  display(['bestN =', num2str(bestN),' bestM =', num2str(bestM)]);
 
-bktfastTest=bkt_fast_macd;
+bktfastTest=bkt_fast_005_macd;
 bktfastTest=bktfastTest.fast_macd(hisDataTest(:,4),closeXminsTest,dateXminsTest,newTimeScale,cost,bestN,bestM,1);
 
 p = Performance_05;
@@ -127,7 +144,7 @@ title(['Test Best Result, Final R over maxDD = ',num2str( risultato) ])
 
 %% now the final check using the Paper Trading
 
-bktfastPaperTrading=bkt_fast_macd;
+bktfastPaperTrading=bkt_fast_005_macd;
 bktfastPaperTrading=bktfastPaperTrading.fast_macd(hisDataPaperTrad(:,4),closeXminsPaperTrad,dateXminsPaperTrad,newTimeScale,cost,bestN,bestM,0);
 
 p = Performance_05;

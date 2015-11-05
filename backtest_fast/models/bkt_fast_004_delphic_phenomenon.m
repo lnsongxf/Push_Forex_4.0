@@ -109,6 +109,7 @@ classdef bkt_fast_004_delphic_phenomenon < handle
                                         obj.r(i) = P(k) - Pbuy - cost;
                                         obj.closingPrices(ntrades) = P(k);
                                         obj.ClDates(ntrades) = date(k);
+                                        obj.chei(ntrades)=i;
                                         indexClose = indexClose + 1;
                                         break
                                     
@@ -137,9 +138,10 @@ classdef bkt_fast_004_delphic_phenomenon < handle
                                         obj.r(i) = - ( P(k) - Pbuy ) - cost;
                                         obj.closingPrices(ntrades) = P(k);
                                         obj.ClDates(ntrades) = date(k);
+                                        obj.chei(ntrades)=i;
                                         indexClose = indexClose + 1;
                                         break
-                                    
+                                        
                                     end
                                     
                                 end
@@ -206,7 +208,6 @@ classdef bkt_fast_004_delphic_phenomenon < handle
             devFluct2 = 1; % lo impongo sempre uguale a 1
             %devFluct2 = std(fluctuationslag((i-(100-M)):i));
             obj.direction(ntrades)= segnoOperazione;
-            obj.chei(ntrades)=i;
             obj.openingPrices(ntrades) = Pbuy;
             obj.OpDates(ntrades) = date(i);
             

@@ -23,7 +23,7 @@ classdef PerformanceDistribution_03 < handle
         
         %%
         
-        function obj=calcPerformanceDistr(obj,nameAlgo_,origin_,cross_,freq_,transCost_,inputResultsMatrix_,HistData_1min_,HistData_freq_,nstep,nstepeq,dimCluster)
+        function obj=calcPerformanceDistr(obj,nameAlgo_,origin_,cross_,freq_,transCost_,inputResultsMatrix_,HistData_1min_,HistData_freq_,nstep,nstepeq,dimCluster,plotPerDistribution)
             
             %
             % DESCRIPTION:
@@ -46,8 +46,9 @@ classdef PerformanceDistribution_03 < handle
             %                           use the function [outputHyst]=fromRawHystToHistorical
             % HistData_freq_        ... 5mins-hystorical data correspondet to the period of test
             % nstep                 ... number of binnig steps
-            % nstepeq               ... distance between a given wrong/correct operation and the next
-            % dimCluster            ... number of wrong/correct subsequent operations (dimension of cluster)
+            % nstepeq               ... pattern of returns: distance
+            %                           between a given wrong/correct operation and the next one
+            % dimCluster            ... pattern of returns: number of wrong/correct subsequent operations (dimension of cluster)
             %
             % OUTPUT parameters:
             % -------------------------------------------------------------
@@ -56,48 +57,16 @@ classdef PerformanceDistribution_03 < handle
             %
             % EXAMPLE of use:
             % -------------------------------------------------------------
-            % objname=PerformanceDistribution_03;
-            % objname=objname.calcPerformanceDistr('real_17','bktWeb','EURUSD',5,1,outputBktWeb,history_1min,history_5min,12,10,10);
+            % pd=PerformanceDistribution_03;
+            % pd=pd.calcPerformanceDistr('real_17','bktWeb','EURUSD',5,1,bkt_Algo002.outputBktOffline,bkt_Algo002.starthisData,bkt_Algo002.newHisData,12,10,10,5)
             %
             
             
             tic
-            if strcmp(origin_,'bktWeb')
-                dim=size(inputResultsMatrix_);
-                real=inputResultsMatrix_(:,6);
-                nRows=sum(real(:));
-                oneMatrix=zeros(dim(1),dim(2));
-                for i = 1: dim(2)
-                    oneMatrix(:,i)=real;
-                end
-                [~,~,matrix] = find(inputResultsMatrix_.*oneMatrix);
-                obj.inputResultsMatrix=reshape(matrix,nRows,dim(2));
-            elseif strcmp(origin_,'demo')
-                dim=size(inputResultsMatrix_);
-                real=inputResultsMatrix_(:,6);
-                nRows=sum(real(:));
-                oneMatrix=zeros(dim(1),dim(2));
-                for i = 1: dim(2)
-                    oneMatrix(:,i)=real;
-                end
-                [~,~,matrix] = find(inputResultsMatrix_.*oneMatrix);
-                obj.inputResultsMatrix=reshape(matrix,nRows,dim(2));
-            elseif strcmp(origin_,'bkt')
-                dim=size(inputResultsMatrix_);
-                real=inputResultsMatrix_(:,6);
-                nRows=sum(real(:));
-                oneMatrix=zeros(dim(1),dim(2));
-                for i = 1: dim(2)
-                    oneMatrix(:,i)=real;
-                end
-                [~,~,matrix] = find(inputResultsMatrix_.*oneMatrix);
-                obj.inputResultsMatrix=reshape(matrix,nRows,dim(2));
-            else
-                h=msgbox('please indicate as origin: bktWeb, demo, bkt','WARN','warn');
-                waitfor(h)
-                return
-            end
             
+            matrix = find(inputResultsMatrix_(:,6));
+            obj.inputResultsMatrix=inputResultsMatrix_(matrix,:); %#ok<FNDSB>
+
             obj.nameAlgo=nameAlgo_;
             obj.origin=origin_;
             obj.cross=cross_;
@@ -144,12 +113,23 @@ classdef PerformanceDistribution_03 < handle
             obj.rowResp=resp(iresp);
             obj.rowResn=resn(iresn);
             
-            
-            obj=obj.analysisMacroParams;
-            obj=obj.analysisMicroParams(nstep);
-            obj=obj.analysisReturnsPattern(nstepeq,dimCluster);
-            obj=obj.plotOperationOnHystorical;
-            
+            switch plotPerDistribution
+                case 0
+                    
+                case 1
+                    obj=obj.analysisMicroParams(nstep);
+                case 2
+                    obj=obj.analysisMacroParams;
+                case 3
+                    obj=obj.analysisReturnsPattern(nstepeq,dimCluster);
+                case 4
+                    obj=obj.plotOperationOnHystorical;
+                case 5
+                    obj=obj.analysisMicroParams(nstep);
+                    obj=obj.analysisMacroParams;
+                    obj=obj.analysisReturnsPattern(nstepeq,dimCluster);
+                    obj=obj.plotOperationOnHystorical;
+            end
             
             toc
             
@@ -400,12 +380,13 @@ classdef PerformanceDistribution_03 < handle
             rowHistDatafreq=start:stop;
             operHistDatafreq=obj.HistDatafreq(start:stop,1);
             
-            plot(rowHistDatafreq,operHistDatafreq,'-k')
+            plot(rowHistDatafreq,operHistDatafreq,'-k','LineWidth',1)
             hold on
             plot(rowHistfreqOpenp,obj.inputResultsMatrix(obj.rowResp,2),'ob')
             plot(rowHistfreqClosep,obj.inputResultsMatrix(obj.rowResp,3),'*b')
             plot(rowHistfreqOpenn,obj.inputResultsMatrix(obj.rowResn,2),'or')
             plot(rowHistfreqClosen,obj.inputResultsMatrix(obj.rowResn,3),'*r')
+            legend('Price','openP win','closeP win','openP lost','closeP lost')
             % plotyy(cumsum(obj.inputResultsMatrix(:,4)-obj.transCost),'plot');
         end
         

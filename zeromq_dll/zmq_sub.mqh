@@ -30,11 +30,8 @@
 //+------------------------------------------------------------------+
 
 
-//int subscribe(int value, char const &topic[]);
-//string receive(int conn_handler);
-int fnzmq_sub_dll_003();
 string receive(string conn_handle);
-string subscribe(string conn_handle, string topic_name);
-string sub_and_recv(int conn_handle, string topic_name);
-string conn_and_sub(int context, string url, string topic_name);
+string conn_and_sub(string url, string topic_name);
+int send_with_topic(string socket, string message, string topic);
+string connect(string url);
 

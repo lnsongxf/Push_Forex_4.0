@@ -127,7 +127,8 @@ risultato = performanceTest.pipsEarned / abs(performanceTest.maxDD);
 
 figure
 plot(cumsum(bktfastTest.outputbkt(:,4)))
-title(['Test Best Result, Final R over maxDD = ',num2str( risultato) ])
+title(['Test Best Result, Final R over maxDD = ',num2str( risultato) ])  
+
 
 %% now the final check using the Paper Trading
 

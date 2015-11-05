@@ -241,28 +241,24 @@ classdef coreState_real02 < handle
             
             
         end
-
         
-                %%
         
-        function obj = Algo_002_Ale (obj,closure,params)
+        %%
+        
+        function obj = core_Algo_002_leadlag (obj,closure,params)
             
-            %NOTE: 
+            %NOTE:
             %LOGICA: fa 2 smoothing e quando si incrociano apre nella
             %direzione opposta dello smooth minore
             %
             
             % non uso i dati al minuto per le valutazioni dello
             % state
-            closePrice=closure(1:end-1);
+            closePrice=closure;
             
             windowSize1 = 2;
             a = (1/windowSize1)*ones(1,windowSize1);
             smoothClose1 = filter(a,1,closePrice);
-            %             fluctuations1=abs(closure-smoothClose1);
-%             devFluct1=std(fluctuations1(windowSize1:end));
-%             actualFluct1=closure(end)-smoothClose1(end);
-%             signDirection1=sign(actualFluct1);
             
             windowSize2 = 20;
             b = (1/windowSize2)*ones(1,windowSize2);
@@ -270,14 +266,11 @@ classdef coreState_real02 < handle
             fluctuations2=abs(closePrice-smoothClose2);
             devFluct2=std(fluctuations2(windowSize2:end));
             
-            %             actualFluct2=closure(end)-smoothClose2(end);
-            %             signDirection2=sign(actualFluct2);
-            
-%             figure
-%             plot(closure,'ob')
-%             hold on
-%             plot(smoothClose1,'-b')
-%             plot(smoothClose2,'-r')
+            %             cla
+            %             plot(closure,'ob')
+            %             hold on
+            %             plot(smoothClose1,'-b')
+            %             plot(smoothClose2,'-r')
             
             newSmoothClose1=smoothClose1(end);
             newSmoothClose2=smoothClose2(end);
@@ -293,27 +286,23 @@ classdef coreState_real02 < handle
             
             inversion=oldSign*newSign;
             
-            if inversion<0 %&& devFluct2 > 4
+            if 1 %inversion<0 && devFluct2 > 4 % I don't start if fluctuations are too small
                 obj.state=1;
                 obj.suggestedDirection=-newSign;
-%                 if devFluct2 > 20
-%                     devFluct2 = 20;
-%                 end
-                obj.suggestedTP=5*devFluct2;
-                obj.suggestedSL=devFluct2;
-                %obj.suggestedSL=2*devFluct2;
+                obj.suggestedTP=1*devFluct2;
+                obj.suggestedSL=1*devFluct2;
             else
                 obj.state=0;
             end
-
+            
             params.set('smoothVal1',smoothClose1(end));
             params.set('smoothVal2',smoothClose2(end));
-   
+            
         end
         
         %%
         
-        function obj = Algo_004_Ale (obj,closure,params)
+        function obj = core_Algo_004_statTrend (obj,closure,params)
             
             %NOTE:
             %LOGICA: fa 2 smoothing e quando si incrociano apre nella direzione dello smooth minore
@@ -321,7 +310,7 @@ classdef coreState_real02 < handle
             
             % non uso i dati al minuto per le valutazioni dello
             % state
-            closePrice=closure(1:end-1);
+            closePrice=closure;
             
             windowSize1 = 5;
             a = (1/windowSize1)*ones(1,windowSize1);
@@ -331,12 +320,12 @@ classdef coreState_real02 < handle
             %             actualFluct1=closure(end)-smoothClose1(end);
             %             signDirection1=sign(actualFluct1);
             
-            windowSize2 = 30;
+            windowSize2 = 50;
             b = (1/windowSize2)*ones(1,windowSize2);
             smoothClose2 = filter(b,1,closePrice);
             fluctuations2=abs(closePrice-smoothClose2);
             meanFluct2=mean(fluctuations2(windowSize2:end));
-            devFluct2=std(fluctuations2(windowSize2:end));
+            %             devFluct2=std(fluctuations2(windowSize2:end));
             %             actualFluct2=closure(end)-smoothClose2(end);
             %             signDirection2=sign(actualFluct2);
             
@@ -344,7 +333,7 @@ classdef coreState_real02 < handle
             gradient2=gradient(smoothClose2);
             
             newSmoothClose1=smoothClose1(end);
-            newSmoothClose2=smoothClose2(end);       
+            newSmoothClose2=smoothClose2(end);
             newGradient1=gradient1(end);
             newGradient2=gradient2(end);
             
@@ -363,25 +352,26 @@ classdef coreState_real02 < handle
             newState=sign(newGradient1*newGradient2);
             oldState=sign(oldGradient1*oldGradient2);
             trend=newState+oldState;
-            trendDirection=sign(newGradient1);
+            trendDirection=sign(newGradient2);
             
-%             subplot(1,2,1)
-%             cla
-%             plot(closePrice,'ob')
-%             hold on
-%             plot(smoothClose1,'-b')
-%             plot(smoothClose2,'-r')
-%             
-%             subplot(1,2,2)
-%             plot(newGradient1,'ob')
-%             hold on
-%             plot(newGradient2,'or')
-%                        
-            if inversion<0 && trend==2
+            %             subplot(1,2,1)
+            %             cla
+            %             plot(closePrice,'ob')
+            %             hold on
+            %             plot(smoothClose1,'-b')
+            %             plot(smoothClose2,'-r')
+            %
+            %             subplot(1,2,2)
+            %             plot(newGradient1,'ob')
+            %             hold on
+            %             plot(newGradient2,'or')
+            %
+            %if inversion<0 && trend==2
+            if trend==2
                 obj.state=1;
-                obj.suggestedDirection=-trendDirection;
-                obj.suggestedTP=2*meanFluct2;
-                obj.suggestedSL=2*meanFluct2;
+                obj.suggestedDirection=trendDirection;
+                obj.suggestedTP=3*meanFluct2;
+                obj.suggestedSL=3*meanFluct2;
             else
                 obj.state=0;
             end
@@ -391,8 +381,36 @@ classdef coreState_real02 < handle
             
         end
         
+        function obj = core_Algo_011_stoc_oscillator (obj,high, low, closure)
+            
+            stosc = stochosc(high, low, closure, 3, 5);
+            FpK = stosc(:,1);
+            
+            if (FpK < 20 )
+                
+                obj.state=1;
+                obj.suggestedDirection=1;
+                obj.suggestedTP=10;
+                obj.suggestedSL=10;
+                
+            elseif (FpK > 80 )
+                
+                obj.state=1;
+                obj.suggestedDirection=-1;
+                obj.suggestedTP=10;
+                obj.suggestedSL=10;
+                
+            else
+                obj.state=0;
+            end
+            
+        end
+        
+        
+        
+        
     end
     
 end
 
-        
+

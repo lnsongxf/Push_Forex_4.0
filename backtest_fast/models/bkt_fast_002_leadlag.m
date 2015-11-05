@@ -18,10 +18,10 @@ classdef bkt_fast_002_leadlag < handle
     
     methods
         
-        function obj = fast_Ale002(obj, Pminute,P,date,N,M,newTimeScale,cost,wSL,wTP,plottami)
+        function obj = fast_002_leadlag(obj, Pminute,P,date,N,M,newTimeScale,cost,wSL,wTP,plottami)
             
             
-            %% simula algo Ale002
+            %% simula leadlag con TP e SL a seconda della volatilità
             
             pandl = zeros(size(P));
             obj.trades = zeros(size(P));
@@ -77,20 +77,22 @@ classdef bkt_fast_002_leadlag < handle
                         if cond1 && cond2
                             
                             obj.r(indice_I) = wTP*devFluct2 - cost;
-                            obj.closingPrices(ntrades) = Pbuy + segnoOperazione*floor(wTP*devFluct2);
+                            obj.closingPrices(ntrades) = Pminute(j);
                             obj.ClDates(ntrades) = date(indice_I); %controlla
                             %obj = obj.chiudi_per_TP(Pbuy, indice_I, segnoOperazione, devFluct2, wTP, cost, ntrades, date);
                             i = indice_I;
+                            obj.chei(ntrades)=i;
                             indexClose = indexClose + 1;
                             break
                             
                         elseif cond3 && cond4
                             
                             obj.r(indice_I) = - wSL*devFluct2 - cost;
-                            obj.closingPrices(ntrades) = Pbuy - segnoOperazione*floor(wSL*devFluct2);
+                            obj.closingPrices(ntrades) = Pminute(j);
                             obj.ClDates(ntrades) = date(indice_I); %controlla
                             %obj = obj.chiudi_per_SL(Pbuy, indice_I, segnoOperazione, devFluct2, wSL, cost, ntrades, date);
                             i = indice_I;
+                            obj.chei(ntrades)=i;
                             indexClose = indexClose + 1;
                             break
                             
@@ -136,16 +138,12 @@ classdef bkt_fast_002_leadlag < handle
                 ax(1) = subplot(2,1,1);
                 plot([P(M:end),lead(M:end),lag(M:end)],'LineWidth',1); grid on
                 legend('Close',['Lead ',num2str(N)],['Lag ',num2str(M)],'Location','Best')
-                title(['Lead/Lag EMA Results, Final Return = ',num2str(sh,3)])
+                title(['Lead/Lag EMA Results, Final Return = ',num2str(sum(obj.outputbkt(:,4)))])
                 ax(2) = subplot(2,1,2);
-                plot([obj.trades,pandl*10,standev],'LineWidth',1); grid on
-                legend('Position','Returns','standev','Location','Best')
-                title(['NumTrades = ',num2str(indexClose),', Final Return = ',num2str(sum(obj.r),3),' (',num2str(sum(obj.r)/P(1)*100,3),'%)'])
-                xlabel(ax(1), 'Serial index i number');
-                xlabel(ax(2), 'Serial index i number');
-                ylabel(ax(1), 'Price ($)');
-                ylabel(ax(2), 'Returns ($)');
-                linkaxes(ax,'x')
+                plot(obj.outputbkt(:,1),cumsum(obj.outputbkt(:,4))), grid on
+                legend('Cumulative Return')
+                title('Cumulative Returns ')
+
                 
             end %if
             
@@ -158,7 +156,6 @@ classdef bkt_fast_002_leadlag < handle
             Pbuy = P(i);
             devFluct2 = std(fluctuationslag((i-(100-M)):i));
             obj.direction(ntrades)= segnoOperazione;
-            obj.chei(ntrades)=i;
             obj.openingPrices(ntrades) = Pbuy;
             obj.OpDates(ntrades) = date(i);
             

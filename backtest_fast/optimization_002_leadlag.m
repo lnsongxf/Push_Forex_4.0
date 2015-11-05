@@ -8,19 +8,34 @@
 %annualScaling = sqrt(250);
 %annualScaling = sqrt(360000);
 
-%out=importdata('table.csv',',',1);
-%adjCl=out.data(:,6);
+%% Initial parameters
 
-%input parameters:
-
-%hisData=load('EURUSD_2012_2015.csv');
-hisData=load('EURUSD_smallsample2014_2015.csv');
 cross = 'EURUSD';
 actTimeScale = 1;
 newTimeScale = 30;
 cost = 1; % spread
 
+%% Input data:
 
+% % Import the data with dates as 6th columns
+% [~, ~, raw] = xlsread('C:\Users\lory\Documents\GitHub\Push_Forex_4.0\EURUSD_2012_2015_withDate_corretto.csv','EURUSD_2012_2015_withDate_corre');
+% % Replace non-numeric cells with 0.0
+% R = cellfun(@(x) ~isnumeric(x) || isnan(x),raw); % Find non-numeric cells
+% raw(R) = {0.0}; % Replace non-numeric cells
+% % Create output variable
+% hisDataRaw = cell2mat(raw);
+% hisDataRaw(:,1:4)=hisDataRaw(:,1:4)*10000;
+% % Clear temporary variables
+% clearvars raw R;
+
+
+hisDataRaw=load('EURUSD_2012_2015.csv');
+%hisDataRaw=load('EURUSD_smallsample2014_2015.csv');
+
+%% check historical
+
+% remove lines with no data (holes)
+hisData = hisDataRaw( (hisDataRaw(:,1) ~=0), : );
 
 [r,c] = size(hisData);
 
@@ -36,6 +51,8 @@ if c == 5
     
 end
 
+%% Split historical into testdata for optimization and paper trading
+
 % dividi lo storico in test per ottimizzare l'algo e paper trading
 % (75% dello storico è Test, l'ultimo 25% paper trading)
 rTest = floor(r*0.75);
@@ -47,6 +64,11 @@ hisDataPaperTrad = hisData(rTest+1:end,:);
 if newTimeScale > 1
     
     expert = TimeSeriesExpert_11;
+    expert.rescaleData(hisData,actTimeScale,newTimeScale);
+    
+    closeXminsHisData = expert.closeVrescaled;
+    dateXminsHisData = expert.openDrescaled;
+
     expert.rescaleData(hisDataTest,actTimeScale,newTimeScale);
     
     closeXminsTest = expert.closeVrescaled;
@@ -63,8 +85,8 @@ end
 
 %% prova semplice
 
-% bktfast2=bkt_fast_Ale002;
-% bktfast2=bktfast2.fast_Ale002(hisDataTest(:,4),closeXminsTest,dateXminsTest,2,20,newTimeScale,cost,1,5,0);
+% bktfast2=bkt_fast_002_leadlag;
+% bktfast2=bktfast2.fast_002_leadlag(hisDataTest(:,4),closeXminsTest,dateXminsTest,2,20,newTimeScale,cost,1,5,1);
 
 %% Estimate parameters over a range of values
 % Puoi cambiare o le frequenze di smoothing (2,20 default)
@@ -85,8 +107,8 @@ for n = 1:10
         
 %         display(['n =', num2str(n),' m = ',  num2str(m)]);
         
-        bktfast=bkt_fast_Ale002;
-        bktfast=bktfast.fast_Ale002(hisDataTest(:,4),closeXminsTest,dateXminsTest,2,20,newTimeScale,cost,n,m,0);
+        bktfast=bkt_fast_002_leadlag;
+        bktfast=bktfast.fast_002_leadlag(hisDataTest(:,4),closeXminsTest,dateXminsTest,2,20,newTimeScale,cost,n,m,0);
         
         p = Performance_05;
         performance = p.calcSinglePerformance('Ale002','bktWeb',cross,newTimeScale,cost,10000,10,bktfast.outputbkt,0);
@@ -111,8 +133,8 @@ sweepPlot_BKT_Fast(R_over_maxDD)
  
  display(['bestN =', num2str(bestN),' bestM =', num2str(bestM)]);
 
-bktfastTest=bkt_fast_Ale002;
-bktfastTest=bktfastTest.fast_Ale002(hisDataTest(:,4),closeXminsTest,dateXminsTest,2,20,newTimeScale,cost,bestN,bestM,0);
+bktfastTest=bkt_fast_002_leadlag;
+bktfastTest=bktfastTest.fast_002_leadlag(hisDataTest(:,4),closeXminsTest,dateXminsTest,2,20,newTimeScale,cost,bestN,bestM,0);
 
 p = Performance_05;
 performanceTest = p.calcSinglePerformance('Ale002','bktWeb',cross,newTimeScale,cost,10000,10,bktfastTest.outputbkt,0);
@@ -125,8 +147,8 @@ title(['Test Best Result, Final R over maxDD = ',num2str( risultato) ])
 
 %% now the final check using the Paper Trading
 
-bktfastPaperTrading=bkt_fast_Ale002;
-bktfastPaperTrading=bktfastPaperTrading.fast_Ale002(hisDataPaperTrad(:,4),closeXminsPaperTrad,dateXminsPaperTrad,2,20,newTimeScale,cost,bestN,bestM,0);
+bktfastPaperTrading=bkt_fast_002_leadlag;
+bktfastPaperTrading=bktfastPaperTrading.fast_002_leadlag(hisDataPaperTrad(:,4),closeXminsPaperTrad,dateXminsPaperTrad,2,20,newTimeScale,cost,bestN,bestM,0);
 
 p = Performance_05;
 performancePaperTrad = p.calcSinglePerformance('Ale002','bktWeb',cross,newTimeScale,cost,10000,10,bktfastPaperTrading.outputbkt,0);
