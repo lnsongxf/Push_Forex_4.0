@@ -7,7 +7,7 @@ function StartAlgo(IP,password)
 
     % SET LISTENERS
     port = 50027;
-    add = num2str(cell2mat( strcat('tcp://',IP,':%d') ));
+    add = strcat('tcp://',IP,':%d');
     address = sprintf(add, port);
     zmq.core.connect(socket, address);
     portPub = 50026;
