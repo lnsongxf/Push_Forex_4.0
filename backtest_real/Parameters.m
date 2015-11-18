@@ -11,6 +11,7 @@ classdef Parameters < handle
         stopLoss;
         smoothVal1;
         smoothVal2;
+        previous_signal;
         smoothingCoef;
         startValue;
         lastDer;
@@ -167,6 +168,8 @@ classdef Parameters < handle
             obj.set('smoothVal1',-1);
             obj.map('smoothVal2') =parameter;
             obj.set('smoothVal2',-1);
+            obj.map('previous_signal') =parameter;
+            obj.set('previous_signal',0);
             
             
         end

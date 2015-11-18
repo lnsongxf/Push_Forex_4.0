@@ -104,7 +104,7 @@ end
 %% prova semplice
 
 %  bktfast=bkt_fast_011_oscillatore_stocastico;
-%  bktfast=bktfast.fast_oscillatore_stocastico(hisDataTest(:,4),newHisDataTest,5,3,newTimeScale,cost,10,10,1);
+%  bktfast=bktfast.fast_oscillatore_stocastico(hisData(:,4),newHisData,3,5,newTimeScale,cost,10,10,1);
  
 %% Estimate parameters over a range of values
 % Puoi cambiare i TP e SL consigliati

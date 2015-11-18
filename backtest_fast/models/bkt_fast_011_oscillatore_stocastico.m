@@ -61,7 +61,7 @@ classdef bkt_fast_011_oscillatore_stocastico < handle
             s(FpK<20) = 1;
             s(FpK>80) = -1;
 
-            i = kperiods + 1;
+            i = 100; %this can be as small as kperiods+1 (it's used to align the results to the bktoffline)
             
             
             while i <= sizeStorico
