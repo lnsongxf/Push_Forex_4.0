@@ -1,5 +1,43 @@
 function [topicPub,messagePub] = onlineAlgo002(topicSub,messageSub,password)
 
+
+            % DESCRIPTION:
+            % -------------------------------------------------------------
+            % This function runs an Algo within the online trading system.
+            % It takes in input a topic and a relative message from the
+            % server. It handles the message received and send back an output 
+            % to the server.
+            %
+            % INPUT parameters:
+            % -------------------------------------------------------------
+            % topicSub:             topic of the message received or
+            %                       sent. The topic acts as a key for the
+            %                       following message.
+            % messageSub:           message attached to the relative topic.
+            % password:             ask to the administrator
+            %
+            % OUTPUT parameters:
+            % -------------------------------------------------------------
+            % topicSub:             topic of the message to send to the 
+            %                       server. The topic acts as a key for the
+            %                       following message.
+            % messageSub:           message sent to the server.
+            %
+            % EXAMPLE of use:
+            % -------------------------------------------------------------
+            % clear all; 
+            % StartAlgo(IP,password);
+            % 
+            % NOTE
+            % -------------------------------------------------------------
+            % please ask to the administrator the IP of the server and the
+            % password.
+            % For more details about the trading system read the documents:
+            % - Build AlgoV2
+            % - ManualeBuild AlgoV2.pdf
+            %
+
+            
 persistent matrix;
 persistent newTimeScalePoint;
 persistent startingOperation;
