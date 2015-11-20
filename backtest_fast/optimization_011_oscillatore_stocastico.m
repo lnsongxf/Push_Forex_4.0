@@ -32,8 +32,8 @@ cost = 1; % spread
 % clearvars raw R;
 
 
-hisDataRaw=load('EURUSD_2012_2015.csv');
-%hisDataRaw=load('EURUSD_smallsample2014_2015.csv');
+%hisDataRaw=load('EURUSD_2012_2015.csv');
+hisDataRaw=load('EURUSD_smallsample2014_2015.csv');
 
 %% check historical
 
