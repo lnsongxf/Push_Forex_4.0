@@ -27,7 +27,7 @@ classdef bktOffline < handle
             %
             % INPUT parameters:
             % -------------------------------------------------------------
-            % nameAlgo:                 nome dell'algoritmo che usi
+            % nameAlgo:                 nome esatto dell'algoritmo che usi
             % cross:                    ad es 'EURUSD'
             % nData:                    numero di dati in input di storico per ciclo
             % histName:                 nome dello storico, es: 'nome_storico.csv'
@@ -62,6 +62,8 @@ classdef bktOffline < handle
             % -------------------------------------------------------------
             % per salvare lo storico:   dlmwrite('EURUSD_2012_2015.csv', data, '-append') ;
             %
+            
+            algo = str2func(nameAlgo);
             
             obj.nData=nData_;
             
@@ -152,7 +154,8 @@ classdef bktOffline < handle
                     if isfinite(hisData(indexHisData,1))
                         
                         matrix(end,:) = hisData(indexHisData,:);
-                        [oper, openValue, closeValue, stopLoss, takeProfit, valueTp, st] = Algo_002_leadlag(matrix,newTimeScalePoint,openValueReal);
+%                         [oper, openValue, closeValue, stopLoss, takeProfit, valueTp, st] = Algo_002_leadlag(matrix,newTimeScalePoint,openValueReal);
+                        [oper, openValue, closeValue, stopLoss, takeProfit, valueTp, st] = algo(matrix,newTimeScalePoint,openValueReal);
                         
                         newState{1} = oper;
                         newState{2} = openValue;

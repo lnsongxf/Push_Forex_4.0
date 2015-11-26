@@ -13,8 +13,8 @@
 
 %input parameters:
 
-%hisData=load('EURUSD_2012_2015.csv');
-hisData=load('EURUSD_smallsample2014_2015.csv');
+hisData=load('EURUSD_2012_2015.csv');
+%hisData=load('EURUSD_smallsample2014_2015.csv');
 cross = 'EURUSD';
 actTimeScale = 1;
 newTimeScale = 30;
@@ -47,6 +47,12 @@ hisDataPaperTrad = hisData(rTest+1:end,:);
 if newTimeScale > 1
     
     expert = TimeSeriesExpert_11;
+    
+    expert.rescaleData(hisData,actTimeScale,newTimeScale);
+    
+    closeXmins = expert.closeVrescaled;
+    dateXmins = expert.openDrescaled;    
+    
     expert.rescaleData(hisDataTest,actTimeScale,newTimeScale);
     
     closeXminsTest = expert.closeVrescaled;
@@ -64,7 +70,7 @@ end
 %% prova semplice
 
 %  bktfast=bkt_fast_009_bollinger_financialtoolbox;
-%  bktfast=bktfast.fast_bollinger_financialtoolbox(hisDataTest(:,4),closeXminsTest,dateXminsTest,newTimeScale,cost,8,1,1);
+%  bktfast=bktfast.fast_bollinger_financialtoolbox(hisData(:,4),closeXmins,dateXmins,newTimeScale,cost,5,1,1);
 
 %% Estimate parameters over a range of values
 % Puoi cambiare il periodo di lookback N e le stdev per le bande

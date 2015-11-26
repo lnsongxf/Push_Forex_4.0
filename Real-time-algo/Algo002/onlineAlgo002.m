@@ -1,21 +1,67 @@
 function [topicPub,messagePub] = onlineAlgo002(topicSub,messageSub,password)
 
+
+% DESCRIPTION:
+% -------------------------------------------------------------
+% This function runs an Algo within the online trading system.
+% It takes in input a topic and a relative message from the
+% server. It handles the message received and send back an output
+% to the server.
+%
+% INPUT parameters:
+% -------------------------------------------------------------
+% topicSub:             topic of the message received or
+%                       sent. The topic acts as a key for the
+%                       following message.
+% messageSub:           message attached to the relative topic.
+% password:             ask to the administrator
+%
+% OUTPUT parameters:
+% -------------------------------------------------------------
+% topicSub:             topic of the message to send to the
+%                       server. The topic acts as a key for the
+%                       following message.
+% messageSub:           message sent to the server.
+%
+% EXAMPLE of use:
+% -------------------------------------------------------------
+% clear all;
+% StartAlgo(IP,password);
+%
+% NOTE
+% -------------------------------------------------------------
+% please ask to the administrator the IP of the server and the
+% password.
+% For more details about the trading system read the documents:
+% - Build AlgoV2
+% - ManualeBuild AlgoV2.pdf
+%
+
+
 persistent matrix;
 persistent newTimeScalePoint;
 persistent startingOperation;
 persistent updatedOperation;
+persistent lastCloseValue
 persistent openValueReal;
 persistent trial;
 persistent ticket;
 persistent ms;
 persistent tStartClosingRequest;
 persistent tElapsedClosingRequest;
+persistent nFile
+persistent logFileDimension
+persistent logFile
+persistent LogObj
+persistent logFolderName
 
 topicPub = '';
 messagePub = '';
 nData=80;
 closingTimeScale = 1;
 openingTimeScale = 30;
+nameAlgo='Algo002';
+server_exe = 0; % set to 1 when the Algo is running on the server as an .exe
 
 indexOpen = 0;
 indexClose = 0;
@@ -28,10 +74,31 @@ if(isempty(matrix))
     newTimeScalePoint = 0;
     ms = machineStateManager;
     ms.machineStatus = 'closed';
+    nFile=0;
+    logFileDimension=0;
 end
+
+ms.statusNotification = 0;
 
 if(isempty (openValueReal))
     openValueReal = 0;
+end
+
+if nFile == 0
+    nFile=nFile+1;
+    logFolderName ='C:\Users\alericci\Desktop\Forex 4.0 noShared\test Logs\';
+    if server_exe == 0 && isdir(logFolderName)
+        [LogObj,logFile] = createLogFile (logFolderName,nameAlgo,nFile);
+    else
+        currentFolder = pwd;
+        logFolderName = strcat(currentFolder,'\','logfile_',nameAlgo,'\');
+        mkdir(logFolderName);
+        [LogObj,logFile] = createLogFile (logFolderName,nameAlgo,nFile);
+    end
+elseif logFileDimension > 1000
+    nFile=nFile+1;
+    fclose('all');
+    [LogObj,logFile] = createLogFile (logFolderName,nameAlgo,nFile);
 end
 
 listener1 = strcmp(topicSub,'TIMEFRAMEQUOTE@MT4@ACTIVTRADES@EURUSD@m1@v80');
@@ -40,7 +107,7 @@ listener3 = strcmp(topicSub,'STATUS@EURUSD@1002');
 
 if listener1 && ( strcmp(ms.machineStatus,'closed') || strcmp(ms.machineStatus,'open') ) %new 30minutes data array
     
-    display('new data array at 30min');
+    LogObj.info('MATLAB info','new data array at 30min received');
     myData = strsplit(messageSub, ';');
     newTimeScalePoint = 1;
     
@@ -56,7 +123,7 @@ if listener1 && ( strcmp(ms.machineStatus,'closed') || strcmp(ms.machineStatus,'
     
 elseif listener2 && ( strcmp(ms.machineStatus,'closed') || strcmp(ms.machineStatus,'open') ) %new 1minute data point
     
-    display('new data point at 1min');
+    LogObj.info('MATLAB info','new data point at 1min received');
     newData = textscan(messageSub,'%d %d %d %d %d %s','Delimiter',','); % messageSub: open,max,min,close,volume,data
     newDataMatrix = cell2mat(newData(1:5));
     matrix(end,1)= newDataMatrix(:,1);
@@ -69,8 +136,8 @@ elseif listener2 && ( strcmp(ms.machineStatus,'closed') || strcmp(ms.machineStat
     
 elseif listener3 && ( strcmp(ms.machineStatus,'closing') || strcmp(ms.machineStatus,'opening') )%new status
     
-    display(strcat('Topic:',{' '}, topicSub));
-    display(strcat('Message:',{' '}, messageSub));
+    LogObj.trace('Status received',num2str(cell2mat(strcat('Topic:',{' '}, topicSub))) );
+    LogObj.trace('Status received',num2str(cell2mat(strcat('Message:',{' '}, messageSub))) );
     newStatus = textscan(messageSub,'%d %s %d %d','Delimiter',','); % messageSub: status(1,-1),type(open,close),price,ticket
     status= newStatus{1};
     type= newStatus{2};
@@ -78,11 +145,12 @@ elseif listener3 && ( strcmp(ms.machineStatus,'closing') || strcmp(ms.machineSta
     abc= newStatus{4};
     ticket = abc;
     
-    display( strcat('Ticket:',{' '}, num2str(ticket)) );
-    display( strcat('Price:',{' '}, num2str(price)) );
+    LogObj.info('MATLAB info',num2str(cell2mat(strcat('STATUS received for the Ticket:',{' '}, num2str(ticket)))) );
     
     open  = strcmp(type,'open');
     close = strcmp(type,'close');
+    
+    ms.statusNotification = 1;
     
     if open
         
@@ -91,19 +159,21 @@ elseif listener3 && ( strcmp(ms.machineStatus,'closing') || strcmp(ms.machineSta
         if StatusOpen == 1
             
             openValueReal = price ;
-            display(strcat('MT4 opened the requested operation ',{' '},num2str(ticket),{' '},' at the price ',{' '},num2str(price)) );
+            LogObj.info('MT4 info',num2str(cell2mat(strcat('MT4 opened the requested operation',{' '},num2str(ticket),{' '},' at the price ',{' '},num2str(price)))) );
             ms.machineStatus = 'open';
-            display(ms.machineStatus);
+            LogObj.trace('machine status',ms.machineStatus);
             trial=1;
             
             pause(30) % wait the next 1 min data point
             
         elseif StatusOpen == -1
             
-            display ('MT4 failed in opening the requested operation. Won t try again');
+            LogObj.info('MT4 info','MT4 failed in opening the requested operation. Won t try again');
             openValueReal = -1 ;
             startingOperation = 0;
             ms.machineStatus = 'closed';
+            LogObj.trace('machine status',ms.machineStatus);
+            ms.statusNotification = 0;
             
         end
         
@@ -111,21 +181,25 @@ elseif listener3 && ( strcmp(ms.machineStatus,'closing') || strcmp(ms.machineSta
         
         StatusClose = status;
         
-        if StatusClose == 1
+        if StatusClose == 1 && price > 0
             
-            display( strcat('MT4 closed the requested operation ',{' '},num2str(ticket),{' '},' at the price ',{' '},num2str(price)) );
+            LogObj.info('MT4 info',num2str(cell2mat(strcat('MT4 closed the requested operation ',{' '},num2str(ticket),{' '},' at the price ',{' '},num2str(price)))) );
             ms.machineStatus = 'closed';
-            display(ms.machineStatus);
+            LogObj.trace('machine status',ms.machineStatus);
             
-        elseif StatusClose == -1
+        elseif StatusClose == -1 || price < 0
             
-            display( strcat('MT4 failed in closing the operation',{' '}, num2str(ticket)) );
+            if StatusClose == 1 && price < 0
+                LogObj.error( 'MT4 error',num2str(cell2mat(strcat('MT4 closed the requested operation',{' '}, num2str(ticket),{' '},'at the price',{' '},num2str(price)))) );
+            else
+                LogObj.warn('MT4 warn',num2str(cell2mat(strcat('MT4 failed in closing the operation',{' '}, num2str(ticket)))) );
+            end
             
             if trial < 5
                 trial=trial+1;
-                [topicPub,messagePub,startingOperation]=onlineClose002(price,ticket,indexClose);
-                display( strcat('Matlab trial #',{' '},num2str(trial),{' '},' to close the operation:', {' '},num2str(ticket)) );
-                display(ms.machineStatus);
+                [topicPub,messagePub,startingOperation]=onlineClose002(lastCloseValue,ticket,indexClose);
+                LogObj.trace('problems',num2str(cell2mat(strcat('Matlab trial #',{' '},num2str(trial),{' '},' to close the operation:', {' '},num2str(ticket)))) );
+                LogObj.trace('machine status',ms.machineStatus);
                 
             else
                 
@@ -134,11 +208,10 @@ elseif listener3 && ( strcmp(ms.machineStatus,'closing') || strcmp(ms.machineSta
                 subject  = num2str(cell2mat( strcat('MT4 failed in closing the operation',{' '}, num2str(ticket)) ));
                 content  = num2str(cell2mat( strcat('Please close the operation',{' '},num2str(ticket),{' '},'manually. Matlab will consider it closed') ));
                 sendgmail(receiver, subject, content, mail, password)
-
-                display(strcat('We suppose that the operation',{' '},num2str(ticket),{' '},'has been manually closed'));
-                display(ms.machineStatus);
-
+                
+                LogObj.error('MT4 error',num2str(cell2mat(strcat('MT4 was not able to close the operation',{' '},num2str(ticket),{' '},'please check e-mail and close it manually'))) );
                 ms.machineStatus = 'closed';
+                LogObj.trace('machine status',ms.machineStatus);
                 
             end
             
@@ -146,31 +219,32 @@ elseif listener3 && ( strcmp(ms.machineStatus,'closing') || strcmp(ms.machineSta
         
     else
         
-        display( 'problems in the received status format, please check if MT4 operated the request and proceed manually',{' '}, messageSub);
-        display( 'Matlab will be resetted' )
+        LogObj.warn('warn',num2str(cell2mat(strcat('problems in the received status format, please check if MT4 operated the request and proceed manually',{' '}, messageSub))) );
+        LogObj.trace('MATLAB info','Matlab will be resetted' )
         openValueReal = -1 ;
         startingOperation = 0;
         ms.machineStatus = 'closed';
+        LogObj.trace('machine status',ms.machineStatus);
         
     end
     
 elseif listener1 && ( strcmp(ms.machineStatus,'closing') || strcmp(ms.machineStatus,'opening'))
     
-    display(strcat('skipping new data point at', num2str(openingTimeScale),'min', topicSub));
-    display(strcat('we are still waiting for the message of Status ...',ms.machineStatus));
+    LogObj.trace('MATLAB info',num2str(cell2mat(strcat('skipping data point at',{' '}, num2str(openingTimeScale),'min'))) );
+    LogObj.info('MATLAB info',num2str(cell2mat(strcat('still waiting for the Status ...',{' '},ms.machineStatus))) );
     
 elseif listener2 && ( strcmp(ms.machineStatus,'closing') || strcmp(ms.machineStatus,'opening'))
     
-    display(strcat('skipping new data point at', num2str(closingTimeScale),'min', topicSub));
-    display(strcat('we are still waiting for the message of Status ...',ms.machineStatus));
+    LogObj.trace('MATLAB info',num2str(cell2mat(strcat('skipping data point at',{' '}, num2str(closingTimeScale),'min'))) );
+    LogObj.info('MATLAB info',num2str(cell2mat(strcat('still waiting for the Status ...',{' '},ms.machineStatus))) );
     
 elseif listener3 && ( strcmp(ms.machineStatus,'closed') || strcmp(ms.machineStatus,'open'))
     
-    display(strcat('WTF? Received message of Status even if the machine state is ...',ms.machineStatus, topicSub));
+    LogObj.warn('warn',num2str(cell2mat(strcat('WTF? Received message of Status even if the machine state is ...',{' '},ms.machineStatus, topicSub))) );
     
 else
     
-    display('WTF? Received message on unknown topic',{' '}, topicSub);
+    LogObj.warn('warn',num2str(cell2mat(strcat('WTF? Received message on unknown topic',{' '}, topicSub))) );
     
 end
 
@@ -181,22 +255,23 @@ if strcmp(ms.machineStatus,'closing')
     
     if tElapsedClosingRequest > 90
         
-        display( strcat('no Status message received for closing the position',{' '}, num2str(ticket)) );
-        display( strcat('We suppose that the operation',{' '},num2str(ticket),{' '},'has been closed by MT4'));
+        LogObj.error('error',num2str(cell2mat(strcat('no Status message received for closing the position',{' '}, num2str(ticket)))) );
+        LogObj.info('MATLAB info',num2str(cell2mat(strcat('We suppose that the operation',{' '},num2str(ticket),{' '},'has been closed by MT4'))) );
         
         receiver = '4castersltd@gmail.com';
         mail     = '4castersltd@gmail.com';
-        subject  = num2str(cell2mat( strcat('no Status message received for closing the position',{' '}, num2str(ticket)) )); 
+        subject  = num2str(cell2mat( strcat('no Status message received for closing the position',{' '}, num2str(ticket)) ));
         content  = num2str(cell2mat( strcat('We suppose that the operation',{' '},num2str(ticket),{' '},'has been closed by MT4, please check if it is true') ));
         sendgmail(receiver, subject, content, mail, password)
         
         ms.machineStatus = 'closed';
+        LogObj.trace('machine status',ms.machineStatus);
         
     end
 end
 
 
-if ( strcmp(ms.machineStatus,'closed') || strcmp(ms.machineStatus,'open') )
+if ( ( strcmp(ms.machineStatus,'closed') || strcmp(ms.machineStatus,'open') ) && ms.statusNotification == 0 )
     [oper, openValue, closeValue, stopLoss, takeProfit, valueTp, ~] = Algo_002_leadlag(matrix,newTimeScalePoint,openValueReal);
     
     newState{1} = oper;
@@ -208,6 +283,7 @@ if ( strcmp(ms.machineStatus,'closed') || strcmp(ms.machineStatus,'open') )
     
     newTimeScalePoint = 0;
     updatedOperation  = newState{1};
+    lastCloseValue = newState{3};
     
 end
 
@@ -219,8 +295,10 @@ if abs(updatedOperation) > 0 && startingOperation == 0
     MT4stopL = (stopLoss + 20) * 10;
     MT4takeP = (takeProfit + 20) * 10;
     [topicPub,messagePub,startingOperation]=onlineOpen002(oper,openValue,MT4stopL,MT4takeP,indexOpen);
+    
+    LogObj.info( 'MATLAB info', num2str(cell2mat(strcat( 'Matalb requests to open a new operation at the price',{' '},num2str(openValue) ))) ) ;
     ms.machineStatus = 'opening';
-    display(ms.machineStatus);
+    LogObj.trace('machine status',ms.machineStatus);
     
 elseif updatedOperation == 0 && abs(startingOperation) > 0
     % Closing request
@@ -228,11 +306,20 @@ elseif updatedOperation == 0 && abs(startingOperation) > 0
     
     tStartClosingRequest = tic;
     
+    LogObj.info( 'MATLAB info', num2str(cell2mat(strcat( 'Matalb requests to close the operation ',{' '},num2str(ticket),{' '},'at the price',{' '},num2str(closeValue) ))) ) ;
     ms.machineStatus = 'closing';
-    display(ms.machineStatus);
+    LogObj.trace('machine status',ms.machineStatus);
     
 end
 
+logFileProperties=dir(logFile);
+logFileDimension=logFileProperties.bytes;
+
+clear newState
+clear newStatus
+
+% M = inmem;
+% display (M);
 
 end
 

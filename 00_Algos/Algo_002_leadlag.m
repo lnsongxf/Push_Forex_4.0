@@ -86,8 +86,8 @@ params = ra.p;
 operationState = ra.os;
 
 
-%lows           = matrix(:,2);
-%highs          = matrix(:,3);
+%highs           = matrix(:,2);
+%lows         = matrix(:,3);
 chiusure        = matrix(:,4);
 %volumi          = matrix(:,5);
 

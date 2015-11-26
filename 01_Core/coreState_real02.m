@@ -381,28 +381,38 @@ classdef coreState_real02 < handle
             
         end
         
-        function obj = core_Algo_011_stoc_oscillator (obj,high, low, closure)
+        function obj = core_Algo_011_stoc_oscillator (obj, low, high, closure, params)
             
             stosc = stochosc(high, low, closure, 3, 5);
             FpK = stosc(:,1);
             
-            if (FpK < 20 )
+            obj.state=0;
+            
+            if (FpK(end) < 20 )
                 
-                obj.state=1;
-                obj.suggestedDirection=1;
-                obj.suggestedTP=10;
-                obj.suggestedSL=10;
+                params.set('previous_signal',1);
                 
-            elseif (FpK > 80 )
+            elseif (FpK(end) > 80 )
                 
-                obj.state=1;
-                obj.suggestedDirection=-1;
-                obj.suggestedTP=10;
-                obj.suggestedSL=10;
+                params.set('previous_signal',-1);
                 
             else
-                obj.state=0;
+                
+                prev_signal=params.get('previous_signal');
+                
+                if(prev_signal~=0)
+                    
+                    obj.state=1;
+                    obj.suggestedDirection=prev_signal;
+                    obj.suggestedTP=10;
+                    obj.suggestedSL=10;
+                    
+                end
+                
+                params.set('previous_signal',0);
+                
             end
+            
             
         end
         
