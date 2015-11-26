@@ -95,9 +95,9 @@ if nFile == 0
         mkdir(logFolderName);
         [LogObj,logFile] = createLogFile (logFolderName,nameAlgo,nFile);
     end
-elseif logFileDimension > 5000
+elseif logFileDimension > 1000
     nFile=nFile+1;
-    clear log
+    fclose('all');
     [LogObj,logFile] = createLogFile (logFolderName,nameAlgo,nFile);
 end
 
@@ -219,7 +219,7 @@ elseif listener3 && ( strcmp(ms.machineStatus,'closing') || strcmp(ms.machineSta
         
     else
         
-        LogObj.warn('warn',strcat('problems in the received status format, please check if MT4 operated the request and proceed manually',{' '}, messageSub) );
+        LogObj.warn('warn',num2str(cell2mat(strcat('problems in the received status format, please check if MT4 operated the request and proceed manually',{' '}, messageSub))) );
         LogObj.trace('MATLAB info','Matlab will be resetted' )
         openValueReal = -1 ;
         startingOperation = 0;
@@ -231,12 +231,12 @@ elseif listener3 && ( strcmp(ms.machineStatus,'closing') || strcmp(ms.machineSta
 elseif listener1 && ( strcmp(ms.machineStatus,'closing') || strcmp(ms.machineStatus,'opening'))
     
     LogObj.trace('MATLAB info',num2str(cell2mat(strcat('skipping data point at',{' '}, num2str(openingTimeScale),'min'))) );
-    LogObj.info('MATLAB info',strcat('still waiting for the Status ...',{' '},ms.machineStatus) );
+    LogObj.info('MATLAB info',num2str(cell2mat(strcat('still waiting for the Status ...',{' '},ms.machineStatus))) );
     
 elseif listener2 && ( strcmp(ms.machineStatus,'closing') || strcmp(ms.machineStatus,'opening'))
     
     LogObj.trace('MATLAB info',num2str(cell2mat(strcat('skipping data point at',{' '}, num2str(closingTimeScale),'min'))) );
-    LogObj.info('MATLAB info',strcat('still waiting for the Status ...',{' '},ms.machineStatus) );
+    LogObj.info('MATLAB info',num2str(cell2mat(strcat('still waiting for the Status ...',{' '},ms.machineStatus))) );
     
 elseif listener3 && ( strcmp(ms.machineStatus,'closed') || strcmp(ms.machineStatus,'open'))
     
