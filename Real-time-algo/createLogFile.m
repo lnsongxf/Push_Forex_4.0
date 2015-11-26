@@ -1,6 +1,4 @@
-function [LogObj,logFile] = createLogFile (nameAlgo,nFile)
-logFolderName='C:\Users\alericci\Desktop\Forex 4.0 noShared\test Logs\';
-    %logFileName=strcat('logfile',nameAlgo,num2str(nFile,'_%010i'),'.txt');
+function [LogObj,logFile] = createLogFile (logFolderName,nameAlgo,nFile)
     logFileName=strcat('logfile',nameAlgo,'_',num2str(nFile),'.txt');
     logFile=strcat(logFolderName,logFileName);
     LogObj = log4m.getLogger(logFile);
