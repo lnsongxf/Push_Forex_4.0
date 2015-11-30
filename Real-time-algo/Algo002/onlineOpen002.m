@@ -18,8 +18,6 @@ indexOpen = indexOpen + 1;
 display(['indexOpen =' num2str(indexOpen)]);
 display(['direction =' num2str(oper)]);
 
-display('Matalb requests to open a new operation');
-
 startingOperation = oper;
 
 end

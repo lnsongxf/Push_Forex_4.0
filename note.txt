@@ -31,3 +31,21 @@ altrimenti pui usare il tool SourceTree
 
 quando ci sono modifiche sul server che nn hai sincronizzato mentre tu stai lavorando:
 git stash -> git pull -> git stash pop -> git commit -am "" -> git push
+
+
+recovery of Github
+-----------------------------------------------------------------
+Nel caso in cui vengano pushati file troppo grandi (>100Mb) o Git si blocchi per qualche motivo, questa e' la procedura per riallinearsi su develop:
+
+gitk --all		
+controlla i files che sono stati committati e non pushati
+salva questi files in una cartella backup
+git reset --hard HEAD
+git reset --hard origin/develop
+reinserisci i files salvati nel backup
+git add --all
+git commit -am "aligning to develop"
+git push
+
+
+------------------------------------------------------------------

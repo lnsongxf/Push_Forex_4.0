@@ -61,7 +61,7 @@ classdef bkt_fast_011_oscillatore_stocastico < handle
             s(FpK<20) = 1;
             s(FpK>80) = -1;
 
-            i = 100; %this can be as small as kperiods+1 (it's used to align the results to the bktoffline)
+            i = 101; %this can be as small as kperiods+1 (it's used to align the results to the bktoffline)
             
             
             while i <= sizeStorico
@@ -81,7 +81,7 @@ classdef bkt_fast_011_oscillatore_stocastico < handle
                         cond2 = sign (Pminute(j) - Pbuy) == segnoOperazione;
                         cond3 = abs (Pminute(j) - Pbuy) >= floor(wSL*devFluct2);
                         cond4 = sign (Pminute(j) - Pbuy) == segnoOperazione*-1;
-                        cond5 = abs( s(indice_I) - segnoOperazione ) >= 2;
+ %                       cond5 = abs( s(indice_I) - segnoOperazione ) >= 2;
                         
                         if cond1 && cond2
                             
@@ -160,7 +160,7 @@ classdef bkt_fast_011_oscillatore_stocastico < handle
                 legend('Price','Location','best')
                 title('stochastic oscill. Results' )
                 ax(2) = subplot(3,1,2);
-                plot(stosc)
+                plot(stosc(:,1))
                 hold on
                 plot(xlim, [1 1]*20, '-r')
                 plot(xlim, [1 1]*80, '-r')

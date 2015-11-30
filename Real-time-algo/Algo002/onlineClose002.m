@@ -14,8 +14,6 @@ indexClose = indexClose + 1;
 display(strcat('indexClose =', num2str(indexClose)));
 display(strcat('closeValue =', num2str(closeValue)));
 
-display(strcat('Matalb requests to close the operation ',num2str(ticket)) ) ;
-
 startingOperation = 0;
 
 end
