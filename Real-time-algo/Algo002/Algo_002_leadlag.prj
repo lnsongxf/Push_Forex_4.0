@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
+  <configuration target="target.ezdeploy.standalone" target-name="MATLAB Compiler for Standalone Applications" name="Algo_002_leadlag" location="C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\Real-time-algo\Algo002" file="C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\Real-time-algo\Algo002\Algo_002_leadlag.prj" preferred-package-type="package.type.exe" build-checksum="2496559351" preferred-package-location="C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\Real-time-algo\Algo002\Algo_002_leadlag\for_redistribution">
+    <param.appname>Algo_002_leadlag</param.appname>
+    <param.authnamewatermark />
+    <param.email />
+    <param.company />
+    <param.icon />
+    <param.icons />
+    <param.summary />
+    <param.description />
+    <param.screenshot />
+    <param.version>1.0</param.version>
+    <param.namespace>Algo_002_leadlag</param.namespace>
+    <param.guid />
+    <param.installpath.string>\Algo_002_leadlag\</param.installpath.string>
+    <param.installpath.combo>option.installpath.programfiles</param.installpath.combo>
+    <param.logo />
+    <param.install.notes />
+    <param.intermediate>${PROJECT_ROOT}\Algo_002_leadlag\for_testing</param.intermediate>
+    <param.output>${PROJECT_ROOT}\Algo_002_leadlag\for_redistribution</param.output>
+    <param.embed.ctf>true</param.embed.ctf>
+    <param.target.type>subtarget.standalone</param.target.type>
+    <param.classorg />
+    <param.web.mcr>true</param.web.mcr>
+    <param.package.mcr>false</param.package.mcr>
+    <param.no.mcr>false</param.no.mcr>
+    <param.web.mcr.name>MyAppInstaller_web</param.web.mcr.name>
+    <param.package.mcr.name>MyAppInstaller_mcr</param.package.mcr.name>
+    <param.no.mcr.name>MyAppInstaller_app</param.no.mcr.name>
+    <param.user.defined.mcr.options />
+    <param.windows.command.prompt>true</param.windows.command.prompt>
+    <param.user.only.registration>false</param.user.only.registration>
+    <param.mads.no.java>false</param.mads.no.java>
+    <param.mads.exclusive.mcr>false</param.mads.exclusive.mcr>
+    <param.net.framework>option.net.framework.default</param.net.framework>
+    <param.assembly.type>false</param.assembly.type>
+    <param.encryption.key.file />
+    <param.net.enable.remoting>false</param.net.enable.remoting>
+    <param.net.tsa.enable>false</param.net.tsa.enable>
+    <param.net.tsa.assembly />
+    <param.net.tsa.interface />
+    <param.net.tsa.namespace>Algo_002_leadlag</param.net.tsa.namespace>
+    <param.net.tsa.superclass />
+    <param.net.tsa.metadata />
+    <param.net.tsa.metadata.assembly>H:\My Documents</param.net.tsa.metadata.assembly>
+    <param.create.log>false</param.create.log>
+    <param.log.file />
+    <unset>
+      <param.authnamewatermark />
+      <param.email />
+      <param.company />
+      <param.icon />
+      <param.icons />
+      <param.summary />
+      <param.description />
+      <param.screenshot />
+      <param.version />
+      <param.namespace />
+      <param.guid />
+      <param.installpath.string />
+      <param.logo />
+      <param.install.notes />
+      <param.intermediate />
+      <param.output />
+      <param.embed.ctf />
+      <param.target.type />
+      <param.classorg />
+      <param.web.mcr />
+      <param.package.mcr />
+      <param.no.mcr />
+      <param.web.mcr.name />
+      <param.package.mcr.name />
+      <param.no.mcr.name />
+      <param.user.defined.mcr.options />
+      <param.windows.command.prompt />
+      <param.user.only.registration />
+      <param.mads.no.java />
+      <param.mads.exclusive.mcr />
+      <param.net.framework />
+      <param.assembly.type />
+      <param.encryption.key.file />
+      <param.net.enable.remoting />
+      <param.net.tsa.enable />
+      <param.net.tsa.assembly />
+      <param.net.tsa.interface />
+      <param.net.tsa.namespace />
+      <param.net.tsa.superclass />
+      <param.net.tsa.metadata />
+      <param.net.tsa.metadata.assembly />
+      <param.create.log />
+      <param.log.file />
+    </unset>
+    <fileset.main>
+      <file>${PROJECT_ROOT}\StartAlgo.m</file>
+    </fileset.main>
+    <fileset.resources>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\00_Algos\Algo_002_leadlag.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\01_Core\coreState_real02.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\02_closingManager\directTakeProfitManager.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\02_closingManager\dynamicalTPandSLManager.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\03_decisionMaker\additional functions\altiBassicontatore.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\03_decisionMaker\DecisionMaker_real02.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\06_indicators\genhurst.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\06_indicators\stationarity.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\06_indicators\vratiotest.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\backtest_classic\getSimpleAmplitude.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\backtest_classic\MapIterator.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\backtest_classic\takeProfitFunction.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\backtest_classic\updateParamsOnMaxIncrease.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\backtest_real\OperationState.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\backtest_real\parameter.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\backtest_real\Parameters.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\backtest_real\RealAlgo.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\close.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\close.mexw64</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\connect.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\connect.mexw64</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\ctx_new.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\ctx_new.mexw64</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\ctx_shutdown.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\ctx_shutdown.mexw64</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\ctx_term.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\ctx_term.mexw64</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\disconnect.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\disconnect.mexw64</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\libzmq-v120-mt-4_0_4.dll</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\recv.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\recv.mexw64</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\send.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\send.mexw64</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\setsockopt.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\setsockopt.mexw64</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\socket.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\socket.mexw64</file>
+      <file>${PROJECT_ROOT}\configListeners002.txt</file>
+      <file>${PROJECT_ROOT}\configPublishers002.txt</file>
+      <file>${PROJECT_ROOT}\onlineAlgo002.m</file>
+      <file>${PROJECT_ROOT}\onlineClose002.m</file>
+      <file>${PROJECT_ROOT}\onlineOpen002.m</file>
+      <file>${PROJECT_ROOT}\strsplit.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\Real-time-algo\createLogFile.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\Real-time-algo\log4m.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\Real-time-algo\machineStateManager.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\Real-time-algo\sendgmail.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\spatial-econometrics\coint\adf.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\spatial-econometrics\coint\c_sja.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\spatial-econometrics\coint\c_sjt.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\spatial-econometrics\coint\detrend.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\spatial-econometrics\coint\johansen.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\spatial-econometrics\coint\prt_coint.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\spatial-econometrics\coint\ptrend.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\spatial-econometrics\coint\ztcrit.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\spatial-econometrics\distrib\beta_inv.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\spatial-econometrics\distrib\beta_pdf.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\spatial-econometrics\distrib\chis_prb.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\spatial-econometrics\distrib\norm_prb.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\spatial-econometrics\distrib\tdis_inv.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\spatial-econometrics\distrib\tdis_prb.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\spatial-econometrics\gibbs\prt_coda.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\spatial-econometrics\regress\ols.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\spatial-econometrics\regress\prt_eqs.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\spatial-econometrics\regress\prt_felogit.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\spatial-econometrics\regress\prt_gibbs.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\spatial-econometrics\regress\prt_multilogit.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\spatial-econometrics\regress\prt_reg.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\spatial-econometrics\regress\prt_swm.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\spatial-econometrics\regress\prt_tvp.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\spatial-econometrics\spatial\casetti_models\prt_cas.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\spatial-econometrics\spatial\far_models\prt_far.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\spatial-econometrics\spatial\gmm_models\prt_gmm.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\spatial-econometrics\spatial\gwr_models\prt_gwr.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\spatial-econometrics\spatial\mess_models\prt_mess.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\spatial-econometrics\spatial\panel\prt_spnew.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\spatial-econometrics\spatial\sac_models\prt_sac.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\spatial-econometrics\spatial\sar_models\cr_interval.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\spatial-econometrics\spatial\sar_models\prt_sar.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\spatial-econometrics\spatial\sdm_models\prt_sdm.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\spatial-econometrics\spatial\sem_models\prt_sem.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\spatial-econometrics\spatial\semip\prt_semip.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\spatial-econometrics\spatial\stats\prt_spat.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\spatial-econometrics\util\cols.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\spatial-econometrics\util\lag.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\spatial-econometrics\util\mlag.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\spatial-econometrics\util\mprint.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\spatial-econometrics\util\prt.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\spatial-econometrics\util\rows.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\spatial-econometrics\util\tdiff.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\spatial-econometrics\util\trimr.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\spatial-econometrics\var_bvar\prt_var.m</file>
+      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\spatial-econometrics\var_bvar\prt_varg.m</file>
+    </fileset.resources>
+    <fileset.package />
+    <build-deliverables>
+      <file name="Algo_002_leadlag.exe" location="${PROJECT_ROOT}\Algo_002_leadlag\for_testing" optional="false">C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\Real-time-algo\Algo002\Algo_002_leadlag\for_testing\Algo_002_leadlag.exe</file>
+      <file name="readme.txt" location="${PROJECT_ROOT}\Algo_002_leadlag\for_testing" optional="true">C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\Real-time-algo\Algo002\Algo_002_leadlag\for_testing\readme.txt</file>
+    </build-deliverables>
+    <workflow />
+    <matlab>
+      <root>C:\Program Files\Matlab\R2013b</root>
+      <toolboxes>
+        <toolbox name="fixedpoint" />
+      </toolboxes>
+    </matlab>
+    <platform>
+      <unix>false</unix>
+      <mac>false</mac>
+      <windows>true</windows>
+      <win2k>false</win2k>
+      <winxp>false</winxp>
+      <vista>false</vista>
+      <linux>false</linux>
+      <solaris>false</solaris>
+      <osver>6.1</osver>
+      <os32>false</os32>
+      <os64>true</os64>
+      <arch>win64</arch>
+      <matlab>true</matlab>
+    </platform>
+  </configuration>
+</deployment-project>
+

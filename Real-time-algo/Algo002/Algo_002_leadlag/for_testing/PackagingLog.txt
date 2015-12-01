@@ -1,0 +1,171 @@
+ant:
+<ant>
+  <mkdir dir="C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\Real-time-algo\Algo002\Algo_002_leadlag\for_redistribution" />
+  <mkdir dir="C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\Real-time-algo\Algo002\Algo_002_leadlag\for_testing" />
+</ant>
+mcc -C -o Algo_002_leadlag -W WinMain:Algo_002_leadlag -T link:exe -d C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\Real-time-algo\Algo002\Algo_002_leadlag\for_testing -v C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\Real-time-algo\Algo002\StartAlgo.m -a C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\Real-time-algo\Algo002\configListeners002.txt -a C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\Real-time-algo\Algo002\configPublishers002.txt -a C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\libzmq-v120-mt-4_0_4.dll 
+Compiler version: 5.0 (R2013b)
+Dependency analysis by DEPFUN.
+Processing C:\Program Files\Matlab\R2013b\toolbox\matlab\win64\mcc.enc
+Processing C:\Program Files\Matlab\R2013b\toolbox\stats\win64\mcc.enc
+Processing C:\Program Files\Matlab\R2013b\toolbox\shared\statslib\win64\mcc.enc
+Processing C:\Program Files\Matlab\R2013b\toolbox\shared\optimlib\win64\mcc.enc
+Processing C:\Program Files\Matlab\R2013b\toolbox\optim\win64\mcc.enc
+Processing C:\Program Files\Matlab\R2013b\toolbox\distcomp\win64\mcc.enc
+Processing C:\Program Files\Matlab\R2013b\toolbox\control\win64\mcc.enc
+Processing C:\Program Files\Matlab\R2013b\toolbox\shared\controllib\general\win64\mcc.enc
+Processing C:\Program Files\Matlab\R2013b\toolbox\shared\controllib\engine\win64\mcc.enc
+Processing C:\Program Files\Matlab\R2013b\toolbox\ident\win64\mcc.enc
+Processing C:\Program Files\Matlab\R2013b\toolbox\signal\win64\mcc.enc
+Processing C:\Program Files\Matlab\R2013b\toolbox\shared\controllib\graphics\win64\mcc.enc
+Processing C:\Program Files\Matlab\R2013b\toolbox\shared\spcuilib\win64\mcc.enc
+Processing C:\Program Files\Matlab\R2013b\toolbox\images\win64\mcc.enc
+Processing C:\Program Files\Matlab\R2013b\toolbox\curvefit\win64\mcc.enc
+Processing C:\Program Files\Matlab\R2013b\toolbox\shared\imageslib\win64\mcc.enc
+Processing C:\Program Files\Matlab\R2013b\toolbox\shared\coder\win64\mcc.enc
+Processing C:\Program Files\Matlab\R2013b\toolbox\globaloptim\win64\mcc.enc
+Processing C:\Program Files\Matlab\R2013b\toolbox\shared\controllib\requirements\win64\mcc.enc
+Processing include files...
+2 item(s) added.
+Processing directories installed with MCR...
+The file C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\Real-time-algo\Algo002\Algo_002_leadlag\for_testing\mccExcludedFiles.log contains a list of functions excluded from the CTF archive.
+0 item(s) added.
+Generating MATLAB path for the compiled application...
+Created 125 path items.
+[Warning: Adding path
+"C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\Real-time-algo\Algo002"
+to Compiler path instance.] 
+Parsing file "C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\Real-time-algo\Algo002\StartAlgo.m"
+	(Referenced from: "Compiler Command Line").
+Parsing file "C:\Program Files\Matlab\R2013b\toolbox\compiler\deploy\deployprint.m"
+	(Referenced from: "Compiler Command Line").
+Parsing file "C:\Program Files\Matlab\R2013b\toolbox\compiler\deploy\printdlg.m"
+	(Referenced from: "Compiler Command Line").
+Deleting 119 temporary MEX authorization files.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_41_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_18467_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_6334_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_26500_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_19169_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_15724_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_29358_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_26962_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_24464_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_11478_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_5705_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_28145_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_23281_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_16827_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_9961_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_491_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_2995_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_11942_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_4827_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_5436_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_32391_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_14604_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_3902_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_153_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_292_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_12382_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_17421_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_18716_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_19718_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_19895_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_5447_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_21726_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_14771_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_11538_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_1869_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_19912_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_25667_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_26299_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_17035_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_9894_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_28703_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_23811_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_31322_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_30333_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_17673_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_4664_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_15141_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_7711_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_28253_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_6868_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_25547_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_27644_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_32662_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_32757_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_20037_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_12859_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_8723_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_9741_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_27529_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_778_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_12316_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_3035_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_22190_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_1842_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_288_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_30106_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_9040_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_8942_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_19264_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_22648_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_15350_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_15006_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_27446_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_23805_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_15890_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_6729_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_24370_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_31101_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_24393_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_3548_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_19629_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_12623_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_24084_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_19954_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_18756_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_11840_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_4966_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_7376_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_13931_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_26308_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_16944_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_32439_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_24626_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_11323_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_5537_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_21538_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_16118_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_2082_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_4833_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_4639_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_22929_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_16541_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_31115_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_29658_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_22704_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_9930_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_13977_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_2306_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_31673_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_22386_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_5021_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_28745_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_26924_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_19072_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_6270_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_5829_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_26777_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_15573_2100.auth'.
+Removing: 'C:\Users\alericci\AppData\Local\Temp\mathworks_tmp_2100_5097_2100.auth'.
+Generating file "C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\Real-time-algo\Algo002\Algo_002_leadlag\for_testing\readme.txt".
+Packaging...
+Adding custom icon C:\Program Files\Matlab\R2013b\toolbox\compiler\Resources\default_icon.ico to C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\Real-time-algo\Algo002\Algo_002_leadlag\for_testing\Algo_002_leadlag.exe.
+Attempting to embed the CTF archive into your application $C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\Real-time-algo\Algo002\Algo_002_leadlag\for_testing\Algo_002_leadlag.exe.
+Finished embedding CTF archive. Deleting the external CTF archive.
+Creating the bundle...
+Web based installer created at C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\Real-time-algo\Algo002\Algo_002_leadlag\for_redistribution\MyAppInstaller_web.exe.
+Packaging complete.

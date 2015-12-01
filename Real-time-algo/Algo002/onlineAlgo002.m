@@ -57,7 +57,7 @@ persistent logFolderName
 
 topicPub = '';
 messagePub = '';
-nData=80;
+nData=100;
 closingTimeScale = 1;
 openingTimeScale = 30;
 nameAlgo='Algo002';
@@ -95,13 +95,13 @@ if nFile == 0
         mkdir(logFolderName);
         [LogObj,logFile] = createLogFile (logFolderName,nameAlgo,nFile);
     end
-elseif logFileDimension > 1000
+elseif logFileDimension > 10000000
     nFile=nFile+1;
     fclose('all');
     [LogObj,logFile] = createLogFile (logFolderName,nameAlgo,nFile);
 end
 
-listener1 = strcmp(topicSub,'TIMEFRAMEQUOTE@MT4@ACTIVTRADES@EURUSD@m1@v80');
+listener1 = strcmp(topicSub,'TIMEFRAMEQUOTE@MT4@ACTIVTRADES@EURUSD@m30@v100');
 listener2 = strcmp(topicSub,'TIMEFRAMEQUOTE@MT4@ACTIVTRADES@EURUSD@m1@v1');
 listener3 = strcmp(topicSub,'STATUS@EURUSD@1002');
 
