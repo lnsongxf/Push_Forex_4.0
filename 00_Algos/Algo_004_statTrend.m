@@ -102,13 +102,14 @@ if newTimeScalePoint
     % -------- stationarity Test ------------------ %
     st.stationarityTests(chiusure(1:end-1),30,0);
 end
-stateC = cState.state;
-if st.HurstExponent>0.5
-    stateH=1;
-else
-    stateH=0;
-end
-state=stateC*stateH;
+% stateC = cState.state;
+% if st.HurstExponent>0.5
+%     stateH=1;
+% else
+%     stateH=0;
+% end
+% state=stateC*stateH;
+state=cState.state;
 
 
 if operationState.lock

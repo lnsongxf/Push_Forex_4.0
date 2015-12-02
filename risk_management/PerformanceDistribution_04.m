@@ -368,25 +368,42 @@ classdef PerformanceDistribution_04 < handle
         %%
         function obj=plotOperationOnHystorical(obj,timeSeriesProperties_)
             
+            
+            L=length(obj.HistData1min(:,4));
+            xHistData1min=1:L;
+            
+            H=timeSeriesProperties_(:,1);
+            lnewTimeScale=length(H);
+            start=(obj.nData+1)*obj.freq;
+            stop=(lnewTimeScale+obj.nData)*obj.freq;
+            xProperties=start:obj.freq:stop;
+            
             figure
-            s(1)=subplot(2,1,1);
-            plot(obj.HistData1min(:,4),'k','LineWidth',1)
+            s(1)=subplot(3,1,1);
+            plot(xHistData1min,obj.HistData1min(:,4),'Color','k','LineWidth',1)
+
             hold on
             plot(obj.rowHistpOp,obj.HistData1min(obj.rowHistpOp,4),'ob')
             plot(obj.rowHistpCl,obj.HistData1min(obj.rowHistpCl,4),'*b')
             
             plot(obj.rowHistnOp,obj.HistData1min(obj.rowHistnOp,4),'or')
             plot(obj.rowHistnCl,obj.HistData1min(obj.rowHistnCl,4),'*r')
+
+            windowSize1 = 10;
+            a = (1/windowSize1)*ones(1,windowSize1);
+            smoothClose1 = filter(a,1,obj.HistDatafreq(obj.nData+1:end,4));
             
-            legend('Price','Open win','Close win','Open lost','Close lost')
+            windowSize2 = 60;
+            b = (1/windowSize2)*ones(1,windowSize2);
+            smoothClose2 = filter(b,1,obj.HistDatafreq(obj.nData+1:end,4));
+         
+            line(xProperties(windowSize2:end),smoothClose1(windowSize2:end),'Color','b','LineWidth',1);
+            line(xProperties(windowSize2:end),smoothClose2(windowSize2:end),'Color','r','LineWidth',1);
+            
+            legend('Price','Open win','Close win','Open lost','Close lost','MA10','MA60')
             
             s(2)=subplot(2,1,2);
-            H=timeSeriesProperties_(:,1);
-            lnewTimeScale=length(H);
-            start=(obj.nData+1)*obj.freq;
-            stop=(lnewTimeScale+obj.nData)*obj.freq;
-            xProperties=start:obj.freq:stop;
-            plot(xProperties,timeSeriesProperties_(:,1),'-k');
+            plot(xProperties,H,'-k');
             hold on
             lin1=zeros(length(xProperties))+0.5;
             plot(xProperties,lin1,'-r');

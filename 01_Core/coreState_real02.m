@@ -366,8 +366,8 @@ classdef coreState_real02 < handle
             %             hold on
             %             plot(newGradient2,'or')
             %
-            %if inversion<0 && trend==2
-            if trend==2
+            if inversion<0 && trend==2
+            %if trend==2
                 obj.state=1;
                 obj.suggestedDirection=trendDirection;
                 obj.suggestedTP=5*meanFluct2;
