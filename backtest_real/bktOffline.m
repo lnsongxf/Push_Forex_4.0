@@ -17,8 +17,7 @@ classdef bktOffline < handle
     
     methods
         
-        function [obj] = spin(obj,nameAlgo,cross,nData_,histName,actTimeScale, ...
-                newTimeScale,transCost,initialStack,leverage,plotPerformance,plotPerDistribution)
+        function [obj] = spin(obj,parameters)
             
             %
             % DESCRIPTION:
@@ -56,12 +55,19 @@ classdef bktOffline < handle
             % EXAMPLE of use:
             % -------------------------------------------------------------
             % clear all; bkt_Algo_002=bktOffline
-            % bkt_Algo_002=bkt_Algo_002.spin('Algo_002_leadlag','EURUSD',100,'EURUSD_2012_2015.csv',1,30,1,10000,10,1,5)
+            % bkt_Algo_002=bkt_Algo_002.spin('parameters_Offline_Algo_002.txt')
             %
             % NOTE
             % -------------------------------------------------------------
             % per salvare lo storico:   dlmwrite('EURUSD_2012_2015.csv', data, '-append') ;
             %
+            
+            %% Import parameters:
+            fid=fopen(parameters);
+            C = textscan(fid, '%s', 'Delimiter', '', 'CommentStyle', '%');
+            fclose(fid);
+            cellfun(@eval, C{1});
+            
             
             algo = str2func(nameAlgo);
             
@@ -129,7 +135,7 @@ classdef bktOffline < handle
             matrix=zeros(obj.nData+1, 6);
             
             
-            % ---  da qui inizia il core dello spin ---
+            %% ---  da qui inizia il core dello spin ---
             tic
             
             % l'indice i è sui dati alla new time scale
@@ -154,7 +160,7 @@ classdef bktOffline < handle
                     if isfinite(hisData(indexHisData,1))
                         
                         matrix(end,:) = hisData(indexHisData,:);
-%                         [oper, openValue, closeValue, stopLoss, takeProfit, valueTp, st] = Algo_002_leadlag(matrix,newTimeScalePoint,openValueReal);
+                        %                         [oper, openValue, closeValue, stopLoss, takeProfit, valueTp, st] = Algo_002_leadlag(matrix,newTimeScalePoint,openValueReal);
                         [oper, openValue, closeValue, stopLoss, takeProfit, valueTp, st] = algo(matrix,newTimeScalePoint,openValueReal);
                         
                         newState{1} = oper;
@@ -164,7 +170,7 @@ classdef bktOffline < handle
                         newState{5} = takeProfit;
                         newState{6} = valueTp;
                         
-                        % calcola probabilità di mean reversion etc 
+                        % calcola probabilità di mean reversion etc
                         a=st.HurstExponent;
                         b=st.pValue;
                         c=st.halflife;
@@ -178,7 +184,7 @@ classdef bktOffline < handle
                         updatedOperation = newState{1};
                         
                         %opening
-                        if abs(updatedOperation) > 0 && startingOperation == 0 
+                        if abs(updatedOperation) > 0 && startingOperation == 0
                             
                             openValueReal             = newState{2};
                             startingOperation         = newState{1};
@@ -187,18 +193,18 @@ classdef bktOffline < handle
                             iO(indexOpen)=i;
                             SL(indexOpen)=stopLoss;
                             TP(indexOpen)=takeProfit;
-
+                            
                             display(['indexOpen =' num2str(indexOpen)]);
                             display(['i Open =' num2str(i)]);
                             display(['startingOperation =' num2str(startingOperation)]);
                             
                             direction(indexOpen)      = newState{1};
-                            openingPrice(indexOpen)   = newState{2};                            
+                            openingPrice(indexOpen)   = newState{2};
                             openingDateNum(indexOpen) = obj.newHisData(i,6);
                             lots(indexOpen)           = 1;
-                        
-                        % closing
-                        elseif updatedOperation == 0 && abs(startingOperation) > 0 
+                            
+                            % closing
+                        elseif updatedOperation == 0 && abs(startingOperation) > 0
                             
                             openValueReal             = 0;
                             
@@ -228,7 +234,7 @@ classdef bktOffline < handle
             openingDateNum = openingDateNum(1:indexClose);
             closingDateNum = closingDateNum(1:indexClose);
             lots = lots(1:indexClose);
-                      
+            
             jC=jC(1:indexClose);
             iC=iC(1:indexClose);
             iO=iO(1:indexClose);
@@ -256,9 +262,9 @@ classdef bktOffline < handle
             obj.outputBktOffline(:,8) = closingDateNum;             % closing date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
             obj.outputBktOffline(:,9) = lots;                       % lots setted for single operation
             
-%             obj.timeSeriesProperties(:,1)=st.HurstExponent;
-%             obj.timeSeriesProperties(:,1)=st.pValue;
-%             obj.timeSeriesProperties(:,1)=st.halflife;
+            %             obj.timeSeriesProperties(:,1)=st.HurstExponent;
+            %             obj.timeSeriesProperties(:,1)=st.pValue;
+            %             obj.timeSeriesProperties(:,1)=st.halflife;
             
             p = Performance_05;
             obj.performance = p.calcSinglePerformance(nameAlgo,'bktWeb',cross,newTimeScale,transCost,initialStack,leverage,obj.outputBktOffline,plotPerformance);

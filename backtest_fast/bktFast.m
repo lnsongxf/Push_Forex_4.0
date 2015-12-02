@@ -20,19 +20,24 @@ classdef bktFast < handle
             % INPUT parameters:
             % -------------------------------------------------------------
             % nameAlgo:                 string containing the name of the algo (your MATLAB function)
-            % N:                        first optimization (1 to N) -> lag,slowly varying
-            % M:                        second optimization (1 to M) -> lead,highly varying
+            % N:                        first optimization (use array!!!) -> lag,slowly varying
+            % M:                        second optimization (use array or put = 1 !!!) -> lead,highly varying
             % cross:                    e.g. 'EURUSD'
             % histName:                 filename containing hist prices, e.g. : 'nome_storico.csv'
             % actTimeScale:             timescale of the hist data, in minutes
             % newTimeScale:             new timescale to work with (rescale)
             % transCost:                spread in pips
+            % pips_TP:                  max TP
+            % pips_SL:                  max allowed SL
+            % stdev_TP:                 stdev(volatility) for calculating TP
+            % stdev_SL:                 stdev(volatility) for calculating SL
             % WhatToPlot:               what do you want to plot:
             %                              0: nothing
             %                              1: returns of optimized algo(training and papertrading)
             %                              2: + sweepPlot of training
             %                              3: + performance
             % -------------------------------------------------------------
+
             
             %% Import parameters:
             fid=fopen(parameters);
@@ -99,11 +104,11 @@ classdef bktFast < handle
             
             tic
             
-            for n = 1:N
+            for n = N
                 
                 display(['n =', num2str(n)]);
                 
-                for m = 1:M
+                for m = M
                     
                     bktfast = algo;
                     bktfast = bktfast.spin(hisDataTraining(:,4),closeXminsTraining,dateXminsTraining,newTimeScale,transCost,n,m,0);

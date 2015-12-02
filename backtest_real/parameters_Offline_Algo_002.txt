@@ -1,0 +1,33 @@
+            % INPUT parameters:
+            % -------------------------------------------------------------
+            % nameAlgo:                 nome esatto dell'algoritmo che usi
+            % cross:                    ad es 'EURUSD'
+            % nData_:                    numero di dati in input di storico per ciclo
+            % histName:                 nome dello storico, es: 'nome_storico.csv'
+            % actTimeScale:             scala temporale dello storico in input
+            % newTimeScale:             scala temporale su cui vuoi lavorare (in minuti)
+            % transCost:                costo dello spread in pips, ad es: 1
+            % initialStack:             capitale iniziale, ad es: 10000
+            % leverage:                 la leva che usi, es: 10
+            % plotPerformance:          1 se vuoi plottare le perfomance
+            % plotPerDistribution:      1-microanalisi 2-macroanalisi 3-pattern ritorni
+            %                           4-plot operazioni su storico 5-plotta tutto
+            %
+            % EXAMPLE of use:
+            % -------------------------------------------------------------
+            % clear all; bkt_Algo_002=bktOffline
+            % bkt_Algo_002=bkt_Algo_002.spin('parameters_Offline_Algo_002.txt')
+
+
+
+nameAlgo = 'Algo_002_leadlag'
+cross = 'EURUSD'
+nData_ = 100
+histName = 'EURUSD_2012_2015.csv'
+actTimeScale = 1
+newTimeScale = 30
+transCost = 1
+initialStack = 10000
+leverage = 10
+plotPerformance = 1
+plotPerDistribution = 5 
