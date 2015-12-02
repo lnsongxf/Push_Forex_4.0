@@ -320,7 +320,7 @@ classdef coreState_real02 < handle
             %             actualFluct1=closure(end)-smoothClose1(end);
             %             signDirection1=sign(actualFluct1);
             
-            windowSize2 = 60;
+            windowSize2 = 50;
             b = (1/windowSize2)*ones(1,windowSize2);
             smoothClose2 = filter(b,1,closePrice);
             fluctuations2=abs(closePrice-smoothClose2);

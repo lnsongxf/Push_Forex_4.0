@@ -393,7 +393,7 @@ classdef PerformanceDistribution_04 < handle
             a = (1/windowSize1)*ones(1,windowSize1);
             smoothClose1 = filter(a,1,obj.HistDatafreq(obj.nData+1:end,4));
             
-            windowSize2 = 60;
+            windowSize2 = 50;
             b = (1/windowSize2)*ones(1,windowSize2);
             smoothClose2 = filter(b,1,obj.HistDatafreq(obj.nData+1:end,4));
          

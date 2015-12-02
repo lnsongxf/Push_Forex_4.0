@@ -68,7 +68,6 @@ classdef bktOffline < handle
             fclose(fid);
             cellfun(@eval, C{1});
             
-            
             algo = str2func(nameAlgo);
             
             obj.nData=nData_;
@@ -261,15 +260,7 @@ classdef bktOffline < handle
             obj.outputBktOffline(:,7) = openingDateNum;             % opening date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
             obj.outputBktOffline(:,8) = closingDateNum;             % closing date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
             obj.outputBktOffline(:,9) = lots;                       % lots setted for single operation
-<<<<<<< Updated upstream
-            
-            %             obj.timeSeriesProperties(:,1)=st.HurstExponent;
-            %             obj.timeSeriesProperties(:,1)=st.pValue;
-            %             obj.timeSeriesProperties(:,1)=st.halflife;
-            
-=======
-                       
->>>>>>> Stashed changes
+
             p = Performance_05;
             obj.performance = p.calcSinglePerformance(nameAlgo,'bktWeb',Cross,newTimeScale,transCost,initialStack,Leverage,obj.outputBktOffline,plotPerformance);
             pD = PerformanceDistribution_04;
