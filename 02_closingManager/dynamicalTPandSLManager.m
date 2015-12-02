@@ -12,7 +12,7 @@ TakeProfitPrice = OpenPrice + direction * TakeP;
 StopLossPrice   = OpenPrice - direction * StopL;
 
 % If the current price is more than SL above the opening prcice, re-set
-if abs( (LastClosePrice - StopLossPrice) ) > abs(StopL)*1.2
+if abs( (LastClosePrice - StopLossPrice) ) > abs(StopL)*1.1
     
     distance = floor(abs(LastClosePrice - StopLossPrice)/2);
     

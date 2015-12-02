@@ -312,7 +312,7 @@ classdef coreState_real02 < handle
             % state
             closePrice=closure;
             
-            windowSize1 = 5;
+            windowSize1 = 10;
             a = (1/windowSize1)*ones(1,windowSize1);
             smoothClose1 = filter(a,1,closePrice);
             %             fluctuations1=abs(closure-smoothClose1);
@@ -320,7 +320,7 @@ classdef coreState_real02 < handle
             %             actualFluct1=closure(end)-smoothClose1(end);
             %             signDirection1=sign(actualFluct1);
             
-            windowSize2 = 50;
+            windowSize2 = 60;
             b = (1/windowSize2)*ones(1,windowSize2);
             smoothClose2 = filter(b,1,closePrice);
             fluctuations2=abs(closePrice-smoothClose2);
@@ -370,8 +370,8 @@ classdef coreState_real02 < handle
             if trend==2
                 obj.state=1;
                 obj.suggestedDirection=trendDirection;
-                obj.suggestedTP=3*meanFluct2;
-                obj.suggestedSL=3*meanFluct2;
+                obj.suggestedTP=5*meanFluct2;
+                obj.suggestedSL=5*meanFluct2;
             else
                 obj.state=0;
             end
