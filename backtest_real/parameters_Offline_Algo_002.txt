@@ -1,14 +1,14 @@
             % INPUT parameters:
             % -------------------------------------------------------------
             % nameAlgo:                 nome esatto dell'algoritmo che usi
-            % cross:                    ad es 'EURUSD'
+            % Cross:                    ad es 'EURUSD'
             % nData_:                    numero di dati in input di storico per ciclo
             % histName:                 nome dello storico, es: 'nome_storico.csv'
             % actTimeScale:             scala temporale dello storico in input
             % newTimeScale:             scala temporale su cui vuoi lavorare (in minuti)
             % transCost:                costo dello spread in pips, ad es: 1
             % initialStack:             capitale iniziale, ad es: 10000
-            % leverage:                 la leva che usi, es: 10
+            % Leverage:                 la leva che usi, es: 10
             % plotPerformance:          1 se vuoi plottare le perfomance
             % plotPerDistribution:      1-microanalisi 2-macroanalisi 3-pattern ritorni
             %                           4-plot operazioni su storico 5-plotta tutto
@@ -21,13 +21,13 @@
 
 
 nameAlgo = 'Algo_002_leadlag'
-cross = 'EURUSD'
+Cross = 'EURUSD'
 nData_ = 100
-histName = 'EURUSD_2012_2015.csv'
+histName = 'EURUSD_test.csv'
 actTimeScale = 1
 newTimeScale = 30
 transCost = 1
 initialStack = 10000
-leverage = 10
+Leverage = 10
 plotPerformance = 1
 plotPerDistribution = 5 

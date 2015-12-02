@@ -27,14 +27,14 @@ classdef bktOffline < handle
             % INPUT parameters:
             % -------------------------------------------------------------
             % nameAlgo:                 nome esatto dell'algoritmo che usi
-            % cross:                    ad es 'EURUSD'
+            % Cross:                    ad es 'EURUSD'
             % nData:                    numero di dati in input di storico per ciclo
             % histName:                 nome dello storico, es: 'nome_storico.csv'
             % actTimeScale:             scala temporale dello storico in input
             % newTimeScale:             scala temporale su cui vuoi lavorare (in minuti)
             % transCost:                costo dello spread in pips, ad es: 1
             % initialStack:             capitale iniziale, ad es: 10000
-            % leverage:                 la leva che usi, es: 10
+            % Leverage:                 la leva che usi, es: 10
             % plotPerformance:          1 se vuoi plottare le perfomance
             % plotPerDistribution:      1-microanalisi 2-macroanalisi 3-pattern ritorni
             %                           4-plot operazioni su storico 5-plotta tutto
@@ -271,9 +271,9 @@ classdef bktOffline < handle
                        
 >>>>>>> Stashed changes
             p = Performance_05;
-            obj.performance = p.calcSinglePerformance(nameAlgo,'bktWeb',cross,newTimeScale,transCost,initialStack,leverage,obj.outputBktOffline,plotPerformance);
+            obj.performance = p.calcSinglePerformance(nameAlgo,'bktWeb',Cross,newTimeScale,transCost,initialStack,Leverage,obj.outputBktOffline,plotPerformance);
             pD = PerformanceDistribution_04;
-            obj.performanceDistribution = pD.calcPerformanceDistr(nameAlgo,'bktWeb',cross,obj.nData,newTimeScale,transCost,obj.outputBktOffline,obj.timeSeriesProperties,obj.starthisData,obj.newHisData,15,10,10,plotPerDistribution);
+            obj.performanceDistribution = pD.calcPerformanceDistr(nameAlgo,'bktWeb',Cross,obj.nData,newTimeScale,transCost,obj.outputBktOffline,obj.timeSeriesProperties,obj.starthisData,obj.newHisData,15,10,10,plotPerDistribution);
             
         end
         
