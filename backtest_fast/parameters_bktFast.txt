@@ -1,0 +1,27 @@
+            % INPUT parameters:
+            % -------------------------------------------------------------
+            % nameAlgo:                 string containing the name of the algo (your MATLAB function)
+            % N:                        first optimization (1 to N) -> lag,slowly varying
+            % M:                        second optimization (1 to M) -> lead,highly varying
+            % cross:                    e.g. 'EURUSD'
+            % histName:                 filename containing hist prices, e.g. : 'nome_storico.csv'
+            % actTimeScale:             timescale of the hist data, in minutes
+            % newTimeScale:             new timescale to work with (rescale)
+            % transCost:                spread in pips
+            % WhatToPlot:               what do you want to plot:
+            %                              0: nothing
+            %                              1: returns of optimized algo(training and papertrading)
+            %                              2: + sweepPlot of training
+            %                              3: + performance
+            % -------------------------------------------------------------
+
+            
+nameAlgo = 'bkt_fast_002_leadlag' 
+N = 10                        		
+M = 10                  
+cross = 'EURUSD'            
+histName = 'EURUSD....'		   
+actTimeScale = 1             		
+newTimeScale = 30             		
+transCost = 1                		
+WhatToPlot = 3               			
