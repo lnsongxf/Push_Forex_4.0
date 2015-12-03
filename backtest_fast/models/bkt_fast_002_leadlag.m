@@ -18,10 +18,14 @@ classdef bkt_fast_002_leadlag < handle
     
     methods
         
-        function obj = fast_002_leadlag(obj, Pminute,P,date,N,M,newTimeScale,cost,wSL,wTP,plottami)
+        function obj = spin(obj, Pminute, matrixNewHisData, ~, newTimeScale, N, M, cost, ~, ~, wTP, wSL, plottami)            
             
             
             %% simula leadlag con TP e SL a seconda della volatilità
+            
+            P = matrixNewHisData(:,4);
+            date = matrixNewHisData(:,6);
+            
             
             pandl = zeros(size(P));
             obj.trades = zeros(size(P));
@@ -47,7 +51,7 @@ classdef bkt_fast_002_leadlag < handle
             fluctuationslag=abs(P-lag);
             
             % signals
-            s(lead>lag) = 1; 
+            s(lead>lag) = 1;
             s(lag>lead) = -1;
             
             
@@ -103,7 +107,7 @@ classdef bkt_fast_002_leadlag < handle
                         
                     end
                     
-               
+                    
                 end
                 
                 i = i + 1;
@@ -143,7 +147,7 @@ classdef bkt_fast_002_leadlag < handle
                 plot(obj.outputbkt(:,1),cumsum(obj.outputbkt(:,4))), grid on
                 legend('Cumulative Return')
                 title('Cumulative Returns ')
-
+                
                 
             end %if
             
@@ -163,21 +167,21 @@ classdef bkt_fast_002_leadlag < handle
         
         
         
-%         function [obj] = chiudi_per_SL(obj, Pbuy, indice_I, segnoOperazione, devFluct2, wSL, cost, ntrades, date)
-%             
-%             obj.r(indice_I) = - wSL*devFluct2 - cost;
-%             obj.closingPrices(ntrades) = Pbuy - segnoOperazione*floor(wSL*devFluct2);
-%             obj.ClDates(ntrades) = date(indice_I); %controlla
-%             
-%         end
-%         
-%         function [obj] = chiudi_per_TP(obj, Pbuy, indice_I, segnoOperazione, devFluct2, wTP, cost, ntrades, date)
-%             
-%             obj.r(indice_I) = wTP*devFluct2 - cost;
-%             obj.closingPrices(ntrades) = Pbuy + segnoOperazione*floor(wTP*devFluct2);
-%             obj.ClDates(ntrades) = date(indice_I); %controlla
-%             
-%         end
+        %         function [obj] = chiudi_per_SL(obj, Pbuy, indice_I, segnoOperazione, devFluct2, wSL, cost, ntrades, date)
+        %
+        %             obj.r(indice_I) = - wSL*devFluct2 - cost;
+        %             obj.closingPrices(ntrades) = Pbuy - segnoOperazione*floor(wSL*devFluct2);
+        %             obj.ClDates(ntrades) = date(indice_I); %controlla
+        %
+        %         end
+        %
+        %         function [obj] = chiudi_per_TP(obj, Pbuy, indice_I, segnoOperazione, devFluct2, wTP, cost, ntrades, date)
+        %
+        %             obj.r(indice_I) = wTP*devFluct2 - cost;
+        %             obj.closingPrices(ntrades) = Pbuy + segnoOperazione*floor(wTP*devFluct2);
+        %             obj.ClDates(ntrades) = date(indice_I); %controlla
+        %
+        %         end
         
         
     end

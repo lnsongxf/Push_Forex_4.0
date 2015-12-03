@@ -22,7 +22,8 @@ classdef bktFast < handle
             % nameAlgo:                 string containing the name of the algo (your MATLAB function)
             % N:                        first optimization (use array!!!) -> lag,slowly varying
             % M:                        second optimization (use array or put = 1 !!!) -> lead,highly varying
-            % cross:                    e.g. 'EURUSD'
+            % N_greater_than_M:         if = 1 then skip loops where n<=m (required in some algo with smoothing)
+            % Cross:                    e.g. 'EURUSD'
             % histName:                 filename containing hist prices, e.g. : 'nome_storico.csv'
             % actTimeScale:             timescale of the hist data, in minutes
             % newTimeScale:             new timescale to work with (rescale)
@@ -37,7 +38,7 @@ classdef bktFast < handle
             %                              2: + sweepPlot of training
             %                              3: + performance
             % -------------------------------------------------------------
-
+            
             
             %% Import parameters:
             fid=fopen(parameters);
@@ -70,10 +71,10 @@ classdef bktFast < handle
             end
             
             % split historical into trainging set for optimization and paper trading
-            % default: 75% Test, 25% paper trading)
-            rTest = floor(r*0.75);
-            hisDataTraining = hisData(1:rTest,:);
-            hisDataPaperTrad = hisData(rTest+1:end,:);
+            % default: 75% Training, 25% paper trading)
+            rTraining = floor(r*0.75);
+            hisDataTraining = hisData(1:rTraining,:);
+            hisDataPaperTrad = hisData(rTraining+1:end,:);
             
             % rescale data if requested
             if newTimeScale > 1
@@ -81,19 +82,31 @@ classdef bktFast < handle
                 expert = TimeSeriesExpert_11;
                 
 %                 expert.rescaleData(hisData,actTimeScale,newTimeScale);
-%                 
-%                 closeXminsHisData = expert.closeVrescaled;
-%                 dateXminsHisData = expert.openDrescaled;
+%
+%                 newHisData(:,1) = expert.openVrescaled;
+%                 newHisData(:,2) = expert.maxVrescaled;
+%                 newHisData(:,3) = expert.minVrescaled;
+%                 newHisData(:,4) = expert.closeVrescaled;
+%                 newHisData(:,5) = expert.volrescaled;
+%                 newHisData(:,6) = expert.openDrescaled;
                 
                 expert.rescaleData(hisDataTraining,actTimeScale,newTimeScale);
                 
-                closeXminsTraining = expert.closeVrescaled;
-                dateXminsTraining = expert.openDrescaled;
+                newHisDataTraining(:,1) = expert.openVrescaled;
+                newHisDataTraining(:,2) = expert.maxVrescaled;
+                newHisDataTraining(:,3) = expert.minVrescaled;
+                newHisDataTraining(:,4) = expert.closeVrescaled;
+                newHisDataTraining(:,5) = expert.volrescaled;
+                newHisDataTraining(:,6) = expert.openDrescaled;
                 
                 expert.rescaleData(hisDataPaperTrad,actTimeScale,newTimeScale);
                 
-                closeXminsPaperTrad = expert.closeVrescaled;
-                dateXminsPaperTrad = expert.openDrescaled;
+                newHisDataPaperTrad(:,1) = expert.openVrescaled;
+                newHisDataPaperTrad(:,2) = expert.maxVrescaled;
+                newHisDataPaperTrad(:,3) = expert.minVrescaled;
+                newHisDataPaperTrad(:,4) = expert.closeVrescaled;
+                newHisDataPaperTrad(:,5) = expert.volrescaled;
+                newHisDataPaperTrad(:,6) = expert.openDrescaled;
                 
             end
             
@@ -108,17 +121,20 @@ classdef bktFast < handle
                 
                 display(['n =', num2str(n)]);
                 
+                
                 for m = M
-                    
-                    bktfast = algo;
-                    bktfast = bktfast.spin(hisDataTraining(:,4),closeXminsTraining,dateXminsTraining,newTimeScale,transCost,n,m,0);
-                    
-                    p = Performance_05;
-                    performance = p.calcSinglePerformance(nameAlgo,'bktWeb',cross,newTimeScale,cost,10000,10,bktfast.outputbkt,0);
-                    
-                    obj.R_over_maxDD(n,m) = performance.pipsEarned / abs(performance.maxDD);
-                    
-                    
+                    if( N_greater_than_M && n<=m )
+                        continue
+                    end
+                        bktfast = feval(algo);
+                        %                 spin(Pmin,matrixNewTimeScale, actTimeScale,newTimeScale, N, M, transCost, pips_TP, pips_SL, stdev_TP,stdev_SL, plot)
+                        bktfast = bktfast.spin(hisDataTraining(:,4), newHisDataTraining, actTimeScale, newTimeScale, n, m, transCost, pips_TP, pips_SL, stdev_TP, stdev_SL, 0);
+                        
+                        p = Performance_05;
+                        performance = p.calcSinglePerformance(nameAlgo,'bktWeb',Cross,newTimeScale,transCost,10000,10,bktfast.outputbkt,0);
+                        
+                        obj.R_over_maxDD(n,m) = performance.pipsEarned / abs(performance.maxDD);
+                        
                 end
                 
             end
@@ -135,40 +151,40 @@ classdef bktFast < handle
             
             display(['bestN =', num2str(bestN),' bestM =', num2str(bestM)]);
             
-            obj.bktfastTraining = algo;
-            obj.bktfastTraining = obj.bktfastTraining.spin(hisDataTraining(:,4),closeXminsTraining,dateXminsTraining,newTimeScale,transCost,n,m,0);
+            obj.bktfastTraining = feval(algo);
+            obj.bktfastTraining = obj.bktfastTraining.spin(hisDataTraining(:,4), newHisDataTraining, actTimeScale, newTimeScale, bestN, bestM, transCost, pips_TP, pips_SL, stdev_TP, stdev_SL, 0);
             
             p = Performance_05;
-            obj.performanceTraining = p.calcSinglePerformance(nameAlgo,'bktWeb',cross,newTimeScale,cost,10000,10,obj.bktfastTraining.outputbkt,0);
+            obj.performanceTraining = p.calcSinglePerformance(nameAlgo,'bktWeb',Cross,newTimeScale,transCost,10000,10,obj.bktfastTraining.outputbkt,0);
             
             risultato = obj.performanceTraining.pipsEarned / abs(obj.performanceTraining.maxDD);
             
             if WhatToPlot > 0
                 figure
-                plot(cumsum(bktfastTest.outputbkt(:,4)))
+                plot(cumsum(obj.bktfastTraining.outputbkt(:,4)))
                 title(['Training Best Result, Final R over maxDD = ',num2str( risultato) ])
             end
             
             
             %% perform paper trading
-            obj.bktfastPaperTrading = algo;
-            obj.bktfastPaperTrading = obj.bktfastPaperTrading.spin(hisDataTraining(:,4),closeXminsPaperTrad,dateXminsPaperTrad,newTimeScale,transCost,n,m,0);
+            obj.bktfastPaperTrading = feval(algo);
+            obj.bktfastPaperTrading = obj.bktfastPaperTrading.spin(hisDataPaperTrad(:,4), newHisDataPaperTrad, actTimeScale, newTimeScale, bestN, bestM, transCost, pips_TP, pips_SL, stdev_TP, stdev_SL, 0);
             
             p = Performance_05;
-            obj.performancePaperTrad = p.calcSinglePerformance(nameAlgo,'bktWeb',cross,newTimeScale,cost,10000,10,obj.bktfastPaperTrading.outputbkt,0);
+            obj.performancePaperTrad = p.calcSinglePerformance(nameAlgo,'bktWeb',Cross,newTimeScale,transCost,10000,10,obj.bktfastPaperTrading.outputbkt,0);
             risultato = obj.performancePaperTrad.pipsEarned / abs(obj.performancePaperTrad.maxDD);
             
             if WhatToPlot > 0
-            figure
-            plot(cumsum(obj.bktfastPaperTrading.outputbkt(:,4)))
-            title(['Paper Trading Result, Final R over maxDD = ',num2str( risultato) ])
+                figure
+                plot(cumsum(obj.bktfastPaperTrading.outputbkt(:,4)))
+                title(['Paper Trading Result, Final R over maxDD = ',num2str( risultato) ])
             end
             
-
+            
             
         end % end function optimize
         
-           
+        
     end % end of methods
     
     

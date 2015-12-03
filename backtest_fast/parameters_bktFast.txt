@@ -3,7 +3,8 @@
             % nameAlgo:                 string containing the name of the algo (your MATLAB function)
             % N:                        first optimization parameter (use array!!) -> lag,slowly varying
             % M:                        second optimization parameter (use array or put = 1!!) -> lead,highly varying
-            % cross:                    e.g. 'EURUSD'
+            % N_greater_than_M:         if = 1 then skip loops where n<=m (required in some algo with smoothing)
+            % Cross:                    e.g. 'EURUSD'
             % histName:                 filename containing hist prices, e.g. : 'nome_storico.csv'
             % actTimeScale:             timescale of the hist data, in minutes
             % newTimeScale:             new timescale to work with (rescale)
@@ -20,11 +21,12 @@
             % -------------------------------------------------------------
 
             
-nameAlgo = 'bkt_fast_002_leadlag' 
-N = 1:10                        		
-M = 1:10                  
-cross = 'EURUSD'            
-histName = 'EURUSD....'		   
+nameAlgo = 'bkt_fast_002_leadlag_dynamicalAsBtkReal' 
+N = 5:10                        		
+M = 1:10   
+N_greater_than_M = 1               
+Cross = 'EURUSD'            
+histName = 'EURUSD_smallsample2014_2015.csv'		   
 actTimeScale = 1             		
 newTimeScale = 30             		
 transCost = 1

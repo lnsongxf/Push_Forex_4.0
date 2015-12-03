@@ -18,10 +18,13 @@ classdef bkt_fast_002_leadlag_dynamicalAsBtkReal < handle
     
     methods
         
-        function obj = fast_002_leadlag(obj, Pminute,P,date,N,M,newTimeScale,cost,wSL,wTP,plottami)
+        function obj = spin(obj, Pminute, matrixNewHisData, ~, newTimeScale, N, M, cost, ~, ~, wTP, wSL, plottami)
             
             
             %% simula leadlag con TP e SL a seconda della volatilità
+            
+            P = matrixNewHisData(:,4);
+            date = matrixNewHisData(:,6);
             
             pandl = zeros(size(P));
             obj.trades = zeros(size(P));
@@ -81,7 +84,7 @@ classdef bkt_fast_002_leadlag_dynamicalAsBtkReal < handle
                             distance = floor(abs(Pminute(j) - StopLossPrice)/2);
                             
                             newStopL =  - segnoOperazione * ( (Pminute(j) - Pbuy) - segnoOperazione * distance );
-
+                            
                             %display(strcat('dynamical SL, the new SL is',' ',num2str(newStopL)));
                             
                             StopLossPrice    = Pbuy - segnoOperazione * newStopL;
