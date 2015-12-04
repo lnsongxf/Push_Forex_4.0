@@ -302,10 +302,10 @@ classdef coreState_real02 < handle
         
         %%
         
-        function obj = core_Algo_004_statTrend (obj,closure,params)
+        function obj = core_Algo_004_statTrend (obj,closure,params,timeSeriesProperties)
             
             %NOTE:
-            %LOGICA: fa 2 smoothing e quando si incrociano apre nella direzione dello smooth minore
+            %LOGICA: fa 2 smoothing e quando si incrociano apre se sono concordi
             %
             
             % non uso i dati al minuto per le valutazioni dello
@@ -329,8 +329,8 @@ classdef coreState_real02 < handle
             %             actualFluct2=closure(end)-smoothClose2(end);
             %             signDirection2=sign(actualFluct2);
             
-            gradient1=gradient(smoothClose1);
-            gradient2=gradient(smoothClose2);
+            gradient1=diff(smoothClose1);
+            gradient2=diff(smoothClose2);
             
             newSmoothClose1=smoothClose1(end);
             newSmoothClose2=smoothClose2(end);
@@ -354,6 +354,8 @@ classdef coreState_real02 < handle
             trend=newState+oldState;
             trendDirection=sign(newGradient2);
             
+            gradientHurst = timeSeriesProperties.HurstDiff(end);
+            
             %             subplot(1,2,1)
             %             cla
             %             plot(closePrice,'ob')
@@ -366,7 +368,8 @@ classdef coreState_real02 < handle
             %             hold on
             %             plot(newGradient2,'or')
             %
-            if inversion<0 && trend==2
+            
+            if inversion<0 && trend==2 && gradientHurst > 0
             %if trend==2
                 obj.state=1;
                 obj.suggestedDirection=trendDirection;

@@ -1,4 +1,4 @@
-function [oper, openValue, closeValue, stopLoss, noLoose, valueTp,st] = Algo_004_statTrend(matrix,newTimeScalePoint,openValueReal)
+function [oper, openValue, closeValue, stopLoss, noLoose, valueTp] = Algo_004_statTrend(matrix,newTimeScalePoint,openValueReal,timeSeriesProperties)
 
 %
 % DESCRIPTION:
@@ -36,8 +36,8 @@ function [oper, openValue, closeValue, stopLoss, noLoose, valueTp,st] = Algo_004
 % openValue: suggested opening price
 % closeValue: suggested closing price
 % stopLoss: suggested SL
-% noLoose: suggested TP                                         <-  THIS IS CONFUSING
-% valueTp: NOT USED IN THE MAIN PROGRAM !!!!     <- THIS IS CONFUSING
+% noLoose: suggested TP                          <-  THIS IS CONFUSING
+% valueTp: NOT USED IN THE MAIN PROGRAM !!!!     <-  THIS IS CONFUSING
 % st: output from the stationarity test
 %
 % EXAMPLE of use:
@@ -45,9 +45,9 @@ function [oper, openValue, closeValue, stopLoss, noLoose, valueTp,st] = Algo_004
 % to be used in bktOffline or in demo/live mode
 %
 
-global      map;
-persistent  counter;
-persistent  countCycle;
+global     map;
+persistent counter;
+persistent countCycle;
 % global      log;
 
 openValue = 0;
@@ -95,20 +95,34 @@ chiusure        = matrix(:,4);
 if newTimeScalePoint
     
     % 01a
-    % -------- coreState filter ------------------ %
-    cState.core_Algo_004_statTrend(chiusure(1:end-1),params);
+    % -------- stationarity Test ------------------ %
+    
+    st.stationarityTests(chiusure(1:end-1),30,0);
+    
+    a=st.HurstExponent;
+    c=st.pValue;
+    d=st.halflife;
+    
+    % 01c
+    % -------- .................. ----------------- %
+    if isfinite(timeSeriesProperties.HurstExponent(end))
+        smoothCoeff = 0.1;
+        [~,timeSeriesProperties.HurstDiff]=smoothDiff(timeSeriesProperties.HurstExponent,smoothCoeff);
+    end
+    
+    
+    % ----- update timeSeriesProperties ------------ %
+    b=timeSeriesProperties.HurstDiff(end);
+    
+    timeSeriesProperties.addPoint(a,b,c,d);
+    
     
     % 01b
-    % -------- stationarity Test ------------------ %
-    st.stationarityTests(chiusure(1:end-1),30,0);
+    % -------- coreState filter ------------------ %
+    cState.core_Algo_004_statTrend(chiusure(1:end-1),params,timeSeriesProperties);
+    
 end
-% stateC = cState.state;
-% if st.HurstExponent>0.5
-%     stateH=1;
-% else
-%     stateH=0;
-% end
-% state=stateC*stateH;
+
 state=cState.state;
 
 

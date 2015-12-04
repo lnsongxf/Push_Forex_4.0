@@ -366,20 +366,24 @@ classdef PerformanceDistribution_04 < handle
         
         
         %%
-        function obj=plotOperationOnHystorical(obj,timeSeriesProperties_)
+        function obj=plotOperationOnHystorical(obj,timeSeriesProperties)
             
             
             L=length(obj.HistData1min(:,4));
             xHistData1min=1:L;
             
-            H=timeSeriesProperties_(:,1);
+            H  = timeSeriesProperties.HurstExponent(:);
+            Hd = timeSeriesProperties.HurstDiff(:);
+%             pV = TimeSeriesProperties.pValue(:);
+%             hL = TimeSeriesProperties.halflife(:);
+                        
             lnewTimeScale=length(H);
             start=(obj.nData+1)*obj.freq;
             stop=(lnewTimeScale+obj.nData)*obj.freq;
             xProperties=start:obj.freq:stop;
             
             figure
-            s(1)=subplot(3,1,1);
+            s(1)=subplot(2,1,1);
             plot(xHistData1min,obj.HistData1min(:,4),'Color','k','LineWidth',1)
 
             hold on
@@ -403,13 +407,34 @@ classdef PerformanceDistribution_04 < handle
             legend('Price','Open win','Close win','Open lost','Close lost','MA10','MA60')
             
             s(2)=subplot(2,1,2);
-            plot(xProperties,H,'-k');
+            [~,hLine1,hLine2]=plotyy(xProperties,H,xProperties,Hd);
+            set(hLine1, 'Color', 'k','LineWidth',1);     
+            set(hLine2, 'Color', 'r','LineWidth',1);
             hold on
             lin1=zeros(length(xProperties))+0.5;
-            plot(xProperties,lin1,'-r');
-            legend('hurst exponent','random-walk line','H2 < 0.5 -> mean reverting -- H2 > 0.5 -> trending');
+            line(xProperties,lin1,'Color','r','LineWidth',1);
+            
+            smoothCoeff = 0.1;
+            HurstSmooth = smooth(H,smoothCoeff,'rloess');
+            line(xProperties,HurstSmooth,'Color','b','LineWidth',1);           
+
+            legend('hurst exponent','hurst gradient','random-walk line, H2 < 0.5 -> mean reverting -- H2 > 0.5 -> trending','H exp MA10');
             
             linkaxes(s,'x');
+            
+%             figure
+%             s2(1)=subplot(2,1,1);
+%             plot(xProperties,pV,'-k');
+%             hold on
+%             lin1=zeros(length(xProperties))+0.5;
+%             plot(xProperties,lin1,'-r');
+%             legend('pValue');
+%             
+%             s2(1)=subplot(2,1,2);
+%             plot(xProperties,hL,'-k');
+%             legend('halfLife');
+%             
+%             linkaxes(s2,'x');
             
             % plotyy(cumsum(obj.inputResultsMatrix(:,4)-obj.transCost),'plot');
         end
