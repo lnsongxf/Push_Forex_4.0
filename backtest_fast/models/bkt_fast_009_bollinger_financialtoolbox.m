@@ -19,7 +19,7 @@ classdef bkt_fast_009_bollinger_financialtoolbox < handle
     
     methods
         
-        function obj = fast_bollinger_financialtoolbox(obj, Pminute,P,date,newTimeScale,cost,N,nstd,plottami)
+        function obj = spin(obj, Pminute, matrixNewHisData, ~, newTimeScale, N, nstd, cost, ~, ~, ~, ~, plottami) 
             
             % Pminute = prezzo al minuto
             % P = prezzo alla new time scale
@@ -31,6 +31,9 @@ classdef bkt_fast_009_bollinger_financialtoolbox < handle
             
             %% simula algo Bollinger bands usando la funzione del financial toolbox
             % (invece dell'algo 003_bollinger che implementava secondo E.Chan)
+
+            P = matrixNewHisData(:,4);
+            date = matrixNewHisData(:,6);            
             
             pandl = zeros(size(P));
             obj.trades = zeros(size(P));

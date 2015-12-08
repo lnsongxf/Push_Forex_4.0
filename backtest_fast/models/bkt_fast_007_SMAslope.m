@@ -12,14 +12,17 @@ classdef bkt_fast_007_SMAslope < handle
         OpDates;
         closingPrices;
         ClDates;
+        indexClose;
         
     end
     
     
     methods
         
-        function obj = fast_SMAslope(obj, Pminute,P,date,maPeriod,threshold,newTimeScale,cost,wSL,wTP,plottami)
+        function obj = spin(obj, Pminute, matrixNewHisData, ~, newTimeScale, N, M, cost, ~, ~, wTP, wSL, plottami) 
             
+            maPeriod = N;
+            threshold = M;
             % Pminute = prezzo al minuto
             % P = prezzo alla new time scale
             % date = data alla new time scale
@@ -30,7 +33,9 @@ classdef bkt_fast_007_SMAslope < handle
             % wTP = peso per calcolare quando chiuder per TP
             
             %% utilizza segnale della slope di una simple moving average
-                        
+            
+            P = matrixNewHisData(:,4);
+            date = matrixNewHisData(:,6);
             
             pandl = zeros(size(P));
             obj.trades = zeros(size(P));
@@ -43,18 +48,18 @@ classdef bkt_fast_007_SMAslope < handle
             obj.r =zeros(size(P));
             
             ntrades = 0;
-            indexClose = 0;
+            obj.indexClose = 0;
             s = zeros(size(P));
             
             [~,sma]=movavg(P,1,maPeriod);
             indicator=sma(2:end) ./ sma(1:end-1);
             indicator(1:maPeriod)=0;
-
-
+            
+            
             s(indicator>threshold)=1;
             s(indicator<-threshold)=-1;
             
-
+            
             i = 101;
             
             
@@ -86,7 +91,7 @@ classdef bkt_fast_007_SMAslope < handle
                             %obj = obj.chiudi_per_TP(Pbuy, indice_I, segnoOperazione, devFluct2, wTP, cost, ntrades, date);
                             i = indice_I;
                             obj.chei(ntrades)=i;
-                            indexClose = indexClose + 1;
+                            obj.indexClose = obj.indexClose + 1;
                             break
                             
                         elseif cond3 && cond4
@@ -97,7 +102,7 @@ classdef bkt_fast_007_SMAslope < handle
                             %obj = obj.chiudi_per_SL(Pbuy, indice_I, segnoOperazione, devFluct2, wSL, cost, ntrades, date);
                             i = indice_I;
                             obj.chei(ntrades)=i;
-                            indexClose = indexClose + 1;
+                            obj.indexClose = obj.indexClose + 1;
                             break
                             
                         elseif cond5
@@ -107,7 +112,7 @@ classdef bkt_fast_007_SMAslope < handle
                             obj.ClDates(ntrades) = date(indice_I); %controlla
                             i = indice_I;
                             obj.chei(ntrades)=i;
-                            indexClose = indexClose + 1;
+                            obj.indexClose = obj.indexClose + 1;
                             break
                             
                         end
@@ -117,7 +122,7 @@ classdef bkt_fast_007_SMAslope < handle
                         
                     end
                     
-               
+                    
                 end
                 
                 i = i + 1;
@@ -132,16 +137,16 @@ classdef bkt_fast_007_SMAslope < handle
             %             profittofinale = sum(r);
             %
             
-            obj.outputbkt(:,1) = obj.chei(1:indexClose);                    % index of stick
-            obj.outputbkt(:,2) = obj.openingPrices(1:indexClose);      % opening price
-            obj.outputbkt(:,3) = obj.closingPrices(1:indexClose);        % closing price
-            obj.outputbkt(:,4) = (obj.closingPrices(1:indexClose) - ...
-                obj.openingPrices(1:indexClose)).*obj.direction(1:indexClose);   % returns
-            obj.outputbkt(:,5) = obj.direction(1:indexClose);              % direction
-            obj.outputbkt(:,6) = ones(indexClose,1);                    % real
-            obj.outputbkt(:,7) = obj.OpDates(1:indexClose);              % opening date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
-            obj.outputbkt(:,8) = obj.ClDates(1:indexClose);                % closing date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
-            obj.outputbkt(:,9) = ones(indexClose,1)*1;                 % lots setted for single operation
+            obj.outputbkt(:,1) = obj.chei(1:obj.indexClose);                    % index of stick
+            obj.outputbkt(:,2) = obj.openingPrices(1:obj.indexClose);      % opening price
+            obj.outputbkt(:,3) = obj.closingPrices(1:obj.indexClose);        % closing price
+            obj.outputbkt(:,4) = (obj.closingPrices(1:obj.indexClose) - ...
+                obj.openingPrices(1:obj.indexClose)).*obj.direction(1:obj.indexClose);   % returns
+            obj.outputbkt(:,5) = obj.direction(1:obj.indexClose);              % direction
+            obj.outputbkt(:,6) = ones(obj.indexClose,1);                    % real
+            obj.outputbkt(:,7) = obj.OpDates(1:obj.indexClose);              % opening date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
+            obj.outputbkt(:,8) = obj.ClDates(1:obj.indexClose);                % closing date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
+            obj.outputbkt(:,9) = ones(obj.indexClose,1)*1;                 % lots setted for single operation
             
             
             
@@ -175,24 +180,24 @@ classdef bkt_fast_007_SMAslope < handle
             
         end
         
-
         
         
-%         function [obj] = chiudi_per_SL(obj, Pbuy, indice_I, segnoOperazione, devFluct2, wSL, cost, ntrades, date)
-%             
-%             obj.r(indice_I) = - wSL*devFluct2 - cost;
-%             obj.closingPrices(ntrades) = Pbuy - segnoOperazione*floor(wSL*devFluct2);
-%             obj.ClDates(ntrades) = date(indice_I); %controlla
-%             
-%         end
-%         
-%         function [obj] = chiudi_per_TP(obj, Pbuy, indice_I, segnoOperazione, devFluct2, wTP, cost, ntrades, date)
-%             
-%             obj.r(indice_I) = wTP*devFluct2 - cost;
-%             obj.closingPrices(ntrades) = Pbuy + segnoOperazione*floor(wTP*devFluct2);
-%             obj.ClDates(ntrades) = date(indice_I); %controlla
-%             
-%         end
+        
+        %         function [obj] = chiudi_per_SL(obj, Pbuy, indice_I, segnoOperazione, devFluct2, wSL, cost, ntrades, date)
+        %
+        %             obj.r(indice_I) = - wSL*devFluct2 - cost;
+        %             obj.closingPrices(ntrades) = Pbuy - segnoOperazione*floor(wSL*devFluct2);
+        %             obj.ClDates(ntrades) = date(indice_I); %controlla
+        %
+        %         end
+        %
+        %         function [obj] = chiudi_per_TP(obj, Pbuy, indice_I, segnoOperazione, devFluct2, wTP, cost, ntrades, date)
+        %
+        %             obj.r(indice_I) = wTP*devFluct2 - cost;
+        %             obj.closingPrices(ntrades) = Pbuy + segnoOperazione*floor(wTP*devFluct2);
+        %             obj.ClDates(ntrades) = date(indice_I); %controlla
+        %
+        %         end
         
         
     end

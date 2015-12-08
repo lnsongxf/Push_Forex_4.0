@@ -12,14 +12,17 @@ classdef bkt_fast_005_macd < handle
         OpDates;
         closingPrices;
         ClDates;
+        indexClose;
         
     end
     
     
     methods
         
-        function obj = fast_macd(obj, Pminute,P,date,newTimeScale,cost,wSL,wTP,plottami)
-            
+        function obj = spin(obj, Pminute, matrixNewHisData, ~, newTimeScale, N, M, cost, ~, ~, ~, ~, plottami)
+
+            wTP = N;
+            wSL = M;
             % Pminute = prezzo al minuto
             % P = prezzo alla new time scale
             % date = data alla new time scale
@@ -28,7 +31,9 @@ classdef bkt_fast_005_macd < handle
             % wTP = peso per calcolare quando chiuder per TP
             
             %% utilizza segnale del moving average convergence divergence
-                        
+             P = matrixNewHisData(:,4);
+            date = matrixNewHisData(:,6);
+            
             
             pandl = zeros(size(P));
             obj.trades = zeros(size(P));
@@ -41,7 +46,7 @@ classdef bkt_fast_005_macd < handle
             obj.r =zeros(size(P));
             
             ntrades = 0;
-            indexClose = 0;
+            obj.indexClose = 0;
             s = zeros(size(P));
             
             [macdvec, nineperma] = macd(P);
@@ -80,7 +85,7 @@ classdef bkt_fast_005_macd < handle
                             %obj = obj.chiudi_per_TP(Pbuy, indice_I, segnoOperazione, devFluct2, wTP, cost, ntrades, date);
                             i = indice_I;
                             obj.chei(ntrades)=i;
-                            indexClose = indexClose + 1;
+                            obj.indexClose = obj.indexClose + 1;
                             break
                             
                         elseif cond3 && cond4
@@ -91,7 +96,7 @@ classdef bkt_fast_005_macd < handle
                             %obj = obj.chiudi_per_SL(Pbuy, indice_I, segnoOperazione, devFluct2, wSL, cost, ntrades, date);
                             i = indice_I;
                             obj.chei(ntrades)=i;
-                            indexClose = indexClose + 1;
+                            obj.indexClose = obj.indexClose + 1;
                             break
                             
 %                         elseif cond5
@@ -101,7 +106,7 @@ classdef bkt_fast_005_macd < handle
 %                             obj.ClDates(ntrades) = date(indice_I); %controlla
 %                             i = indice_I;
 %                             obj.chei(ntrades)=i;
-%                             indexClose = indexClose + 1;
+%                             obj.indexClose = obj.indexClose + 1;
 %                             break
 %                             
                         end
@@ -126,16 +131,16 @@ classdef bkt_fast_005_macd < handle
             %             profittofinale = sum(r);
             %
             
-            obj.outputbkt(:,1) = obj.chei(1:indexClose);                    % index of stick
-            obj.outputbkt(:,2) = obj.openingPrices(1:indexClose);      % opening price
-            obj.outputbkt(:,3) = obj.closingPrices(1:indexClose);        % closing price
-            obj.outputbkt(:,4) = (obj.closingPrices(1:indexClose) - ...
-                obj.openingPrices(1:indexClose)).*obj.direction(1:indexClose);   % returns
-            obj.outputbkt(:,5) = obj.direction(1:indexClose);              % direction
-            obj.outputbkt(:,6) = ones(indexClose,1);                    % real
-            obj.outputbkt(:,7) = obj.OpDates(1:indexClose);              % opening date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
-            obj.outputbkt(:,8) = obj.ClDates(1:indexClose);                % closing date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
-            obj.outputbkt(:,9) = ones(indexClose,1)*1;                 % lots setted for single operation
+            obj.outputbkt(:,1) = obj.chei(1:obj.indexClose);                    % index of stick
+            obj.outputbkt(:,2) = obj.openingPrices(1:obj.indexClose);      % opening price
+            obj.outputbkt(:,3) = obj.closingPrices(1:obj.indexClose);        % closing price
+            obj.outputbkt(:,4) = (obj.closingPrices(1:obj.indexClose) - ...
+                obj.openingPrices(1:obj.indexClose)).*obj.direction(1:obj.indexClose);   % returns
+            obj.outputbkt(:,5) = obj.direction(1:obj.indexClose);              % direction
+            obj.outputbkt(:,6) = ones(obj.indexClose,1);                    % real
+            obj.outputbkt(:,7) = obj.OpDates(1:obj.indexClose);              % opening date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
+            obj.outputbkt(:,8) = obj.ClDates(1:obj.indexClose);                % closing date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
+            obj.outputbkt(:,9) = ones(obj.indexClose,1)*1;                 % lots setted for single operation
             
             
             
