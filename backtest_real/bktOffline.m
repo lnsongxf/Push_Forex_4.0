@@ -175,6 +175,9 @@ classdef bktOffline < handle
                             obj.timeSeriesPropertiesOffline.HurstDiff(k-1,1) = obj.timeSeriesProperties.HurstDiff(end);
                             obj.timeSeriesPropertiesOffline.pValue (k-1,1) = obj.timeSeriesProperties.pValue(end);
                             obj.timeSeriesPropertiesOffline.halflife(k-1,1) = obj.timeSeriesProperties.halflife(end);
+                            if k >= 101
+                            obj.timeSeriesPropertiesOffline.HurstSmooth(k-100:k-1,1) = obj.timeSeriesProperties.HurstSmooth;
+                            end
                         end
                         
                         newTimeScalePoint=0;

@@ -366,14 +366,15 @@ classdef PerformanceDistribution_04 < handle
         
         
         %%
-        function obj=plotOperationOnHystorical(obj,timeSeriesProperties)
+        function obj=plotOperationOnHystorical(obj,timeSeriesPropertiesOffline)
             
             
             L=length(obj.HistData1min(:,4));
             xHistData1min=1:L;
             
-            H  = timeSeriesProperties.HurstExponent(:);
-            Hd = timeSeriesProperties.HurstDiff(:);
+            H  = timeSeriesPropertiesOffline.HurstExponent;
+            Hd = timeSeriesPropertiesOffline.HurstDiff;
+            Hs = timeSeriesPropertiesOffline.HurstSmooth;
 %             pV = TimeSeriesProperties.pValue(:);
 %             hL = TimeSeriesProperties.halflife(:);
                         
@@ -383,7 +384,7 @@ classdef PerformanceDistribution_04 < handle
             xProperties=start:obj.freq:stop;
             
             figure
-            s(1)=subplot(2,1,1);
+            s(1)=subplot(3,1,1);
             plot(xHistData1min,obj.HistData1min(:,4),'Color','k','LineWidth',1)
 
             hold on
@@ -406,19 +407,23 @@ classdef PerformanceDistribution_04 < handle
             
             legend('Price','Open win','Close win','Open lost','Close lost','MA10','MA60')
             
-            s(2)=subplot(2,1,2);
-            [~,hLine1,hLine2]=plotyy(xProperties,H,xProperties,Hd);
-            set(hLine1, 'Color', 'k','LineWidth',1);     
-            set(hLine2, 'Color', 'r','LineWidth',1);
+            s(2)=subplot(3,1,2);
+            plot(xProperties,H,'r');
             hold on
-            lin1=zeros(length(xProperties))+0.5;
-            line(xProperties,lin1,'Color','r','LineWidth',1);
+            lin1=zeros(length(xProperties));
+            line(xProperties,lin1+0.5,'Color','r','LineWidth',1);
             
             smoothCoeff = 0.1;
-            HurstSmooth = smooth(H,smoothCoeff,'rloess');
-            line(xProperties,HurstSmooth,'Color','b','LineWidth',1);           
-
-            legend('hurst exponent','hurst gradient','random-walk line, H2 < 0.5 -> mean reverting -- H2 > 0.5 -> trending','H exp MA10');
+            Hss = smooth(H,smoothCoeff,'rloess');
+            line(xProperties,Hs,'Color','b','LineWidth',1); 
+            line(xProperties,Hss,'Color','g','LineWidth',1);      
+            
+            legend('hurst exponent','random-walk line, H2 < 0.5 -> mean reverting -- H2 > 0.5 -> trending','hurst smooth','hurst smooth theoretical');
+            
+            s(3)=subplot(3,1,3);
+            plot(xProperties,Hd,'b');
+            line(xProperties,lin1,'Color','r','LineWidth',1);
+            legend('first derivative', '0 line')
             
             linkaxes(s,'x');
             

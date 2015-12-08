@@ -15,6 +15,7 @@ classdef indicatorsOffline < handle
      HurstDiff
      pValue
      halflife
+     HurstSmooth
         
     end
     

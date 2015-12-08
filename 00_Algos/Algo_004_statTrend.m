@@ -106,23 +106,28 @@ if newTimeScalePoint
     % 01c
     % -------- .................. ----------------- %
     if isfinite(timeSeriesProperties.HurstExponent(end))
-        smoothCoeff = 0.1;
-        [~,timeSeriesProperties.HurstDiff]=smoothDiff(timeSeriesProperties.HurstExponent,smoothCoeff);
+        smoothCoeff = 0.5;
+        [timeSeriesProperties.HurstSmooth,timeSeriesProperties.HurstDiff]=smoothDiff(timeSeriesProperties.HurstExponent,smoothCoeff);
     end
     
     
     % ----- update timeSeriesProperties ------------ %
-    b=timeSeriesProperties.HurstDiff(end);
+    b=mean(timeSeriesProperties.HurstDiff(end-5:end-1));
+    e=timeSeriesProperties.HurstSmooth(end);
     
-    timeSeriesProperties.addPoint(a,b,c,d);
+    timeSeriesProperties.addPoint(a,b,c,d,e);
     
-    
+%     plot(timeSeriesProperties.HurstExponent,'-b');
+%     hold on
+%     plot(timeSeriesProperties.HurstSmooth,'-or');
+%     
+%     cla
+
     % 01b
     % -------- coreState filter ------------------ %
     cState.core_Algo_004_statTrend(chiusure(1:end-1),params,timeSeriesProperties);
     
 end
-
 state=cState.state;
 
 

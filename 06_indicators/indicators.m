@@ -15,17 +15,19 @@ classdef indicators < handle
      HurstDiff     = nan(100,1)
      pValue        = nan(100,1);
      halflife      = nan(100,1);
+     HurstSmooth   = nan(100,1);
         
     end
     
     methods
         
-        function addPoint(obj,HurstPoint,HurstDiffPoint, pValuePoint, halflifePoint)
+        function addPoint(obj,HurstPoint,HurstDiffPoint, pValuePoint, halflifePoint, HurstSmoothPoint)
            
             obj.HurstExponent = [ obj.HurstExponent(2:end) ; HurstPoint ];
-            obj.HurstDiff     = [ obj.HurstDiff(2:end) ; HurstDiffPoint ];
+            obj.HurstDiff     = [ obj.HurstDiff(2:end) ; HurstDiffPoint ];            
             obj.pValue        = [ obj.pValue(2:end) ; pValuePoint ];
             obj.halflife      = [ obj.halflife(2:end) ; halflifePoint ];
+            obj.HurstSmooth   = [ obj.HurstSmooth(2:end) ; HurstSmoothPoint ];
             
         end
     
