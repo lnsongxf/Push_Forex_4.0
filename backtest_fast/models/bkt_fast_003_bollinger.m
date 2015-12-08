@@ -18,7 +18,7 @@ classdef bkt_fast_003_bollinger < handle
     
     methods
         
-        function obj = fast_bollinger(obj, Pminute,P,date,N,newTimeScale,cost,wApri,wChiudi,plottami)
+        function obj = spin(obj, Pminute, matrixNewHisData, ~, newTimeScale, N, ~, cost, ~, ~, wApri, wChiudi, plottami)
             
             % Pminute = prezzo al minuto
             % P = prezzo alla new time scale
@@ -30,6 +30,9 @@ classdef bkt_fast_003_bollinger < handle
             
             
             %% simula algo Bollinger bands
+            
+            P = matrixNewHisData(:,4);
+            date = matrixNewHisData(:,6);
             
             pandl = zeros(size(P));
             obj.trades = zeros(size(P));

@@ -18,10 +18,14 @@ classdef bkt_fast_002b_leadlag_dynamicalSL < handle
     
     methods
         
-        function obj = fast_002b_leadlag(obj, Pminute,P,date,N,M,newTimeScale,cost,wSL,wTP,plottami)
+        function obj = spin(obj, Pminute, matrixNewHisData, ~, newTimeScale, N, M, cost, ~, ~, wTP, wSL, plottami)            
             
             
             %% simula leadlag con TP e SL a seconda della volatilità
+            
+            P = matrixNewHisData(:,4);
+            date = matrixNewHisData(:,6);
+            
             
             pandl = zeros(size(P));
             obj.trades = zeros(size(P));
