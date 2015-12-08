@@ -12,6 +12,7 @@ classdef bkt_fast_002b_leadlag_dynamicalSL < handle
         OpDates;
         closingPrices;
         ClDates;
+        indexClose;
         
     end
     

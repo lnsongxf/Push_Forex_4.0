@@ -129,12 +129,13 @@ classdef bktFast < handle
                         bktfast = feval(algo);
                         %                 spin(Pmin,matrixNewTimeScale, actTimeScale,newTimeScale, N, M, transCost, pips_TP, pips_SL, stdev_TP,stdev_SL, plot)
                         bktfast = bktfast.spin(hisDataTraining(:,4), newHisDataTraining, actTimeScale, newTimeScale, n, m, transCost, pips_TP, pips_SL, stdev_TP, stdev_SL, 0);
-                        
-                        p = Performance_05;
-                        performance = p.calcSinglePerformance(nameAlgo,'bktWeb',Cross,newTimeScale,transCost,10000,10,bktfast.outputbkt,0);
-                        
-                        obj.R_over_maxDD(n,m) = performance.pipsEarned / abs(performance.maxDD);
-                        
+
+                        if bktfast.indexClose>20
+                            p = Performance_05;
+                            performance = p.calcSinglePerformance(nameAlgo,'bktWeb',Cross,newTimeScale,transCost,10000,10,bktfast.outputbkt,0);
+                            
+                            obj.R_over_maxDD(n,m) = performance.pipsEarned / abs(performance.maxDD);
+                        end
                 end
                 
             end

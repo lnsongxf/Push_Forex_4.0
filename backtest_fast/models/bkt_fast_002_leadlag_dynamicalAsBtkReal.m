@@ -12,6 +12,7 @@ classdef bkt_fast_002_leadlag_dynamicalAsBtkReal < handle
         OpDates;
         closingPrices;
         ClDates;
+        obj.indexClose;
         
     end
     
@@ -37,7 +38,7 @@ classdef bkt_fast_002_leadlag_dynamicalAsBtkReal < handle
             obj.r =zeros(size(P));
             
             ntrades = 0;
-            indexClose = 0;
+            obj.indexClose = 0;
             s = zeros(size(P));
             
             
@@ -123,7 +124,7 @@ classdef bkt_fast_002_leadlag_dynamicalAsBtkReal < handle
                             %obj = obj.chiudi_per_TP(Pbuy, indice_I, segnoOperazione, devFluct2, wTP, cost, ntrades, date);
                             i = indice_I;
                             obj.chei(ntrades)=i;
-                            indexClose = indexClose + 1;
+                            obj.indexClose = obj.indexClose + 1;
                             break
                             
                         end
@@ -148,16 +149,16 @@ classdef bkt_fast_002_leadlag_dynamicalAsBtkReal < handle
             %             profittofinale = sum(r);
             %
             
-            obj.outputbkt(:,1) = obj.chei(1:indexClose);                    % index of stick
-            obj.outputbkt(:,2) = obj.openingPrices(1:indexClose);      % opening price
-            obj.outputbkt(:,3) = obj.closingPrices(1:indexClose);        % closing price
-            obj.outputbkt(:,4) = (obj.closingPrices(1:indexClose) - ...
-                obj.openingPrices(1:indexClose)).*obj.direction(1:indexClose);   % returns
-            obj.outputbkt(:,5) = obj.direction(1:indexClose);              % direction
-            obj.outputbkt(:,6) = ones(indexClose,1);                    % real
-            obj.outputbkt(:,7) = obj.OpDates(1:indexClose);              % opening date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
-            obj.outputbkt(:,8) = obj.ClDates(1:indexClose);                % closing date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
-            obj.outputbkt(:,9) = ones(indexClose,1)*1;                 % lots setted for single operation
+            obj.outputbkt(:,1) = obj.chei(1:obj.indexClose);                    % index of stick
+            obj.outputbkt(:,2) = obj.openingPrices(1:obj.indexClose);      % opening price
+            obj.outputbkt(:,3) = obj.closingPrices(1:obj.indexClose);        % closing price
+            obj.outputbkt(:,4) = (obj.closingPrices(1:obj.indexClose) - ...
+                obj.openingPrices(1:obj.indexClose)).*obj.direction(1:obj.indexClose);   % returns
+            obj.outputbkt(:,5) = obj.direction(1:obj.indexClose);              % direction
+            obj.outputbkt(:,6) = ones(obj.indexClose,1);                    % real
+            obj.outputbkt(:,7) = obj.OpDates(1:obj.indexClose);              % opening date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
+            obj.outputbkt(:,8) = obj.ClDates(1:obj.indexClose);                % closing date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
+            obj.outputbkt(:,9) = ones(obj.indexClose,1)*1;                 % lots setted for single operation
             
             
             

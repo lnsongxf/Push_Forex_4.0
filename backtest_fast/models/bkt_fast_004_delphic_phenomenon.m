@@ -12,24 +12,28 @@ classdef bkt_fast_004_delphic_phenomenon < handle
         OpDates;
         closingPrices;
         ClDates;
+        indexClose;
         
     end
     
     
     methods
         
-        function obj = fast_delphic_phenomenon(obj, P, date, cost, N, M, plottami)
+        function obj = spin(obj, ~, matrixNewHisData, ~, ~, N, M, cost, ~, ~, ~, ~, plottami)
             
             % P=chiusure a timescale almeno alla mezz ora
             % date = date delle chiusure P
             % cost = spread per operazione (calcolato quando chiudi)
-            % N = frequenza smooth alta (lead, in letteratura=18)
-            % M = frequenza smooth bassa (lag, in letteratura=40)
+            % N = frequenza smooth alta (lag, in letteratura=40)
+            % M = frequenza smooth bassa (lead, in letteratura=18)
             % plottami =1 se vuoi plot alla fine, se no =0
             
             
             %% utilizza indicatore "delphic_phenomenon" con due medie mobili e prezzo a mezz ore o più lungo
             % guarda qui: https://www.ig.com/it/il-delphic-phenomenon
+            
+            P = matrixNewHisData(:,4);
+            date = matrixNewHisData(:,6);
             
             pandl = zeros(size(P));
             obj.trades = zeros(size(P));
@@ -42,15 +46,15 @@ classdef bkt_fast_004_delphic_phenomenon < handle
             obj.r =zeros(size(P));
             
             ntrades = 0;
-            indexClose = 0;
+            obj.indexClose = 0;
             s = zeros(size(P));
             slead = zeros(size(P));
             slag = zeros(size(P));
             
-            a = (1/N)*ones(1,N);
+            a = (1/M)*ones(1,M);
             lead = filter(a,1,P);
             
-            b = (1/M)*ones(1,M);
+            b = (1/N)*ones(1,N);
             lag = filter(b,1,P);
             
             s(lead>lag)=1;
@@ -61,7 +65,7 @@ classdef bkt_fast_004_delphic_phenomenon < handle
             
             % slag dice se P è maggiore di lag
             slag(P>lag)=1;
-
+            
             condition1_long = 0;
             condition1_short= 0;
             
@@ -110,9 +114,9 @@ classdef bkt_fast_004_delphic_phenomenon < handle
                                         obj.closingPrices(ntrades) = P(k);
                                         obj.ClDates(ntrades) = date(k);
                                         obj.chei(ntrades)=i;
-                                        indexClose = indexClose + 1;
+                                        obj.indexClose = obj.indexClose + 1;
                                         break
-                                    
+                                        
                                     end
                                     
                                 end
@@ -139,7 +143,7 @@ classdef bkt_fast_004_delphic_phenomenon < handle
                                         obj.closingPrices(ntrades) = P(k);
                                         obj.ClDates(ntrades) = date(k);
                                         obj.chei(ntrades)=i;
-                                        indexClose = indexClose + 1;
+                                        obj.indexClose = obj.indexClose + 1;
                                         break
                                         
                                     end
@@ -164,18 +168,18 @@ classdef bkt_fast_004_delphic_phenomenon < handle
                 
                 i = i + 1;
             end
-                
             
-            obj.outputbkt(:,1) = obj.chei(1:indexClose);                    % index of stick
-            obj.outputbkt(:,2) = obj.openingPrices(1:indexClose);      % opening price
-            obj.outputbkt(:,3) = obj.closingPrices(1:indexClose);        % closing price
-            obj.outputbkt(:,4) = (obj.closingPrices(1:indexClose) - ...
-                obj.openingPrices(1:indexClose)).*obj.direction(1:indexClose);   % returns
-            obj.outputbkt(:,5) = obj.direction(1:indexClose);              % direction
-            obj.outputbkt(:,6) = ones(indexClose,1);                    % real
-            obj.outputbkt(:,7) = obj.OpDates(1:indexClose);              % opening date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
-            obj.outputbkt(:,8) = obj.ClDates(1:indexClose);                % closing date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
-            obj.outputbkt(:,9) = ones(indexClose,1)*1;                 % lots setted for single operation
+            
+            obj.outputbkt(:,1) = obj.chei(1:obj.indexClose);                    % index of stick
+            obj.outputbkt(:,2) = obj.openingPrices(1:obj.indexClose);      % opening price
+            obj.outputbkt(:,3) = obj.closingPrices(1:obj.indexClose);        % closing price
+            obj.outputbkt(:,4) = (obj.closingPrices(1:obj.indexClose) - ...
+                obj.openingPrices(1:obj.indexClose)).*obj.direction(1:obj.indexClose);   % returns
+            obj.outputbkt(:,5) = obj.direction(1:obj.indexClose);              % direction
+            obj.outputbkt(:,6) = ones(obj.indexClose,1);                    % real
+            obj.outputbkt(:,7) = obj.OpDates(1:obj.indexClose);              % opening date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
+            obj.outputbkt(:,8) = obj.ClDates(1:obj.indexClose);                % closing date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
+            obj.outputbkt(:,9) = ones(obj.indexClose,1)*1;                 % lots setted for single operation
             
             
             

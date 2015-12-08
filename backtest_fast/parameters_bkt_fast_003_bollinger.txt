@@ -24,7 +24,7 @@
 nameAlgo = 'bkt_fast_003_bollinger' 
 
 % N qui e' il lookback period per calcolare media e stdev
-N = 5:10
+N = 8:20
 
 % M is not used                        		
 M = 1   
@@ -39,8 +39,8 @@ pips_TP = 100
 pips_SL = 100
 
 % in questo caso stdev_TP e' la deviazione dallo zScore necessaria x aprire l' operazione
-stdev_TP = 5 
+stdev_TP = 2 
 % in questo caso stdev_SL e' la deviazione dallo zScore necessaria x chiudere l' operazione  
-stdev_SL = 5   	
+stdev_SL = 2   	
 
 WhatToPlot = 3               			
