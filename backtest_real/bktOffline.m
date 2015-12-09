@@ -162,7 +162,7 @@ classdef bktOffline < handle
                         
                         matrix(end,:) = hisData(indexHisData,:);
                         
-                        [oper, openValue, closeValue, stopLoss, takeProfit, valueTp] = algo(matrix,newTimeScalePoint,openValueReal,obj.timeSeriesProperties);
+                        [oper, openValue, closeValue, stopLoss, takeProfit, valueTp] = algo(matrix,newTimeScalePoint,openValueReal,obj.timeSeriesProperties,indexHisData);
                         
                         newState{1} = oper;
                         newState{2} = openValue;

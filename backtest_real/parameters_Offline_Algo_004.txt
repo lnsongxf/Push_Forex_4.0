@@ -30,4 +30,4 @@ transCost = 1
 initialStack = 10000
 Leverage = 10
 plotPerformance = 1
-plotPerDistribution = 5 
+plotPerDistribution = 3 

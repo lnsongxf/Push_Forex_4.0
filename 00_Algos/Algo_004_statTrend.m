@@ -1,4 +1,4 @@
-function [oper, openValue, closeValue, stopLoss, noLoose, valueTp] = Algo_004_statTrend(matrix,newTimeScalePoint,openValueReal,timeSeriesProperties)
+function [oper, openValue, closeValue, stopLoss, noLoose, valueTp] = Algo_004_statTrend(matrix,newTimeScalePoint,openValueReal,timeSeriesProperties,indexHisData)
 
 %
 % DESCRIPTION:
@@ -48,7 +48,10 @@ function [oper, openValue, closeValue, stopLoss, noLoose, valueTp] = Algo_004_st
 global     map;
 persistent counter;
 persistent countCycle;
+persistent openingTime;
 % global      log;
+
+latencyTreshold = 1600;    % latency treshold in minutes
 
 openValue = 0;
 closeValue= 0;
@@ -149,11 +152,20 @@ else
         % 02a
         % -------- takeProfitManager: close for TP or SL ------ %
         if openValueReal > 0
-            
+
             params.set('openValue_',openValueReal);
+            
             %[operationState,~, params] = timeClosureManager (operationState, chiusure, params,5000);
-            [params,TakeProfitPrice,StopLossPrice] = dynamicalTPandSLManager(operationState, chiusure, params);
-            [operationState,~, params] = directTakeProfitManager (operationState, chiusure, params,TakeProfitPrice,StopLossPrice);
+            dynamicParameters {1} = 1.1;
+            [params,TakeProfitPrice,StopLossPrice,dynamicOn] = dynamicalTPandSLManager(operationState, chiusure, params,@closingForApproaching,dynamicParameters);
+            if dynamicOn  == 1
+                openingTime = indexHisData;
+            end
+            
+            closingTime     = indexHisData;
+            Latency         = closingTime - openingTime;
+            
+            [operationState,~, params] = directTakeProfitManager (operationState, chiusure, params,TakeProfitPrice,StopLossPrice,Latency,latencyTreshold);
             
         elseif openValueReal < 0
             
@@ -177,6 +189,8 @@ else
             [params, operationState, counter] = decMaker.decisionDirectionByCore(chiusure,params,operationState,cState,TakeP,StopL);
             
             display('Matlab ha deciso di aprire');
+            
+            openingTime = indexHisData;
             
             % 03c
             % -------- decMaker lock manager -------------------- %

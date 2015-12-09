@@ -83,7 +83,7 @@ classdef PerformanceDistribution_04 < handle
             obj.transCost=transCost_;
             obj.HistData1min=HistData_1min_;
             obj.HistDatafreq=HistData_freq_;
-                
+            
             
             operations = obj.inputResultsMatrix(:,4);
             win_operations = obj.inputResultsMatrix( (operations>0) , : );
@@ -108,7 +108,7 @@ classdef PerformanceDistribution_04 < handle
             [~,obj.rowHistpCl,obj.rowRespCl] = intersect(obj.HistData1min(:,6), date_close_win, 'stable');
             [~,obj.rowHistnCl,obj.rowResnCl] = intersect(obj.HistData1min(:,6), date_close_lost, 'stable');
             
-         
+            
             
             switch plotPerDistribution
                 case 0
@@ -116,12 +116,13 @@ classdef PerformanceDistribution_04 < handle
                 case 1
                     obj=obj.analysisMicroParams(nstep);
                 case 2
+                    obj=obj.analysisMicroParams(nstep);
                     obj=obj.analysisMacroParams;
                 case 3
+                    obj=obj.analysisMicroParams(nstep);
+                    obj=obj.analysisMacroParams;
                     obj=obj.analysisReturnsPattern(nstepeq,dimCluster);
                 case 4
-                    obj=obj.plotOperationOnHystorical;
-                case 5
                     obj=obj.analysisMicroParams(nstep);
                     obj=obj.analysisMacroParams;
                     obj=obj.analysisReturnsPattern(nstepeq,dimCluster);
@@ -375,9 +376,9 @@ classdef PerformanceDistribution_04 < handle
             H  = timeSeriesPropertiesOffline.HurstExponent;
             Hd = timeSeriesPropertiesOffline.HurstDiff;
             Hs = timeSeriesPropertiesOffline.HurstSmooth;
-%             pV = TimeSeriesProperties.pValue(:);
-%             hL = TimeSeriesProperties.halflife(:);
-                        
+            %             pV = TimeSeriesProperties.pValue(:);
+            %             hL = TimeSeriesProperties.halflife(:);
+            
             lnewTimeScale=length(H);
             start=(obj.nData+1)*obj.freq;
             stop=(lnewTimeScale+obj.nData)*obj.freq;
@@ -386,14 +387,14 @@ classdef PerformanceDistribution_04 < handle
             figure
             s(1)=subplot(3,1,1);
             plot(xHistData1min,obj.HistData1min(:,4),'Color','k','LineWidth',1)
-
+            
             hold on
             plot(obj.rowHistpOp,obj.HistData1min(obj.rowHistpOp,4),'ob')
             plot(obj.rowHistpCl,obj.HistData1min(obj.rowHistpCl,4),'*b')
             
             plot(obj.rowHistnOp,obj.HistData1min(obj.rowHistnOp,4),'or')
             plot(obj.rowHistnCl,obj.HistData1min(obj.rowHistnCl,4),'*r')
-
+            
             windowSize1 = 10;
             a = (1/windowSize1)*ones(1,windowSize1);
             smoothClose1 = filter(a,1,obj.HistDatafreq(obj.nData+1:end,4));
@@ -401,7 +402,7 @@ classdef PerformanceDistribution_04 < handle
             windowSize2 = 50;
             b = (1/windowSize2)*ones(1,windowSize2);
             smoothClose2 = filter(b,1,obj.HistDatafreq(obj.nData+1:end,4));
-         
+            
             line(xProperties(windowSize2:end),smoothClose1(windowSize2:end),'Color','b','LineWidth',1);
             line(xProperties(windowSize2:end),smoothClose2(windowSize2:end),'Color','r','LineWidth',1);
             
@@ -415,8 +416,8 @@ classdef PerformanceDistribution_04 < handle
             
             smoothCoeff = 0.1;
             Hss = smooth(H,smoothCoeff,'rloess');
-            line(xProperties,Hs,'Color','b','LineWidth',1); 
-            line(xProperties,Hss,'Color','g','LineWidth',1);      
+            line(xProperties,Hs,'Color','b','LineWidth',1);
+            line(xProperties,Hss,'Color','g','LineWidth',1);
             
             legend('hurst exponent','random-walk line, H2 < 0.5 -> mean reverting -- H2 > 0.5 -> trending','hurst smooth','hurst smooth theoretical');
             
@@ -427,19 +428,19 @@ classdef PerformanceDistribution_04 < handle
             
             linkaxes(s,'x');
             
-%             figure
-%             s2(1)=subplot(2,1,1);
-%             plot(xProperties,pV,'-k');
-%             hold on
-%             lin1=zeros(length(xProperties))+0.5;
-%             plot(xProperties,lin1,'-r');
-%             legend('pValue');
-%             
-%             s2(1)=subplot(2,1,2);
-%             plot(xProperties,hL,'-k');
-%             legend('halfLife');
-%             
-%             linkaxes(s2,'x');
+            %             figure
+            %             s2(1)=subplot(2,1,1);
+            %             plot(xProperties,pV,'-k');
+            %             hold on
+            %             lin1=zeros(length(xProperties))+0.5;
+            %             plot(xProperties,lin1,'-r');
+            %             legend('pValue');
+            %
+            %             s2(1)=subplot(2,1,2);
+            %             plot(xProperties,hL,'-k');
+            %             legend('halfLife');
+            %
+            %             linkaxes(s2,'x');
             
             % plotyy(cumsum(obj.inputResultsMatrix(:,4)-obj.transCost),'plot');
         end
