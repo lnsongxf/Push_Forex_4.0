@@ -13,6 +13,7 @@ classdef bkt_fast_010_WpR < handle
         closingPrices;
         ClDates;
         indexClose;
+        signal;
         
     end
     
@@ -55,7 +56,7 @@ classdef bkt_fast_010_WpR < handle
             s(WpR>-20) = -1;
             s(WpR<-80) = 1;
 
-            
+            obj.signal = s;
             
 
             i = nperiods + 1;
