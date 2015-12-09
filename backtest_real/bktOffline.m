@@ -4,9 +4,10 @@ classdef bktOffline < handle
         nData
         starthisData
         newHisData
+        iOpenActTimeScale
         iCloseActTimeScale
-        iCloseNewTimeScale
         iOpenNewTimeScale
+        iCloseNewTimeScale
         stopL
         takeP
         outputBktOffline
@@ -124,7 +125,7 @@ classdef bktOffline < handle
             closingDateNum = zeros(floor(lnewHisData/2), 1);
             nCandelotto = zeros(floor(lnewHisData/2), 1);
             lots = zeros(floor(lnewHisData/2), 1);
-            jC = zeros(floor(lnewHisData/2), 1);  % index j close
+            jC = zeros(floor(lnewHisData/2), 1);   % index j close
             iC = zeros(floor(lnewHisData/2), 1);   % index i close
             iO = zeros(floor(lnewHisData/2), 1);   % index i open
             SL = zeros(floor(lnewHisData/2), 1);   % stop loss
@@ -229,38 +230,41 @@ classdef bktOffline < handle
             
             toc
             
-            direction = direction(1:indexClose);
-            openingPrice = openingPrice(1:indexClose);
-            openingDateNum = openingDateNum(1:indexClose);
-            closingDateNum = closingDateNum(1:indexClose);
-            lots = lots(1:indexClose);
-            
-            jC=jC(1:indexClose);
-            iC=iC(1:indexClose);
             iO=iO(1:indexClose);
+            iC=iC(1:indexClose);
+            jO=iO*newTimeScale;
+            jC=jC(1:indexClose);
             SL=SL(1:indexClose);
-            TP=TP(1:indexClose);
+            TP=TP(1:indexClose);   
             
-            l = length(direction);
-            
-            obj.iCloseActTimeScale=jC;
-            obj.iCloseNewTimeScale=iC;
-            obj.iOpenNewTimeScale=iO;
+            obj.iOpenNewTimeScale  = iO;
+            obj.iCloseNewTimeScale = iC;
+            obj.iOpenActTimeScale  = jO;
+            obj.iCloseActTimeScale = jC;
             obj.stopL=SL;
             obj.takeP=TP;
             
+            direction       = direction(1:indexClose);
+            openingPrice    = openingPrice(1:indexClose);
+            openingDateNum  = openingDateNum(1:indexClose);
+            closingDateNum  = closingDateNum(1:indexClose);
+            lots            = lots(1:indexClose);
+            latency         = jC-jO;
+        
+            l = length(direction);
             obj.outputBktOffline = zeros(l,8);
             
-            obj.outputBktOffline(:,1) = nCandelotto(1:l);           % index of stick
-            obj.outputBktOffline(:,2) = openingPrice(1:l);          % opening price
-            obj.outputBktOffline(:,3) = closingPrice(1:l);          % closing price
-            obj.outputBktOffline(:,4) = (closingPrice(1:l) ...
-                - openingPrice(1:l)) .* direction(1:l);             % returns
-            obj.outputBktOffline(:,5) = direction(1:l);             % direction
-            obj.outputBktOffline(:,6) = ones(l,1);                  % real
-            obj.outputBktOffline(:,7) = openingDateNum;             % opening date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
-            obj.outputBktOffline(:,8) = closingDateNum;             % closing date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
-            obj.outputBktOffline(:,9) = lots;                       % lots setted for single operation
+            obj.outputBktOffline(:,1)  = nCandelotto(1:l);           % index of stick
+            obj.outputBktOffline(:,2)  = openingPrice(1:l);          % opening price
+            obj.outputBktOffline(:,3)  = closingPrice(1:l);          % closing price
+            obj.outputBktOffline(:,4)  = (closingPrice(1:l) ...
+                - openingPrice(1:l)) .* direction(1:l);              % returns
+            obj.outputBktOffline(:,5)  = direction(1:l);             % direction
+            obj.outputBktOffline(:,6)  = ones(l,1);                  % real
+            obj.outputBktOffline(:,7)  = openingDateNum;             % opening date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
+            obj.outputBktOffline(:,8)  = closingDateNum;             % closing date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
+            obj.outputBktOffline(:,9)  = lots;                       % lots setted for single operation
+            obj.outputBktOffline(:,10) = latency;                    % duration of single operation
             
             p = Performance_05;
             obj.performance = p.calcSinglePerformance(nameAlgo,'bktWeb',Cross,newTimeScale,transCost,initialStack,Leverage,obj.outputBktOffline,plotPerformance);

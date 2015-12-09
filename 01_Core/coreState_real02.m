@@ -365,8 +365,8 @@ classdef coreState_real02 < handle
             %                         plot(smoothClose1,'-b')
             %                         plot(smoothClose2,'-r')
             
-            if inversion<0 && trend==2 && gradientHurst > 0
-%             if inversion<0 && gradientHurst > 0
+%             if inversion<0 && trend==2 && gradientHurst > 0
+             if inversion<0 && gradientHurst > 0
 %             if inversion<0 && trend == 2 && Hurst > 0.55
 %             if inversion<0 && Hurst > 0.55 && gradientHurst > 0
                 obj.state=1;

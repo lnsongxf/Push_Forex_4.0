@@ -52,6 +52,10 @@ classdef Performance_05 < handle
         ferialDaysOperation
         daysOperation;
         numOperations;
+        latency
+        minLatency
+        maxLatency
+        aveLatency
         
         RR;
         percExRetPos;
@@ -247,9 +251,10 @@ classdef Performance_05 < handle
         function obj=SharpeRatio(obj,colour,plotPerformance)
             
             row = find(obj.inputResultsMatrix(:,6));
-            returns = obj.inputResultsMatrix(row,4);
-            nOper = obj.inputResultsMatrix(row,1);    % nOper is the index of the operation
-            lots=obj.inputResultsMatrix(:,9);
+            returns   = obj.inputResultsMatrix(row,4);
+            nOper     = obj.inputResultsMatrix(row,1);    % nOper is the index of the operation
+            lots      = obj.inputResultsMatrix(row,9);
+            Latency   = obj.inputResultsMatrix(row,10);   % duration of single operation in minutes
             workingStack=lots.*100000;
             pip2EuroConversion=workingStack/10000;
             returnsEuro=returns.*pip2EuroConversion;
@@ -324,8 +329,12 @@ classdef Performance_05 < handle
             obj.dailyAveNetReturnsEuroPerc=mean(dailyNetReturnsEuroPerc(:));
             
             obj.daysOperation=daysOper;
-            obj.ferialDaysOperation=length(obj.ferialNetReturns);
-            obj.numOperations=numOper;
+            obj.ferialDaysOperation = length(obj.ferialNetReturns);
+            obj.numOperations       = numOper;
+            obj.latency             = Latency;
+            obj.minLatency          = min(Latency(:));
+            obj.maxLatency          = max(Latency(:));
+            obj.aveLatency          = mean(Latency(:));
             
             obj.pipsEarned=sum(NetReturnsPips);
             obj.EuroEarned=sum(NetReturnsEuro);
@@ -346,7 +355,8 @@ classdef Performance_05 < handle
                 
                 startDate = datenum(firstDay);
                 endDate = datenum(lastDay);
-                xData = linspace(startDate,endDate,daysOper);
+                xDataDays  = linspace(startDate,endDate,daysOper);
+                xDataNoper = 1:numOper;
                 lin1=zeros(numOper);
                 lin2=zeros(daysOper);
                 
@@ -356,11 +366,19 @@ classdef Performance_05 < handle
                 
                 
                 figure
-                plot(ProfitLossPips,cLine);
+                s(1)=subplot(2,1,1);
+                plot(xDataNoper,ProfitLossPips,cLine);
                 title('cumulative Excess of Returns per operation in pips');
                 %axis([0 numOper+2 min(PL)-5 max(PL)+5]);
                 hold on
                 plot(lin1,'-c');
+                
+                s(2)=subplot(2,1,2);
+                plot(xDataNoper,Latency,cLine);
+                title('latency of single operation in minutes');
+                
+                linkaxes(s,'x');
+                
                 
                 figure
                 plot(ProfitLossEuro,cLine);
@@ -370,53 +388,53 @@ classdef Performance_05 < handle
                 plot(lin1,'-c');
                 
                 figure;
-                plot(xData,dailyNumOper,cCurve);
+                plot(xDataDays,dailyNumOper,cCurve);
                 title('number of operations per day');
                 hold on
-                plot(xData,lin2);
-                set(gca,'XTick',xData);
+                plot(xDataDays,lin2);
+                set(gca,'XTick',xDataDays);
                 datetick('x','dd/mm/yyyy HH:MM','keepticks');
                 
 
                 figure
                 
                 p(1)=subplot(2,3,1);
-                plot(xData,dailyNetReturns,cCurve);
+                plot(xDataDays,dailyNetReturns,cCurve);
                 title('daily Excess of Returns');
                 hold on
-                plot(xData,lin2);
+                plot(xDataDays,lin2);
                 
                 p(2)=subplot(2,3,4);
-                plot(xData,cumsum(dailyNetReturns),cCurve);
+                plot(xDataDays,cumsum(dailyNetReturns),cCurve);
                 title('cumulative Excess of Returns per day');
                 hold on
-                plot(xData,lin2);
+                plot(xDataDays,lin2);
                 
                 p(3)=subplot(2,3,2);
-                plot(xData,dailyNetReturnsEuro,cCurve);
+                plot(xDataDays,dailyNetReturnsEuro,cCurve);
                 title('daily Excess of Returns in Euro');
                 hold on
-                plot(xData,lin2);
+                plot(xDataDays,lin2);
                 
                 p(4)=subplot(2,3,5);
-                plot(xData,cumsum(dailyNetReturnsEuro)+obj.initialStack,cCurve);
+                plot(xDataDays,cumsum(dailyNetReturnsEuro)+obj.initialStack,cCurve);
                 title('cumulative Excess of Returns per day in Euro');
                 hold on
-                plot(xData,lin2);
+                plot(xDataDays,lin2);
                 
                 p(5)=subplot(2,3,3);
-                plot(xData,dailyNetReturnsEuroPerc,cCurve);
+                plot(xDataDays,dailyNetReturnsEuroPerc,cCurve);
                 title('daily Excess of Returns in %');
                 hold on
-                plot(xData,lin2);
+                plot(xDataDays,lin2);
                 
                 p(6)=subplot(2,3,6);
-                plot(xData,cumsum(dailyNetReturnsEuroPerc),cCurve);
+                plot(xDataDays,cumsum(dailyNetReturnsEuroPerc),cCurve);
                 title('cumulative Excess of Returns per day in %');
                 hold on
-                plot(xData,lin2);
+                plot(xDataDays,lin2);
                 
-                set(p,'XTick',xData);
+                set(p,'XTick',xDataDays);
                 for i=1:6
                     datetick(p(i),'x','dd/mm/yyyy HH:MM','keepticks');
                 end
