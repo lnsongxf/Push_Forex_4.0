@@ -7,7 +7,7 @@ classdef OperationState
         lastOperation;
         lock;
         lockDuration;
-        minutesFromOpening; % it counts the steps (on the actualTimeScale) after the opening
+        latency;
     end
     
     methods
@@ -18,7 +18,7 @@ classdef OperationState
             obj.lastOperation       = 0;
             obj.lock                = 0;
             obj.lockDuration        = 0;
-            obj.minutesFromOpening  = 0;
+            obj.latency             = 0;
         end
     end
     

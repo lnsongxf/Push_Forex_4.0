@@ -48,10 +48,6 @@ function [oper, openValue, closeValue, stopLoss, noLoose, valueTp] = Algo_004_st
 global     map;
 persistent counter;
 persistent countCycle;
-persistent openingTime;
-% global      log;
-
-latencyTreshold = 1600;    % latency treshold in minutes
 
 openValue = 0;
 closeValue= 0;
@@ -106,7 +102,7 @@ if newTimeScalePoint
     c=st.pValue;
     d=st.halflife;
     
-    % 01c
+    % 01b
     % -------- .................. ----------------- %
     if isfinite(timeSeriesProperties.HurstExponent(end))
         smoothCoeff = 0.5;
@@ -126,7 +122,7 @@ if newTimeScalePoint
 %     
 %     cla
 
-    % 01b
+    % 01c
     % -------- coreState filter ------------------ %
     cState.core_Algo_004_statTrend(chiusure(1:end-1),params,timeSeriesProperties);
     
@@ -154,19 +150,21 @@ else
         if openValueReal > 0
 
             params.set('openValue_',openValueReal);
+            params.set('closeTime_',indexHisData);
             
-            closingTime     = indexHisData;
-            Latency         = closingTime - openingTime;
+            openingTime = params.get('openTime__');
+            closingTime = params.get('closeTime_');
+            operationState.latency = closingTime - openingTime;
             
-            %[operationState,~, params] = timeClosureManager (operationState, chiusure, params,5000);
-            dynamicParameters {1} = 1;
+            dynamicParameters {1} = 0;
             dynamicParameters {2} = 1;
-            [params,TakeProfitPrice,StopLossPrice,dynamicOn] = dynamicalTPandSLManager(operationState, chiusure, params, Latency , @closingShrinkingBands,dynamicParameters);
+            [params,TakeProfitPrice,StopLossPrice,dynamicOn] = dynamicalTPandSLManager(operationState, chiusure, params, @closingShrinkingBands, dynamicParameters);
             if dynamicOn  == 1
-                openingTime = indexHisData;
+                params.set('openTime__',indexHisData);
             end
             
-            [operationState,~, params] = directTakeProfitManager (operationState, chiusure, params,TakeProfitPrice,StopLossPrice,Latency,latencyTreshold);
+            latencyTreshold = 1000000;    % latency treshold in minutes
+            [operationState,~, params] = directTakeProfitManager (operationState, chiusure, params,TakeProfitPrice,StopLossPrice, latencyTreshold);
             
         elseif openValueReal < 0
             
@@ -189,9 +187,9 @@ else
             % -------- decMaker direction manager --------------- %
             [params, operationState, counter] = decMaker.decisionDirectionByCore(chiusure,params,operationState,cState,TakeP,StopL);
             
+            params.set('openTime__',indexHisData);            
             display('Matlab ha deciso di aprire');
             
-            openingTime = indexHisData;
             
             % 03c
             % -------- decMaker lock manager -------------------- %

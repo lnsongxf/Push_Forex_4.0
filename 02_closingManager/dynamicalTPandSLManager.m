@@ -1,8 +1,8 @@
-function [params,TakeProfitPrice,StopLossPrice,dynamicOn] = dynamicalTPandSLManager(operationState, chiusure, params,Latency, closingFunction,dynamicParameters)
+function [params,TakeProfitPrice,StopLossPrice,dynamicOn] = dynamicalTPandSLManager(operationState, chiusure, params, closingFunction,dynamicParameters)
 
-operationState.minutesFromOpening = operationState.minutesFromOpening + 1;
 LastClosePrice = chiusure(end);
-direction=operationState.actualOperation;
+direction = operationState.actualOperation;
+Latency   = operationState.latency;
 
 OpenPrice = params.get('openValue_');
 TakeP = params.get('noLoose___');

@@ -100,9 +100,9 @@ classdef Parameters < handle
             % display (strcat ('Guadagno netto: ',mat2str (-1*abs (obj.get('closeValue') - obj.get('openValue_')))));
         end
         
-        function operStates = closeOnCall (obj, operStates, currValue)
-            % display ('Ho chiuso per stop loss');
+        function operStates = closeOnCall (obj, operStates, currValue, closingTime)
             obj.set('closeValue',currValue);
+            obj.set('closeTime_',closingTime);
             operStates.lastOperation    = operStates.actualOperation;
             operStates.actualOperation  = 0;
             operStates.lock             = 0;
@@ -126,6 +126,7 @@ classdef Parameters < handle
         function operStates = resetStatusOnFailureOpening (obj,operStates)      
             obj.set('openValue_',-1);
             obj.set('closeValue',-1);
+            obj.set('openTime _',0 );
             obj.set('percTp____',0);
             obj.set('maxValue__',0);
             operStates.lastOperation    = 0;
@@ -146,6 +147,10 @@ classdef Parameters < handle
             obj.set('openValue_',-1);
             obj.map('closeValue')=parameter;
             obj.set('closeValue',-1);
+            obj.map('openTime__')=parameter;
+            obj.set('openTime__',0 );
+            obj.map('closeTime_')=parameter;
+            obj.set('closeTime_',0 );
             obj.map('stopLoss__')=parameter;
             obj.set('stopLoss__',-1);
             obj.map('noLoose___')=parameter;

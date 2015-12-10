@@ -268,7 +268,6 @@ classdef DecisionMaker_real02 < handle
             
             params.set('openValue_',currValue);
             params.set('closeValue',-1);
-            %params.set('stopLoss__',mult*dev);
             params.set('stopLoss__',StopL);
             params.set('noLoose___',TakeP);
             params.set('maxPercTp_',1);
@@ -276,7 +275,6 @@ classdef DecisionMaker_real02 < handle
             params.set('real______',obj.real);
             
             counter = 0;
-            operationState.minutesFromOpening = 0;
             
         end
         
