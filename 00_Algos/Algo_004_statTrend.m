@@ -131,6 +131,16 @@ if newTimeScalePoint
     cState.core_Algo_004_statTrend(chiusure(1:end-1),params,timeSeriesProperties);
     
 end
+<<<<<<< Updated upstream
+=======
+% stateC = cState.state;
+% if st.HurstExponent>0.5
+%     stateH=1;
+% else
+%     stateH=0;
+% end
+% state=stateC*stateH;
+>>>>>>> Stashed changes
 state=cState.state;
 
 

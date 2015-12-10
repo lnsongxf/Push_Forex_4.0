@@ -355,6 +355,7 @@ classdef coreState_real02 < handle
             trend=newState+oldState;
             trendDirection=sign(newGradient2);
             
+<<<<<<< Updated upstream
             % Hurst         = timeSeriesProperties.HurstSmooth(end);
             gradientHurst = timeSeriesProperties.HurstDiff(end);
             
@@ -369,6 +370,22 @@ classdef coreState_real02 < handle
              if inversion<0 && gradientHurst > 0
 %             if inversion<0 && trend == 2 && Hurst > 0.55
 %             if inversion<0 && Hurst > 0.55 && gradientHurst > 0
+=======
+            %             subplot(1,2,1)
+            %             cla
+            %             plot(closePrice,'ob')
+            %             hold on
+            %             plot(smoothClose1,'-b')
+            %             plot(smoothClose2,'-r')
+            %
+            %             subplot(1,2,2)
+            %             plot(newGradient1,'ob')
+            %             hold on
+            %             plot(newGradient2,'or')
+            %
+            if inversion<0 && trend==2
+            %if trend==2
+>>>>>>> Stashed changes
                 obj.state=1;
                 obj.suggestedDirection=trendDirection;
                 obj.suggestedTP=5*meanFluct2;

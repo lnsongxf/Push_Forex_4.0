@@ -384,17 +384,43 @@ classdef PerformanceDistribution_04 < handle
             stop=(lnewTimeScale+obj.nData)*obj.freq;
             xProperties=start:obj.freq:stop;
             
+            
+            L=length(obj.HistData1min(:,4));
+            xHistData1min=1:L;
+            
+            H=timeSeriesProperties_(:,1);
+            lnewTimeScale=length(H);
+            start=(obj.nData+1)*obj.freq;
+            stop=(lnewTimeScale+obj.nData)*obj.freq;
+            xProperties=start:obj.freq:stop;
+            
             figure
             s(1)=subplot(3,1,1);
             plot(xHistData1min,obj.HistData1min(:,4),'Color','k','LineWidth',1)
+<<<<<<< Updated upstream
             
+=======
+
+>>>>>>> Stashed changes
             hold on
             plot(obj.rowHistpOp,obj.HistData1min(obj.rowHistpOp,4),'ob')
             plot(obj.rowHistpCl,obj.HistData1min(obj.rowHistpCl,4),'*b')
             
             plot(obj.rowHistnOp,obj.HistData1min(obj.rowHistnOp,4),'or')
             plot(obj.rowHistnCl,obj.HistData1min(obj.rowHistnCl,4),'*r')
+
+            windowSize1 = 10;
+            a = (1/windowSize1)*ones(1,windowSize1);
+            smoothClose1 = filter(a,1,obj.HistDatafreq(obj.nData+1:end,4));
             
+            windowSize2 = 60;
+            b = (1/windowSize2)*ones(1,windowSize2);
+            smoothClose2 = filter(b,1,obj.HistDatafreq(obj.nData+1:end,4));
+         
+            line(xProperties(windowSize2:end),smoothClose1(windowSize2:end),'Color','b','LineWidth',1);
+            line(xProperties(windowSize2:end),smoothClose2(windowSize2:end),'Color','r','LineWidth',1);
+            
+<<<<<<< Updated upstream
             windowSize1 = 10;
             a = (1/windowSize1)*ones(1,windowSize1);
             smoothClose1 = filter(a,1,obj.HistDatafreq(obj.nData+1:end,4));
@@ -410,6 +436,12 @@ classdef PerformanceDistribution_04 < handle
             
             s(2)=subplot(3,1,2);
             plot(xProperties,H,'r');
+=======
+            legend('Price','Open win','Close win','Open lost','Close lost','MA10','MA60')
+            
+            s(2)=subplot(2,1,2);
+            plot(xProperties,H,'-k');
+>>>>>>> Stashed changes
             hold on
             lin1=zeros(length(xProperties));
             line(xProperties,lin1+0.5,'Color','r','LineWidth',1);
