@@ -156,8 +156,8 @@ else
             params.set('openValue_',openValueReal);
             
             %[operationState,~, params] = timeClosureManager (operationState, chiusure, params,5000);
-            dynamicParameters {1} = 1.1;
-            [params,TakeProfitPrice,StopLossPrice,dynamicOn] = dynamicalTPandSLManager(operationState, chiusure, params,@closingForApproaching,dynamicParameters);
+            dynamicParameters {1} = 1;
+            [params,TakeProfitPrice,StopLossPrice,dynamicOn] = dynamicalTPandSLManager(operationState, chiusure, params,@closingShrinkingBands,dynamicParameters);
             if dynamicOn  == 1
                 openingTime = indexHisData;
             end

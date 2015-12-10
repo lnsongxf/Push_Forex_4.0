@@ -372,8 +372,8 @@ classdef coreState_real02 < handle
                 
                 obj.state=1;
                 obj.suggestedDirection=trendDirection;
-                obj.suggestedTP=5*meanFluct2;
-                obj.suggestedSL=5*meanFluct2;
+                obj.suggestedTP=min(5*meanFluct2,100);
+                obj.suggestedSL=min(5*meanFluct2,100);
             else
                 obj.state=0;
             end
