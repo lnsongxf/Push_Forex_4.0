@@ -155,15 +155,16 @@ else
 
             params.set('openValue_',openValueReal);
             
+            closingTime     = indexHisData;
+            Latency         = closingTime - openingTime;
+            
             %[operationState,~, params] = timeClosureManager (operationState, chiusure, params,5000);
             dynamicParameters {1} = 1;
-            [params,TakeProfitPrice,StopLossPrice,dynamicOn] = dynamicalTPandSLManager(operationState, chiusure, params,@closingShrinkingBands,dynamicParameters);
+            dynamicParameters {2} = 1;
+            [params,TakeProfitPrice,StopLossPrice,dynamicOn] = dynamicalTPandSLManager(operationState, chiusure, params, Latency , @closingShrinkingBands,dynamicParameters);
             if dynamicOn  == 1
                 openingTime = indexHisData;
             end
-            
-            closingTime     = indexHisData;
-            Latency         = closingTime - openingTime;
             
             [operationState,~, params] = directTakeProfitManager (operationState, chiusure, params,TakeProfitPrice,StopLossPrice,Latency,latencyTreshold);
             

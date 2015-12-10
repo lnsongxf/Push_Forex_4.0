@@ -1,4 +1,4 @@
-function [TakeProfitPrice,StopLossPrice,newTakeP,newStopL,dynamicOn] = closingForApproaching(OpenPrice,LastClosePrice,direction,TakeP,StopL,dynamicParameters)
+function [TakeProfitPrice,StopLossPrice,newTakeP,newStopL,dynamicOn] = closingForApproaching(OpenPrice,LastClosePrice,direction,TakeP,StopL,~, dynamicParameters)
 
 % ------------ do not modify inside -----------------
 TakeProfitPrice = OpenPrice + direction * TakeP;
@@ -9,6 +9,14 @@ dynamicOn = 0;
 % ---------------------------------------------------
 
 gain = dynamicParameters {1};
+
+% ------------------IDEA BEHIND----------------------
+% This one follows the spot price by adjusting the SL and TP every time
+% there is a possible gain. The SL is pushed fast towards the spot price.
+% The TP could be modified as well...
+% ---------------------------------------------------
+
+
 
 % If the current price is more than SL above the opening prcice, re-set
 if abs( (LastClosePrice - StopLossPrice) ) > abs(StopL)*gain
