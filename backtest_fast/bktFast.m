@@ -6,6 +6,8 @@ classdef bktFast < handle
         performanceTraining
         bktfastPaperTrading
         performancePaperTrad
+        bktfastTry
+        performanceTry
         
     end
     
@@ -81,14 +83,14 @@ classdef bktFast < handle
                 
                 expert = TimeSeriesExpert_11;
                 
-%                 expert.rescaleData(hisData,actTimeScale,newTimeScale);
-%
-%                 newHisData(:,1) = expert.openVrescaled;
-%                 newHisData(:,2) = expert.maxVrescaled;
-%                 newHisData(:,3) = expert.minVrescaled;
-%                 newHisData(:,4) = expert.closeVrescaled;
-%                 newHisData(:,5) = expert.volrescaled;
-%                 newHisData(:,6) = expert.openDrescaled;
+                %                 expert.rescaleData(hisData,actTimeScale,newTimeScale);
+                %
+                %                 newHisData(:,1) = expert.openVrescaled;
+                %                 newHisData(:,2) = expert.maxVrescaled;
+                %                 newHisData(:,3) = expert.minVrescaled;
+                %                 newHisData(:,4) = expert.closeVrescaled;
+                %                 newHisData(:,5) = expert.volrescaled;
+                %                 newHisData(:,6) = expert.openDrescaled;
                 
                 expert.rescaleData(hisDataTraining,actTimeScale,newTimeScale);
                 
@@ -126,16 +128,16 @@ classdef bktFast < handle
                     if( N_greater_than_M && n<=m )
                         continue
                     end
-                        bktfast = feval(algo);
-                        %                 spin(Pmin,matrixNewTimeScale, actTimeScale,newTimeScale, N, M, transCost, pips_TP, pips_SL, stdev_TP,stdev_SL, plot)
-                        bktfast = bktfast.spin(hisDataTraining(:,4), newHisDataTraining, actTimeScale, newTimeScale, n, m, transCost, pips_TP, pips_SL, stdev_TP, stdev_SL, 0);
-
-                        if bktfast.indexClose>20
-                            p = Performance_05;
-                            performance = p.calcSinglePerformance(nameAlgo,'bktWeb',Cross,newTimeScale,transCost,10000,10,bktfast.outputbkt,0);
-                            
-                            obj.R_over_maxDD(n,m) = performance.pipsEarned / abs(performance.maxDD);
-                        end
+                    bktfast = feval(algo);
+                    %                 spin(Pmin,matrixNewTimeScale, actTimeScale,newTimeScale, N, M, transCost, pips_TP, pips_SL, stdev_TP,stdev_SL, plot)
+                    bktfast = bktfast.spin(hisDataTraining(:,4), newHisDataTraining, actTimeScale, newTimeScale, n, m, transCost, pips_TP, pips_SL, stdev_TP, stdev_SL, 0);
+                    
+                    if bktfast.indexClose>20
+                        p = Performance_05;
+                        performance = p.calcSinglePerformance(nameAlgo,'bktWeb',Cross,newTimeScale,transCost,10000,10,bktfast.outputbkt,0);
+                        
+                        obj.R_over_maxDD(n,m) = performance.pipsEarned / abs(performance.maxDD);
+                    end
                 end
                 
             end
@@ -185,6 +187,78 @@ classdef bktFast < handle
             
         end % end function optimize
         
+        
+        function [obj] = tryme(obj,parameters)
+            
+            %% Import parameters:
+            fid=fopen(parameters);
+            C = textscan(fid, '%s', 'Delimiter', '', 'CommentStyle', '%');
+            fclose(fid);
+            cellfun(@eval, C{1});
+            
+            
+            algo = str2func(nameAlgo);
+            
+            
+            %% Load and check historical
+            
+            hisDataRaw=load(histName);
+            
+            % remove lines with no data (holes)
+            hisData = hisDataRaw( (hisDataRaw(:,1) ~=0), : );
+            
+            [r,c] = size(hisData);
+            
+            % include fake dates if not present in the histfile
+            if c == 5
+                
+                hisData(1,6) = datenum('01/01/2015 00:00', 'mm/dd/yyyy HH:MM');
+                
+                for j = 2:r;
+                    hisData(j,6) = hisData(1,6) + ( (actTimeScale/1440)*(j-1) );
+                end
+                
+            end
+            
+            % rescale data if requested
+            if newTimeScale > 1
+                
+                expert = TimeSeriesExpert_11;
+                
+                expert.rescaleData(hisData,actTimeScale,newTimeScale);
+                
+                newHisData(:,1) = expert.openVrescaled;
+                newHisData(:,2) = expert.maxVrescaled;
+                newHisData(:,3) = expert.minVrescaled;
+                newHisData(:,4) = expert.closeVrescaled;
+                newHisData(:,5) = expert.volrescaled;
+                newHisData(:,6) = expert.openDrescaled;
+                
+            end
+            
+            % check that M or N are no array
+            if (size(M,2)>1 || size(N,2)>1 )
+                M=M(end);
+                N=N(end);
+            end
+            
+            
+            %% perform try
+            obj.bktfastTry = feval(algo);
+            obj.bktfastTry = obj.bktfastTry.spin(hisData(:,4), newHisData, actTimeScale, newTimeScale, N, M, transCost, pips_TP, pips_SL, stdev_TP, stdev_SL, 0);
+            
+            p = Performance_05;
+            obj.performanceTry = p.calcSinglePerformance(nameAlgo,'bktWeb',Cross,newTimeScale,transCost,10000,10,obj.bktfastTry.outputbkt,0);
+            risultato = obj.performanceTry.pipsEarned / abs(obj.performanceTry.maxDD);
+            
+            if WhatToPlot > 0
+                figure
+                plot(cumsum(obj.bktfastTry.outputbkt(:,4)))
+                title(['Result, Final R over maxDD = ',num2str( risultato) ])
+            end
+            
+            
+        end % end of function tryme
         
     end % end of methods
     
