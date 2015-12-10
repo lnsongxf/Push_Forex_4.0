@@ -34,4 +34,4 @@ pips_TP = 100
 pips_SL = 100
 stdev_TP = 5
 stdev_SL = 5        		
-WhatToPlot = 3               			
+WhatToPlot = 0
