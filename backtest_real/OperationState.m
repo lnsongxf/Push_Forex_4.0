@@ -7,6 +7,7 @@ classdef OperationState
         lastOperation;
         lock;
         lockDuration;
+        minimumReturn;
         latency;
     end
     
@@ -18,6 +19,7 @@ classdef OperationState
             obj.lastOperation       = 0;
             obj.lock                = 0;
             obj.lockDuration        = 0;
+            obj.minimumReturn       = 0;
             obj.latency             = 0;
         end
     end

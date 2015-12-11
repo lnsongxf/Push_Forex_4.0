@@ -56,6 +56,10 @@ classdef Performance_05 < handle
         minLatency
         maxLatency
         aveLatency
+        singleOperMinReturn
+        minSingleOperMinReturn
+        maxSingleOperMinReturn
+        aveSingleOperMinReturn
         
         RR;
         percExRetPos;
@@ -251,10 +255,11 @@ classdef Performance_05 < handle
         function obj=SharpeRatio(obj,colour,plotPerformance)
             
             row = find(obj.inputResultsMatrix(:,6));
-            returns   = obj.inputResultsMatrix(row,4);
-            nOper     = obj.inputResultsMatrix(row,1);    % nOper is the index of the operation
-            lots      = obj.inputResultsMatrix(row,9);
-            Latency   = obj.inputResultsMatrix(row,10);   % duration of single operation in minutes
+            returns    = obj.inputResultsMatrix(row,4);
+            nOper      = obj.inputResultsMatrix(row,1);    % nOper is the index of the operation
+            lots       = obj.inputResultsMatrix(row,9);
+            Latency    = obj.inputResultsMatrix(row,10);   % duration of single operation in minutes
+            minReturns = obj.inputResultsMatrix(row,11);   % minimum return touched during dingle operation
             workingStack=lots.*100000;
             pip2EuroConversion=workingStack/10000;
             returnsEuro=returns.*pip2EuroConversion;
@@ -329,12 +334,16 @@ classdef Performance_05 < handle
             obj.dailyAveNetReturnsEuroPerc=mean(dailyNetReturnsEuroPerc(:));
             
             obj.daysOperation=daysOper;
-            obj.ferialDaysOperation = length(obj.ferialNetReturns);
-            obj.numOperations       = numOper;
-            obj.latency             = Latency;
-            obj.minLatency          = min(Latency(:));
-            obj.maxLatency          = max(Latency(:));
-            obj.aveLatency          = mean(Latency(:));
+            obj.ferialDaysOperation    = length(obj.ferialNetReturns);
+            obj.numOperations          = numOper;
+            obj.latency                = Latency;
+            obj.minLatency             = min(Latency(:));
+            obj.maxLatency             = max(Latency(:));
+            obj.aveLatency             = mean(Latency(:));
+            obj.singleOperMinReturn    = minReturns;
+            obj.minSingleOperMinReturn = min(minReturns(:));
+            obj.maxSingleOperMinReturn = max(minReturns(:));
+            obj.aveSingleOperMinReturn = mean(minReturns(:));
             
             obj.pipsEarned=sum(NetReturnsPips);
             obj.EuroEarned=sum(NetReturnsEuro);
@@ -374,7 +383,7 @@ classdef Performance_05 < handle
                 plot(lin1,'-c');
                 
                 s(2)=subplot(2,1,2);
-                plot(xDataNoper,Latency,cLine);
+                plotyy(xDataNoper,Latency,xDataNoper,minReturns);
                 title('latency of single operation in minutes');
                 
                 linkaxes(s,'x');

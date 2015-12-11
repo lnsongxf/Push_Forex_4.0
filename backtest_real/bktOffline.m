@@ -116,20 +116,21 @@ classdef bktOffline < handle
                 
             end
             
-            lhisData = length(hisData);
-            lnewHisData = length(obj.newHisData);
-            direction = zeros(floor(lnewHisData/2), 1);
-            openingPrice = zeros(floor(lnewHisData/2), 1);
-            closingPrice = zeros(floor(lnewHisData/2), 1);
+            lhisData       = length(hisData);
+            lnewHisData    = length(obj.newHisData);
+            direction      = zeros(floor(lnewHisData/2), 1);
+            openingPrice   = zeros(floor(lnewHisData/2), 1);
+            closingPrice   = zeros(floor(lnewHisData/2), 1);
             openingDateNum = zeros(floor(lnewHisData/2), 1);
             closingDateNum = zeros(floor(lnewHisData/2), 1);
-            nCandelotto = zeros(floor(lnewHisData/2), 1);
-            lots = zeros(floor(lnewHisData/2), 1);
-            jC = zeros(floor(lnewHisData/2), 1);   % index j close
-            iC = zeros(floor(lnewHisData/2), 1);   % index i close
-            iO = zeros(floor(lnewHisData/2), 1);   % index i open
-            SL = zeros(floor(lnewHisData/2), 1);   % stop loss
-            TP = zeros(floor(lnewHisData/2), 1);   % take profit
+            nCandelotto    = zeros(floor(lnewHisData/2), 1);
+            minimumReturns = zeros(floor(lnewHisData/2), 1);
+            lots           = zeros(floor(lnewHisData/2), 1);
+            jC             = zeros(floor(lnewHisData/2), 1);   % index j close
+            iC             = zeros(floor(lnewHisData/2), 1);   % index i close
+            iO             = zeros(floor(lnewHisData/2), 1);   % index i open
+            SL             = zeros(floor(lnewHisData/2), 1);   % stop loss
+            TP             = zeros(floor(lnewHisData/2), 1);   % take profit
             
             matrix=zeros(obj.nData+1, 6);
             
@@ -162,14 +163,14 @@ classdef bktOffline < handle
                         
                         matrix(end,:) = hisData(indexHisData,:);
                         
-                        [oper, openValue, closeValue, stopLoss, takeProfit, valueTp] = algo(matrix,newTimeScalePoint,openValueReal,obj.timeSeriesProperties,indexHisData);
-                        
+                        [oper,openValue, closeValue, stopLoss, takeProfit, minReturn] = algo(matrix,newTimeScalePoint,openValueReal,obj.timeSeriesProperties,indexHisData);
+
                         newState{1} = oper;
                         newState{2} = openValue;
                         newState{3} = closeValue;
                         newState{4} = stopLoss;
                         newState{5} = takeProfit;
-                        newState{6} = valueTp;
+                        newState{6} = minReturn;
                         
                         if newTimeScalePoint == 1 && k > 1
                             obj.timeSeriesPropertiesOffline.HurstExponent(k-1,1) = obj.timeSeriesProperties.HurstExponent(end);
@@ -207,18 +208,19 @@ classdef bktOffline < handle
                             % closing
                         elseif updatedOperation == 0 && abs(startingOperation) > 0
                             
-                            openValueReal             = 0;
-                            
-                            jC(indexOpen)=indexHisData;
-                            iC(indexOpen)=i;
-                            nCandelotto(indexOpen) = i;
-                            indexClose = indexClose + 1;
-                            closingPrice(indexOpen) = newState{3};
-                            closingDateNum(indexOpen) = obj.newHisData(i,6);
-                            display(['closeValue =' num2str(closeValue)]);
+                            openValueReal     = 0;
                             startingOperation = 0;
+                            display(['closeValue =' num2str(closeValue)]);
                             display('operation closed');
                             display(['i Close =' num2str(i)]);
+                            
+                            minimumReturns(indexOpen) = newState{6};
+                            jC(indexOpen)             = indexHisData;
+                            iC(indexOpen)             = i;
+                            nCandelotto(indexOpen)    = i;
+                            indexClose                = indexClose + 1;
+                            closingPrice(indexOpen)   = newState{3};
+                            closingDateNum(indexOpen) = obj.newHisData(i,6);
                             
                         end
                         
@@ -248,6 +250,7 @@ classdef bktOffline < handle
             openingPrice    = openingPrice(1:indexClose);
             openingDateNum  = openingDateNum(1:indexClose);
             closingDateNum  = closingDateNum(1:indexClose);
+            minimumReturns  = minimumReturns(1:indexClose);
             lots            = lots(1:indexClose);
             latency         = jC-jO;
         
@@ -265,6 +268,7 @@ classdef bktOffline < handle
             obj.outputBktOffline(:,8)  = closingDateNum;             % closing date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
             obj.outputBktOffline(:,9)  = lots;                       % lots setted for single operation
             obj.outputBktOffline(:,10) = latency;                    % duration of single operation
+            obj.outputBktOffline(:,11) = minimumReturns;             % minimum return touched during dingle operation
 
             p = Performance_05;
             obj.performance = p.calcSinglePerformance(nameAlgo,'bktWeb',Cross,newTimeScale,transCost,initialStack,Leverage,obj.outputBktOffline,plotPerformance);

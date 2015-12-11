@@ -1,4 +1,4 @@
-function [topicPub,messagePub] = onlineAlgo002(topicSub,messageSub,password)
+function [topicPub,messagePub] = onlineAlgo004(topicSub,messageSub,password)
 
 
 % DESCRIPTION:
@@ -272,13 +272,14 @@ end
 
 
 if ( ( strcmp(ms.machineStatus,'closed') || strcmp(ms.machineStatus,'open') ) && ms.statusNotification == 0 )
-    [oper, openValue, closeValue, stopLoss, takeProfit] = Algo_002_leadlag(matrix,newTimeScalePoint,openValueReal);
-
+    [oper,openValue, closeValue, stopLoss, takeProfit, minReturn] = Algo_002_leadlag(matrix,newTimeScalePoint,openValueReal);
+    
     newState{1} = oper;
     newState{2} = openValue;
     newState{3} = closeValue;
     newState{4} = stopLoss;
     newState{5} = takeProfit;
+    newState{6} = minReturn;
     
     newTimeScalePoint = 0;
     updatedOperation  = newState{1};

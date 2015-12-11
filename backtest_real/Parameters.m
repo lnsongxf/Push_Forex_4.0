@@ -75,6 +75,7 @@ classdef Parameters < handle
             obj.set('closeValue',obj.get('openValue_') + obj.get('noLoose___')*operStates.actualOperation);
             operStates.lastOperation    = operStates.actualOperation;
             operStates.actualOperation  = 0;
+            operStates.minimumReturn    = 0;
             operStates.lock             = 0;
             operStates.phase            = 0;
                         
@@ -94,6 +95,7 @@ classdef Parameters < handle
             obj.set('closeValue',obj.get('openValue_') +obj.get('stopLoss__')*(-operStates.actualOperation));
             operStates.lastOperation    = operStates.actualOperation;
             operStates.actualOperation  = 0;
+            operStates.minimumReturn    = 0;
             operStates.lock             = 0;
             operStates.phase            = 0;
             % obj.set('alfa______',obj.get('newAlfa___'));
@@ -103,10 +105,11 @@ classdef Parameters < handle
         function operStates = closeOnCall (obj, operStates, currValue, closingTime)
             obj.set('closeValue',currValue);
             obj.set('closeTime_',closingTime);
-            operStates.lastOperation    = operStates.actualOperation;
-            operStates.actualOperation  = 0;
-            operStates.lock             = 0;
-            operStates.phase            = 0;
+            operStates.lastOperation     = operStates.actualOperation;
+            operStates.actualOperation   = 0;
+            operStates.minimumReturn     = 0;
+            operStates.lock              = 0;
+            operStates.phase             = 0;
         end
                     
         function operStates = updateParamsMaxIncrease (obj, operStates,value)
@@ -115,10 +118,11 @@ classdef Parameters < handle
         function operStates = updateParamsOnTakeProfit (obj,operStates)
             % display ('Ho chiuso per take profit');
             obj.set('closeValue',obj.get('valueTp___'));
-            operStates.lastOperation    = operStates.actualOperation;
-            operStates.actualOperation  = 0;
-            operStates.lock             = 0;
-            operStates.phase            = 0;
+            operStates.lastOperation     = operStates.actualOperation;
+            operStates.actualOperation   = 0;
+            operStates.minimumReturn     = 0;
+            operStates.lock              = 0;
+            operStates.phase             = 0;
             % obj.set('alfa___ ___',obj.get('newAlfa___'));
             % display (strcat ('Guadagno netto: ',mat2str (abs (obj.get('closeValue') - obj.get('openValue_')))));
         end
@@ -131,6 +135,7 @@ classdef Parameters < handle
             obj.set('maxValue__',0);
             operStates.lastOperation    = 0;
             operStates.actualOperation  = 0;
+            operStates.minimumReturn    = 0;
             operStates.lock             = 0;
             operStates.phase            = 0;
         end

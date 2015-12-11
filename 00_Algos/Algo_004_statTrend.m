@@ -1,4 +1,4 @@
-function [oper, openValue, closeValue, stopLoss, noLoose, valueTp] = Algo_004_statTrend(matrix,newTimeScalePoint,openValueReal,timeSeriesProperties,indexHisData)
+function [oper, openValue, closeValue, stopLoss, takeProfit, minReturn] = Algo_004_statTrend(matrix,newTimeScalePoint,openValueReal,timeSeriesProperties,indexHisData)
 
 %
 % DESCRIPTION:
@@ -49,11 +49,11 @@ global     map;
 persistent counter;
 persistent countCycle;
 
-openValue = 0;
-closeValue= 0;
-stopLoss  = 0;
-noLoose   = 0;
-valueTp   = 0;
+openValue  = 0;
+closeValue = 0;
+stopLoss   = 0;
+takeProfit = 0;
+minReturn  = 0;
 %real      = 0;
 
 cState = coreState_real02;
@@ -73,7 +73,7 @@ if(isempty(countCycle) || countCycle == 0)
     operationState = OperationState;
     params = Parameters;
     map('Algo_004_statTrend') = RealAlgo(operationState,params);
-    oper = 0;
+    oper      = 0;
     return;
 end
 
@@ -152,6 +152,12 @@ else
             params.set('openValue_',openValueReal);
             params.set('closeTime_',indexHisData);
             
+            openingPrice = openValueReal;
+            actualPrice  = chiusure(end);
+            actualReturn = (actualPrice - openingPrice)*operationState.actualOperation;
+            operationState.minimumReturn = min(operationState.minimumReturn,actualReturn);
+            minReturn = operationState.minimumReturn;
+   
             openingTime = params.get('openTime__');
             closingTime = params.get('closeTime_');
             operationState.latency = closingTime - openingTime;
@@ -201,17 +207,15 @@ else
     
 end
 
-oper = operationState.actualOperation;
+oper      = operationState.actualOperation;
 
 real_Algo = RealAlgo(operationState,params);
 map('Algo_004_statTrend')     = real_Algo;
 
-openValue = params.get('openValue_');
-closeValue= params.get('closeValue');
-stopLoss  = params.get('stopLoss__');
-noLoose   = params.get('noLoose___');
-valueTp   = params.get('valueTp___');
-
+openValue   = params.get('openValue_');
+closeValue  = params.get('closeValue');
+stopLoss    = params.get('stopLoss__');
+takeProfit  = params.get('noLoose___');
 
 clear real_Algo;
 clear params;

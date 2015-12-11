@@ -1,4 +1,4 @@
-function [oper, openValue, closeValue, stopLoss, noLoose, valueTp,st] = Algo_002_leadlag(matrix,newTimeScalePoint,openValueReal)
+function [oper, openValue, closeValue, stopLoss, noLoose] = Algo_002_leadlag(matrix,newTimeScalePoint,openValueReal)
 
 %
 % DESCRIPTION:
@@ -54,7 +54,6 @@ openValue = 0;
 closeValue= 0;
 stopLoss  = 0;
 noLoose   = 0;
-valueTp   = 0;
 %real      = 0;
 
 cState = coreState_real02;
@@ -175,8 +174,6 @@ openValue = params.get('openValue_');
 closeValue= params.get('closeValue');
 stopLoss  = params.get('stopLoss__');
 noLoose   = params.get('noLoose___');
-valueTp   = params.get('valueTp___');
-
 
 clear real_Algo;
 clear params;
