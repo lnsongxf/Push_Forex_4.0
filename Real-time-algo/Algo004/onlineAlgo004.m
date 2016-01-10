@@ -60,7 +60,7 @@ messagePub = '';
 nData=100;
 closingTimeScale = 1;
 openingTimeScale = 30;
-nameAlgo='Algo002';
+nameAlgo='Algo004';
 server_exe = 0; % set to 1 when the Algo is running on the server as an .exe
 
 indexOpen = 0;
@@ -210,7 +210,7 @@ elseif listener3 && ( strcmp(ms.machineStatus,'closing') || strcmp(ms.machineSta
                 sendgmail(receiver, subject, content, mail, password)
                 
                 LogObj.error('MT4 error',num2str(cell2mat(strcat('MT4 was not able to close the operation',{' '},num2str(ticket),{' '},'please check e-mail and close it manually'))) );
-                ms.machineStatus = 'closed';
+                ms.machineStatus = 'closed'; %#ok<UNRCH>
                 LogObj.trace('machine status',ms.machineStatus);
                 
             end
@@ -256,7 +256,7 @@ if strcmp(ms.machineStatus,'closing')
     if tElapsedClosingRequest > 90
         
         LogObj.error('error',num2str(cell2mat(strcat('no Status message received for closing the position',{' '}, num2str(ticket)))) );
-        LogObj.info('MATLAB info',num2str(cell2mat(strcat('We suppose that the operation',{' '},num2str(ticket),{' '},'has been closed by MT4'))) );
+        LogObj.info('MATLAB info',num2str(cell2mat(strcat('We suppose that the operation',{' '},num2str(ticket),{' '},'has been closed by MT4'))) ); %#ok<UNRCH>
         
         receiver = '4castersltd@gmail.com';
         mail     = '4castersltd@gmail.com';
@@ -272,7 +272,9 @@ end
 
 
 if ( ( strcmp(ms.machineStatus,'closed') || strcmp(ms.machineStatus,'open') ) && ms.statusNotification == 0 )
-    [oper,openValue, closeValue, stopLoss, takeProfit, minReturn] = Algo_002_leadlag(matrix,newTimeScalePoint,openValueReal);
+    t=now;
+    timeMin=t*60*24;
+    [oper,openValue, closeValue, stopLoss, takeProfit, minReturn] = Algo_004_statTrend(matrix,newTimeScalePoint,openValueReal,timeSeriesProperties,timeMin);
     
     newState{1} = oper;
     newState{2} = openValue;

@@ -195,8 +195,7 @@ else
             
             params.set('openTime__',indexHisData);            
             display('Matlab ha deciso di aprire');
-            
-            
+                       
             % 03c
             % -------- decMaker lock manager -------------------- %
             operationState = decMaker.calcLock(operationState);
