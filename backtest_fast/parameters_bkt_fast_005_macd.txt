@@ -21,12 +21,12 @@
             % -------------------------------------------------------------
 
             
-nameAlgo = 'bkt_fast_005_macd' 
+nameAlgo = 'bkt_fast_005_macd_dynamicalTPandSL'
 
 % N qui e' il num di pips dopo cui chiuder l'operazione per TP
-N = [ 5 10 15 20 25 30 35 40]
+N = 5
 % M qui e' il num di pips dopo cui chiuder l'operazione per SL
-M = [ 5 10 15 20 25 30 35 40]   
+M = 40
 
 N_greater_than_M = 0     
 Cross = 'EURUSD'            

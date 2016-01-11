@@ -115,3 +115,35 @@ plot(sBollPos,P(sBollPos),'og','markersize',3,'LineWidth',2)
 plot(sBollNeg,P(sBollNeg),'or','markersize',3,'LineWidth',2)
 legend('Bollinger')
 linkaxes(ax,'x')
+
+%% %%%%%%%%%%%%%%%%%%
+%% generate signal RSI
+
+thresh = [30 70]; % default threshold for the RSI
+
+% N = periodo(relativo all new time scale) su cui si basa l RSI
+% M = M-period moving average
+N = 10;
+M = 5;
+
+ma = movavg(P,M,M,'e');
+ri = rsindex(P - ma, N);
+
+indx    = ri < thresh(1);
+indx    = [false; indx(1:end-1) & ~indx(2:end)];
+sRSI(indx) = 1;
+% Crossing the upper threshold
+indx    = ri > thresh(2);
+indx    = [false; indx(1:end-1) & ~indx(2:end)];
+sRSI(indx) = -1;
+
+%% plot signal RSI
+
+sRSIPos = find(sRSI==1);
+sRSINeg = find(sRSI==-1);
+
+figure
+plot(P,'LineWidth',1.5)
+hold on
+plot(sRSIPos,P(sRSIPos),'og','markersize',3,'LineWidth',2)
+plot(sRSINeg,P(sRSINeg),'or','markersize',3,'LineWidth',2)

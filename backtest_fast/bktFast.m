@@ -1,5 +1,18 @@
 classdef bktFast < handle
     
+    %%%%%%%%%%%%%%%%
+    %%% use it like this:
+    % fast = bktFast;
+    % fast = fast.optimize('parameters_file.txt')
+    %
+    %%% or to simply check that an algo it's working:
+    %
+    % test = bktFast;
+    % fast = test.tryme('parameters_file.txt')
+    %
+    %%%%%%%%%%%%%%%%
+    
+    
     properties
         R_over_maxDD
         bktfastTraining
@@ -145,7 +158,9 @@ classdef bktFast < handle
             toc
             
             if WhatToPlot > 1
-                sweepPlot_BKT_Fast(obj.R_over_maxDD)
+                temp=obj.R_over_maxDD;
+                temp(isnan( temp) )=0;
+                sweepPlot_BKT_Fast(temp)
             end
             
             %% display results of training

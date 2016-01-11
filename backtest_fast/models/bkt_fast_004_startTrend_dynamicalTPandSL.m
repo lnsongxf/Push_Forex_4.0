@@ -10,9 +10,11 @@ classdef bkt_fast_004_startTrend_dynamicalTPandSL < handle
         r;
         openingPrices;
         OpDates;
+        indexOpen;
         closingPrices;
         ClDates;
         indexClose;
+        latency;
         
     end
     
@@ -136,6 +138,7 @@ classdef bkt_fast_004_startTrend_dynamicalTPandSL < handle
                             i = indice_I;
                             obj.chei(ntrades)=i;
                             obj.indexClose = obj.indexClose + 1;
+                            obj.latency(ntrades)=j - newTimeScale*obj.indexOpen;
                             break
                             
                         end
@@ -170,6 +173,8 @@ classdef bkt_fast_004_startTrend_dynamicalTPandSL < handle
             obj.outputbkt(:,7) = obj.OpDates(1:obj.indexClose);              % opening date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
             obj.outputbkt(:,8) = obj.ClDates(1:obj.indexClose);                % closing date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
             obj.outputbkt(:,9) = ones(obj.indexClose,1)*1;                 % lots setted for single operation
+            obj.outputbkt(:,10) = obj.latency(1:obj.indexClose);        % number of minutes the operation was open
+            obj.outputbkt(:,11) = ones(obj.indexClose,1);         % to be done     % minimum return touched during dingle operation
             
             
             
@@ -201,6 +206,7 @@ classdef bkt_fast_004_startTrend_dynamicalTPandSL < handle
             obj.direction(ntrades)= segnoOperazione;
             obj.openingPrices(ntrades) = Pbuy;
             obj.OpDates(ntrades) = date(i);
+            obj.indexOpen = i;
             
         end
         
