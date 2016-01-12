@@ -16,7 +16,7 @@
             % EXAMPLE of use:
             % -------------------------------------------------------------
             % clear all; bkt_Algo_004=bktOffline
-            % bkt_Algo_002=bkt_Algo_004.spin('parameters_Offline_Algo_004.txt')
+            % bkt_Algo_004=bkt_Algo_004.spin('parameters_Offline_Algo_004.txt')
 
 
 

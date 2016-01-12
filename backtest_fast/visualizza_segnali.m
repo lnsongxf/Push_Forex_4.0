@@ -13,9 +13,11 @@ hisDataTemp = hisDataRaw( (hisDataRaw(:,1) ~=0), : );
 [r,c] = size(hisDataTemp);
 
 %remove badly loaded dates (will add fake dates in a sec)
-if c ~= 5
-    hisData = hisDataTemp(:,c-4:c);
-end
+            if c ~= 5
+                hisData = hisDataTemp(:,c-4:c);
+            else
+                hisData = hisDataTemp;
+            end
 
 hisData(1,6) = datenum('01/01/2015 00:00', 'mm/dd/yyyy HH:MM');
 
