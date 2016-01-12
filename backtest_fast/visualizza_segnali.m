@@ -1,27 +1,26 @@
 %% load data
 
 
-hisDataRaw=load('EURUSD_smallsample2014_2015.csv');
+hisDataRaw=load('AUDCAD.csv');
 
 
 actTimeScale = 1;
 newTimeScale = 30;
 
 % remove lines with no data (holes)
-hisData = hisDataRaw( (hisDataRaw(:,1) ~=0), : );
+hisDataTemp = hisDataRaw( (hisDataRaw(:,1) ~=0), : );
 
-[r,c] = size(hisData);
+[r,c] = size(hisDataTemp);
 
+%remove badly loaded dates (will add fake dates in a sec)
+if c ~= 5
+    hisData = hisDataTemp(:,c-4:c);
+end
 
-% includi colonna delle date se non esiste nel file di input
-if c == 5
-    
-    hisData(1,6) = datenum('01/01/2015 00:00', 'mm/dd/yyyy HH:MM');
-    
-    for j = 2:r;
-        hisData(j,6) = hisData(1,6) + ( (actTimeScale/1440)*(j-1) );
-    end
-    
+hisData(1,6) = datenum('01/01/2015 00:00', 'mm/dd/yyyy HH:MM');
+
+for j = 2:r;
+    hisData(j,6) = hisData(1,6) + ( (actTimeScale/1440)*(j-1) );
 end
 
 % riscala temporalmente se richiesto

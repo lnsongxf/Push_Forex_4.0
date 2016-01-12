@@ -30,8 +30,8 @@ N = 8:20
 M = 1   
 
 N_greater_than_M = 0               
-Cross = 'EURUSD'            
-histName = 'EURUSD_smallsample2014_2015.csv'		   
+Cross = 'AUDCAD'            
+histName = 'AUDCAD.csv' % 'EURUSD_smallsample2014_2015.csv'		   
 actTimeScale = 1             		
 newTimeScale = 30             		
 transCost = 1

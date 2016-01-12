@@ -70,20 +70,24 @@ classdef bktFast < handle
             hisDataRaw=load(histName);
             
             % remove lines with no data (holes)
-            hisData = hisDataRaw( (hisDataRaw(:,1) ~=0), : );
+            hisDataTemp = hisDataRaw( (hisDataRaw(:,1) ~=0), : );
             
-            [r,c] = size(hisData);
+            [r,c] = size(hisDataTemp);
             
-            % include fake dates if not present in the histfile
-            if c == 5
-                
-                hisData(1,6) = datenum('01/01/2015 00:00', 'mm/dd/yyyy HH:MM');
-                
-                for j = 2:r;
-                    hisData(j,6) = hisData(1,6) + ( (actTimeScale/1440)*(j-1) );
-                end
-                
+            %remove badly loaded dates (will add fake dates in a sec)
+            if c ~= 5
+                hisData = hisDataTemp(:,c-4:c);
+            else
+                hisData = hisDataTemp;
             end
+            
+            
+            hisData(1,6) = datenum('01/01/2015 00:00', 'mm/dd/yyyy HH:MM');
+            
+            for j = 2:r;
+                hisData(j,6) = hisData(1,6) + ( (actTimeScale/1440)*(j-1) );
+            end
+            
             
             % split historical into trainging set for optimization and paper trading
             % default: 75% Training, 25% paper trading)
@@ -220,20 +224,23 @@ classdef bktFast < handle
             hisDataRaw=load(histName);
             
             % remove lines with no data (holes)
-            hisData = hisDataRaw( (hisDataRaw(:,1) ~=0), : );
+            hisDataTemp = hisDataRaw( (hisDataRaw(:,1) ~=0), : );
             
-            [r,c] = size(hisData);
+            [r,c] = size(hisDataTemp);
             
-            % include fake dates if not present in the histfile
-            if c == 5
-                
-                hisData(1,6) = datenum('01/01/2015 00:00', 'mm/dd/yyyy HH:MM');
-                
-                for j = 2:r;
-                    hisData(j,6) = hisData(1,6) + ( (actTimeScale/1440)*(j-1) );
-                end
-                
+            %remove badly loaded dates (will add fake dates in a sec)
+            if c ~= 5
+                hisData = hisDataTemp(:,c-4:c);
+            else
+                hisData = hisDataTemp;
             end
+            
+            hisData(1,6) = datenum('01/01/2015 00:00', 'mm/dd/yyyy HH:MM');
+            
+            for j = 2:r;
+                hisData(j,6) = hisData(1,6) + ( (actTimeScale/1440)*(j-1) );
+            end
+            
             
             % rescale data if requested
             if newTimeScale > 1
