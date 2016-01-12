@@ -54,6 +54,7 @@ persistent logFileDimension
 persistent logFile
 persistent LogObj
 persistent logFolderName
+persistent timeSeriesProperties
 
 topicPub = '';
 messagePub = '';
@@ -76,6 +77,7 @@ if(isempty(matrix))
     ms.machineStatus = 'closed';
     nFile=0;
     logFileDimension=0;
+    timeSeriesProperties=indicators;
 end
 
 ms.statusNotification = 0;
@@ -101,9 +103,9 @@ elseif logFileDimension > 10000000
     [LogObj,logFile] = createLogFile (logFolderName,nameAlgo,nFile);
 end
 
-listener1 = strcmp(topicSub,'TIMEFRAMEQUOTE@MT4@ACTIVTRADES@EURUSD@m30@v100');
+listener1 = strcmp(topicSub,'TIMEFRAMEQUOTE@MT4@ACTIVTRADES@EURUSD@m1@v100');
 listener2 = strcmp(topicSub,'TIMEFRAMEQUOTE@MT4@ACTIVTRADES@EURUSD@m1@v1');
-listener3 = strcmp(topicSub,'STATUS@EURUSD@1002');
+listener3 = strcmp(topicSub,'STATUS@EURUSD@1004');
 
 if listener1 && ( strcmp(ms.machineStatus,'closed') || strcmp(ms.machineStatus,'open') ) %new 30minutes data array
     
@@ -190,14 +192,14 @@ elseif listener3 && ( strcmp(ms.machineStatus,'closing') || strcmp(ms.machineSta
         elseif StatusClose == -1 || price < 0
             
             if StatusClose == 1 && price < 0
-                LogObj.error( 'MT4 error',num2str(cell2mat(strcat('MT4 closed the requested operation',{' '}, num2str(ticket),{' '},'at the price',{' '},num2str(price)))) );
+                LogObj.error( 'MT4 error',num2str(cell2mat(strcat('MT4 tried to close the requested operation',{' '}, num2str(ticket),{' '},'at the price',{' '},num2str(price)))) );
             else
                 LogObj.warn('MT4 warn',num2str(cell2mat(strcat('MT4 failed in closing the operation',{' '}, num2str(ticket)))) );
             end
             
             if trial < 5
                 trial=trial+1;
-                [topicPub,messagePub,startingOperation]=onlineClose002(lastCloseValue,ticket,indexClose);
+                [topicPub,messagePub,startingOperation]=onlineClose004(lastCloseValue,ticket,indexClose);
                 LogObj.trace('problems',num2str(cell2mat(strcat('Matlab trial #',{' '},num2str(trial),{' '},' to close the operation:', {' '},num2str(ticket)))) );
                 LogObj.trace('machine status',ms.machineStatus);
                 
@@ -296,7 +298,7 @@ if abs(updatedOperation) > 0 && startingOperation == 0
     % numbers to avoid Metatrader to close automatically
     MT4stopL = (stopLoss + 20) * 10;
     MT4takeP = (takeProfit + 20) * 10;
-    [topicPub,messagePub,startingOperation]=onlineOpen002(oper,openValue,MT4stopL,MT4takeP,indexOpen);
+    [topicPub,messagePub,startingOperation]=onlineOpen004(oper,openValue,MT4stopL,MT4takeP,indexOpen);
     
     LogObj.info( 'MATLAB info', num2str(cell2mat(strcat( 'Matalb requests to open a new operation at the price',{' '},num2str(openValue) ))) ) ;
     ms.machineStatus = 'opening';
@@ -304,7 +306,7 @@ if abs(updatedOperation) > 0 && startingOperation == 0
     
 elseif updatedOperation == 0 && abs(startingOperation) > 0
     % Closing request
-    [topicPub,messagePub,startingOperation]=onlineClose002(closeValue,ticket,indexClose);
+    [topicPub,messagePub,startingOperation]=onlineClose004(closeValue,ticket,indexClose);
     
     tStartClosingRequest = tic;
     

@@ -43,7 +43,7 @@ classdef bktOffline < handle
             %
             % OUTPUT parameters:
             % -------------------------------------------------------------
-            %starthisData
+            % starthisData
             % newHisData
             % iCloseActTimeScale
             % iCloseNewTimeScale

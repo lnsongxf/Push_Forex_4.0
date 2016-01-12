@@ -1,4 +1,4 @@
-function [newTakeP,newStopL] = progressiveTPandSL (LastClosePrice,OpenPrice,TakeProfitPrice,StopLossPrice,direction,TakeP,StopL,variables)
+function [newTakeP,newStopL] = closingProgressiveTPandSL (LastClosePrice,OpenPrice,TakeProfitPrice,StopLossPrice,direction,TakeP,StopL,variables)
 
 tresholdSL = variables(1);
 newLimitTP = variables(2);

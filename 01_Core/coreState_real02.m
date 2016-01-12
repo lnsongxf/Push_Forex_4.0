@@ -355,7 +355,7 @@ classdef coreState_real02 < handle
             trend=newState+oldState;
             trendDirection=sign(newGradient2);
             
-            % Hurst         = timeSeriesProperties.HurstSmooth(end);
+            Hurst         = timeSeriesProperties.HurstSmooth(end);
             gradientHurst = timeSeriesProperties.HurstDiff(end);
             
             %                         subplot(3,1,1)
@@ -366,9 +366,10 @@ classdef coreState_real02 < handle
             %                         plot(smoothClose2,'-r')
             
 %             if inversion<0 && trend==2 && gradientHurst > 0
-            if inversion<0 && gradientHurst > 0
+             if inversion<0 && gradientHurst > 0
 %             if inversion<0 && trend == 2 && Hurst > 0.5
 %             if inversion<0 && Hurst > 0.55 && gradientHurst > 0
+%             if abs(inversion)>0 && Hurst > 0 && abs(gradientHurst)>0    %test
                 
                 obj.state=1;
                 obj.suggestedDirection=trendDirection;

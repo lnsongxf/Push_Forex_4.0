@@ -130,7 +130,7 @@ classdef Parameters < handle
         function operStates = resetStatusOnFailureOpening (obj,operStates)      
             obj.set('openValue_',-1);
             obj.set('closeValue',-1);
-            obj.set('openTime _',0 );
+            obj.set('openTime__',0 );
             obj.set('percTp____',0);
             obj.set('maxValue__',0);
             operStates.lastOperation    = 0;
