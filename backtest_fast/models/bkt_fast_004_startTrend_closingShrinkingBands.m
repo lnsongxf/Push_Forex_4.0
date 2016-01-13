@@ -45,17 +45,20 @@ classdef bkt_fast_004_startTrend_closingShrinkingBands < handle
             s = zeros(size(P));
             
             % iterative (slow!!) stationarity test
-            Hurst = zeros(size(P));
+            Hurst = nan(size(P));
+            smoothHurstDiff = nan(size(P));
             st=stationarity;
+            
+            display(length(P));
             
             for j=100:length(P)
                 
                 st.stationarityTests(P(j-99:j),newTimeScale,0);
                 Hurst(j) = st.HurstExponent;
+                [~,HurstDiff] = smoothDiff(Hurst(j-99:j),0.5);
+                smoothHurstDiff(j) = mean(HurstDiff(end-5:end-1));
                 
             end
-            
-            HurstDiff = [0 ; diff(Hurst)];
             
             a = (1/M)*ones(1,M);
             lead = filter(a,1,P);
@@ -80,7 +83,7 @@ classdef bkt_fast_004_startTrend_closingShrinkingBands < handle
                 % se lead e lag si incrociano, parte un segnale...
                 %if ( s(i)*s(i-1) < 0  ) && ( s_gradient(i-1) + s_gradient(i-2) == 2 )
                 
-                if ( s(i)*s(i-1) < 0  ) && ( HurstDiff(i) > 0 )
+                if ( s(i)*s(i-1) < 0  ) && ( smoothHurstDiff(i) > 0 )
                 
                     segnoOperazione = gradient2(i-1) ;
                     ntrades = ntrades + 1;
