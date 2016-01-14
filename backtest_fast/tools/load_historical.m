@@ -45,7 +45,7 @@ function [hisData, newHisData] = load_historical(histName, actTimeScale, newTime
                 newHisData(:,6) = expert.openDrescaled;
              
             else
-                newHisData = 0;
+                newHisData = hisData;
             end
             
 end

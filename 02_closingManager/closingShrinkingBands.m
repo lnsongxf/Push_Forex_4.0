@@ -32,7 +32,7 @@ if ( distance > 0 )
     newStopL = StopL - ( distance + ShrinkSL );
     newTakeP = TakeP + ( distance - ShrinkTP );
     
-    display(strcat('dynamical shrinking bands: TP = ',num2str(newTakeP),' SL = ',num2str(newStopL)));
+%     display(strcat('dynamical shrinking bands: TP = ',num2str(newTakeP),' SL = ',num2str(newStopL)));
     
     dynamicOn = 1;
     
