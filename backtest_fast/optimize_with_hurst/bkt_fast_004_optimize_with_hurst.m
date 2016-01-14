@@ -75,8 +75,8 @@ classdef bkt_fast_004_optimize_with_hurst < handle
                     
                     TakeP = min(floor(wTP*devFluct2),100);
                     StopL = min(floor(wSL*devFluct2),100);
-%                     TakeProfitPrice = Pbuy + segnoOperazione * TakeP;
-%                     StopLossPrice =  Pbuy - segnoOperazione * StopL;
+                    TakeProfitPrice = Pbuy + segnoOperazione * TakeP;
+                    StopLossPrice =  Pbuy - segnoOperazione * StopL;
                     
                     for j = newTimeScale*(i):length(Pminute)
                         

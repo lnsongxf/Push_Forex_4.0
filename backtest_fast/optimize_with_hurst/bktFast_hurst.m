@@ -110,18 +110,22 @@ classdef bktFast_hurst < handle
                 
             end
             
-            
-            
-            for n = N
-                
-                display(['n =', num2str(n)]);
-                
-                
-                for m = M
+                for n = pips_TP
                     
-                    if( N_greater_than_M && n<=m )
-                        continue
-                    end
+                    display(['pipsTP =', num2str(pips_TP)]);
+                    
+                    for m = pips_SL
+            
+%             for n = N
+%                 
+%                 display(['n =', num2str(n)]);
+%                 
+%                 
+%                 for m = M
+%                     
+%                     if( N_greater_than_M && n<=m )
+%                         continue
+%                     end
                     
                     bktfast = feval(algo);
                     %                       spin(            Pmin,           matrixNewTimeScale, actTimeScale, newTimeScale, N, M, transCost, pips_TP, pips_SL, stdev_TP,stdev_SL, plot, Hurst_vector)
