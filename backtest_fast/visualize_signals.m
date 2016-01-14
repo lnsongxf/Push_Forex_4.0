@@ -80,7 +80,7 @@ switch lower(signal)
         
         % plot macd signal
         figure
-        plot(cl,'LineWidth',1.5)        
+        plot(cl,'LineWidth',1.5)
         hold on
         plot(sMacdPos,cl(sMacdPos),'og','markersize',3,'LineWidth',2)
         plot(sMacdNeg,cl(sMacdNeg),'or','markersize',3,'LineWidth',2)
@@ -88,7 +88,7 @@ switch lower(signal)
         
         % plot when macd changes signal
         figure
-        plot(cl,'LineWidth',2)        
+        plot(cl,'LineWidth',2)
         hold on
         plot(changeSignalMacd,cl(changeSignalMacd),'or','markersize',5,'LineWidth',2)
         title('when macd changes signal')
@@ -132,27 +132,41 @@ switch lower(signal)
         
     case 'bollinger' %DA FINIRE!!!
         
-        % N = lookback period 
+        % N = lookback period
         % std = standard dev per la banda
         if isempty(params)
             N = 10;
+            weight = 1;
             std = 2;
         else
             N = params{1};
-            std = params{2};
+            weight = params{2};
+            std = params{3};
         end
         
-        a = (1/N)*ones(1,N);
-        MA = filter(a,1,P);
-        MSTDEV = movingStd(P, N);
+%         a = (1/N)*ones(1,N);
+%         MA = filter(a,1,cl);
+%         MSTDEV = movingStd(cl, N);
+%         
+%         zScore=(cl-MA)./MSTDEV;
+%         
+%         sBoll = zeros(size(cl));
+%         % signals
+%         sBoll(zScore < -std) = 1;
+%         sBoll(zScore > std) = -1;
+%         
+        outbol = tech_indicators(cl ,'boll' ,N,weight,std);
+        middl = outbol(:,1);
+        upp = outbol(:,2);
+        lowe = outbol(:,3);
         
-        zScore=(P-MA)./MSTDEV;
-        
-        sBoll = zeros(size(P));
-        % signals
-        sBoll(zScore < -wApri) = 1;
-        sBoll(zScore > wApri) = -1;
-        
-        
+        % plot Bollinger bands
+        figure
+        plot(cl,'LineWidth',2)
+        hold on
+        plot(middl,'-g')
+        plot(upp,'r')
+        plot(lowe,'r')
+        title('Bollinger Bands')
         
 end
