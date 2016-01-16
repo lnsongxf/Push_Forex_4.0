@@ -78,7 +78,7 @@ void processInput(string msg)
       string buffer = "";
       string topic = "HISTORY@ACTIVTRADES@EURUSD";
       // retrieving info from trade history
-      int i,hstTotal=OrdersHistoryTotal();
+      int i,j=0,hstTotal=OrdersHistoryTotal();
       for(i=0;i<hstTotal;i++)
       {
          //---- check selection result
@@ -88,13 +88,20 @@ void processInput(string msg)
             break;
          }
          // some work with order
-         buffer += ";";
          buffer += nextOrderToString();
-         if (i >= MAX_NUM_OF_TRADES_PER_MESSAGE) {
-            buffer += ";";
+         if (j >= MAX_NUM_OF_TRADES_PER_MESSAGE && i != hstTotal - 1) {
+            buffer += "|";
             buffer += "more";
             
             send(topic, buffer);
+            
+            j = 0;
+            buffer = "";
+            
+         }
+         if (j != 0 && i < hstTotal - 1) 
+         {
+            buffer += "|";
          }
       }
       send(topic, buffer);
@@ -107,7 +114,7 @@ string nextOrderToString()
 {
    //ticket number; open time; trade operation; amount of lots; symbol; open price; Stop Loss; Take Profit; close time; close price; commission; swap; profit;
    //comment; magic number; pending order expiration date.
-   string buffer = "";
+   string buffer =
    StringConcatenate(OrderTicket(),";",
    OrderOpenTime(),";",
    OrderType(),";",
