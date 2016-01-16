@@ -163,7 +163,7 @@ else
             operationState.latency = closingTime - openingTime;
             
             dynamicParameters {1} = 0;
-            dynamicParameters {2} = 1;
+            dynamicParameters {2} = 2;
             [params,TakeProfitPrice,StopLossPrice,dynamicOn] = dynamicalTPandSLManager(operationState, chiusure, params, @closingShrinkingBands, dynamicParameters);
             if dynamicOn  == 1
                 params.set('openTime__',indexHisData);
