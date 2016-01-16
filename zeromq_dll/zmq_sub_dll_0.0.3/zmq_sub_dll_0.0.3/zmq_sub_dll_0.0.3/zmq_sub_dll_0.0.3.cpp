@@ -125,6 +125,18 @@ int send_with_topic(const wchar_t *publisher_wchart, const wchar_t *message, con
 	return value;
 }
 
+int close(const wchar_t* socket)
+{
+	char socket_chars[81920];
+	size_t socket_chars_value;
+	wcstombs_s(&socket_chars_value, socket_chars, 81920, socket, wcslen(socket));
+
+	long long publisher = atoll(socket_chars);
+
+	return zmq_close((void *)socket);
+}
+
+
 Czmq_sub_dll_003::Czmq_sub_dll_003()
 {
 	return;

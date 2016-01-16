@@ -20,3 +20,4 @@ const wchar_t* receive(const wchar_t* conn_handle);
 const wchar_t* conn_and_sub(const wchar_t *addr, const wchar_t *topic_name);
 const wchar_t* connect(const wchar_t *addr);
 int send_with_topic(const wchar_t *publisher_wchart, const wchar_t *message, const wchar_t *topic);
+int close(const wchar_t* socket);

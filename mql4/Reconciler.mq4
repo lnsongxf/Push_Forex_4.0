@@ -12,16 +12,18 @@
 #property strict
 #property indicator_chart_window
 
+string listener;
 string speaker;
 
-
+int MAX_NUM_OF_TRADES_PER_MESSAGE = 25;
 //+------------------------------------------------------------------+
 //| Custom indicator initialization function                         |
 //+------------------------------------------------------------------+
 int OnInit()
   {
-   speaker = connect("tcp://localhost:51025");
-   Print("Connecting: " + speaker);
+   listener = conn_and_sub("tcp://localhost:51127", "RECONCILER@ACTIVTRADES@EURUSD");
+   speaker = connect("tcp://localhost:50025");
+   Print("Connecting: " + listener);
    
    return(INIT_SUCCEEDED);
   }
@@ -47,7 +49,89 @@ int OnCalculate(const int rates_total,
 
 int deinit()
 {
-   //close the socket
+   close(listener);
+   close(speaker);
+   return 0;
+}
+
+void OnTick()
+{
+   string msg;
+   do {
+      msg = receive(listener);
+      if (StringLen(msg) > 0)
+      {
+         if (StringCompare("", msg) != 0)
+         {
+            Alert("Message received: " + msg);
+            processInput(msg);
+         }
+         
+      }
+   }while (StringCompare("", msg) != 0);
+}
+
+void processInput(string msg)
+{
+   if (StringCompare("full", msg) == 0)
+   {
+      string buffer = "";
+      string topic = "HISTORY@ACTIVTRADES@EURUSD";
+      // retrieving info from trade history
+      int i,hstTotal=OrdersHistoryTotal();
+      for(i=0;i<hstTotal;i++)
+      {
+         //---- check selection result
+         if(OrderSelect(i,SELECT_BY_POS,MODE_HISTORY)==false)
+         {
+            Print("Access to history failed with error (",GetLastError(),")");
+            break;
+         }
+         // some work with order
+         buffer += ";";
+         buffer += nextOrderToString();
+         if (i >= MAX_NUM_OF_TRADES_PER_MESSAGE) {
+            buffer += ";";
+            buffer += "more";
+            
+            send(topic, buffer);
+         }
+      }
+      send(topic, buffer);
+   }
+   Print("Invalid command " + msg);
+   
+}
+
+string nextOrderToString()
+{
+   //ticket number; open time; trade operation; amount of lots; symbol; open price; Stop Loss; Take Profit; close time; close price; commission; swap; profit;
+   //comment; magic number; pending order expiration date.
+   string buffer = "";
+   StringConcatenate(OrderTicket(),";",
+   OrderOpenTime(),";",
+   OrderType(),";",
+   OrderLots(),";",
+   OrderSymbol(),";",
+   OrderOpenPrice(),";",
+   OrderStopLoss(),";",
+   OrderTakeProfit(),";",
+   OrderCloseTime(),";",
+   OrderClosePrice(),";",
+   OrderCommission(),";",
+   OrderSwap(),";",
+   OrderProfit(),";",
+   OrderComment(),";",
+   OrderMagicNumber());
+
+   return buffer;
+}
+
+void send(string topic, string message){
+   Print("Message to send: " + message + " on topic: " + topic);
+   int result = send_with_topic(speaker, message+"\n", topic);
+   Print("Sending result = " + IntegerToString(result));
+   Print("Message sent: " + message + " on topic: " + topic);
 }
 
 int sleepXIndicators(int milli_seconds)
