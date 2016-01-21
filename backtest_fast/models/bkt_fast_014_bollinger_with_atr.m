@@ -48,6 +48,7 @@ classdef bkt_fast_014_bollinger_with_atr < handle
             obj.OpDates=zeros(size(P));
             obj.ClDates=zeros(size(P));
             obj.r =zeros(size(P));
+            obj.latency(size(P));
             obj.indexClose = 0;
             
             ntrades = 0;

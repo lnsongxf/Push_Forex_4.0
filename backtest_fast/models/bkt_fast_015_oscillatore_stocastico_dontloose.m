@@ -1,4 +1,4 @@
-classdef bkt_fast_011_oscillatore_stocastico < handle
+classdef bkt_fast_015_oscillatore_stocastico_dontloose < handle
     
     
     properties
@@ -21,7 +21,7 @@ classdef bkt_fast_011_oscillatore_stocastico < handle
     
     methods
         
-        function obj = spin(obj, Pminute, matrixNewHisData, ~, newTimeScale, kperiods, dperiods, cost, ~, ~, wTP, wSL, plottami) 
+        function obj = spin(obj, Pminute, matrixNewHisData, ~, newTimeScale, kperiods, dperiods, cost, ~, ~, wTP, wSL, plottami)
             
             % Pminute = prezzo al minuto
             % matrixNewHisData = matrice con prezzi e date alla new time scale
@@ -34,7 +34,7 @@ classdef bkt_fast_011_oscillatore_stocastico < handle
             
             %% utilizza segnale dell'oscillatore stocastico
             % https://www.ig.com/it/oscillatore-stocastico-prima-parte
-                        
+            
             high = matrixNewHisData(:,2);
             low = matrixNewHisData(:,3);
             P = matrixNewHisData(:,4);
@@ -55,7 +55,7 @@ classdef bkt_fast_011_oscillatore_stocastico < handle
             ntrades = 0;
             obj.indexClose = 0;
             s = zeros(sizeStorico,1);
-           
+            
             stosc = stochosc(high, low, P, kperiods, dperiods);
             FpK = stosc(:,1);
             %FpD = stosc(:,2);
@@ -63,7 +63,7 @@ classdef bkt_fast_011_oscillatore_stocastico < handle
             % I use a single oscillator as signal generator
             s(FpK<20) = 1;
             s(FpK>80) = -1;
-
+            
             i = 101; %this can be as small as kperiods+1 (it's used to align the results to the bktoffline)
             
             
@@ -76,60 +76,49 @@ classdef bkt_fast_011_oscillatore_stocastico < handle
                     ntrades = ntrades + 1;
                     [obj, Pbuy, devFluct2] = obj.apri(i, P, 0, ntrades, segnoOperazione, date);
                     
+                    TakeP = min(floor(wTP*devFluct2),100);
+                    StopL = min(floor(wSL*devFluct2),100);
+                    TakeProfitPrice = Pbuy + segnoOperazione * TakeP;
+                    StopLossPrice =  Pbuy - segnoOperazione * StopL;
+                    
                     for j = newTimeScale*(i):length(Pminute)
                         
                         indice_I = floor(j/newTimeScale);
                         
-                        cond1 = abs (Pminute(j) - Pbuy) >= floor(wTP*devFluct2);
-                        cond2 = sign (Pminute(j) - Pbuy) == segnoOperazione;
-                        cond3 = abs (Pminute(j) - Pbuy) >= floor(wSL*devFluct2);
-                        cond4 = sign (Pminute(j) - Pbuy) == segnoOperazione*-1;
- %                       cond5 = abs( s(indice_I) - segnoOperazione ) >= 2;
+                        %%%%%%%%%%% dynamicalTPandSLManager
                         
-                        if cond1 && cond2
+                        dynamicParameters {1} = 0;
+                        dynamicParameters {2} = 1;
+                        [TakeProfitPrice,StopLossPrice,TakeP,StopL,~] = dontloose(Pbuy,Pminute(j),segnoOperazione,TakeP,StopL, 0, dynamicParameters);
+                        
+                        %%%%%%%%%%%%%%%%%%%%%%%%%%
+                        
+                        condTP = ( sign( Pminute(j) - TakeProfitPrice ) * segnoOperazione );
+                        condSL = ( sign( StopLossPrice - Pminute(j) ) ) * segnoOperazione;
+                        
+                        if ( condTP >=0 ) || ( condSL >= 0 )
                             
-                            obj.r(indice_I) = wTP*devFluct2 - cost;
-                            obj.closingPrices(ntrades) = Pbuy + segnoOperazione*floor(wTP*devFluct2);
+                            obj.r(indice_I) =  segnoOperazione*(Pminute(j) - Pbuy) - cost;
+                            obj.closingPrices(ntrades) = Pminute(j);
                             obj.ClDates(ntrades) = date(indice_I); %controlla
                             %obj = obj.chiudi_per_TP(Pbuy, indice_I, segnoOperazione, devFluct2, wTP, cost, ntrades, date);
                             i = indice_I;
                             obj.chei(ntrades)=i;
                             obj.indexClose = obj.indexClose + 1;
-                            obj.latency(ntrades)=j - obj.indexOpen;
+                            obj.latency(ntrades)=j - newTimeScale*obj.indexOpen;
                             break
-                            
-                        elseif cond3 && cond4
-                            
-                            obj.r(indice_I) = - wSL*devFluct2 - cost;
-                            obj.closingPrices(ntrades) = Pbuy - segnoOperazione*floor(wSL*devFluct2);
-                            obj.ClDates(ntrades) = date(indice_I); %controlla
-                            %obj = obj.chiudi_per_SL(Pbuy, indice_I, segnoOperazione, devFluct2, wSL, cost, ntrades, date);
-                            i = indice_I;
-                            obj.chei(ntrades)=i;
-                            obj.indexClose = obj.indexClose + 1;
-                            obj.latency(ntrades)=j - obj.indexOpen;
-                            break
-                            
-%                         elseif cond5
-%                             
-%                             obj.r(indice_I) = segnoOperazione*(Pminute(j) - Pbuy) - cost;
-%                             obj.closingPrices(ntrades) = Pminute(j);
-%                             obj.ClDates(ntrades) = date(indice_I); %controlla
-%                             i = indice_I;
-%                             obj.chei(ntrades)=i;
-%                             obj.indexClose = obj.indexClose + 1;
-%                             break
-                            
                             
                         end
                         
-                        i = indice_I;
-                        obj.trades(i) = 1;
-                        
                     end
                     
-               
+                    i = indice_I;
+                    obj.trades(i) = 1;
+                    
                 end
+                
+                
+                
                 
                 i = i + 1;
                 
@@ -195,24 +184,24 @@ classdef bkt_fast_011_oscillatore_stocastico < handle
             
         end
         
-
         
         
-%         function [obj] = chiudi_per_SL(obj, Pbuy, indice_I, segnoOperazione, devFluct2, wSL, cost, ntrades, date)
-%             
-%             obj.r(indice_I) = - wSL*devFluct2 - cost;
-%             obj.closingPrices(ntrades) = Pbuy - segnoOperazione*floor(wSL*devFluct2);
-%             obj.ClDates(ntrades) = date(indice_I); %controlla
-%             
-%         end
-%         
-%         function [obj] = chiudi_per_TP(obj, Pbuy, indice_I, segnoOperazione, devFluct2, wTP, cost, ntrades, date)
-%             
-%             obj.r(indice_I) = wTP*devFluct2 - cost;
-%             obj.closingPrices(ntrades) = Pbuy + segnoOperazione*floor(wTP*devFluct2);
-%             obj.ClDates(ntrades) = date(indice_I); %controlla
-%             
-%         end
+        
+        %         function [obj] = chiudi_per_SL(obj, Pbuy, indice_I, segnoOperazione, devFluct2, wSL, cost, ntrades, date)
+        %
+        %             obj.r(indice_I) = - wSL*devFluct2 - cost;
+        %             obj.closingPrices(ntrades) = Pbuy - segnoOperazione*floor(wSL*devFluct2);
+        %             obj.ClDates(ntrades) = date(indice_I); %controlla
+        %
+        %         end
+        %
+        %         function [obj] = chiudi_per_TP(obj, Pbuy, indice_I, segnoOperazione, devFluct2, wTP, cost, ntrades, date)
+        %
+        %             obj.r(indice_I) = wTP*devFluct2 - cost;
+        %             obj.closingPrices(ntrades) = Pbuy + segnoOperazione*floor(wTP*devFluct2);
+        %             obj.ClDates(ntrades) = date(indice_I); %controlla
+        %
+        %         end
         
         
     end
