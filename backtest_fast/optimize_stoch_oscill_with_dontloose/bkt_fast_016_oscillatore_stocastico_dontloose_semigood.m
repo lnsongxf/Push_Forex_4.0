@@ -1,4 +1,4 @@
-classdef bkt_fast_015_oscillatore_stocastico_dontloose < handle
+classdef bkt_fast_016_oscillatore_stocastico_dontloose_semigood < handle
     
     
     properties
@@ -21,12 +21,12 @@ classdef bkt_fast_015_oscillatore_stocastico_dontloose < handle
     
     methods
         
-        function obj = spin(obj, Pminute, matrixNewHisData, ~, newTimeScale, kperiods, dperiods, cost, ~, ~, wTP, wSL, plottami)
+        function obj = spin(obj, Pminute, matrixNewHisData, ~, newTimeScale, kperiods, lateSL, cost, ~, ~, wTP, wSL, plottami)
             
             % Pminute = prezzo al minuto
             % matrixNewHisData = matrice con prezzi e date alla new time scale
             % kperiods = numero di periodi %K (consigliato = 10)
-            % dperiods = numero di periodi %D (consigliato = 3)
+            % lateSL = a quanto risettare lo SL dopo che dontloose ha sbagliato a calcolarlo
             % cost = spread per operazione (calcolato quando chiudi)
             % wSL = peso per calcolare quando chiuder per SL
             % wTP = peso per calcolare quando chiuder per TP
@@ -56,7 +56,7 @@ classdef bkt_fast_015_oscillatore_stocastico_dontloose < handle
             obj.indexClose = 0;
             s = zeros(sizeStorico,1);
             
-            stosc = stochosc(high, low, P, kperiods, dperiods);
+            stosc = stochosc(high, low, P, kperiods, 1);
             FpK = stosc(:,1);
             %FpD = stosc(:,2);
             
@@ -92,7 +92,7 @@ classdef bkt_fast_015_oscillatore_stocastico_dontloose < handle
                         [TakeProfitPrice,StopLossPrice,TakeP,StopL,~] = dontloose(Pbuy,Pminute(j),segnoOperazione,TakeP,StopL, 0, dynamicParameters);
 %                         display(['TP =', num2str(TakeP),'SL =', num2str(StopL)]);
 %                         display(['StopLossPrice =', num2str(StopLossPrice)]);
-                        StopL = min(StopL,200);
+                        StopL = min(StopL,lateSL);
                         %%%%%%%%%%%%%%%%%%%%%%%%%%
                         
                         condTP = ( sign( Pminute(j) - TakeProfitPrice ) * segnoOperazione );
