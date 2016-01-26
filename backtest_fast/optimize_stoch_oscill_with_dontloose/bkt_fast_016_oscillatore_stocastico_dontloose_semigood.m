@@ -70,7 +70,7 @@ classdef bkt_fast_016_oscillatore_stocastico_dontloose_semigood < handle
             while i <= sizeStorico
                 
                 % se il segnale passa da ipercomprato/venduto a non, compra (1 in long, -1 in short)
-                if  ( abs( s(i-1) ) && s(i)==0 && s(i-1)==-1)
+                if  ( abs( s(i-1) ) && s(i)==0 )
                     
                     segnoOperazione = s(i-1);
                     ntrades = ntrades + 1;
@@ -89,10 +89,11 @@ classdef bkt_fast_016_oscillatore_stocastico_dontloose_semigood < handle
                         
                         dynamicParameters {1} = 0;
                         dynamicParameters {2} = 1;
-                        [TakeProfitPrice,StopLossPrice,TakeP,StopL,~] = dontloose(Pbuy,Pminute(j),segnoOperazione,TakeP,StopL, 0, dynamicParameters);
-%                         display(['TP =', num2str(TakeP),'SL =', num2str(StopL)]);
+                        dynamicParameters {3} = lateSL;
+                        [TakeProfitPrice,StopLossPrice,TakeP,StopL,~] = closingDontloose(Pbuy,Pminute(j),segnoOperazione,TakeP,StopL, 0, dynamicParameters);
+%                         display(['TP =', num2str(TakeP),' SL =', num2str(StopL)]);
 %                         display(['StopLossPrice =', num2str(StopLossPrice)]);
-                        StopL = min(StopL,lateSL);
+                        
                         %%%%%%%%%%%%%%%%%%%%%%%%%%
                         
                         condTP = ( sign( Pminute(j) - TakeProfitPrice ) * segnoOperazione );
