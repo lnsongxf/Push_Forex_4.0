@@ -17,28 +17,36 @@ dynamicOn = 0;
 
 %
 minTP          = dynamicParameters {1};
-diffexpert     = dynamicParameters {2};
+diffvalue      = dynamicParameters {2};
 difflimit      = dynamicParameters {3};
 ShrinkFactorSL = dynamicParameters {4};
 ShrinkSL       = dynamicParameters {5};
 
 distance       = direction * ( LastClosePrice - OpenPrice );
-diffvalue      = (direction * diffexpert);
-MeanPrice      = floor( (TakeProfitPrice + StopLossPrice) / 2 );
-distanceNewSL  =  (( direction * ( LastClosePrice - MeanPrice ) ) * ShrinkFactorSL) + ShrinkSL;
 
 display(strcat('diffvalue =',num2str(diffvalue)));
 
-if ( distance > minTP ) && (diffvalue > difflimit)
+
+if ( distance > minTP ) 
     
-    TakeProfitPrice = TakeProfitPrice + direction * minTP;
-    StopLossPrice = StopLossPrice + direction * ( distanceNewSL );
-    
+    TakeProfitPrice = TakeProfitPrice + direction * 1;
     newTakeP = (TakeProfitPrice - OpenPrice) * direction;
+    
+    StopLossPrice = StopLossPrice + direction * ( distance + ShrinkSL );
     newStopL = (OpenPrice - StopLossPrice) * direction;
     
     display(strcat('dynamical TP = ',num2str(newTakeP),' SL = ',num2str(newStopL)));
+    dynamicOn = 1;
     
+elseif (diffvalue > difflimit)
+    
+    MeanPrice      = floor( (TakeProfitPrice + StopLossPrice) / 2 );
+    distanceNewSL  =  (( direction * ( LastClosePrice - MeanPrice ) ) * ShrinkFactorSL) + ShrinkSL;
+
+    StopLossPrice = StopLossPrice + direction * ( distanceNewSL );
+    newStopL = (OpenPrice - StopLossPrice) * direction;
+    
+    display(strcat('dynamical TP = ',num2str(newTakeP),' SL = ',num2str(newStopL)));
     dynamicOn = 1;
     
 end

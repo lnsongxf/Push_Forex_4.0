@@ -21,8 +21,8 @@ int MAX_NUM_OF_TRADES_PER_MESSAGE = 25;
 //+------------------------------------------------------------------+
 int OnInit()
   {
-   listener = conn_and_sub("tcp://localhost:51127", "RECONCILER@ACTIVTRADES@EURUSD");
-   speaker = connect("tcp://localhost:50025");
+   listener = conn_and_sub("tcp://192.168.0.9:51127", "RECONCILER@ACTIVTRADES@EURUSD");
+   speaker = connect("tcp://192.168.0.9:51125");
    Print("Connecting: " + listener);
    
    return(INIT_SUCCEEDED);
@@ -31,6 +31,13 @@ int OnInit()
 //+------------------------------------------------------------------+
 //| Custom indicator iteration function                              |
 //+------------------------------------------------------------------+
+int deinit()
+{
+   //close(listener);
+   //close(speaker);
+   return 0;
+}
+
 int OnCalculate(const int rates_total,
                 const int prev_calculated,
                 const datetime &time[],
@@ -43,37 +50,26 @@ int OnCalculate(const int rates_total,
                 const int &spread[])
   {
   
-      
-      return(rates_total);
-  }
-
-int deinit()
-{
-   close(listener);
-   close(speaker);
-   return 0;
-}
-
-void OnTick()
-{
    string msg;
-   do {
-      msg = receive(listener);
-      if (StringLen(msg) > 0)
+   
+   //Alert("Tick!");
+   msg = receive(listener);
+   //Alert("Msg: " + msg);
+   if (StringLen(msg) > 0)
+   {
+      //Alert("Msg: " + msg);
+      if (StringCompare("FULL", msg) == 0)
       {
-         if (StringCompare("", msg) != 0)
-         {
-            Alert("Message received: " + msg);
-            processInput(msg);
-         }
-         
-      }
-   }while (StringCompare("", msg) != 0);
+         Alert("Message received: " + msg);
+         processInput(msg);
+      }   
+   }
+   return 0;
 }
 
 void processInput(string msg)
 {
-   if (StringCompare("full", msg) == 0)
+   if (StringCompare("FULL", msg) == 0)
    {
       string buffer = "";
       string topic = "HISTORY@ACTIVTRADES@EURUSD";
@@ -89,6 +85,7 @@ void processInput(string msg)
          }
          // some work with order
          buffer += nextOrderToString();
+         j = j + 1;
          if (j >= MAX_NUM_OF_TRADES_PER_MESSAGE && i != hstTotal - 1) {
             buffer += "|";
             buffer += "more";
