@@ -226,7 +226,7 @@ classdef bktFast < handle
             obj.bktfastTry = obj.bktfastTry.spin(hisData(:,4), newHisData, actTimeScale, newTimeScale, N, M, transCost, pips_TP, pips_SL, stdev_TP, stdev_SL, 0);
             
             p = Performance_05;
-            obj.performanceTry = p.calcSinglePerformance(nameAlgo,'bktWeb',Cross,newTimeScale,transCost,10000,10,obj.bktfastTry.outputbkt,0);
+            obj.performanceTry = p.calcSinglePerformance(nameAlgo,'bktWeb',Cross,newTimeScale,transCost,10000,10,obj.bktfastTry.outputbkt,1);
             risultato = obj.performanceTry.pipsEarned / abs(obj.performanceTry.maxDD);
             
             if WhatToPlot > 0
