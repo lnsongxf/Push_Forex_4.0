@@ -78,7 +78,7 @@ classdef bktFast < handle
             % split historical into trainging set for optimization and paper trading
             % default: 75% Training, 25% paper trading)
             rTraining = floor(r*0.75);
-            rnTraining = floor(rn*0.75);
+            rnTraining = floor(rTraining/30);
             
             hisDataTraining = hisData(1:rTraining,:);
             hisDataPaperTrad = hisData(rTraining+1:end,:);
@@ -150,7 +150,7 @@ classdef bktFast < handle
             if WhatToPlot > 0
                 
                 figure
-                plot(cumsum(obj.bktfastTraining.outputbkt(:,4)))
+                plot(cumsum(obj.bktfastTraining.outputbkt(:,4) - transCost))
                 title(['Training Best Result, Final R over maxDD = ',num2str( risultato) ])
                 
             end
@@ -168,7 +168,7 @@ classdef bktFast < handle
             if WhatToPlot > 0
                 
                 figure
-                plot(cumsum(obj.bktfastPaperTrading.outputbkt(:,4)))
+                plot(cumsum(obj.bktfastPaperTrading.outputbkt(:,4) - transCost))
                 title(['Paper Trading Result, Final R over maxDD = ',num2str( risultato) ])
                 
             end
@@ -232,7 +232,7 @@ classdef bktFast < handle
             if WhatToPlot > 0
                 
                 figure
-                plot(cumsum(obj.bktfastTry.outputbkt(:,4)))
+                plot(cumsum(obj.bktfastTry.outputbkt(:,4) - transCost))
                 title(['Result, Final R over maxDD = ',num2str( risultato) ])
                 
             end
