@@ -134,6 +134,15 @@ classdef bktFast < handle
                 risultato_temp = performance_temp.pipsEarned / abs(performance_temp.maxDD) ;
                 display(['papertrad R/maxDD =', num2str(risultato_temp), ', pips earned =', num2str(performance_temp.pipsEarned) ]);
                 
+                %plot if it is good:
+                if risultato_temp > 1.0 && WhatToPlot > 1
+                    
+                    figure
+                    plot(cumsum(temp_paperTrad.outputbkt(:,4) - transCost))
+                    title(['Temp Paper Trading Result,', 'N =', num2str(n),' M =', num2str(ind_best) ,'. R over maxDD = ',num2str( risultato_temp) ])
+                    
+                end
+                
             end
             
             toc
