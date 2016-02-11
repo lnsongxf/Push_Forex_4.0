@@ -1,7 +1,7 @@
 
 %%%%%%%%%%
 
-historical= 'EURUSD_2012_2015.csv';
+historical= 'EURUSD-04-2014-02-2016.csv';
 timescale = 30;
 kperiods1 = 5;
 kperiods2 = 10;
@@ -111,8 +111,8 @@ final_signal_short = intersect(intersect(signal_short3,signal_short2),signal_sho
 figure
 plot(cl,'LineWidth',1.5)
 hold on
-plot(final_signal_long,cl(final_signal_long),'og','markersize',5,'LineWidth',2)
-plot(final_signal_short,cl(final_signal_short),'or','markersize',5,'LineWidth',2)
+plot(final_signal_long,cl(final_signal_long),'.g','markersize',15,'LineWidth',2)
+plot(final_signal_short,cl(final_signal_short),'.r','markersize',15,'LineWidth',2)
 % plot(signal_long1,cl(signal_long1),'og','markersize',3,'LineWidth',2)
 % plot(signal_short1,cl(signal_short1),'or','markersize',3,'LineWidth',2)
 % plot(signal_long2,cl(signal_long2),'og','markersize',4,'LineWidth',2)

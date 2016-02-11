@@ -10,9 +10,11 @@ classdef bkt_fast_002c_leadlag_dynamicalTPandSL < handle
         r;
         openingPrices;
         OpDates;
+        indexOpen;
         closingPrices;
         ClDates;
         indexClose;
+        latency;
         
     end
     
@@ -28,19 +30,21 @@ classdef bkt_fast_002c_leadlag_dynamicalTPandSL < handle
             date = matrixNewHisData(:,6);
             
             
-            pandl = zeros(size(P));
-            obj.trades = zeros(size(P));
-            obj.chei=zeros(size(P));
-            obj.openingPrices=zeros(size(P));
-            obj.closingPrices=zeros(size(P));
-            obj.direction=zeros(size(P));
-            obj.OpDates=zeros(size(P));
-            obj.ClDates=zeros(size(P));
-            obj.r =zeros(size(P));
+            sizeStorico = size(matrixNewHisData,1);
+            
+            pandl = zeros(sizeStorico,1);
+            obj.trades = zeros(sizeStorico,1);
+            obj.chei=zeros(sizeStorico,1);
+            obj.openingPrices=zeros(sizeStorico,1);
+            obj.closingPrices=zeros(sizeStorico,1);
+            obj.direction=zeros(sizeStorico,1);
+            obj.OpDates=zeros(sizeStorico,1);
+            obj.ClDates=zeros(sizeStorico,1);
+            obj.r =zeros(sizeStorico,1);
             
             ntrades = 0;
             obj.indexClose = 0;
-            s = zeros(size(P));
+            s = zeros(sizeStorico,1);
             
             
             
@@ -60,7 +64,7 @@ classdef bkt_fast_002c_leadlag_dynamicalTPandSL < handle
             i = 101;
             
             
-            while i <= length(P)
+            while i <= sizeStorico
                 
                 % se il trend breve va sotto quello lungo compra long
                 % se il trend breve va sopra quello lungo compra short
@@ -110,6 +114,7 @@ classdef bkt_fast_002c_leadlag_dynamicalTPandSL < handle
                             i = indice_I;
                             obj.chei(ntrades)=i;
                             obj.indexClose = obj.indexClose + 1;
+                            obj.latency(ntrades)=j - newTimeScale*obj.indexOpen;
                             break
 
                         end
@@ -144,7 +149,9 @@ classdef bkt_fast_002c_leadlag_dynamicalTPandSL < handle
             obj.outputbkt(:,7) = obj.OpDates(1:obj.indexClose);              % opening date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
             obj.outputbkt(:,8) = obj.ClDates(1:obj.indexClose);                % closing date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
             obj.outputbkt(:,9) = ones(obj.indexClose,1)*1;                 % lots setted for single operation
-            
+            obj.outputbkt(:,10) = obj.latency(1:obj.indexClose);        % number of minutes the operation was open
+            obj.outputbkt(:,11) = ones(obj.indexClose,1);         % to be done     % minimum return touched during dingle operation
+                        
             
             
             % Plot a richiesta
@@ -174,6 +181,7 @@ classdef bkt_fast_002c_leadlag_dynamicalTPandSL < handle
             obj.direction(ntrades)= segnoOperazione;
             obj.openingPrices(ntrades) = Pbuy;
             obj.OpDates(ntrades) = date(i);
+            obj.indexOpen = i;
             
         end
         
