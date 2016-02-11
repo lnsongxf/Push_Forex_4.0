@@ -245,7 +245,7 @@ classdef coreState_real02 < handle
         
         %%
         
-        function obj = core_Algo_002_leadlag (obj,closure,params)
+        function obj = core_Algo_002_leadlag (obj,closure,params,timeSeriesProperties)
             
             %NOTE:
             %LOGICA: fa 2 smoothing e quando si incrociano apre nella
@@ -302,7 +302,7 @@ classdef coreState_real02 < handle
         
         %%
         
-        function obj = core_Algo_004_statTrend (obj,closure,params,timeSeriesProperties)
+        function obj = core_Algo_004_statTrend (obj,closure,params)
             
             %NOTE:
             %LOGICA: fa 2 smoothing e quando si incrociano apre se sono concordi
