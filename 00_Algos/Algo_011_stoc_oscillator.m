@@ -1,4 +1,4 @@
-function [oper, openValue, closeValue, stopLoss, noLoose, valueTp,st] = Algo_011_stoc_oscillator(matrix,newTimeScalePoint,openValueReal)
+function [oper, openValue, closeValue, stopLoss, takeProfit, minReturn] = Algo_011_stoc_oscillator(matrix,newTimeScalePoint,openValueReal,timeSeriesProperties,indexHisData)
 
 %
 % DESCRIPTION:
@@ -36,8 +36,8 @@ function [oper, openValue, closeValue, stopLoss, noLoose, valueTp,st] = Algo_011
 % openValue: suggested opening price
 % closeValue: suggested closing price
 % stopLoss: suggested SL
-% noLoose: suggested TP                                         <-  THIS IS CONFUSING
-% valueTp: NOT USED IN THE MAIN PROGRAM !!!!     <- THIS IS CONFUSING
+% noLoose: suggested TP                          <-  THIS IS CONFUSING
+% valueTp: NOT USED IN THE MAIN PROGRAM !!!!     <-  THIS IS CONFUSING
 % st: output from the stationarity test
 %
 % EXAMPLE of use:
@@ -45,16 +45,15 @@ function [oper, openValue, closeValue, stopLoss, noLoose, valueTp,st] = Algo_011
 % to be used in bktOffline or in demo/live mode
 %
 
-global      map;
-persistent  counter;
-persistent  countCycle;
-% global      log;
+global     map;
+persistent counter;
+persistent countCycle;
 
-openValue = 0;
-closeValue= 0;
-stopLoss  = 0;
-noLoose   = 0;
-valueTp   = 0;
+openValue  = 0;
+closeValue = 0;
+stopLoss   = 0;
+takeProfit = 0;
+minReturn  = 0;
 %real      = 0;
 
 cState = coreState_real02;
@@ -74,7 +73,7 @@ if(isempty(countCycle) || countCycle == 0)
     operationState = OperationState;
     params = Parameters;
     map('Algo_011_stoc_oscill') = RealAlgo(operationState,params);
-    oper = 0;
+    oper      = 0;
     return;
 end
 
@@ -87,7 +86,7 @@ operationState = ra.os;
 
 
 highs           = matrix(:,2);
-lows          = matrix(:,3);
+lows         = matrix(:,3);
 chiusure        = matrix(:,4);
 %volumi          = matrix(:,5);
 
@@ -95,19 +94,41 @@ chiusure        = matrix(:,4);
 if newTimeScalePoint
     
     % 01a
-    % -------- coreState filter ------------------ %
-    cState.core_Algo_011_stoc_oscillator( lows(1:end-1), highs(1:end-1), chiusure(1:end-1), params );
+    % -------- stationarity Test ------------------- %
+    
+    st.stationarityTests(chiusure(1:end-1),30,0);
+    
+    a=st.HurstExponent;
+    c=st.pValue;
+    d=st.halflife;
     
     % 01b
-    % -------- stationarity Test ------------------ %
-    %st.stationarityTests(chiusure(1:end-1),30,0);
-    st.HurstExponent=0;
-    st.pValue=0;
-    st.halflife=0;
-
+    % -------- .................. ------------------ %
+    if isfinite(timeSeriesProperties.HurstExponent(end))
+        smoothCoeff = 0.5;
+        [timeSeriesProperties.HurstSmooth,timeSeriesProperties.HurstDiff]=smoothDiff(timeSeriesProperties.HurstExponent,smoothCoeff);
+    end
+    
+    
+    % ----- update timeSeriesProperties ------------ %
+    b=mean(timeSeriesProperties.HurstDiff(end-5:end-1));
+    e=timeSeriesProperties.HurstSmooth(end);
+    
+    timeSeriesProperties.addPoint(a,b,c,d,e);
+    
+    %     plot(timeSeriesProperties.HurstExponent,'-b');
+    %     hold on
+    %     plot(timeSeriesProperties.HurstSmooth,'-or');
+    %
+    %     cla
+    
+    % 01c
+    % -------- coreState filter -------------------- %
+    cState.core_Algo_011_stoc_oscillator( lows(1:end-1), highs(1:end-1), chiusure(1:end-1), params );
+    
 end
+state=cState.state;
 
-state = cState.state;
 
 if operationState.lock
     
@@ -129,9 +150,28 @@ else
         if openValueReal > 0
             
             params.set('openValue_',openValueReal);
-%             [params,TakeProfitPrice,StopLossPrice] = dynamicalTPandSLManager(operationState, chiusure, params);
-%             [operationState,~, params] = directTakeProfitManager (operationState, chiusure, params,TakeProfitPrice,StopLossPrice);
-            [operationState,~, params] = takeProfitManager (operationState, chiusure, params);
+            params.set('closeTime_',indexHisData);
+            
+            openingPrice = openValueReal;
+            actualPrice  = chiusure(end);
+            actualReturn = (actualPrice - openingPrice)*operationState.actualOperation;
+            operationState.minimumReturn = min(operationState.minimumReturn,actualReturn);
+            minReturn = operationState.minimumReturn;
+            
+            openingTime = params.get('openTime__');
+            closingTime = params.get('closeTime_');
+            operationState.latency = closingTime - openingTime;
+            
+            dynamicParameters {1} = 0;
+            dynamicParameters {2} = 1;
+            dynamicParameters {3} = 91;
+            [params,TakeProfitPrice,StopLossPrice,dynamicOn] = dynamicalTPandSLManager(operationState, chiusure, params, @closingHighSL, dynamicParameters);
+            if dynamicOn  == 1
+                params.set('openTime__',indexHisData);
+            end
+            
+            latencyTreshold = 1000000;    % latency treshold in minutes
+            [operationState,~, params] = directTakeProfitManager (operationState, chiusure, params,TakeProfitPrice,StopLossPrice, latencyTreshold);
             
         elseif openValueReal < 0
             
@@ -154,6 +194,7 @@ else
             % -------- decMaker direction manager --------------- %
             [params, operationState, counter] = decMaker.decisionDirectionByCore(chiusure,params,operationState,cState,TakeP,StopL);
             
+            params.set('openTime__',indexHisData);
             display('Matlab ha deciso di aprire');
             
             % 03c
@@ -166,17 +207,15 @@ else
     
 end
 
-oper = operationState.actualOperation;
+oper      = operationState.actualOperation;
 
 real_Algo = RealAlgo(operationState,params);
 map('Algo_011_stoc_oscill')     = real_Algo;
 
-openValue = params.get('openValue_');
-closeValue= params.get('closeValue');
-stopLoss  = params.get('stopLoss__');
-noLoose   = params.get('noLoose___');
-valueTp   = params.get('valueTp___');
-
+openValue   = params.get('openValue_');
+closeValue  = params.get('closeValue');
+stopLoss    = params.get('stopLoss__');
+takeProfit  = params.get('noLoose___');
 
 clear real_Algo;
 clear params;

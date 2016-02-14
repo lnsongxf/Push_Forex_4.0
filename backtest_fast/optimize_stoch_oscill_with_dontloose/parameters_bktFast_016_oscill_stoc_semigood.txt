@@ -21,12 +21,12 @@
             % -------------------------------------------------------------
 
             
-nameAlgo = 'bkt_fast_016_oscillatore_stocastico_dontloose_semigood' 
+nameAlgo = 'bkt_fast_016_oscillatore_stocastico_HighSL_semigood' 
 N =  1:20 % 10 % 2 % 19
 M =  1:10:151 % 101 % 81
 N_greater_than_M = 0              
 Cross = 'EURUSD'            
-histName = 'EURUSD-04-2014-02-2016.csv' % 'AUDCAD.csv'  %   'EURUSD_smallsample2014_2015.csv' % 
+histName = 'EURUSD_smallsample2014_2015.csv' %   'EURUSD-04-2014-02-2016.csv' % 'AUDCAD.csv'  %   
 actTimeScale = 1             		
 newTimeScale = 30             		
 transCost = 1

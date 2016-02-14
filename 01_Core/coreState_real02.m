@@ -386,7 +386,7 @@ classdef coreState_real02 < handle
         
         function obj = core_Algo_011_stoc_oscillator (obj, low, high, closure, params)
             
-            stosc = stochosc(high, low, closure, 3, 5);
+            stosc = stochosc(high, low, closure,20, 1);
             FpK = stosc(:,1);
             
             obj.state=0;
@@ -403,7 +403,8 @@ classdef coreState_real02 < handle
                 
                 prev_signal=params.get('previous_signal');
                 
-                if(prev_signal~=0)
+                % if the signal moves from oversold/bought to stable + if there was a modest trend over the last 5 periods
+                if(prev_signal~=0) && ( ( closure(end-5) - closure(end) ) / closure(end) * prev_signal > 0.002 )
                     
                     obj.state=1;
                     obj.suggestedDirection=prev_signal;

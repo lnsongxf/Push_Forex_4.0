@@ -18,32 +18,31 @@ dynamicOn = 0;
 %
 minTP = dynamicParameters {1};
 pipsSL = dynamicParameters {2};
-lateSL = dynamicParameters {3};
 
 distance = direction * ( LastClosePrice - OpenPrice );
 
-if newStopL ~= lateSL;
+
+if ( distance > minTP )
     
-    if ( distance > minTP )
+    StopLossPrice = LastClosePrice - direction * pipsSL;
+    TakeProfitPrice = TakeProfitPrice + direction * minTP;
+    
+    
+    newTakeP = (TakeProfitPrice - OpenPrice) * direction;
+    
+    %         newStopL = OpenPrice - StopLossPrice * direction; % wrong
+    
         
-        StopLossPrice = LastClosePrice - direction * pipsSL;
-        TakeProfitPrice = TakeProfitPrice + direction * minTP;
-        
-        
-        newTakeP = (TakeProfitPrice - OpenPrice) * direction;
-        
-        %         newStopL = OpenPrice - StopLossPrice * direction; % wrong
-        %         newStopL = (OpenPrice - StopLossPrice) * direction; % correct
-        
-        newStopL = lateSL;
-        
-        %     display(strcat('dynamical shrinking bands: TP = ',num2str(newTakeP),' SL = ',num2str(newStopL)));
-        
-        dynamicOn = 1;
-        
-    end
+    newStopL = min( (OpenPrice - StopLossPrice) * direction , StopL );
+
+    
+    %              display(strcat('dynamical shrinking bands: TP = ',num2str(newTakeP),' SL = ',num2str(newStopL)));
+    
+    dynamicOn = 1;
     
 end
+
+
 
 
 end

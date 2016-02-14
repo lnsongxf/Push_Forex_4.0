@@ -1,4 +1,4 @@
-classdef bkt_fast_016_oscillatore_stocastico_dontloose_aftertrend < handle
+classdef bkt_fast_016_oscillatore_stocastico_HighSL_aftertrend < handle
     
     
     properties
@@ -76,10 +76,10 @@ classdef bkt_fast_016_oscillatore_stocastico_dontloose_aftertrend < handle
                     
                     segnoOperazione = s(i-1);
                     ntrades = ntrades + 1;
-                    [obj, Pbuy, devFluct2] = obj.apri(i, P, 0, ntrades, segnoOperazione, date);
-%                     display(['Pbuy =', num2str(Pbuy), ' segno =', num2str(segnoOperazione)]);
-                    TakeP = min(floor(wTP*devFluct2),100);
-                    StopL = min(floor(wSL*devFluct2),100);
+                    [obj, Pbuy, ~] = obj.apri(i, P, 0, ntrades, segnoOperazione, date);
+%                      display(['Pbuy =', num2str(Pbuy), ' segno =', num2str(segnoOperazione)]);
+                    TakeP = 10; % min(floor(wTP*devFluct2),100);
+                    StopL = 10; % min(floor(wSL*devFluct2),100);
                     TakeProfitPrice = Pbuy + segnoOperazione * TakeP;
                     StopLossPrice =  Pbuy - segnoOperazione * StopL;
                     
@@ -92,9 +92,9 @@ classdef bkt_fast_016_oscillatore_stocastico_dontloose_aftertrend < handle
                         dynamicParameters {1} = 0;
                         dynamicParameters {2} = 1;
                         dynamicParameters {3} = lateSL;
-                        [TakeProfitPrice,StopLossPrice,TakeP,StopL,~] = closingDontloose(Pbuy,Pminute(j),segnoOperazione,TakeP,StopL, 0, dynamicParameters);
-%                         display(['TP =', num2str(TakeP),' SL =', num2str(StopL)]);
-%                         display(['StopLossPrice =', num2str(StopLossPrice)]);
+                        [TakeProfitPrice,StopLossPrice,TakeP,StopL,~] = closingHighSL(Pbuy,Pminute(j),segnoOperazione,TakeP,StopL, 0, dynamicParameters);
+%                          display(['TP =', num2str(TakeP),' SL =', num2str(StopL)]);
+%                          display(['StopLossPrice =', num2str(StopLossPrice)]);
                         
                         %%%%%%%%%%%%%%%%%%%%%%%%%%
                         
@@ -111,7 +111,7 @@ classdef bkt_fast_016_oscillatore_stocastico_dontloose_aftertrend < handle
                             obj.chei(ntrades)=i;
                             obj.indexClose = obj.indexClose + 1;
                             obj.latency(ntrades)=j - newTimeScale*obj.indexOpen;
-%                             display('operazione chiusa');
+%                              display('operazione chiusa');
                             break
                             
                         end
