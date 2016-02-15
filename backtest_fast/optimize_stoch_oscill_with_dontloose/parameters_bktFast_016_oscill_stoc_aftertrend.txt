@@ -22,11 +22,11 @@
 
             
 nameAlgo = 'bkt_fast_016_oscillatore_stocastico_HighSL_aftertrend' 
-N = 11 % 1:20 % 10 % 2 % 19
-M =  111 % 1:10:151 % 101 % 81
+N = 1 % 1:20 % 10 % 2 % 19
+M =  91 % 1:10:151 % 101 % 81
 N_greater_than_M = 0              
 Cross = 'EURUSD'            
-histName = 'AUDCAD.csv'  %  'EURUSD_smallsample2014_2015.csv' % 'EURUSD-04-2014-02-2016.csv' % 
+histName = 'EURUSD-04-2014-02-2016.csv' %  'AUDCAD.csv'  %  'EURUSD_smallsample2014_2015.csv' % 
 actTimeScale = 1             		
 newTimeScale = 30             		
 transCost = 1

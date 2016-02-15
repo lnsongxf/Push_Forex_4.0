@@ -398,6 +398,12 @@ classdef Performance_05 < handle
                 bar(xout,n/sum(n));
                 title('frequency histogram of min returns')
                 
+                % frequency histogram of minimum returns, won operations
+                [nplus,xoutplus]=hist( minReturns(find(returns>0)) );
+                figure
+                bar(xoutplus,nplus/sum(nplus));
+                title('frequency histogram of min returns, won operations only')
+                
                 % plot of cumulative returns in Euro
                 figure
                 plot(ProfitLossEuro,cLine);

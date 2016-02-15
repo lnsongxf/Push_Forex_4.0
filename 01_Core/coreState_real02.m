@@ -386,7 +386,7 @@ classdef coreState_real02 < handle
         
         function obj = core_Algo_011_stoc_oscillator (obj, low, high, closure, params)
             
-            stosc = stochosc(high, low, closure,11, 1); % 11,1 for AUDCAD, 1,1 for EURUSD
+            stosc = stochosc(high, low, closure,1, 1); % 11,1 for AUDCAD, 1,1 for EURUSD
             FpK = stosc(:,1);
             
             obj.state=0;
