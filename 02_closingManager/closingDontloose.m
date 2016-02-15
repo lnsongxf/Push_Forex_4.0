@@ -11,7 +11,7 @@ dynamicOn = 0;
 
 % ------------------IDEA BEHIND----------------------
 % If the current price allows a possible gain, reset the SL and TP price to
-% some values ...
+% some values according to the dynamicParameters (the idea is that SL will be 0 or negative!)
 % ---------------------------------------------------
 
 

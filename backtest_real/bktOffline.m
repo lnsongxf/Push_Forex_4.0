@@ -74,7 +74,8 @@ classdef bktOffline < handle
             
             obj.nData=nData_;
             
-            hisData = csvread(histName);
+            [hisData, ~] = load_historical(histName, actTimeScale, newTimeScale);
+            %hisData = csvread(histName);
             [r,c] = size(hisData);
             startingOperation = 0;
             openValueReal = 0;

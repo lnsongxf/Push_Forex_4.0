@@ -374,6 +374,9 @@ classdef Performance_05 < handle
                 cCurve=colour;
                 
                 
+                % top panel: plot of cumulative returns in pips
+                % bottom panel: plot of latency in minutes of single
+                % operation and of minimum returns (in pips) per operation
                 figure
                 s(1)=subplot(2,1,1);
                 plot(xDataNoper,ProfitLossPips,cLine);
@@ -384,11 +387,18 @@ classdef Performance_05 < handle
                 
                 s(2)=subplot(2,1,2);
                 plotyy(xDataNoper,Latency,xDataNoper,minReturns);
-                title('latency of single operation in minutes');
+                legend('latency (mins)','min returns');
+                title('latency of single operation in minutes + min returns');
                 
                 linkaxes(s,'x');
                 
+                % frequency histogram of minimum returns
+                [n,xout]=hist(minReturns,10);
+                figure
+                bar(xout,n/sum(n));
+                title('frequency histogram of min returns')
                 
+                % plot of cumulative returns in Euro
                 figure
                 plot(ProfitLossEuro,cLine);
                 title('cumulative Excess of Returns per operation in Euro');
@@ -396,7 +406,8 @@ classdef Performance_05 < handle
                 hold on
                 plot(lin1,'-c');
                 
-                figure;
+                % plot of number of operation per trading day
+                figure
                 plot(xDataDays,dailyNumOper,cCurve);
                 title('number of operations per day');
                 hold on
@@ -404,7 +415,14 @@ classdef Performance_05 < handle
                 set(gca,'XTick',xDataDays);
                 datetick('x','dd/mm/yyyy HH:MM','keepticks');
                 
-
+                % multi-panel plots:
+                % - daily excess of returns in pips
+                % - cumulative returns per day in pips
+                % - daily excess of returns in Euro
+                % - cumulative returns per day in Euro
+                % - daily Excess of Returns in %
+                % - cumulative Excess of Returns per day in %
+                
                 figure
                 
                 p(1)=subplot(2,3,1);

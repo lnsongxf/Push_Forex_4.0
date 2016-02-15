@@ -164,7 +164,7 @@ else
             
             dynamicParameters {1} = 0;
             dynamicParameters {2} = 1;
-            dynamicParameters {3} = 91;
+            dynamicParameters {3} = 111; % 111 for AUDCAD, 91 for EURUSD
             [params,TakeProfitPrice,StopLossPrice,dynamicOn] = dynamicalTPandSLManager(operationState, chiusure, params, @closingHighSL, dynamicParameters);
             if dynamicOn  == 1
                 params.set('openTime__',indexHisData);
