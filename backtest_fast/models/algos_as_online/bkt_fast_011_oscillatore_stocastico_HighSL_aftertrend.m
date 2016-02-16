@@ -1,4 +1,4 @@
-classdef bkt_fast_016_oscillatore_stocastico_HighSL_semigood < handle
+classdef bkt_fast_011_oscillatore_stocastico_HighSL_aftertrend < handle
     
     
     properties
@@ -70,14 +70,16 @@ classdef bkt_fast_016_oscillatore_stocastico_HighSL_semigood < handle
             while i <= sizeStorico
                 
                 % se il segnale passa da ipercomprato/venduto a non, compra (1 in long, -1 in short)
-                if  ( abs( s(i-1) ) && s(i)==0 )
+                % e se il prezzo nel periodo precedente al segnale ha una
+                % variazione marcata (finisce il trend, mi aspetto il rimbalzo!
+                if  ( abs( s(i-1) ) && ( s(i)==0 ) && ( ( P(i-5) - P(i) ) / P(i) * s(i-1) > 0.002 ) )
                     
                     segnoOperazione = s(i-1);
                     ntrades = ntrades + 1;
-                    [obj, Pbuy, devFluct2] = obj.apri(i, P, 0, ntrades, segnoOperazione, date);
+                    [obj, Pbuy, ~] = obj.apri(i, P, 0, ntrades, segnoOperazione, date);
 %                      display(['Pbuy =', num2str(Pbuy), ' segno =', num2str(segnoOperazione)]);
-                    TakeP = min(floor(wTP*devFluct2),100);
-                    StopL = min(floor(wSL*devFluct2),100);
+                    TakeP = 10; % min(floor(wTP*devFluct2),100);
+                    StopL = 10; % min(floor(wSL*devFluct2),100);
                     TakeProfitPrice = Pbuy + segnoOperazione * TakeP;
                     StopLossPrice =  Pbuy - segnoOperazione * StopL;
                     

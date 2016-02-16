@@ -73,12 +73,12 @@ classdef bktFast < handle
             [hisData, newHisData] = load_historical(histName, actTimeScale, newTimeScale);
             
             [r,~] = size(hisData);
-            [rn,~] = size(newHisData);
+            %[rn,~] = size(newHisData);
             
             % split historical into trainging set for optimization and paper trading
             % default: 75% Training, 25% paper trading)
             rTraining = floor(r*0.75);
-            rnTraining = floor(rTraining/30);
+            rnTraining = floor(rTraining/newTimeScale);
             
             hisDataTraining = hisData(1:rTraining,:);
             hisDataPaperTrad = hisData(rTraining+1:end,:);
@@ -137,13 +137,23 @@ classdef bktFast < handle
                 %plot if it is good:
                 if risultato_temp > 1.0 && WhatToPlot > 1
                     
+                    temp_Training = feval(algo);
+                    temp_Training = temp_Training.spin(hisDataTraining(:,4), newHisDataTraining, actTimeScale, newTimeScale, n, ind_best, transCost, pips_TP, pips_SL, stdev_TP, stdev_SL, 0);
+                    
                     figure
+                    subplot(1,2,1);
+                    plot(cumsum(temp_Training.outputbkt(:,4) - transCost))
+                    title(['Temp Training Result,', 'N =', num2str(n),' M =', num2str(ind_best) ,'. R over maxDD = ',num2str( current_best) ])
+                    hold on
+                    subplot(1,2,2);
                     plot(cumsum(temp_paperTrad.outputbkt(:,4) - transCost))
                     title(['Temp Paper Trading Result,', 'N =', num2str(n),' M =', num2str(ind_best) ,'. R over maxDD = ',num2str( risultato_temp) ])
                     
                 end
                 
             end
+
+            hold off
             
             toc
             

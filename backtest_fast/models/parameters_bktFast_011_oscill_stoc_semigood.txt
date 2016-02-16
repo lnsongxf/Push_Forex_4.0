@@ -21,7 +21,7 @@
             % -------------------------------------------------------------
 
             
-nameAlgo = 'bkt_fast_016_oscillatore_stocastico_HighSL_semigood' 
+nameAlgo = 'bkt_fast_011_oscillatore_stocastico_HighSL_semigood' 
 N =  1:20 % 10 % 2 % 19
 M =  1:10:151 % 101 % 81
 N_greater_than_M = 0              
