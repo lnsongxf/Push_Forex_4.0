@@ -1,4 +1,5 @@
-function [oper, openValue, closeValue, stopLoss, noLoose] = Algo_002_leadlag(matrix,newTimeScalePoint,openValueReal)
+function [oper, openValue, closeValue, stopLoss, noLoose, minReturn] = Algo_002_leadlag(matrix,newTimeScalePoint,openValueReal,timeSeriesProperties,indexHisData)
+
 
 %
 % DESCRIPTION:
@@ -48,12 +49,12 @@ function [oper, openValue, closeValue, stopLoss, noLoose] = Algo_002_leadlag(mat
 global      map;
 persistent  counter;
 persistent  countCycle;
-% global      log;
 
-openValue = 0;
-closeValue= 0;
-stopLoss  = 0;
-noLoose   = 0;
+openValue  = 0;
+closeValue = 0;
+stopLoss   = 0;
+noLoose    = 0;
+minReturn  = 0;
 %real      = 0;
 
 cState = coreState_real02;
@@ -94,16 +95,26 @@ chiusure        = matrix(:,4);
 if newTimeScalePoint
     
     % 01a
-    % -------- coreState filter ------------------ %
-    cState.core_Algo_002_leadlag(chiusure(1:end-1),params);
-    
-    % 01b
-    % -------- stationarity Test ------------------ %
+    % -------- stationarity Test ------------------- %
     %st.stationarityTests(chiusure(1:end-1),30,0);
     st.HurstExponent=0;
     st.pValue=0;
     st.halflife=0;
+    
+    a=st.HurstExponent;
+    c=st.pValue;
+    d=st.halflife;
 
+    % ----- update timeSeriesProperties ------------ %
+    b=0;
+    e=0;
+    
+    timeSeriesProperties.addPoint(a,b,c,d,e);
+    
+    % 01c
+    % -------- coreState filter -------------------- %
+    cState.core_Algo_002_leadlag(chiusure(1:end-1),params);
+    
 end
 
 state = cState.state;
@@ -128,9 +139,29 @@ else
         if openValueReal > 0
             
             params.set('openValue_',openValueReal);
-            [params,TakeProfitPrice,StopLossPrice] = dynamicalTPandSLManager(operationState, chiusure, params);
-            [operationState,~, params] = directTakeProfitManager (operationState, chiusure, params,TakeProfitPrice,StopLossPrice);
-%             [operationState,~, params] = takeProfitManager (operationState, chiusure, params);
+            params.set('closeTime_',indexHisData);
+            
+            openingPrice = openValueReal;
+            actualPrice  = chiusure(end);
+            actualReturn = (actualPrice - openingPrice)*operationState.actualOperation;
+            operationState.minimumReturn = min(operationState.minimumReturn,actualReturn);
+            minReturn = operationState.minimumReturn;
+            
+            openingTime = params.get('openTime__');
+            closingTime = params.get('closeTime_');
+            operationState.latency = closingTime - openingTime;
+            
+            dynamicParameters {1} = 1.2;  %closingForApproaching
+            %dynamicParameters {1} = 0.1;      %closingShrinkingBands
+            %dynamicParameters {2} = 1.5;    %closingShrinkingBands
+            [params,TakeProfitPrice,StopLossPrice,dynamicOn] = dynamicalTPandSLManager(operationState, chiusure, params, @closingForApproaching, dynamicParameters);
+            if dynamicOn  == 1
+                params.set('openTime__',indexHisData);
+            end
+            
+            latencyTreshold = 1000000;    % latency treshold in minutes
+            [operationState,~, params] = directTakeProfitManager (operationState, chiusure, params,TakeProfitPrice,StopLossPrice, latencyTreshold);
+
             
         elseif openValueReal < 0
             
@@ -153,6 +184,7 @@ else
             % -------- decMaker direction manager --------------- %
             [params, operationState, counter] = decMaker.decisionDirectionByCore(chiusure,params,operationState,cState,TakeP,StopL);
             
+            params.set('openTime__',indexHisData);
             display('Matlab ha deciso di aprire');
             
             % 03c

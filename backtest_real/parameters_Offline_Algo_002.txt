@@ -23,7 +23,7 @@
 nameAlgo = 'Algo_002_leadlag'
 Cross = 'EURUSD'
 nData_ = 100
-histName = 'EURUSD_test.csv'
+histName = 'C:\Users\alericci\Desktop\Forex 4.0 noShared\EURUSD_2012_2015.csv'
 actTimeScale = 1
 newTimeScale = 30
 transCost = 1

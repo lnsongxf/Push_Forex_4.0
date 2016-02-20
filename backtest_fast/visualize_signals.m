@@ -3,8 +3,8 @@ function visualize_signals(historical,timescale,signal,params)
 % signal:
 % 'macd' : moving average convergence divergence
 % 'rsi': relative strength index
-% 'bollinger': bollinger bands
-%
+% 'bollinger': bollinger bands  %DA FINIRE!!!
+% 'stochosc1': stochastic oscillator only with FpK signal
 %
 %
 %
@@ -144,17 +144,17 @@ switch lower(signal)
             std = params{3};
         end
         
-%         a = (1/N)*ones(1,N);
-%         MA = filter(a,1,cl);
-%         MSTDEV = movingStd(cl, N);
-%         
-%         zScore=(cl-MA)./MSTDEV;
-%         
-%         sBoll = zeros(size(cl));
-%         % signals
-%         sBoll(zScore < -std) = 1;
-%         sBoll(zScore > std) = -1;
-%         
+        %         a = (1/N)*ones(1,N);
+        %         MA = filter(a,1,cl);
+        %         MSTDEV = movingStd(cl, N);
+        %
+        %         zScore=(cl-MA)./MSTDEV;
+        %
+        %         sBoll = zeros(size(cl));
+        %         % signals
+        %         sBoll(zScore < -std) = 1;
+        %         sBoll(zScore > std) = -1;
+        %
         outbol = tech_indicators(cl ,'boll' ,N,weight,std);
         middl = outbol(:,1);
         upp = outbol(:,2);
@@ -168,5 +168,36 @@ switch lower(signal)
         plot(upp,'r')
         plot(lowe,'r')
         title('Bollinger Bands')
+        
+        
+    case 'stochosc1'
+        
+        if isempty(params)
+            kperiods = 10;
+        else
+            kperiods = params{1};
+        end
+        
+        stosc = stochosc(hi, lo, cl, kperiods, 1);
+        FpK = stosc(:,1);
+        
+        s_oversold = zeros(size(FpK));
+        s_overbought = zeros(size(FpK));
+        s_oversold(FpK<20) = 1;
+        s_overbought(FpK>80) = -1;
+        
+        diff_long = [ 0 ; diff(s_oversold) ];
+        signal_long = find(diff_long==-1); % quando passa da 1 a 0 (diff = -1)
+        
+        diff_short = [ 0 ; diff(s_overbought) ];
+        signal_short = find(diff_short==1); % quando passa da -1 a 0 (diff = 1)
+        
+        % plot stoch1 signal
+        figure
+        plot(cl,'LineWidth',1.5)
+        hold on
+        plot(signal_long,cl(signal_long),'og','markersize',3,'LineWidth',2)
+        plot(signal_short,cl(signal_short),'or','markersize',3,'LineWidth',2)
+        title('stochastic oscillator, signal FpK only')
         
 end

@@ -87,13 +87,13 @@ classdef bkt_fast_011_10_oscillatore_stocastico < handle
 %                         display(['Pminute =', num2str(Pminute(j))]);
                         %%%%%%%%%%% dynamicalTPandSLManager
                         
-                        dynamicParameters {1} = 0;
+                        dynamicParameters {1} = 1;
                         if ( j-newTimeScale*(i) ) >= 5
-                            dynamicParameters {2} = Pminute(j)-Pminute(j-5);
+                            dynamicParameters {2} = segnoOperazione * (Pminute(j)-Pminute(j-5) );
                         else
-                            dynamicParameters {2} = 1000;
+                            dynamicParameters {2} = 0;
                         end
-                        dynamicParameters {3} = 10;
+                        dynamicParameters {3} = 2;
                         dynamicParameters {4} = 0.8;
                         dynamicParameters {5} = 1;
                         % dynamicParameters {3} = lateSL;
@@ -117,7 +117,7 @@ classdef bkt_fast_011_10_oscillatore_stocastico < handle
                             obj.chei(ntrades)=i;
                             obj.indexClose = obj.indexClose + 1;
                             obj.latency(ntrades)=j - newTimeScale*obj.indexOpen;
-%                             display('operazione chiusa');
+                            display('operazione chiusa');
                             break
                             
                         end

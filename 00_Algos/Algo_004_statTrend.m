@@ -94,7 +94,7 @@ chiusure        = matrix(:,4);
 if newTimeScalePoint
     
     % 01a
-    % -------- stationarity Test ------------------ %
+    % -------- stationarity Test ------------------- %
     
     st.stationarityTests(chiusure(1:end-1),30,0);
     
@@ -103,7 +103,7 @@ if newTimeScalePoint
     d=st.halflife;
     
     % 01b
-    % -------- .................. ----------------- %
+    % -------- .................. ------------------ %
     if isfinite(timeSeriesProperties.HurstExponent(end))
         smoothCoeff = 0.5;
         [timeSeriesProperties.HurstSmooth,timeSeriesProperties.HurstDiff]=smoothDiff(timeSeriesProperties.HurstExponent,smoothCoeff);
@@ -123,7 +123,7 @@ if newTimeScalePoint
 %     cla
 
     % 01c
-    % -------- coreState filter ------------------ %
+    % -------- coreState filter -------------------- %
     cState.core_Algo_004_statTrend(chiusure(1:end-1),params,timeSeriesProperties);
     
 end
