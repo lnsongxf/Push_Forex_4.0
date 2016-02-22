@@ -20,10 +20,10 @@
 
 
 
-nameAlgo = 'Algo_011_stoc_oscillator'
+nameAlgo = 'Algo_011_stocOsc_EURUSD'
 Cross = 'EURUSD'
 nData_ = 100
-histName = 'EURUSD-04-2014-02-2016.csv' % 'AUDCAD.csv'  % 'EURUSD_smallsample2014_2015.csv'
+histName = 'C:\Users\alericci\Desktop\Forex 4.0 noShared\EURUSD-04-2014-02-2016.csv'
 actTimeScale = 1
 newTimeScale = 30
 transCost = 1

@@ -1,4 +1,4 @@
-function [oper, openValue, closeValue, stopLoss, takeProfit, minReturn] = Algo_011_stoc_oscillator(matrix,newTimeScalePoint,openValueReal,timeSeriesProperties,indexHisData)
+function [oper, openValue, closeValue, stopLoss, takeProfit, minReturn] = Algo_011_stocOsc_AUDCAD(matrix,newTimeScalePoint,openValueReal,timeSeriesProperties,indexHisData)
 
 %
 % DESCRIPTION:
@@ -72,14 +72,14 @@ if(isempty(countCycle) || countCycle == 0)
     countCycle = 1;
     operationState = OperationState;
     params = Parameters;
-    map('Algo_011_stoc_oscill') = RealAlgo(operationState,params);
+    map('Algo_011_stocOsc_AUDCAD') = RealAlgo(operationState,params);
     oper      = 0;
     return;
 end
 
 
-ra = map('Algo_011_stoc_oscill');
-remove(map,'Algo_011_stoc_oscill');
+ra = map('Algo_011_stocOsc_AUDCAD');
+remove(map,'Algo_011_stocOsc_AUDCAD');
 
 params = ra.p;
 operationState = ra.os;
@@ -124,7 +124,7 @@ if newTimeScalePoint
     
     % 01c
     % -------- coreState filter -------------------- %
-    cState.core_Algo_011_stoc_oscillator( lows(1:end-1), highs(1:end-1), chiusure(1:end-1), params );
+    cState.core_Algo_011_stocOsc( lows(1:end-1), highs(1:end-1), chiusure(1:end-1), params ,11,1);
     
 end
 state=cState.state;
@@ -164,7 +164,7 @@ else
             
             dynamicParameters {1} = 0;
             dynamicParameters {2} = 1;
-            dynamicParameters {3} = 91; % 111 for AUDCAD, 91 for EURUSD
+            dynamicParameters {3} = 111; % 111 for AUDCAD, 91 for EURUSD
             [params,TakeProfitPrice,StopLossPrice,dynamicOn] = dynamicalTPandSLManager(operationState, chiusure, params, @closingHighSL, dynamicParameters);
             if dynamicOn  == 1
                 params.set('openTime__',indexHisData);
@@ -210,7 +210,7 @@ end
 oper      = operationState.actualOperation;
 
 real_Algo = RealAlgo(operationState,params);
-map('Algo_011_stoc_oscill')     = real_Algo;
+map('Algo_011_stocOsc_AUDCAD') = real_Algo;
 
 openValue   = params.get('openValue_');
 closeValue  = params.get('closeValue');
