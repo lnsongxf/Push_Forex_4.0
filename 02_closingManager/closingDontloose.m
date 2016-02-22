@@ -19,6 +19,9 @@ dynamicOn = 0;
 minTP = dynamicParameters {1};
 pipsSL = dynamicParameters {2};
 
+% QUESTO E' DA MODIFICARE XE LA DISTANZA NON DEVE ESSER CALCOLATA CSI
+% SE NO ENTRA NELL IF OGNI VOLTA CHE LA DIST E' POSITIVA, ANCHE SE STA
+% PEGGIORANDO!!!!!!!!
 distance = direction * ( LastClosePrice - OpenPrice );
 
 

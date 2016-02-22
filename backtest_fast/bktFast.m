@@ -80,6 +80,12 @@ classdef bktFast < handle
             rTraining = floor(r*0.75);
             rnTraining = floor(rTraining/newTimeScale);
             
+            % use this to skip some of the very old hist data:
+%             skipMe = floor(r*0.20);
+%             skipMeNewTime = floor(skipMe/newTimeScale);
+%             hisDataTraining = hisData(skipMe:rTraining,:);
+%             newHisDataTraining = newHisData(skipMeNewTime:rnTraining,:);
+            
             hisDataTraining = hisData(1:rTraining,:);
             hisDataPaperTrad = hisData(rTraining+1:end,:);
             newHisDataTraining = newHisData(1:rnTraining,:);
@@ -152,7 +158,7 @@ classdef bktFast < handle
                 end
                 
             end
-
+            
             hold off
             
             toc
