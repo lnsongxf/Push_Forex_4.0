@@ -260,15 +260,15 @@ classdef Performance_05 < handle
             lots       = obj.inputResultsMatrix(row,9);
             Latency    = obj.inputResultsMatrix(row,10);   % duration of single operation in minutes
             minReturns = obj.inputResultsMatrix(row,11);   % minimum return touched during dingle operation
-            workingStack=lots.*100000;
-            pip2EuroConversion=workingStack/10000;
+            
+            workingStack=lots.*100000.*obj.leverage;
+            crossFactor=10000;                             % corresponding to 10^x; where x is the number of digits for a specified cross (ex: EURUSD = 10000)
+            pip2EuroConversion=workingStack/crossFactor;
             returnsEuro=returns.*pip2EuroConversion;
             transCostEuro=obj.transCost.*pip2EuroConversion;
-            realStack=workingStack./obj.leverage;
-            % ReturnsEuroPerc=returnsEuro/realStack;
             NetReturnsPips=returns-obj.transCost;
             NetReturnsEuro=returnsEuro-transCostEuro;
-            NetReturnsEuroPerc=(NetReturnsEuro./realStack).*100;
+            NetReturnsEuroPerc=(NetReturnsEuro./obj.initialStack).*100;
             
             dateFirstOperationNum=obj.inputResultsMatrix(row(1),8);
             dateFirstOperation=datestr(dateFirstOperationNum, 'mm/dd/yyyy HH:MM');
