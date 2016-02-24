@@ -1,5 +1,6 @@
 classdef bkt_fast_002_4_leadlag_dynamicalTPandSL_maxvolatility < handle
     
+    % bktfast VERSION 3 (with arrayAperture and minimumReturns)
     
     properties
         
@@ -15,6 +16,8 @@ classdef bkt_fast_002_4_leadlag_dynamicalTPandSL_maxvolatility < handle
         ClDates;
         indexClose;
         latency;
+        arrayAperture;
+        minimumReturns;
         
     end
     
@@ -41,6 +44,9 @@ classdef bkt_fast_002_4_leadlag_dynamicalTPandSL_maxvolatility < handle
             obj.OpDates=zeros(sizeStorico,1);
             obj.ClDates=zeros(sizeStorico,1);
             obj.r =zeros(sizeStorico,1);
+            obj.latency= zeros(sizeStorico,1);
+            obj.arrayAperture= zeros(sizeStorico,1);
+            obj.minimumReturns = zeros(sizeStorico,1);
             
             ntrades = 0;
             obj.indexClose = 0;
@@ -72,6 +78,7 @@ classdef bkt_fast_002_4_leadlag_dynamicalTPandSL_maxvolatility < handle
                     
                     segnoOperazione = - sign(s(i) - s(i-1));
                     ntrades = ntrades + 1;
+                    obj.arrayAperture(ntrades)=i;
                     [obj, Pbuy, devFluct2] = obj.apri(i, P, fluctuationslag, M, ntrades, segnoOperazione, date);
                     
                     volatility = min(floor(wTP*devFluct2),50);
@@ -111,6 +118,7 @@ classdef bkt_fast_002_4_leadlag_dynamicalTPandSL_maxvolatility < handle
                             
                             obj.r(indice_I) = (Pminute(j)-Pbuy)*segnoOperazione - cost;
                             obj.closingPrices(ntrades) = Pminute(j);
+                            obj.minimumReturns(ntrades)=calculate_min_return(Pbuy, Pminute(newTimeScale*i:j), segnoOperazione);
                             obj.ClDates(ntrades) = date(indice_I); %controlla
                             i = indice_I;
                             obj.chei(ntrades)=i;
@@ -140,20 +148,21 @@ classdef bkt_fast_002_4_leadlag_dynamicalTPandSL_maxvolatility < handle
             %             profittofinale = sum(r);
             %
             
-            obj.outputbkt(:,1) = obj.chei(1:obj.indexClose);                    % index of stick
-            obj.outputbkt(:,2) = obj.openingPrices(1:obj.indexClose);      % opening price
+            obj.outputbkt(:,1) = obj.chei(1:obj.indexClose);                 % index of stick
+            obj.outputbkt(:,2) = obj.openingPrices(1:obj.indexClose);        % opening price
             obj.outputbkt(:,3) = obj.closingPrices(1:obj.indexClose);        % closing price
             obj.outputbkt(:,4) = (obj.closingPrices(1:obj.indexClose) - ...
                 obj.openingPrices(1:obj.indexClose)).*obj.direction(1:obj.indexClose);   % returns
-            obj.outputbkt(:,5) = obj.direction(1:obj.indexClose);              % direction
-            obj.outputbkt(:,6) = ones(obj.indexClose,1);                    % real
+            obj.outputbkt(:,5) = obj.direction(1:obj.indexClose);            % direction
+            obj.outputbkt(:,6) = ones(obj.indexClose,1);                     % real
             obj.outputbkt(:,7) = obj.OpDates(1:obj.indexClose);              % opening date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
-            obj.outputbkt(:,8) = obj.ClDates(1:obj.indexClose);                % closing date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
-            obj.outputbkt(:,9) = ones(obj.indexClose,1)*1;                 % lots setted for single operation
-            obj.outputbkt(:,10) = obj.latency(1:obj.indexClose);        % number of minutes the operation was open
-            obj.outputbkt(:,11) = ones(obj.indexClose,1);         % to be done     % minimum return touched during dingle operation
+            obj.outputbkt(:,8) = obj.ClDates(1:obj.indexClose);              % closing date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
+            obj.outputbkt(:,9) = ones(obj.indexClose,1)*1;                   % lots setted for single operation
+            obj.outputbkt(:,10) = obj.latency(1:obj.indexClose);             % number of minutes the operation was open
+            obj.outputbkt(:,11) = obj.minimumReturns(1:obj.indexClose,1);      % minimum return touched during dingle operation
                         
-            
+            obj.latency = obj.latency(1:obj.indexClose);
+            obj.arrayAperture = obj.arrayAperture(1:obj.indexClose);
             
             % Plot a richiesta
             if plottami

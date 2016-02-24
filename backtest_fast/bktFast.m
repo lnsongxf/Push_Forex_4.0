@@ -81,10 +81,10 @@ classdef bktFast < handle
             rnTraining = floor(rTraining/newTimeScale);
             
             % use this to skip some of the very old hist data:
-%             skipMe = floor(r*0.20);
-%             skipMeNewTime = floor(skipMe/newTimeScale);
-%             hisDataTraining = hisData(skipMe:rTraining,:);
-%             newHisDataTraining = newHisData(skipMeNewTime:rnTraining,:);
+            %             skipMe = floor(r*0.20);
+            %             skipMeNewTime = floor(skipMe/newTimeScale);
+            %             hisDataTraining = hisData(skipMe:rTraining,:);
+            %             newHisDataTraining = newHisData(skipMeNewTime:rnTraining,:);
             
             hisDataTraining = hisData(1:rTraining,:);
             hisDataPaperTrad = hisData(rTraining+1:end,:);
@@ -126,10 +126,16 @@ classdef bktFast < handle
                     
                 end
                 
+                
                 % display partial results of optimization
                 [current_best,ind_best] = max(obj.R_over_maxDD(n,:));
-                display(['best R/maxDD=' , num2str(current_best),'.  N =', num2str(n),' M =', num2str(ind_best) ]);
-                display(['pips earned =', num2str(performance.pipsEarned),', num operations =', num2str(bktfast.indexClose) ]);
+                
+                temp_Training = feval(algo);
+                temp_Training = temp_Training.spin(hisDataTraining(:,4), newHisDataTraining, actTimeScale, newTimeScale, n, ind_best, transCost, pips_TP, pips_SL, stdev_TP, stdev_SL, 0);
+                performance_temp_Training = p.calcSinglePerformance(nameAlgo,'bktWeb',Cross,newTimeScale,transCost,10000,10,temp_Training.outputbkt,0);
+                
+                display(['Train: best R/maxDD=' , num2str(current_best),'.  N =', num2str(n),' M =', num2str(ind_best) ]);
+                display(['num operations =', num2str(temp_Training.indexClose) ,', pips earned =', num2str(performance_temp_Training.pipsEarned)]);
                 
                 % try paper trading on partial result and display some numbers
                 
@@ -138,13 +144,12 @@ classdef bktFast < handle
                 performance_temp = p.calcSinglePerformance(nameAlgo,'bktWeb',Cross,newTimeScale,transCost,10000,10,temp_paperTrad.outputbkt,0);
                 
                 risultato_temp = performance_temp.pipsEarned / abs(performance_temp.maxDD) ;
-                display(['papertrad R/maxDD =', num2str(risultato_temp), ', pips earned =', num2str(performance_temp.pipsEarned) ]);
+                display(['Papertrad: R/maxDD =', num2str(risultato_temp)]);
+                display(['num operations =', num2str(temp_paperTrad.indexClose) ,', pips earned =', num2str(performance_temp.pipsEarned) ]);
                 
                 %plot if it is good:
                 if risultato_temp > 1.0 && WhatToPlot > 1
                     
-                    temp_Training = feval(algo);
-                    temp_Training = temp_Training.spin(hisDataTraining(:,4), newHisDataTraining, actTimeScale, newTimeScale, n, ind_best, transCost, pips_TP, pips_SL, stdev_TP, stdev_SL, 0);
                     
                     figure
                     subplot(1,2,1);
