@@ -1,5 +1,6 @@
 classdef bkt_fast_016_double_repo < handle
     
+    % bktfast VERSION 3 (with arrayAperture and minimumReturns)
     
     properties
         
@@ -16,6 +17,7 @@ classdef bkt_fast_016_double_repo < handle
         indexClose;
         latency;
         arrayAperture;
+        minimumReturns;
         
     end
     
@@ -26,15 +28,13 @@ classdef bkt_fast_016_double_repo < handle
             
             % Pminute = prezzo al minuto
             % matrixNewHisData = matrice con prezzi e date alla new time scale
-            % kperiods = numero di periodi %K (consigliato = 10)
-            % lateSL = a quanto risettare lo SL dopo che dontloose ha sbagliato a calcolarlo
+            % N = numero di periodi di smoothing per la media mobile
+            % shift = numero di periodi di cui shiftare la media mobile
             % cost = spread per operazione (calcolato quando chiudi)
             % wSL = peso per calcolare quando chiuder per SL
             % wTP = peso per calcolare quando chiuder per TP
-            % NOTE : it is implemented to close either for TP or SL, or ON CALL if the indicator reverts
             
-            %% utilizza segnale dell'oscillatore stocastico
-            % https://www.ig.com/it/oscillatore-stocastico-prima-parte
+            %% utilizza segnale del double repenetration
             
             high = matrixNewHisData(:,2);
             low = matrixNewHisData(:,3);
@@ -52,7 +52,9 @@ classdef bkt_fast_016_double_repo < handle
             obj.OpDates=zeros(sizeStorico,1);
             obj.ClDates=zeros(sizeStorico,1);
             obj.r =zeros(sizeStorico,1);
+            obj.latency= zeros(sizeStorico,1);
             obj.arrayAperture= zeros(sizeStorico,1);
+            obj.minimumReturns = zeros(sizeStorico,1);
             
             ntrades = 0;
             obj.indexClose = 0;
@@ -61,7 +63,7 @@ classdef bkt_fast_016_double_repo < handle
             a = (1/N)*ones(1,N);
             lead = filter(a,1,P);
             
-            shiftedlead = [ nan(shift,1); lead(shift+1:end) ];
+            shiftedlead = [ nan(shift,1); lead(1:end-shift) ];
             
             s(P>=shiftedlead)=1;
             s(P<shiftedlead)=-1;
@@ -87,6 +89,10 @@ classdef bkt_fast_016_double_repo < handle
                         
                         strend = s(i);
                         trendLenght = trendLenght + 1;
+                        
+                        if (trendLenght == 1) % record the price when the trend starts
+                            starTrendPrice = P(i-1);
+                        end
                         
                     else % if the trend is finished, check how long was it
                         
@@ -117,61 +123,76 @@ classdef bkt_fast_016_double_repo < handle
                         
                         if (s(i) == -strend) % second penetration!!
                             
-                            segnoOperazione = s(i);  % I open opposite to the starting trend
-                            ntrades = ntrades + 1;
-                            obj.arrayAperture(ntrades)=i;
-                            [obj, Pbuy, ~] = obj.apri(i, P, 0, ntrades, segnoOperazione, date);
-                            %                           display(['Pbuy =', num2str(Pbuy), ' segno =', num2str(segnoOperazione)]);
-                            
-                            if segnoOperazione == 1
-                                Volatility = Pbuy - min(low(trigger1:i)) ;
-                            else
-                                Volatility = max(high(trigger1:i)) - Pbuy ;
-                            end
-                            
-                            TakeP = min(Volatility,100);
-                            StopL = min(Volatility,100);
-                            TakeProfitPrice = Pbuy + segnoOperazione * TakeP;
-                            StopLossPrice =  Pbuy - segnoOperazione * StopL;
-                            
-                            for j = newTimeScale*(i):length(Pminute)
+                            if ( (P(i) - starTrendPrice)*strend < 0) % if the current price is too close to the price at the start of the trend, don't open
                                 
-                                indice_I = floor(j/newTimeScale);
-                                %                               display(['Pminute =', num2str(Pminute(j))]);
+                                trigger1 = 0;
+                                trigger2 = 0;
+                                trendLenght = 0;
                                 
-                                %%%%%%%%%%% dynamicalTPandSLManager
+                            else % if the trend is consistent, open
                                 
-                                dynamicParameters {1} = 1;
+                                segnoOperazione = s(i);  % I open opposite to the starting trend
+                                ntrades = ntrades + 1;
+                                obj.arrayAperture(ntrades)=i;
+                                [obj, Pbuy, ~] = obj.apri(i, P, 0, ntrades, segnoOperazione, date);
+                                %                           display(['Pbuy =', num2str(Pbuy), ' segno =', num2str(segnoOperazione)]);
                                 
-                                % [TakeProfitPrice,StopLossPrice,TakeP,StopL,~] = closingForApproaching(Pbuy,Pminute(j),segnoOperazione,TakeP,StopL, 0, dynamicParameters);
-                                %                               display(['TP =', num2str(TakeP),' SL =', num2str(StopL)]);
-                                %                               display(['StopLossPrice =', num2str(StopLossPrice)]);
+                                if segnoOperazione == 1
+                                    Volatility = Pbuy - min(low(trigger1:i)) ;
+                                else
+                                    Volatility = max(high(trigger1:i)) - Pbuy ;
+                                end
                                 
-                                %%%%%%%%%%%%%%%%%%%%%%%%%%
+                                TakeP = max(min(Volatility,50),5);
+                                StopL = max(min(Volatility,50),5);
+                                TakeProfitPrice = Pbuy + segnoOperazione * TakeP;
+                                StopLossPrice =  Pbuy - segnoOperazione * StopL;
                                 
-                                
-                                condTP = ( sign( Pminute(j) - TakeProfitPrice ) * segnoOperazione );
-                                condSL = ( sign( StopLossPrice - Pminute(j) ) ) * segnoOperazione;
-                                
-                                if ( condTP >=0 ) || ( condSL >= 0 )
+                                for j = newTimeScale*(i):length(Pminute)
                                     
-                                    obj.r(indice_I) =  segnoOperazione*(Pminute(j) - Pbuy) - cost;
-                                    obj.closingPrices(ntrades) = Pminute(j);
-                                    obj.ClDates(ntrades) = date(indice_I); %controlla
-                                    %obj = obj.chiudi_per_TP(Pbuy, indice_I, segnoOperazione, devFluct2, wTP, cost, ntrades, date);
-                                    i = indice_I;
-                                    obj.chei(ntrades)=i;
-                                    obj.indexClose = obj.indexClose + 1;
-                                    obj.latency(ntrades)=j - newTimeScale*obj.indexOpen;
-%                                     display('operazione chiusa');
-                                    break
+                                    indice_I = floor(j/newTimeScale);
+                                    %                               display(['Pminute =', num2str(Pminute(j))]);
+                                    
+                                    %%%%%%%%%%% dynamicalTPandSLManager
+                                    %
+                                    dynamicParameters {1} = 1;
+                                    dynamicParameters {2} = 1;
+                                    
+                                    [TakeProfitPrice,StopLossPrice,TakeP,StopL,~] = closingAfterReachedTP(Pbuy,Pminute(j),segnoOperazione,TakeP,StopL, 0, dynamicParameters);
+                                    %                               display(['TP =', num2str(TakeP),' SL =', num2str(StopL)]);
+                                    %                               display(['StopLossPrice =', num2str(StopLossPrice)]);
+                                    
+                                    %%%%%%%%%%%%%%%%%%%%%%%%%%
+                                    
+                                    
+                                    condTP = ( sign( Pminute(j) - TakeProfitPrice ) * segnoOperazione );
+                                    condSL = ( sign( StopLossPrice - Pminute(j) ) ) * segnoOperazione;
+                                    
+                                    if ( condTP >=0 ) || ( condSL >= 0 )
+                                        
+                                        obj.r(indice_I) =  segnoOperazione*(Pminute(j) - Pbuy) - cost;
+                                        obj.closingPrices(ntrades) = Pminute(j);
+                                        obj.ClDates(ntrades) = date(indice_I); %controlla
+                                        obj.minimumReturns(ntrades)=calculate_min_return(Pbuy, Pminute(newTimeScale*i:j), segnoOperazione);
+                                        %obj = obj.chiudi_per_TP(Pbuy, indice_I, segnoOperazione, devFluct2, wTP, cost, ntrades, date);
+                                        i = indice_I;
+                                        obj.chei(ntrades)=i;
+                                        obj.indexClose = obj.indexClose + 1;
+                                        obj.latency(ntrades)=j - newTimeScale*obj.indexOpen;
+                                        %                                     display('operazione chiusa');
+                                        trigger1 = 0;
+                                        trigger2 = 0;
+                                        trendLenght = 0;
+                                        break
+                                        
+                                    end
                                     
                                 end
                                 
+                                i = indice_I;
+                                obj.trades(i) = 1;
+                                
                             end
-                            
-                            i = indice_I;
-                            obj.trades(i) = 1;
                             
                         end
                         
@@ -194,8 +215,9 @@ classdef bkt_fast_016_double_repo < handle
             obj.outputbkt(:,8) = obj.ClDates(1:obj.indexClose);                % closing date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
             obj.outputbkt(:,9) = ones(obj.indexClose,1)*1;                 % lots setted for single operation
             obj.outputbkt(:,10) = obj.latency(1:obj.indexClose);        % number of minutes the operation was open
-            obj.outputbkt(:,11) = ones(obj.indexClose,1);         % to be done     % minimum return touched during dingle operation
+            obj.outputbkt(:,11) = obj.minimumReturns(1:obj.indexClose,1);      % minimum return touched during dingle operation
             
+            obj.latency = obj.latency(1:obj.indexClose);
             obj.arrayAperture = obj.arrayAperture(1:obj.indexClose);
             
             

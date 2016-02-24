@@ -1,5 +1,6 @@
 classdef bkt_fast_002_4_leadlag_dynamicalTPandSL_maxvolatility < handle
     
+    % bktfast VERSION 3 (with arrayAperture and minimumReturns)
     
     properties
         
@@ -15,6 +16,7 @@ classdef bkt_fast_002_4_leadlag_dynamicalTPandSL_maxvolatility < handle
         ClDates;
         indexClose;
         latency;
+        arrayAperture;
         minimumReturns;
         
     end
@@ -42,6 +44,8 @@ classdef bkt_fast_002_4_leadlag_dynamicalTPandSL_maxvolatility < handle
             obj.OpDates=zeros(sizeStorico,1);
             obj.ClDates=zeros(sizeStorico,1);
             obj.r =zeros(sizeStorico,1);
+            obj.latency= zeros(sizeStorico,1);
+            obj.arrayAperture= zeros(sizeStorico,1);
             obj.minimumReturns = zeros(sizeStorico,1);
             
             ntrades = 0;
@@ -74,6 +78,7 @@ classdef bkt_fast_002_4_leadlag_dynamicalTPandSL_maxvolatility < handle
                     
                     segnoOperazione = - sign(s(i) - s(i-1));
                     ntrades = ntrades + 1;
+                    obj.arrayAperture(ntrades)=i;
                     [obj, Pbuy, devFluct2] = obj.apri(i, P, fluctuationslag, M, ntrades, segnoOperazione, date);
                     
                     volatility = min(floor(wTP*devFluct2),50);
@@ -156,7 +161,8 @@ classdef bkt_fast_002_4_leadlag_dynamicalTPandSL_maxvolatility < handle
             obj.outputbkt(:,10) = obj.latency(1:obj.indexClose);             % number of minutes the operation was open
             obj.outputbkt(:,11) = obj.minimumReturns(1:obj.indexClose,1);      % minimum return touched during dingle operation
                         
-            
+            obj.latency = obj.latency(1:obj.indexClose);
+            obj.arrayAperture = obj.arrayAperture(1:obj.indexClose);
             
             % Plot a richiesta
             if plottami
