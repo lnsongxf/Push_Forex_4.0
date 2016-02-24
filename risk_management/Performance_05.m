@@ -25,6 +25,7 @@ classdef Performance_05 < handle
         
         nameAlgo;
         origin;
+        histName;
         period;
         cross;
         freq;
@@ -81,7 +82,7 @@ classdef Performance_05 < handle
         
         %% Function to calculate all the performance parameters of a single result matrix
         
-        function obj=calcSinglePerformance(obj,nameAlgo_,origin_,cross_,freq_,transCost_,initialStack_,leverage_,inputResultsMatrix_,plotPerformance)
+        function obj=calcSinglePerformance(obj,nameAlgo_,origin_,histName_,cross_,freq_,transCost_,initialStack_,leverage_,inputResultsMatrix_,plotPerformance)
             
             %
             % DESCRIPTION:
@@ -131,6 +132,7 @@ classdef Performance_05 < handle
             
             obj.nameAlgo=nameAlgo_;
             obj.origin=origin_;
+            obj.histName=histName_;
             obj.cross=cross_;
             obj.freq=freq_;
             obj.transCost=transCost_;
@@ -263,7 +265,7 @@ classdef Performance_05 < handle
             
             workingStack=lots.*100000.*obj.leverage;
             crossFactor=10000;                             % corresponding to 10^x; where x is the number of digits for a specified cross (ex: EURUSD = 10000)
-            pip2EuroConversion=workingStack/crossFactor;
+            pip2EuroConversion=workingStack./crossFactor;
             returnsEuro=returns.*pip2EuroConversion;
             transCostEuro=obj.transCost.*pip2EuroConversion;
             NetReturnsPips=returns-obj.transCost;
@@ -520,18 +522,10 @@ classdef Performance_05 < handle
         %% DrawDown calculation
         
         function obj=DrawDown(obj)
-            
-            indx = find(obj.inputResultsMatrix(:,6));
-            %Returns=floor(r);
+                                
+            indx = find(obj.inputResultsMatrix(:,6)); 
             Returns=obj.inputResultsMatrix(indx,4);
             ExReturns=Returns-obj.transCost;
-            
-            %l=leverage;
-            %iS=initialStock;
-            
-            %effecrive Stock
-            %eS=iS*l;
-            %PL=eS+cumsum(Returns);
             
             PL=cumsum(ExReturns);
             
@@ -578,8 +572,7 @@ classdef Performance_05 < handle
             end
             [~,~,drawDownDuration] = find(pp);
             %display(drawDownDuration);
-            
-            
+
             obj.maxDD=-max(drawDown);
             obj.minDD=-min(drawDown);
             obj.aveDD=-mean(drawDown);

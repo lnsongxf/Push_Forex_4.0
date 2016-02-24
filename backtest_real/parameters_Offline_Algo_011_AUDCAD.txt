@@ -23,7 +23,7 @@
 nameAlgo = 'Algo_011_stocOsc_AUDCAD'
 Cross = 'AUDCAD'
 nData_ = 100
-histName = 'AUDCAD.csv'
+histName = 'AUDCAD.csv' % 'AUDCAD_short2.csv'
 actTimeScale = 1
 newTimeScale = 30
 transCost = 1

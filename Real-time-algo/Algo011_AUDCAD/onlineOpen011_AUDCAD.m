@@ -11,7 +11,7 @@ slippage=strcat('slippage=',num2str(1.5));                                 % for
 magic=strcat('magic=',num2str(1004));                                      % magic number, algo id.
 sl=strcat('sl=',num2str(stopLoss));                                        % not madatory
 tp=strcat('tp=',num2str(takeProfit));                                      % not mandatory
-topicPub='OPERATIONS@ACTIVTRADES@EURUSD@1111';
+topicPub='OPERATIONS@ACTIVTRADES@AUDCAD@1111';
 messagePub=strcat(price,',',lots,',',slippage,',',sl,',',tp,',',magic,',',op);
 
 indexOpen = indexOpen + 1;
