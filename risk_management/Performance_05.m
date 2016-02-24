@@ -392,6 +392,25 @@ classdef Performance_05 < handle
                 
                 linkaxes(s,'x');
                 
+                % frequency histogram of the latency
+                [latn,xlatn]=hist(Latency,20);
+                figure
+                bar(xlatn,latn/sum(latn));
+                title('frequency histogram of the latency (in mins)')
+                
+                % frequency histogram of the lacency, split in won and lost operations
+                [latplus,xlatplus]=hist( Latency(find(returns>0)) );
+                figure
+                subl(1) = subplot(1,2,1);
+                bar(xlatplus,latplus/sum(latplus));
+                title('frequency histogram of latency, won operations only')
+                [latlost,xlatlost]=hist( Latency(find(returns<0)) );
+                subl(2) = subplot(1,2,2);
+                bar(xlatlost,latlost/sum(latlost));
+                title('frequency histogram of latency, lost operations only')
+                
+                linkaxes(subl,'y');
+                
                 % frequency histogram of minimum returns
                 [n,xout]=hist(minReturns,10);
                 figure
