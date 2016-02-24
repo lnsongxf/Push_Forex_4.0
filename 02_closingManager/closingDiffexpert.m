@@ -22,7 +22,14 @@ difflimit      = dynamicParameters {3};
 ShrinkFactorSL = dynamicParameters {4};
 ShrinkSL       = dynamicParameters {5};
 
+
 distance       = direction * ( LastClosePrice - OpenPrice );
+
+% possibile correzione:
+
+% distance is related to the SL price (it should be always positive)
+%distance = direction * ( LastClosePrice - StopLossPrice );
+%%%% ora bisognerebbe modificarlo in modo che vedi se distance>SL+x ...
 
 display(strcat('diffvalue =',num2str(diffvalue)));
 

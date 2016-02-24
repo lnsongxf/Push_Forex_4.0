@@ -16,18 +16,15 @@ dynamicOn = 0;
 
 
 %
-minTP = dynamicParameters {1};
-pipsSL = dynamicParameters {2};
+minTP = dynamicParameters {1};  % qui e' sia il minimo guadagno richiesto che il num di pips di cui aumenti il TP
 
-% QUESTO E' DA MODIFICARE XE LA DISTANZA NON DEVE ESSER CALCOLATA CSI
-% SE NO ENTRA NELL IF OGNI VOLTA CHE LA DIST E' POSITIVA, ANCHE SE STA
-% PEGGIORANDO!!!!!!!!
+% distance is related to the SL price (it should be always positive)
 distance = direction * ( LastClosePrice - OpenPrice );
 
 
-if ( distance > minTP )
+if ( distance > minTP && StopL > 0)   % se SL e' ancora positivo
     
-    StopLossPrice = LastClosePrice - direction * pipsSL;
+    StopLossPrice = OpenPrice;
     TakeProfitPrice = TakeProfitPrice + direction * minTP;
     
     
@@ -44,8 +41,6 @@ if ( distance > minTP )
     dynamicOn = 1;
     
 end
-
-
 
 
 end
