@@ -8,7 +8,11 @@ var schedule = require('node-schedule');
 "info" (30):  Detail on topics and message exchanged
 "trace" (10): Detail on regular operation. 
 */
-
+if (!Array.prototype.last){
+    Array.prototype.last = function(){
+        return this[this.length - 1];
+    };
+};
 var QuotesModule = (function(){
 
 	var _timeFrameQuotes = function(providerName){
@@ -127,7 +131,7 @@ var QuotesModule = (function(){
 	  							tempObj = timeFrameQuotesObj[key1][index][timeFrame][j];
 	  							//console.log(tempObj);
 		  						if (tempObj[Object.keys(tempObj)[0]].length < Object.keys(tempObj)[0].split("v")[1] ){
-		  							if (realTimeQuotesObj[key0] != "") {
+		  							if (realTimeQuotesObj[key0] != "" && realTimeQuotesObj[key0] != tempObj[Object.keys(tempObj)[0]].last) {
 		  								tempObj[Object.keys(tempObj)[0]].push(realTimeQuotesObj[key0]);	
 		  								logger.trace('Updated timeFrameQuotesObj(operation:adding) : ' + tempObj[Object.keys(tempObj)[0]].toString() + ' for TimeFrame: '+timeFrame+ ' for number of values: '+Object.keys(tempObj)[0]+' on Cross: '+key1 );
 		  								var topic = key1;
@@ -147,7 +151,7 @@ var QuotesModule = (function(){
 										//};
 		  							}
 		  						}else{
-	  								if (realTimeQuotesObj[key0] != "") {
+	  								if (realTimeQuotesObj[key0] != "" && realTimeQuotesObj[key0] != tempObj[Object.keys(tempObj)[0]].last) {
 		  								tempObj[Object.keys(tempObj)[0]].shift();
 		  								tempObj[Object.keys(tempObj)[0]].push(realTimeQuotesObj[key0]);
 		  								logger.trace('Updated timeFrameQuotesObj(operation:shifting) : ' + tempObj[Object.keys(tempObj)[0]].toString() + 'for TimeFrame: '+timeFrame+ ' for number of values: '+Object.keys(tempObj)[0]+' for Cross: '+key1 );
