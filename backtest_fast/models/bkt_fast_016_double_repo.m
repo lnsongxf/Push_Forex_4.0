@@ -94,9 +94,9 @@ classdef bkt_fast_016_double_repo < handle
                             starTrendPrice = P(i-1);
                         end
                         
-                    else % if the trend is finished, check how long was it
+                    else % if the trend is finished, check how long was it and how big (in pips)
                         
-                        if (trendLenght >= 8)
+                        if (trendLenght >= 8 && abs(P(i-1)-starTrendPrice)> 50 )
                             
                             trigger1 = i; % first penetration present
                             
@@ -123,7 +123,7 @@ classdef bkt_fast_016_double_repo < handle
                         
                         if (s(i) == -strend) % second penetration!!
                             
-                            if ( (P(i) - starTrendPrice)*strend < 0) % if the current price is too close to the price at the start of the trend, don't open
+                            if ( (P(i) - starTrendPrice)*strend < 10) % if the current price is too close to the price at the start of the trend, don't open
                                 
                                 trigger1 = 0;
                                 trigger2 = 0;
@@ -155,10 +155,10 @@ classdef bkt_fast_016_double_repo < handle
                                     
                                     %%%%%%%%%%% dynamicalTPandSLManager
                                     %
-                                    dynamicParameters {1} = 1;
-                                    dynamicParameters {2} = 1;
-                                    
-                                    [TakeProfitPrice,StopLossPrice,TakeP,StopL,~] = closingAfterReachedTP(Pbuy,Pminute(j),segnoOperazione,TakeP,StopL, 0, dynamicParameters);
+%                                     dynamicParameters {1} = 1;
+%                                     dynamicParameters {2} = 1;
+%                                     
+%                                     [TakeProfitPrice,StopLossPrice,TakeP,StopL,~] = closingAfterReachedTP(Pbuy,Pminute(j),segnoOperazione,TakeP,StopL, 0, dynamicParameters);
                                     %                               display(['TP =', num2str(TakeP),' SL =', num2str(StopL)]);
                                     %                               display(['StopLossPrice =', num2str(StopLossPrice)]);
                                     
