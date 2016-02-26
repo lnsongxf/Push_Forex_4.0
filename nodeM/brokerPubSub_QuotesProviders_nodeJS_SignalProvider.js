@@ -9,7 +9,7 @@ var schedule = require('node-schedule');
 "trace" (10): Detail on regular operation. 
 */
 if (!Array.prototype.last){
-    Array.prototype.last = function(){
+    Array.prototype.last = {
         return this[this.length - 1];
     };
 };
