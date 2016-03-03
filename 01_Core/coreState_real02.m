@@ -245,7 +245,7 @@ classdef coreState_real02 < handle
         
         %%
         
-        function obj = core_Algo_002_leadlag (obj,closure,params,timeSeriesProperties)
+        function obj = core_Algo_002_leadlag (obj,closure,params)
             
             %NOTE:
             %LOGICA: fa 2 smoothing e quando si incrociano apre nella
@@ -300,9 +300,56 @@ classdef coreState_real02 < handle
             
         end
         
+        
+        %%
+        function obj = core_Algo_003_slingShot(obj,opens, lows, highs, closure, params)
+            
+            actualPrice     = closure(end);
+            setupBarOpen    = opens(end-1);                                % it uses only the last price at 30 min and the actual price at 1 min
+            setupBarMax     = highs(end-1);
+            setupBarMin     = lows(end-1);
+            setupBarClose   = closure(end-1);
+            
+            setupBarDirection = setupBarClose - setupBarOpen;
+            entry_condition = params.get('entry_condition');
+            
+            % entry long
+            if (entry_condition == 0) && (setupBarDirection < -15) && (actualPrice <= setupBarMin)
+                params.set('entry_condition',1);
+                obj.suggestedSL = actualPrice - 2;
+            end
+            if (entry_condition == 1) && (actualPrice > setupBarClose)
+                obj.state=1;
+                obj.suggestedDirection = - setupBarDirection;
+                obj.suggestedTP = 100;                                     % the Algo should close at the closing price of actual stick
+                params.set('entry_condition',0);
+            else
+                obj.state=0;
+            end          
+            
+            % entry short
+            if (entry_condition == 0) && (setupBarDirection > 15) && (actualPrice >= setupBarMax)
+                params.set('entry_condition',1);
+                obj.suggestedSL = actualPrice + 2;
+            end
+            if (entry_condition == 1) && (actualPrice < setupBarClose)
+                obj.state=1;
+                obj.suggestedDirection = - setupBarDirection;
+                obj.suggestedTP = 100;
+                params.set('entry_condition',0);
+            else
+                obj.state=0;
+            end
+            
+       
+        end
+        
+        
         %%
         
-        function obj = core_Algo_004_statTrend (obj,closure,params)
+        %%
+        
+        function obj = core_Algo_004_statTrend (obj,closure,params,timeSeriesProperties)
             
             %NOTE:
             %LOGICA: fa 2 smoothing e quando si incrociano apre se sono concordi
@@ -365,11 +412,11 @@ classdef coreState_real02 < handle
             %                         plot(smoothClose1,'-b')
             %                         plot(smoothClose2,'-r')
             
-%             if inversion<0 && trend==2 && gradientHurst > 0
-             if inversion<0 && gradientHurst > 0
-%             if inversion<0 && trend == 2 && Hurst > 0.5
-%             if inversion<0 && Hurst > 0.55 && gradientHurst > 0
-%             if abs(inversion)>0 && Hurst > 0 && abs(gradientHurst)>0    %test
+            %             if inversion<0 && trend==2 && gradientHurst > 0
+            if inversion<0 && gradientHurst > 0
+                %             if inversion<0 && trend == 2 && Hurst > 0.5
+                %             if inversion<0 && Hurst > 0.55 && gradientHurst > 0
+                %             if abs(inversion)>0 && Hurst > 0 && abs(gradientHurst)>0    %test
                 
                 obj.state=1;
                 obj.suggestedDirection=trendDirection;
@@ -383,6 +430,8 @@ classdef coreState_real02 < handle
             params.set('smoothVal2',smoothClose2(end));
             
         end
+        
+              
         
         function obj = core_Algo_011_stocOsc(obj, low, high, closure, params,Kperiods, Dperiods)
             

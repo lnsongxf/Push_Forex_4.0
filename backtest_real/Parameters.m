@@ -180,6 +180,8 @@ classdef Parameters < handle
             obj.set('smoothVal2',-1);
             obj.map('previous_signal') =parameter;
             obj.set('previous_signal',0);
+            obj.map('entry_condition') =parameter;
+            obj.set('entry_condition',0);
             
             
         end
