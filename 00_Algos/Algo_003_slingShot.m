@@ -92,41 +92,31 @@ chiusure     = matrix(:,4);
 
 % controlla se ho dei nuovi dati sulla newTimeScale
 if newTimeScalePoint
-    
-    % 01a
-    % -------- stationarity Test ------------------- %
-    
-    st.stationarityTests(chiusure(1:end-1),30,0);
-    
-    a=st.HurstExponent;
-    c=st.pValue;
-    d=st.halflife;
-    
-    % 01b
-    % -------- .................. ------------------ %
-    if isfinite(timeSeriesProperties.HurstExponent(end))
-        smoothCoeff = 0.5;
-        [timeSeriesProperties.HurstSmooth,timeSeriesProperties.HurstDiff]=smoothDiff(timeSeriesProperties.HurstExponent,smoothCoeff);
-    end
-    
-    
-    % ----- update timeSeriesProperties ------------ %
-    b=mean(timeSeriesProperties.HurstDiff(end-5:end-1));
-    e=timeSeriesProperties.HurstSmooth(end);
-    
-    timeSeriesProperties.addPoint(a,b,c,d,e);
-    
-    %     plot(timeSeriesProperties.HurstExponent,'-b');
-    %     hold on
-    %     plot(timeSeriesProperties.HurstSmooth,'-or');
-    %
-    %     cla
-    
-    % 01c
-    % -------- coreState filter -------------------- %
-    cState.core_Algo_003_slingShot(opens, lows, highs, closure, params);
-    
+    params.set('endOfcandelStick',1);
+    params.set('entry_condition',0);
 end
+
+% 01a
+% -------- stationarity Test ------------------- %
+%st.stationarityTests(chiusure(1:end-1),30,0);
+st.HurstExponent=0;
+st.pValue=0;
+st.halflife=0;
+
+a=st.HurstExponent;
+c=st.pValue;
+d=st.halflife;
+
+% ----- update timeSeriesProperties ------------ %
+b=0;
+e=0;
+
+timeSeriesProperties.addPoint(a,b,c,d,e);
+
+
+% 01c
+% -------- coreState filter -------------------- %
+cState.core_Algo_003_slingShot(opens, lows, highs, chiusure, params);
 state=cState.state;
 
 
@@ -162,16 +152,18 @@ else
             closingTime = params.get('closeTime_');
             operationState.latency = closingTime - openingTime;
             
-            dynamicParameters {1} = 0;
-            dynamicParameters {2} = 1;
-            dynamicParameters {3} = 111; % 111 for AUDCAD, 91 for EURUSD
-            [params,TakeProfitPrice,StopLossPrice,dynamicOn] = dynamicalTPandSLManager(operationState, chiusure, params, @closingHighSL, dynamicParameters);
-            if dynamicOn  == 1
-                params.set('openTime__',indexHisData);
-            end
+            endOfcandelStick = params.get('endOfcandelStick');
             
-            latencyTreshold = 30;    % latency treshold in minutes
-            [operationState,~, params] = directTakeProfitManager (operationState, chiusure, params,TakeProfitPrice,StopLossPrice, latencyTreshold);
+            if endOfcandelStick == 1
+                dynamicParameters {1} = 0;                                 % no dynamical parameters used on this function
+                [params,TakeProfitPrice,StopLossPrice,dynamicOn] = dynamicalTPandSLManager(operationState, chiusure, params, @closingEndOfcandelStick, dynamicParameters);
+                if dynamicOn  == 1
+                    params.set('openTime__',indexHisData);
+                end
+                
+                latencyTreshold = 1000000;                                 % latency treshold in minutes
+                [operationState,~, params] = directTakeProfitManager (operationState, chiusure, params,TakeProfitPrice,StopLossPrice, latencyTreshold);
+            end
             
         elseif openValueReal < 0
             

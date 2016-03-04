@@ -12,7 +12,7 @@ classdef indicators < handle
     properties
     
      HurstExponent = nan(100,1);
-     HurstDiff     = nan(100,1)
+     HurstDiff     = nan(100,1);
      pValue        = nan(100,1);
      halflife      = nan(100,1);
      HurstSmooth   = nan(100,1);

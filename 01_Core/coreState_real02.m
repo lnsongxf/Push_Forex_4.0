@@ -310,17 +310,21 @@ classdef coreState_real02 < handle
             setupBarMin     = lows(end-1);
             setupBarClose   = closure(end-1);
             
+            dimension = 2;
+            
             setupBarDirection = setupBarClose - setupBarOpen;
             entry_condition = params.get('entry_condition');
             
             % entry long
-            if (entry_condition == 0) && (setupBarDirection < -15) && (actualPrice <= setupBarMin)
+            if (entry_condition == 0) && (setupBarDirection < - dimension) && (actualPrice <= setupBarMin)
                 params.set('entry_condition',1);
-                obj.suggestedSL = actualPrice - 2;
+                SL = abs(actualPrice - setupBarClose)+1;
+                params.set('stopLoss__',SL);  
             end
             if (entry_condition == 1) && (actualPrice > setupBarClose)
                 obj.state=1;
-                obj.suggestedDirection = - setupBarDirection;
+                obj.suggestedDirection = - sign(setupBarDirection);
+                obj.suggestedSL = params.get('stopLoss__');
                 obj.suggestedTP = 100;                                     % the Algo should close at the closing price of actual stick
                 params.set('entry_condition',0);
             else
@@ -328,13 +332,15 @@ classdef coreState_real02 < handle
             end          
             
             % entry short
-            if (entry_condition == 0) && (setupBarDirection > 15) && (actualPrice >= setupBarMax)
+            if (entry_condition == 0) && (setupBarDirection > dimension) && (actualPrice >= setupBarMax)
                 params.set('entry_condition',1);
-                obj.suggestedSL = actualPrice + 2;
+                SL = abs(actualPrice - setupBarClose)+1; 
+                params.set('stopLoss__',SL);  
             end
             if (entry_condition == 1) && (actualPrice < setupBarClose)
                 obj.state=1;
-                obj.suggestedDirection = - setupBarDirection;
+                obj.suggestedDirection = - sign(setupBarDirection);
+                obj.suggestedSL = params.get('stopLoss__');
                 obj.suggestedTP = 100;
                 params.set('entry_condition',0);
             else
