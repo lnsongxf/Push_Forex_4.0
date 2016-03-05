@@ -113,22 +113,48 @@ string nextOrderToString()
 {
    //ticket number; open time; trade operation; amount of lots; symbol; open price; Stop Loss; Take Profit; close time; close price; commission; swap; profit;
    //comment; magic number; pending order expiration date.
+   // Open Date,Close Date,Symbol,Action,
+   // Lots,SL,TP,Open Price,Close Price,Commission,Swap,Pips,Profit,
+   // Comment,Magic Number,Duration (DD:HH:MM:SS),Profitable(%),Profitable(time duration),
+   // Drawdown,Risk:Reward,Max(pips),Max(EUR),Min(pips),Min(EUR),Entry Accuracy(%),Exit Accuracy(%),ProfitMissed(pips),ProfitMissed(EUR)%
+
+   //% 10/31/2013 12:48,10/31/2013 13:44,EURUSD,Buy,
+   //% 1.00,1.36414,1.36644,1.36622,1.36409,0.0000,0.0000,-21.3,-156.15,
+   //% "commento",1943642475,00:00:56:26,0.0,0s,
+   //% 29.8,29.85,0.0,0.0,-29.8,-218.434,0.0,28.5,-21.30,-156.13
+
    string buffer =
-   StringConcatenate(OrderTicket(),";",
+   StringConcatenate(
    OrderOpenTime(),";",
+   OrderCloseTime(),";",
+   OrderSymbol(),";",
    OrderType(),";",
    OrderLots(),";",
-   OrderSymbol(),";",
-   OrderOpenPrice(),";",
    OrderStopLoss(),";",
    OrderTakeProfit(),";",
-   OrderCloseTime(),";",
+   OrderOpenPrice(),";",
    OrderClosePrice(),";",
    OrderCommission(),";",
    OrderSwap(),";",
    OrderProfit(),";",
    OrderComment(),";",
-   OrderMagicNumber());
+   OrderMagicNumber(),";",
+
+   "-1;", //Duration
+   "-1;", //Profitable
+   "-1;", //Profitable
+   "-1;", //Drawdown
+   "-1;", //Risk:Reward
+   "-1;", //Max
+   "-1;", //Max
+   "-1;", //Min
+   "-1;", //Min
+   "-1;", //Entry Accuracy
+   "-1;", //Exit Accuracy
+   "-1;", //ProfitMissed
+   "-1;", //ProfitMissed
+
+   OrderTicket());
 
    return buffer;
 }
