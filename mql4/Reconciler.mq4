@@ -21,8 +21,8 @@ int MAX_NUM_OF_TRADES_PER_MESSAGE = 25;
 //+------------------------------------------------------------------+
 int OnInit()
   {
-   listener = conn_and_sub("tcp://192.168.0.9:51127", "RECONCILER@ACTIVTRADES@EURUSD");
-   speaker = connect("tcp://192.168.0.9:51125");
+   listener = conn_and_sub("tcp://localhost:51127", "RECONCILER@ACTIVTRADES@EURUSD");
+   speaker = connect("tcp://localhost:51125");
    Print("Connecting: " + listener);
    
    return(INIT_SUCCEEDED);
@@ -103,7 +103,9 @@ void processInput(string msg)
       }
       send(topic, buffer);
    }
-   Print("Invalid command " + msg);
+   else {
+   	Print("Invalid command " + msg);
+   }
    
 }
 
