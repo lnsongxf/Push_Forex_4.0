@@ -21,7 +21,7 @@ int MAX_NUM_OF_TRADES_PER_MESSAGE = 25;
 //+------------------------------------------------------------------+
 int OnInit()
   {
-   listener = conn_and_sub("tcp://localhost:51127", "RECONCILER@ACTIVTRADES@EURUSD");
+   listener = conn_and_sub("tcp://localhost:51127", "RECONCILER@ACTIVTRADES@" + Symbol());
    speaker = connect("tcp://localhost:51125");
    Print("Connecting: " + listener);
    
