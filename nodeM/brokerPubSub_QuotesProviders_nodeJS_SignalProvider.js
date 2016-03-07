@@ -132,9 +132,11 @@ var QuotesModule = (function(){
 	  							tempObj = timeFrameQuotesObj[key1][index][timeFrame][j];
 	  							//console.log(tempObj);
 		  						if (tempObj[Object.keys(tempObj)[0]].length < Object.keys(tempObj)[0].split("v")[1] ){
+		  							logger.trace('realTimeQuotesObj[key0] :'+realTimeQuotesObj[key0] );
+		  							logger.trace('tempObj[Object.keys(tempObj)[0]].last(): '+tempObj[Object.keys(tempObj)[0]].last());
 		  							if (realTimeQuotesObj[key0] != "" && realTimeQuotesObj[key0] != tempObj[Object.keys(tempObj)[0]].last()) {
 		  								tempObj[Object.keys(tempObj)[0]].push(realTimeQuotesObj[key0]);	
-		  								//logger.trace('Updated timeFrameQuotesObj(operation:adding) : ' + tempObj[Object.keys(tempObj)[0]].toString() + ' for TimeFrame: '+timeFrame+ ' for number of values: '+Object.keys(tempObj)[0]+' on Cross: '+key1 );
+		  								logger.trace('Updated timeFrameQuotesObj(operation:adding) : ' + tempObj[Object.keys(tempObj)[0]].toString() + ' for TimeFrame: '+timeFrame+ ' for number of values: '+Object.keys(tempObj)[0]+' on Cross: '+key1 );
 		  								var topic = key1;
 		  								//"TIMEFRAMEQUOTE@MT4@ACTIVTRADES   +     @EURUSD     +     @m1     +    @v1 
 		  								var topicToSignalProvider = timeFrameQuotesObj.provider+"@"+key1+"@"+timeFrame+"@"+Object.keys(tempObj)[0];
