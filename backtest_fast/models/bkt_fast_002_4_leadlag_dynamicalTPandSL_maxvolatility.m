@@ -24,7 +24,7 @@ classdef bkt_fast_002_4_leadlag_dynamicalTPandSL_maxvolatility < handle
     
     methods
         
-        function obj = spin(obj, Pminute, matrixNewHisData, ~, newTimeScale, N, M, cost, ~, ~, wTP, wSL, plottami)            
+        function obj = spin(obj, Pminute, matrixNewHisData, ~, newTimeScale, N, M, cost, ~, ~, wTP, wSL, plottami)
             
             
             %% simula leadlag con TP e SL a seconda della volatilità
@@ -62,7 +62,7 @@ classdef bkt_fast_002_4_leadlag_dynamicalTPandSL_maxvolatility < handle
             fluctuationslag=abs(P-lag);
             
             % signals
-            s(lead>lag) = 1; 
+            s(lead>lag) = 1;
             s(lag>lead) = -1;
             
             
@@ -82,39 +82,32 @@ classdef bkt_fast_002_4_leadlag_dynamicalTPandSL_maxvolatility < handle
                     [obj, Pbuy, devFluct2] = obj.apri(i, P, fluctuationslag, M, ntrades, segnoOperazione, date);
                     
                     volatility = min(floor(wTP*devFluct2),50);
-                    TakeProfitPrice = Pbuy + segnoOperazione*volatility;
-                    StopLossPrice =  Pbuy - segnoOperazione*volatility;
-                    newStopLossPrice = StopLossPrice;
-                    newTakeProfitPrice = TakeProfitPrice;
-                    dynamical = 0;
+                    TakeP = volatility;
+                    StopL = volatility;
+                    TakeProfitPrice = Pbuy + segnoOperazione * TakeP;
+                    StopLossPrice =  Pbuy - segnoOperazione * StopL;
                     
                     for j = newTimeScale*(i):length(Pminute)
                         
                         indice_I = floor(j/newTimeScale);
+%                               display(['Pminute =', num2str(Pminute(j))]);
+                       
+                        %%%%%%%%%%% dynamicalTPandSLManager
+%
+%                               dynamicParameters {1} = 1;
+%                               dynamicParameters {2} = 2;
+%                               [TakeProfitPrice,StopLossPrice,TakeP,StopL,~] = closingAfterReachedTP(Pbuy,Pminute(j),segnoOperazione,TakeP,StopL, 0, dynamicParameters);
+%                               display(['TP =', num2str(TakeP),' SL =', num2str(StopL)]);
+%                               display(['StopLossPrice =', num2str(StopLossPrice)]);
                         
-                        %dynamical SL
-                        if abs( (Pminute(j) - TakeProfitPrice) ) < abs( (Pbuy - TakeProfitPrice ) / 2 ) 
-                            
-                            newStopLossPrice = Pminute(j) - segnoOperazione*floor(wSL*devFluct2);
-                            newTakeProfitPrice = TakeProfitPrice + segnoOperazione*floor(devFluct2);
-                            dynamical = 1;
-                            
-                        end
+                        %%%%%%%%%%%%%%%%%%%%%%%%%%
                         
-                        % brutale!!
-                        cond1 = Pminute(j) >= TakeProfitPrice && segnoOperazione == 1;
-                        cond2 = Pminute(j) <= StopLossPrice && segnoOperazione == 1;
                         
-                        cond3 = Pminute(j) <= TakeProfitPrice && segnoOperazione == -1;
-                        cond4 = Pminute(j) >= StopLossPrice && segnoOperazione == -1;
+                        condTP = ( sign( Pminute(j) - TakeProfitPrice ) * segnoOperazione );
+                        condSL = ( sign( StopLossPrice - Pminute(j) ) ) * segnoOperazione;
+
                         
-                        cond5 = Pminute(j) <= newStopLossPrice && segnoOperazione == 1 && dynamical;
-                        cond6 = Pminute(j) >= newStopLossPrice && segnoOperazione == -1 && dynamical;
-                        
-                        cond7 = Pminute(j) >= newTakeProfitPrice && segnoOperazione == 1 && dynamical;
-                        cond8 = Pminute(j) <= newTakeProfitPrice && segnoOperazione == -1 && dynamical;
-                        
-                        if cond1 || cond2 || cond3 || cond4 || cond5 || cond6 || cond7 || cond8
+                        if ( condTP >=0 ) || ( condSL >= 0 )
                             
                             obj.r(indice_I) = (Pminute(j)-Pbuy)*segnoOperazione - cost;
                             obj.closingPrices(ntrades) = Pminute(j);
@@ -125,7 +118,7 @@ classdef bkt_fast_002_4_leadlag_dynamicalTPandSL_maxvolatility < handle
                             obj.indexClose = obj.indexClose + 1;
                             obj.latency(ntrades)=j - newTimeScale*obj.indexOpen;
                             break
-
+                            
                         end
                         
                         i = indice_I;
@@ -133,7 +126,7 @@ classdef bkt_fast_002_4_leadlag_dynamicalTPandSL_maxvolatility < handle
                         
                     end
                     
-               
+                    
                 end
                 
                 i = i + 1;
@@ -160,7 +153,7 @@ classdef bkt_fast_002_4_leadlag_dynamicalTPandSL_maxvolatility < handle
             obj.outputbkt(:,9) = ones(obj.indexClose,1)*1;                   % lots setted for single operation
             obj.outputbkt(:,10) = obj.latency(1:obj.indexClose);             % number of minutes the operation was open
             obj.outputbkt(:,11) = obj.minimumReturns(1:obj.indexClose,1);      % minimum return touched during dingle operation
-                        
+            
             obj.latency = obj.latency(1:obj.indexClose);
             obj.arrayAperture = obj.arrayAperture(1:obj.indexClose);
             
@@ -176,7 +169,7 @@ classdef bkt_fast_002_4_leadlag_dynamicalTPandSL_maxvolatility < handle
                 plot(obj.outputbkt(:,1),cumsum(obj.outputbkt(:,4))), grid on
                 legend('Cumulative Return')
                 title('Cumulative Returns ')
-
+                
                 
             end %if
             
@@ -197,21 +190,21 @@ classdef bkt_fast_002_4_leadlag_dynamicalTPandSL_maxvolatility < handle
         
         
         
-%         function [obj] = chiudi_per_SL(obj, Pbuy, indice_I, segnoOperazione, devFluct2, wSL, cost, ntrades, date)
-%             
-%             obj.r(indice_I) = - wSL*devFluct2 - cost;
-%             obj.closingPrices(ntrades) = Pbuy - segnoOperazione*floor(wSL*devFluct2);
-%             obj.ClDates(ntrades) = date(indice_I); %controlla
-%             
-%         end
-%         
-%         function [obj] = chiudi_per_TP(obj, Pbuy, indice_I, segnoOperazione, devFluct2, wTP, cost, ntrades, date)
-%             
-%             obj.r(indice_I) = wTP*devFluct2 - cost;
-%             obj.closingPrices(ntrades) = Pbuy + segnoOperazione*floor(wTP*devFluct2);
-%             obj.ClDates(ntrades) = date(indice_I); %controlla
-%             
-%         end
+        %         function [obj] = chiudi_per_SL(obj, Pbuy, indice_I, segnoOperazione, devFluct2, wSL, cost, ntrades, date)
+        %
+        %             obj.r(indice_I) = - wSL*devFluct2 - cost;
+        %             obj.closingPrices(ntrades) = Pbuy - segnoOperazione*floor(wSL*devFluct2);
+        %             obj.ClDates(ntrades) = date(indice_I); %controlla
+        %
+        %         end
+        %
+        %         function [obj] = chiudi_per_TP(obj, Pbuy, indice_I, segnoOperazione, devFluct2, wTP, cost, ntrades, date)
+        %
+        %             obj.r(indice_I) = wTP*devFluct2 - cost;
+        %             obj.closingPrices(ntrades) = Pbuy + segnoOperazione*floor(wTP*devFluct2);
+        %             obj.ClDates(ntrades) = date(indice_I); %controlla
+        %
+        %         end
         
         
     end
