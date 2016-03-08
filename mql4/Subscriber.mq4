@@ -24,7 +24,7 @@ int OnInit()
      Alert("Initialising sub indicator");
 //--- indicator buffers mapping
    //listener = conn_and_sub(1, "tcp://192.168.53.68:5563", "eurusd");
-   listener = conn_and_sub("tcp://localhost:50027", "OPERATIONS@ACTIVTRADES@EURUSD");
+   listener = conn_and_sub("tcp://localhost:50027", "OPERATIONS@ACTIVTRADES@"+Symbol());
    speaker = connect("tcp://localhost:50025");
    
    Alert("Conn and sub ing: " + listener);

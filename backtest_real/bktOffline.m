@@ -147,10 +147,15 @@ classdef bktOffline < handle
                 indexNewHisData=i-(obj.nData-1);
                 matrix(1:obj.nData,:) = obj.newHisData(indexNewHisData:i,:);
                 newTimeScalePoint=1; % controlla se ho dei nuovi dati sulla newTimeScale
+                newTimeScalePointEnd = 0;
                 k=k+1; % serve solo nel calcolo della probabilità di mean reversion etc...
                 
                 % l'indice j è sui dati al minuto (alla time scale più veloce)
                 for j = 1:newTimeScale
+                    
+                    if j == newTimeScale
+                        newTimeScalePointEnd = 1;
+                    end
                     
                     indexHisData=i*newTimeScale+j-1;
                     
@@ -164,7 +169,7 @@ classdef bktOffline < handle
                         
                         matrix(end,:) = hisData(indexHisData,:);
                         
-                        [oper,openValue, closeValue, stopLoss, takeProfit, minReturn] = algo(matrix,newTimeScalePoint,openValueReal,obj.timeSeriesProperties,indexHisData);
+                        [oper,openValue, closeValue, stopLoss, takeProfit, minReturn] = algo(matrix,newTimeScalePoint,newTimeScalePointEnd,openValueReal,obj.timeSeriesProperties,indexHisData);
 
                         newState{1} = oper;
                         newState{2} = openValue;

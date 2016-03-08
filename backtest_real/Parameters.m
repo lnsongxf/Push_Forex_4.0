@@ -12,7 +12,8 @@ classdef Parameters < handle
         smoothVal1;
         smoothVal2;
         previous_signal;
-        entry_condition;
+        entry_conditionLong;
+        entry_conditionShort;
         endOfcandelStick;
         smoothingCoef;
         startValue;
@@ -107,7 +108,8 @@ classdef Parameters < handle
         function operStates = closeOnCall (obj, operStates, currValue, closingTime)
             obj.set('closeValue',currValue);
             obj.set('closeTime_',closingTime);
-            obj.set('entry_condition',0);
+            obj.set('entry_conditionLong',0);
+            obj.set('entry_conditionShort',0);
             operStates.lastOperation     = operStates.actualOperation;
             operStates.actualOperation   = 0;
             operStates.minimumReturn     = 0;
@@ -183,8 +185,10 @@ classdef Parameters < handle
             obj.set('smoothVal2',-1);
             obj.map('previous_signal') =parameter;
             obj.set('previous_signal',0);
-            obj.map('entry_condition') =parameter;
-            obj.set('entry_condition',0);
+            obj.map('entry_conditionLong') =parameter;
+            obj.set('entry_conditionLong',0);
+            obj.map('entry_conditionShort') =parameter;
+            obj.set('entry_conditionShort',0);
             obj.map('endOfcandelStick') =parameter;
             obj.set('endOfcandelStick',0);
             
