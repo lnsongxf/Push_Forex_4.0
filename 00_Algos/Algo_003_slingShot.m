@@ -93,7 +93,10 @@ chiusure     = matrix(:,4);
 % controlla se ho dei nuovi dati sulla newTimeScale
 if newTimeScalePoint
     params.set('endOfcandelStick',1);
-    params.set('entry_condition',0);
+    params.set('entry_conditionLong',0);
+    params.set('entry_conditionShort',0);
+else
+    params.set('endOfcandelStick',0);
 end
 
 % 01a
