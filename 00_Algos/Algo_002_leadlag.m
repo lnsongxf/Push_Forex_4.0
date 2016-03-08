@@ -1,4 +1,4 @@
-function [oper, openValue, closeValue, stopLoss, noLoose, minReturn] = Algo_002_leadlag(matrix,newTimeScalePoint,openValueReal,timeSeriesProperties,indexHisData)
+function [oper, openValue, closeValue, stopLoss, noLoose, minReturn] = Algo_002_leadlag(matrix,newTimeScalePoint,newTimeScalePointEnd,openValueReal,timeSeriesProperties,indexHisData)
 
 
 %
@@ -90,6 +90,13 @@ operationState = ra.os;
 %lows         = matrix(:,3);
 chiusure        = matrix(:,4);
 %volumi          = matrix(:,5);
+
+if newTimeScalePointEnd
+    params.set('endOfcandelStick',1);
+else
+    params.set('endOfcandelStick',0);
+end
+
 
 % controlla se ho dei nuovi dati sulla newTimeScale
 if newTimeScalePoint

@@ -1,4 +1,4 @@
-function [oper, openValue, closeValue, stopLoss, takeProfit, minReturn] = Algo_011_stocOsc_EURUSD(matrix,newTimeScalePoint,openValueReal,timeSeriesProperties,indexHisData)
+function [oper, openValue, closeValue, stopLoss, takeProfit, minReturn] = Algo_011_stocOsc_EURUSD(matrix,newTimeScalePoint,newTimeScalePointEnd,openValueReal,timeSeriesProperties,indexHisData)
 
 %
 % DESCRIPTION:
@@ -89,6 +89,13 @@ highs           = matrix(:,2);
 lows         = matrix(:,3);
 chiusure        = matrix(:,4);
 %volumi          = matrix(:,5);
+
+if newTimeScalePointEnd
+    params.set('endOfcandelStick',1);
+else
+    params.set('endOfcandelStick',0);
+end
+
 
 % controlla se ho dei nuovi dati sulla newTimeScale
 if newTimeScalePoint

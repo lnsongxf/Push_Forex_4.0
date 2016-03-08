@@ -310,7 +310,7 @@ classdef coreState_real02 < handle
             setupBarMin     = lows(end-1);
             setupBarClose   = closure(end-1);
             
-            dimension = 2;
+            dimension = 20;
             
             setupBarDirection = setupBarClose - setupBarOpen;
             entry_conditionLong  = params.get('entry_conditionLong');

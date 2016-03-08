@@ -1,4 +1,4 @@
-function [oper, openValue, closeValue, stopLoss, takeProfit, minReturn] = Algo_003_slingShot(matrix,newTimeScalePoint,openValueReal,timeSeriesProperties,indexHisData)
+function [oper, openValue, closeValue, stopLoss, takeProfit, minReturn] = Algo_003_slingShot(matrix,newTimeScalePoint,newTimeScalePointEnd,openValueReal,timeSeriesProperties,indexHisData)
 
 %
 % DESCRIPTION:
@@ -91,7 +91,7 @@ chiusure     = matrix(:,4);
 %volumi      = matrix(:,5);
 
 % controlla se ho dei nuovi dati sulla newTimeScale
-if newTimeScalePoint
+if newTimeScalePointEnd
     params.set('endOfcandelStick',1);
     params.set('entry_conditionLong',0);
     params.set('entry_conditionShort',0);

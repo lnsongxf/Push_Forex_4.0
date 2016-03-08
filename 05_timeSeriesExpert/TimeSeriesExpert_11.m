@@ -96,7 +96,7 @@ classdef TimeSeriesExpert_11 < handle
             obj.openVrescaled=o(1:nRescale:(newL)*nRescale);
             [obj.maxVrescaled,obj.minVrescaled] = RescaleMinAndMax(nRescale,M,m,newL);
             obj.closeVrescaled=c(nRescale:nRescale:(newL)*nRescale);
-            obj.openDrescaled=od(nRescale:nRescale:(newL)*nRescale);
+            obj.openDrescaled=od(1:nRescale:(newL)*nRescale);
             
             vv=[newL,1];
             

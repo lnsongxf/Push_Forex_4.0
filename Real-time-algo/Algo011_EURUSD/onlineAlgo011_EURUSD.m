@@ -276,7 +276,8 @@ end
 if ( ( strcmp(ms.machineStatus,'closed') || strcmp(ms.machineStatus,'open') ) && ms.statusNotification == 0 )
     t=now;
     timeMin=t*60*24;
-    [oper,openValue, closeValue, stopLoss, takeProfit, minReturn] = Algo_011_stocOsc_EURUSD(matrix,newTimeScalePoint,openValueReal,timeSeriesProperties,timeMin);
+    newTimeScalePointEnd = 0;
+    [oper,openValue, closeValue, stopLoss, takeProfit, minReturn] = Algo_011_stocOsc_EURUSD(matrix,newTimeScalePoint,newTimeScalePointEnd,openValueReal,timeSeriesProperties,timeMin);
     
     newState{1} = oper;
     newState{2} = openValue;
