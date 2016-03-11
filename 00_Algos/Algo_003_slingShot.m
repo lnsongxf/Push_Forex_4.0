@@ -155,18 +155,17 @@ else
             closingTime = params.get('closeTime_');
             operationState.latency = closingTime - openingTime;
             
-            endOfcandelStick = params.get('endOfcandelStick');
-            
-            if endOfcandelStick == 1
-                dynamicParameters {1} = 0;                                 % no dynamical parameters used on this function
-                [params,TakeProfitPrice,StopLossPrice,dynamicOn] = dynamicalTPandSLManager(operationState, chiusure, params, @closingEndOfcandelStick, dynamicParameters);
-                if dynamicOn  == 1
-                    params.set('openTime__',indexHisData);
-                end
-                
-                latencyTreshold = 1000000;                                 % latency treshold in minutes
-                [operationState,~, params] = directTakeProfitManager (operationState, chiusure, params,TakeProfitPrice,StopLossPrice, latencyTreshold);
+%             endOfcandelStick = params.get('endOfcandelStick');
+%             dynamicParameters {1} = endOfcandelStick;                    
+%             [params,TakeProfitPrice,StopLossPrice,dynamicOn] = dynamicalTPandSLManager(operationState, chiusure, params, @closingEndOfcandelStick, dynamicParameters);
+            dynamicParameters {1} = 1.1;  %closingForApproaching
+            [params,TakeProfitPrice,StopLossPrice,dynamicOn] = dynamicalTPandSLManager(operationState, chiusure, params, @closingForApproaching, dynamicParameters);
+            if dynamicOn  == 1
+                params.set('openTime__',indexHisData);
             end
+            
+            latencyTreshold = 1000000;                                     % latency treshold in minutes
+            [operationState,~, params] = directTakeProfitManager (operationState, chiusure, params,TakeProfitPrice,StopLossPrice, latencyTreshold);
             
         elseif openValueReal < 0
             

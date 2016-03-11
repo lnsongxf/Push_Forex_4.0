@@ -39,7 +39,8 @@ if ( (LastClosePrice - TakeProfitPrice) * direction ) >= 0
     
     TakeProfitPrice = OpenPrice + direction * newTakeP;
     
-    newStopL = - TakeP + 2;
+    newStopL = - TakeP + 2; %Algo002 uses this
+    % newStopL = - (TakeP + abs(LastClosePrice - TakeProfitPrice)) + 4;
     
     StopLossPrice    = OpenPrice - direction * newStopL;
     
