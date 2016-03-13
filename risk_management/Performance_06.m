@@ -33,6 +33,7 @@ classdef Performance_06 < handle
         initialStack;
         leverage;
         inputResultsMatrix;
+        marginePerTrade;
         
         SR;
         netReturns_pips;
@@ -291,7 +292,7 @@ classdef Performance_06 < handle
             Latency    = obj.inputResultsMatrix(row,10);   % duration of single operation in minutes
             minReturns = obj.inputResultsMatrix(row,11);   % minimum return touched during dingle operation
             
-            workingStack=lots.*100000.*obj.leverage;
+            workingStack=lots.*100000;
             crossFactor=10000;                             % corresponding to 10^x; where x is the number of digits for a specified cross (ex: EURUSD = 10000)
             pip2EuroConversion=workingStack./crossFactor;
             returnsEuro=returns.*pip2EuroConversion;
@@ -299,6 +300,7 @@ classdef Performance_06 < handle
             NetReturnsPips=returns-obj.transCost;
             NetReturnsEuro=returnsEuro-transCostEuro;
             NetReturnsEuroPerc=(NetReturnsEuro./obj.initialStack).*100;
+            obj.marginePerTrade=lots./obj.leverage;
             
             dateFirstOperationNum=obj.inputResultsMatrix(row(1),8);
             dateFirstOperation=datestr(dateFirstOperationNum, 'mm/dd/yyyy HH:MM');
