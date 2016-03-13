@@ -75,22 +75,37 @@ classdef bktFast < handle
             [r,~] = size(hisData);
             %[rn,~] = size(newHisData);
             
-            % split historical into trainging set for optimization and paper trading
-            % default: 75% Training, 25% paper trading)
-            rTraining = floor(r*0.75);
-            rnTraining = floor(rTraining/newTimeScale);
-            
-            % use this to skip some of the very old hist data:
-            %             skipMe = floor(r*0.20);
-            %             skipMeNewTime = floor(skipMe/newTimeScale);
-            %             hisDataTraining = hisData(skipMe:rTraining,:);
-            %             newHisDataTraining = newHisData(skipMeNewTime:rnTraining,:);
-            
-            hisDataTraining = hisData(1:rTraining,:);
-            hisDataPaperTrad = hisData(rTraining+1:end,:);
-            newHisDataTraining = newHisData(1:rnTraining,:);
-            newHisDataPaperTrad = newHisData(rnTraining+1:end,:);
-            
+            if ( exist('reverse_optimization','var') && reverse_optimization == 1 )
+                
+                % split historical and perform optimization on the MOST RECENT HISTORICAL DATA!!!!
+                % default for reverse_optimization: 50% Training, 50% paper trading)
+                rTraining = floor(r*0.5);
+                rnTraining = floor(rTraining/newTimeScale);
+                
+                hisDataTraining = hisData(rTraining+1:end,:);
+                hisDataPaperTrad = hisData(1:rTraining,:);
+                newHisDataTraining = newHisData(rnTraining+1:end,:);
+                newHisDataPaperTrad = newHisData(1:rnTraining,:);
+                
+            else % standard way!
+                
+                % split historical into trainging set for optimization and paper trading
+                % default: 75% Training, 25% paper trading)
+                rTraining = floor(r*0.75);
+                rnTraining = floor(rTraining/newTimeScale);
+                
+                % use this to skip some of the very old hist data:
+                %             skipMe = floor(r*0.20);
+                %             skipMeNewTime = floor(skipMe/newTimeScale);
+                %             hisDataTraining = hisData(skipMe:rTraining,:);
+                %             newHisDataTraining = newHisData(skipMeNewTime:rnTraining,:);
+                
+                hisDataTraining = hisData(1:rTraining,:);
+                hisDataPaperTrad = hisData(rTraining+1:end,:);
+                newHisDataTraining = newHisData(1:rnTraining,:);
+                newHisDataPaperTrad = newHisData(rnTraining+1:end,:);
+                
+            end
             
             %% Perform optimization using training set
             

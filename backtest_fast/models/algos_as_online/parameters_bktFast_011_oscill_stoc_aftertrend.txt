@@ -22,8 +22,8 @@
 
             
 nameAlgo = 'bkt_fast_011_oscillatore_stocastico_HighSL_aftertrend' 
-N =  1:20 % 10 % 2 % 19
-M =  1:10:151 % 101 % 81
+N =  3 % 1:20 % 10 % 2 % 19
+M =  81 % 1:10:151 % 101 % 81
 N_greater_than_M = 0              
 Cross = 'EURUSD'            
 histName =   'AUDCAD.csv'  %  'EURUSD_smallsample2014_2015.csv' % 'EURUSD-04-2014-02-2016.csv' %
@@ -35,3 +35,4 @@ pips_SL = 10
 stdev_TP = 10
 stdev_SL = 10       		
 WhatToPlot = 2
+reverse_optimization = 1
