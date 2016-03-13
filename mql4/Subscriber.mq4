@@ -24,7 +24,9 @@ int OnInit()
      Alert("Initialising sub indicator");
 //--- indicator buffers mapping
    //listener = conn_and_sub(1, "tcp://192.168.53.68:5563", "eurusd");
-   listener = conn_and_sub("tcp://localhost:50027", "OPERATIONS@ACTIVTRADES@"+Symbol());
+   string topic = "OPERATIONS@ACTIVTRADES@" + Symbol();
+   listener = conn_and_sub("tcp://localhost:50027", topic);
+   Alert("Listening to " + topic);
    speaker = connect("tcp://localhost:50025");
    
    Alert("Conn and sub ing: " + listener);
@@ -247,7 +249,7 @@ void OnTick()
       Alert("Attempting to close the ticket " + ticket);
       RefreshRates();
       if(OrderSelect(ticket,SELECT_BY_TICKET,MODE_TRADES)) {
-         if(OrderClose(ticket,1,Bid,4,CLR_NONE)) {
+         if(OrderClose(ticket,1, OrderClosePrice(),50,CLR_NONE)) {
             OrderSelect(ticket,SELECT_BY_TICKET,MODE_HISTORY);
             price = OrderClosePrice()*10000;
             status = 1;
@@ -256,6 +258,10 @@ void OnTick()
            Alert("Errore! posizione non chiusa per errore ",GetLastError());
            buffer = buffer+(magic+"="+GetLastError()+",");
         }
+      }
+      else if (OrderSelect(ticket,SELECT_BY_TICKET,MODE_HISTORY)) {
+            price = OrderClosePrice()*10000;
+            status = 1;
       }
       buffer = status + "," + type + "," + price + "," + ticket;
    }
@@ -267,8 +273,8 @@ void OnTick()
       int price = -1;
       Alert("Attempting to close the ticket " + ticket);
       RefreshRates();
-       if(OrderSelect(ticket,SELECT_BY_TICKET,MODE_TRADES)) {
-         if(OrderClose(ticket,1,Ask,4,CLR_NONE)) {
+      if(OrderSelect(ticket,SELECT_BY_TICKET,MODE_TRADES)) {
+         if(OrderClose(ticket,1, OrderClosePrice(),50,CLR_NONE)) {
             OrderSelect(ticket,SELECT_BY_TICKET,MODE_HISTORY);
             price = OrderClosePrice()*10000;
             status = 1;
@@ -277,11 +283,15 @@ void OnTick()
             Alert("Errore! posizione non chiusa per errore ",GetLastError());
          }
       }
+      else if (OrderSelect(ticket,SELECT_BY_TICKET,MODE_HISTORY)) {
+            price = OrderClosePrice()*10000;
+            status = 1;
+      }
       buffer = status + "," + type + "," + price + "," + ticket;
    }
    
    void writeResponse(string output){
-      string topic = "STATUS@EURUSD@" + IntegerToString(magic);
+      string topic = "STATUS@"+ Symbol() +"@" + IntegerToString(magic);
       Alert("Message to send: " + output + " on topic: " + topic);
       int result = send_with_topic(speaker, output+"\n", topic);
       Alert("Sending result = " + IntegerToString(result));
