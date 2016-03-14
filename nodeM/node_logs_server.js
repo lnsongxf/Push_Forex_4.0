@@ -7,7 +7,9 @@ var BunyanSlack = require('bunyan-slack');
 
 var sockSub = zmq.socket('sub');
 sockSub.connect('tcp://localhost:50028');
-var log = bunyan.createLogger({
+
+
+var logStore = bunyan.createLogger({
 	name: '4casterLogApp',
 	streams: [
     {
@@ -15,25 +17,32 @@ var log = bunyan.createLogger({
       stream: process.stdout         // log INFO and above to stdout
     },
     {
-    	level: 'errorStore',
+    	level: 'error',
     	path: '../../NodeLogs/4casterLogApp-error.log',  // log INFO and above to a file
     	period: '1d',   // daily rotation
     	count: 5        // keep 3 back copies
     },
     {
-    	level: 'infoStore',
+    	level: 'info',
     	path: '../../NodeLogs/4casterLogApp-info.log',  // log INFO and above to a file
     	period: '1d',   // daily rotation
     	count: 5       // keep 3 back copies
     },
     {
-      level: 'fatalStore',
+      level: 'fatal',
       path: '../../NodeLogs/4casterLogApp-fatal.log',  // log INFO and above to a file
       period: '1d',   // daily rotation
       count: 5        // keep 3 back copies
-    },
-      {
-      level: 'errorMessaging',
+    }
+  ]
+});
+
+
+var logMessaging = bunyan.createLogger({
+  name: '4casterLogApp',
+  streams: [
+    {
+      level: 'error',
       stream: new BunyanSlack({
         webhook_url: "https://hooks.slack.com/services/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",
         channel: "#logs-node-beta",
@@ -44,7 +53,7 @@ var log = bunyan.createLogger({
       })
     },
     {
-      level: 'infoMessaging',
+      level: 'info',
       stream: new BunyanSlack({
         webhook_url: "https://hooks.slack.com/services/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",
         channel: "#logs-node-beta",
@@ -55,7 +64,7 @@ var log = bunyan.createLogger({
       })
     },
     {
-      level: 'fatalMessaging',
+      level: 'fatal',
       stream: new BunyanSlack({
         webhook_url: "https://hooks.slack.com/services/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",
         channel: "#logs-node-beta",
@@ -68,21 +77,20 @@ var log = bunyan.createLogger({
   ]
 });
 
-
 sockSub.subscribe('LOGS');
 sockSub.on('message', function(topic, message) {
 
 	if (topic == "LOGS@INFO") {
-		log.infoStore(message.toString());
-    log.infoMessaging(message.toString());
+		logStore.info(message.toString());
+    logMessaging.info(message.toString());
 	}else if (topic == "LOGS@FATAL") {
-		log.fatalStore(message.toString());
-    log.fatalMessaging(message.toString());
+		logStore.fatal(message.toString());
+    logMessaging.fatal(message.toString());
 	}else if( topic == "LOGS@ERROR" ){
-		log.errorStore(message.toString());
-    log.errorMessaging(message.toString());
+		logStore.error(message.toString());
+    logMessaging.error(message.toString());
 	}else if (topic == "LOGS@TRACE") {
-		log.trace(message.toString());
+		logStore.trace(message.toString());
 	};
 });
 
