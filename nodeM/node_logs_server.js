@@ -24,7 +24,7 @@ var log = bunyan.createLogger({
     	level: 'info',
     	path: '../../NodeLogs/4casterLogApp-info.log',  // log INFO and above to a file
     	period: '1d',   // daily rotation
-    	count: 5        // keep 3 back copies
+    	count: 5,        // keep 3 back copies
     	stream: new BunyanSlack({
         webhook_url: "https://hooks.slack.com/services/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",
         channel: "#logs-node-beta",
