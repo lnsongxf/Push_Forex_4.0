@@ -1,5 +1,6 @@
 classdef bkt_fast_011_oscillatore_stocastico_HighSL_aftertrend < handle
     
+    % bktfast VERSION 3 (with arrayAperture and minimumReturns)
     
     properties
         
@@ -15,6 +16,8 @@ classdef bkt_fast_011_oscillatore_stocastico_HighSL_aftertrend < handle
         ClDates;
         indexClose;
         latency;
+                arrayAperture;
+        minimumReturns;
         
     end
     
@@ -51,6 +54,9 @@ classdef bkt_fast_011_oscillatore_stocastico_HighSL_aftertrend < handle
             obj.OpDates=zeros(sizeStorico,1);
             obj.ClDates=zeros(sizeStorico,1);
             obj.r =zeros(sizeStorico,1);
+                        obj.latency= zeros(sizeStorico,1);
+            obj.arrayAperture= zeros(sizeStorico,1);
+            obj.minimumReturns = zeros(sizeStorico,1);
             
             ntrades = 0;
             obj.indexClose = 0;
@@ -105,6 +111,7 @@ classdef bkt_fast_011_oscillatore_stocastico_HighSL_aftertrend < handle
                             
                             obj.r(indice_I) =  segnoOperazione*(Pminute(j) - Pbuy) - cost;
                             obj.closingPrices(ntrades) = Pminute(j);
+                            obj.minimumReturns(ntrades)=calculate_min_return(Pbuy, Pminute(newTimeScale*i:j), segnoOperazione);
                             obj.ClDates(ntrades) = date(indice_I); %controlla
                             %obj = obj.chiudi_per_TP(Pbuy, indice_I, segnoOperazione, devFluct2, wTP, cost, ntrades, date);
                             i = indice_I;
@@ -149,8 +156,10 @@ classdef bkt_fast_011_oscillatore_stocastico_HighSL_aftertrend < handle
             obj.outputbkt(:,8) = obj.ClDates(1:obj.indexClose);                % closing date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
             obj.outputbkt(:,9) = ones(obj.indexClose,1)*1;                 % lots setted for single operation
             obj.outputbkt(:,10) = obj.latency(1:obj.indexClose);        % number of minutes the operation was open
-            obj.outputbkt(:,11) = ones(obj.indexClose,1);         % to be done     % minimum return touched during dingle operation
+                        obj.outputbkt(:,11) = obj.minimumReturns(1:obj.indexClose,1);      % minimum return touched during dingle operation
             
+            obj.latency = obj.latency(1:obj.indexClose);
+            obj.arrayAperture = obj.arrayAperture(1:obj.indexClose);
             
             
             % Plot a richiesta
