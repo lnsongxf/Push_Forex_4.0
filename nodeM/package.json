@@ -6,6 +6,8 @@
   "dependencies": {
     "node-gyp": "*",
     "node-schedule": "*",
-    "zmq": "*"
+    "zmq": "*",
+    "bunyan":"*",
+    "bunyan-slack":"*"
   }
 }
