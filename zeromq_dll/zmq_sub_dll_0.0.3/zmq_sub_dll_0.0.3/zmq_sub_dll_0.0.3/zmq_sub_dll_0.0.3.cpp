@@ -48,7 +48,7 @@ const wchar_t *conn_and_sub(wchar_t *addr, wchar_t *topic)
 	my_context = zmq_ctx_new();
 	subscriber = zmq_socket(my_context, ZMQ_SUB);
 	zmq_connect(subscriber, addr_chars);
-	zmq_setsockopt(subscriber, ZMQ_SUBSCRIBE, topic_chars, 1);
+	zmq_setsockopt(subscriber, ZMQ_SUBSCRIBE, topic_chars, topic_chars_value);
 
 	std::string s = std::to_string((long long)subscriber);
 	const char * chars = s.c_str();
