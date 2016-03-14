@@ -120,7 +120,7 @@ if newTimeScalePoint
     
     % 01c
     % -------- coreState filter -------------------- %
-    cState.core_Algo_002_leadlag(chiusure(1:end-1),params,2,20,4,7,1000);
+    cState.core_Algo_002_leadlag(chiusure(1:end-1),params,11,9,4,7,50);
     
 end
 
@@ -158,10 +158,8 @@ else
             closingTime = params.get('closeTime_');
             operationState.latency = closingTime - openingTime;
             
-            dynamicParameters {1} = 1.2;  %closingForApproaching
-            %dynamicParameters {1} = 0.1;      %closingShrinkingBands
-            %dynamicParameters {2} = 1.5;    %closingShrinkingBands
-            [params,TakeProfitPrice,StopLossPrice,dynamicOn] = dynamicalTPandSLManager(operationState, chiusure, params, @closingForApproaching, dynamicParameters);
+            dynamicParameters {1} = 0;
+            [params,TakeProfitPrice,StopLossPrice,dynamicOn] = dynamicalTPandSLManager(operationState, chiusure, params, @closingDirectTakeProfitManager, dynamicParameters);
             if dynamicOn  == 1
                 params.set('openTime__',indexHisData);
             end

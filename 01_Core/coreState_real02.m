@@ -245,7 +245,7 @@ classdef coreState_real02 < handle
         
         %%
         
-        function obj = core_Algo_002_leadlag (obj,closure,params)
+        function obj = core_Algo_002_leadlag (obj,closure,params,windowSize1,windowSize2,fluctLimit,wTP,maxSL)
             
             %NOTE:
             %LOGICA: fa 2 smoothing e quando si incrociano apre nella
@@ -255,12 +255,10 @@ classdef coreState_real02 < handle
             % non uso i dati al minuto per le valutazioni dello
             % state
             closePrice=closure;
-            
-            windowSize1 = 2;
+
             a = (1/windowSize1)*ones(1,windowSize1);
             smoothClose1 = filter(a,1,closePrice);
             
-            windowSize2 = 20;
             b = (1/windowSize2)*ones(1,windowSize2);
             smoothClose2 = filter(b,1,closePrice);
             fluctuations2=abs(closePrice-smoothClose2);
@@ -286,11 +284,12 @@ classdef coreState_real02 < handle
             
             inversion=oldSign*newSign;
             
-            if inversion <0 && devFluct2 > 4 % I don't start if fluctuations are too small
+            if inversion <0 && devFluct2 > fluctLimit % I don't start if fluctuations are too small
                 obj.state=1;
                 obj.suggestedDirection=-newSign;
-                obj.suggestedTP=7*devFluct2;
-                obj.suggestedSL=7*devFluct2;
+                volatility = min(floor(wTP*devFluct2),maxSL);
+                obj.suggestedTP = volatility;
+                obj.suggestedSL = volatility;
             else
                 obj.state=0;
             end
