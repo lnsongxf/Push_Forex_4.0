@@ -15,17 +15,26 @@ var log = bunyan.createLogger({
       stream: process.stdout         // log INFO and above to stdout
     },
     {
-    	level: 'error',
+    	level: 'errorStore',
     	path: '../../NodeLogs/4casterLogApp-error.log',  // log INFO and above to a file
     	period: '1d',   // daily rotation
     	count: 5        // keep 3 back copies
     },
     {
-    	level: 'info',
+    	level: 'infoStore',
     	path: '../../NodeLogs/4casterLogApp-info.log',  // log INFO and above to a file
     	period: '1d',   // daily rotation
-    	count: 5,        // keep 3 back copies
-    	stream: new BunyanSlack({
+    	count: 5       // keep 3 back copies
+    },
+    {
+      level: 'fatalStore',
+      path: '../../NodeLogs/4casterLogApp-fatal.log',  // log INFO and above to a file
+      period: '1d',   // daily rotation
+      count: 5        // keep 3 back copies
+    },
+      {
+      level: 'errorMessaging',
+      stream: new BunyanSlack({
         webhook_url: "https://hooks.slack.com/services/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",
         channel: "#logs-node-beta",
         username: "admin",
@@ -35,10 +44,26 @@ var log = bunyan.createLogger({
       })
     },
     {
-      level: 'fatal',
-      path: '../../NodeLogs/4casterLogApp-fatal.log',  // log INFO and above to a file
-      period: '1d',   // daily rotation
-      count: 5        // keep 3 back copies
+      level: 'infoMessaging',
+      stream: new BunyanSlack({
+        webhook_url: "https://hooks.slack.com/services/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",
+        channel: "#logs-node-beta",
+        username: "admin",
+        customFormatter: function(record, levelName){
+            return {text: "[" + levelName + "] " + record.msg }
+        }
+      })
+    },
+    {
+      level: 'fatalMessaging',
+      stream: new BunyanSlack({
+        webhook_url: "https://hooks.slack.com/services/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",
+        channel: "#logs-node-beta",
+        username: "admin",
+        customFormatter: function(record, levelName){
+            return {text: "[" + levelName + "] " + record.msg }
+        }
+      })
     }
   ]
 });
@@ -48,11 +73,14 @@ sockSub.subscribe('LOGS');
 sockSub.on('message', function(topic, message) {
 
 	if (topic == "LOGS@INFO") {
-		log.info(message.toString());
+		log.infoStore(message.toString());
+    log.infoMessaging(message.toString());
 	}else if (topic == "LOGS@FATAL") {
-		log.fatal(message.toString());
+		log.fatalStore(message.toString());
+    log.fatalMessaging(message.toString());
 	}else if( topic == "LOGS@ERROR" ){
-		log.error(message.toString());
+		log.errorStore(message.toString());
+    log.errorMessaging(message.toString());
 	}else if (topic == "LOGS@TRACE") {
 		log.trace(message.toString());
 	};

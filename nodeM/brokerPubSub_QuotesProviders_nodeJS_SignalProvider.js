@@ -78,7 +78,7 @@ var QuotesModule = (function(){
 			  		if (runningProviderRealTimeObjs[key0].hasOwnProperty(key)) {
 			  			if (key == messageArr[0]) {
 			  				runningProviderRealTimeObjs[key0][key] = messageArr[1];
-			  				logger.info("Updated realTimeQuotesObj with the last value: "+runningProviderRealTimeObjs[key0][key] +" ,key0: "+key0+ " ,key: "+key);
+			  				logger.trace("Updated realTimeQuotesObj with the last value: "+runningProviderRealTimeObjs[key0][key] +" ,key0: "+key0+ " ,key: "+key);
 			  				return true;
 			  			};	
 			  		}
@@ -147,7 +147,11 @@ var QuotesModule = (function(){
 												logger.error('objWithMessageToSend: '+ JSON.stringify(tempObj) + ' _updateTimeFrameQuotesObj is sending a message (Quotes) notDefined/null');
 											}else{
 			  									sockPub.send([topicToSignalProvider, tempObj[Object.keys(tempObj)[0]].join(";")]);
-												logger.info('Sent new timeFrame value message: '+tempObj[Object.keys(tempObj)[0]].join(";")+ 'for TimeFrame: '+timeFrame+ 'for Cross: '+key1+' on topic: '+topicToSignalProvider);
+			  									if (timeFrame == 'm5' && Object.keys(tempObj)[0].split("v")[1] == '1') {
+													logger.info('Sent new timeFrame value message (ex: logs only for m5 and v1): '+tempObj[Object.keys(tempObj)[0]].join(";")+ 'for TimeFrame: '+timeFrame+ 'for Cross: '+key1+' on topic: '+topicToSignalProvider);
+			  									}else if (timeFrame == 'm30' && Object.keys(tempObj)[0].split("v")[1] == '5') {
+													logger.info('Sent new timeFrame value message (ex: logs only for m30 and v5): '+tempObj[Object.keys(tempObj)[0]].join(";")+ 'for TimeFrame: '+timeFrame+ 'for Cross: '+key1+' on topic: '+topicToSignalProvider);
+			  									}
 			  								}
 			  							}else{
 			  								//if (topicToSignalProvider == null || topicToSignalProvider == undefined ) {
@@ -158,7 +162,7 @@ var QuotesModule = (function(){
 		  								if (realTimeQuotesObj[key0] != "" && realTimeQuotesObj[key0] != tempObj[Object.keys(tempObj)[0]].last()) {
 			  								tempObj[Object.keys(tempObj)[0]].shift();
 			  								tempObj[Object.keys(tempObj)[0]].push(realTimeQuotesObj[key0]);
-			  								//logger.trace('Updated timeFrameQuotesObj(operation:shifting) : ' + tempObj[Object.keys(tempObj)[0]].toString() + 'for TimeFrame: '+timeFrame+ ' for number of values: '+Object.keys(tempObj)[0]+' for Cross: '+key1 );
+			  								logger.trace('Updated timeFrameQuotesObj(operation:shifting) : ' + tempObj[Object.keys(tempObj)[0]].toString() + 'for TimeFrame: '+timeFrame+ ' for number of values: '+Object.keys(tempObj)[0]+' for Cross: '+key1 );
 			  								//"TIMEFRAMEQUOTE@MT4@ACTIVTRADES   +     @EURUSD     +     @m1     +    @v10 
 			  								var topicToSignalProvider = timeFrameQuotesObj.provider+"@"+key1+"@"+timeFrame+"@"+Object.keys(tempObj)[0];
 			  								if (topicToSignalProvider == null || topicToSignalProvider == undefined ) {
@@ -167,7 +171,11 @@ var QuotesModule = (function(){
 												logger.error('objWithMessageToSend: ' + JSON.stringify(tempObj) + ' _updateTimeFrameQuotesObj is sending a message (Quotes) notDefined/null');
 											}else{
 			  									sockPub.send([topicToSignalProvider, tempObj[Object.keys(tempObj)[0]].join(";")]);
-			  									logger.info('Sent new timeFrame value message: '+tempObj[Object.keys(tempObj)[0]].join(";")+ 'for TimeFrame: '+timeFrame+ 'for Cross: '+key1+' on topic: '+topicToSignalProvider);
+			  									if (timeFrame == 'm5' && Object.keys(tempObj)[0].split("v")[1] == '1') {
+			  										logger.info('Sent new timeFrame value message (logs only for m5 and v1): '+tempObj[Object.keys(tempObj)[0]].join(";")+ 'for TimeFrame: '+timeFrame+ 'for Cross: '+key1+' on topic: '+topicToSignalProvider);
+			  									}else if (timeFrame == 'm30' && Object.keys(tempObj)[0].split("v")[1] == '5') {
+													logger.info('Sent new timeFrame value message (ex: logs only for m30 and v5): '+tempObj[Object.keys(tempObj)[0]].join(";")+ 'for TimeFrame: '+timeFrame+ 'for Cross: '+key1+' on topic: '+topicToSignalProvider);
+			  									}
 			  								}
 			  							}else{
 			  								//if (topicToSignalProvider == null || topicToSignalProvider == undefined ) {
