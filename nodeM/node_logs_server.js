@@ -48,13 +48,13 @@ sockSub.subscribe('LOGS');
 sockSub.on('message', function(topic, message) {
 
 	if (topic == "LOGS@INFO") {
-		log.info(message);
+		log.info(message.toString());
 	}else if (topic == "LOGS@FATAL") {
-		log.fatal(message);
+		log.fatal(message.toString());
 	}else if( topic == "LOGS@ERROR" ){
-		log.error(message);
+		log.error(message.toString());
 	}else if (topic == "LOGS@TRACE") {
-		log.trace(message);
+		log.trace(message.toString());
 	};
 });
 
