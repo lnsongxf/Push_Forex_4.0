@@ -383,7 +383,7 @@ sockSubFromQuotesProvider.subscribe('DELETETOPICQUOTES');
 sockSubFromQuotesProvider.on('message', function(topic, message) {
 	//console.log("mess: ",message.toString());
 	//console.log("topic: ",topic.toString());
-	logger.info('Received message from Quotes Provider: '+message+ 'on topic: '+topic);
+	logger.trace('Received message from Quotes Provider: '+message+ 'on topic: '+topic);
 	var topicArr = topic.toString().split("@");
   	var messageArr = message.toString().split("@");
 
