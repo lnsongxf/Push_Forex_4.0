@@ -1,6 +1,10 @@
-﻿Build started 1/15/2016 3:09:33 PM.
-Project "C:\Users\IEUser\Push_Forex_4.0\zeromq_dll\zmq_sub_dll_0.0.3\zmq_sub_dll_0.0.3\zmq_sub_dll_0.0.3\zmq_sub_dll_0.0.3.vcxproj" on node 2 (Build target(s)).
+﻿Build started 3/15/2016 7:47:07 PM.
+Project "C:\Users\IEUser\Push_Forex_4.0\zeromq_dll\zmq_sub_dll_0.0.3\zmq_sub_dll_0.0.3\zmq_sub_dll_0.0.3\zmq_sub_dll_0.0.3.vcxproj" on node 2 (Rebuild target(s)).
 ClCompile:
+  C:\Program Files\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D ZMQ_STATIC /D WIN32 /D NDEBUG /D _WINDOWS /D _USRDLL /D ZMQ_SUB_DLL_003_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /Gm- /EHsc /MT /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Yc"stdafx.h" /Fp"Release\zmq_sub_dll_0.0.3.pch" /Fo"Release\\" /Fd"Release\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt stdafx.cpp
+  stdafx.cpp
+  C:\Program Files\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D ZMQ_STATIC /D WIN32 /D NDEBUG /D _WINDOWS /D _USRDLL /D ZMQ_SUB_DLL_003_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /Gm- /EHsc /MT /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Release\\" /Fd"Release\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt dllmain.cpp
+  dllmain.cpp
   C:\Program Files\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D ZMQ_STATIC /D WIN32 /D NDEBUG /D _WINDOWS /D _USRDLL /D ZMQ_SUB_DLL_003_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /Gm- /EHsc /MT /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Yu"stdafx.h" /Fp"Release\zmq_sub_dll_0.0.3.pch" /Fo"Release\\" /Fd"Release\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt zmq_sub_dll_0.0.3.cpp
   zmq_sub_dll_0.0.3.cpp
 Link:
@@ -12,12 +16,10 @@ zmq_sub_dll_0.0.3.exp : warning LNK4070: /OUT:zmq_sub.dll directive in .EXP diff
   Generating code
   Finished generating code
 zmq_sub_dll_0.0.3.exp : warning LNK4070: /OUT:zmq_sub.dll directive in .EXP differs from output filename 'C:\Users\IEUser\Push_Forex_4.0\zeromq_dll\zmq_sub_dll_0.0.3\zmq_sub_dll_0.0.3\Release\zmq_sub_dll_0.0.3.dll'; ignoring directive
-  0 of 92 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    0 functions had inline decision re-evaluated but remain unchanged
+  All 92 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
   zmq_sub_dll_0.0.3.vcxproj -> C:\Users\IEUser\Push_Forex_4.0\zeromq_dll\zmq_sub_dll_0.0.3\zmq_sub_dll_0.0.3\Release\zmq_sub_dll_0.0.3.dll
-Done Building Project "C:\Users\IEUser\Push_Forex_4.0\zeromq_dll\zmq_sub_dll_0.0.3\zmq_sub_dll_0.0.3\zmq_sub_dll_0.0.3\zmq_sub_dll_0.0.3.vcxproj" (Build target(s)).
+Done Building Project "C:\Users\IEUser\Push_Forex_4.0\zeromq_dll\zmq_sub_dll_0.0.3\zmq_sub_dll_0.0.3\zmq_sub_dll_0.0.3\zmq_sub_dll_0.0.3.vcxproj" (Rebuild target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:03.34
+Time Elapsed 00:00:02.82
