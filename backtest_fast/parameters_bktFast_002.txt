@@ -22,11 +22,11 @@
 
             
 nameAlgo = 'bkt_fast_002_4_leadlag_dynamicalTPandSL_maxvolatility' 
-N =  12 % 2:30 % 12
-M =  9 % 1:20 % 4
+N =  29 % 2:30 % 12
+M =   6 % 1:20 % 4
 N_greater_than_M = 1               
 Cross = 'EURUSD'            
-histName =   'AUDCAD.csv'   % 'EURUSD-04-2014-02-2016.csv' 'EURGBP.csv' % 
+histName =  'EURGBP.csv' % 'AUDCAD.csv'   % 'EURUSD-04-2014-02-2016.csv'  
 actTimeScale = 1             		
 newTimeScale = 30             		
 transCost = 1
@@ -35,3 +35,4 @@ pips_SL = 100
 stdev_TP = 7
 stdev_SL = 7        		
 WhatToPlot = 2
+reverse_optimization = 1
