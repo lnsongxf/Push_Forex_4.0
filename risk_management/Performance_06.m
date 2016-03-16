@@ -450,12 +450,19 @@ classdef Performance_06 < handle
                 title('frequency histogram of latency, lost operations only')
                 
                 linkaxes(subl,'y');
-                
-                % frequency histogram of minimum returns
-                [n,xout]=hist(minReturns,10);
-                figure
-                bar(xout,n/sum(n));
-                title('frequency histogram of min returns')
+
+%                 % frequency histogram of latency, ratio between won and lost operations
+%                 [latplus,~]=hist( Latency( find(returns>0) ), xlatn );
+%                 [latlost,~]=hist( Latency( find(returns<0) ), xlatn );
+%                 figure
+%                 bar( xlatn , (latplus./latlost) );
+%                 title('frequency histogram of latency, ratio won/lost operations')
+%                 
+%                 % frequency histogram of minimum returns
+%                 [n,xout]=hist(minReturns,10);
+%                 figure
+%                 bar(xout,n/sum(n));
+%                 title('frequency histogram of min returns')
                 
                 % frequency histogram of minimum returns, won operations
                 [nplus,xoutplus]=hist( minReturns(find(returns>0)) );
