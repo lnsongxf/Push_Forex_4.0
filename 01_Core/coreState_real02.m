@@ -445,7 +445,7 @@ classdef coreState_real02 < handle
         
         function obj = core_Algo_011_stocOsc(obj, low, high, closure, params,Kperiods, Dperiods)
             
-            stosc = stochosc(high, low, closure,Kperiods,Dperiods); % 11,1 for AUDCAD, 1,1 for EURUSD
+            stosc = stochosc(high, low, closure,Kperiods,Dperiods); % 3,1 for AUDCAD
             FpK = stosc(:,1);
             
             obj.state=0;

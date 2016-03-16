@@ -130,7 +130,7 @@ if newTimeScalePoint
     
     % 01c
     % -------- coreState filter -------------------- %
-    cState.core_Algo_011_stocOsc( lows(1:end-1), highs(1:end-1), chiusure(1:end-1), params ,11,1);
+    cState.core_Algo_011_stocOsc( lows(1:end-1), highs(1:end-1), chiusure(1:end-1), params ,3,1);
     
 end
 state=cState.state;
@@ -170,7 +170,7 @@ else
             
             dynamicParameters {1} = 0;
             dynamicParameters {2} = 1;
-            dynamicParameters {3} = 111; % 111 for AUDCAD, 91 for EURUSD
+            dynamicParameters {3} = 81; % 81 for AUDCAD
             [params,TakeProfitPrice,StopLossPrice,dynamicOn] = dynamicalTPandSLManager(operationState, chiusure, params, @closingHighSL, dynamicParameters);
             if dynamicOn  == 1
                 params.set('openTime__',indexHisData);
