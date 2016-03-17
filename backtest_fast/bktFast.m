@@ -132,10 +132,10 @@ classdef bktFast < handle
                     % if there are enough operations then save the stats
                     if bktfast.indexClose>20
                         
-                        p = Performance_05;
+                        p = Performance_06;
                         performance = p.calcSinglePerformance(nameAlgo,'bktWeb',histName,Cross,newTimeScale,transCost,10000,10,bktfast.outputbkt,0);
                         
-                        obj.R_over_maxDD(n,m) = performance.pipsEarned / abs(performance.maxDD);
+                        obj.R_over_maxDD(n,m) = performance.pipsEarned / abs(performance.maxDD_pips);
                         
                     end
                     
@@ -160,7 +160,7 @@ classdef bktFast < handle
                     temp_paperTrad = temp_paperTrad.spin(hisDataPaperTrad(:,4), newHisDataPaperTrad, actTimeScale, newTimeScale, n, ind_best, transCost, pips_TP, pips_SL, stdev_TP, stdev_SL, 0);
                     performance_temp = p.calcSinglePerformance(nameAlgo,'bktWeb',histName,Cross,newTimeScale,transCost,10000,10,temp_paperTrad.outputbkt,0);
                     
-                    risultato_temp = performance_temp.pipsEarned / abs(performance_temp.maxDD) ;
+                    risultato_temp = performance_temp.pipsEarned / abs(performance_temp.maxDD_pips) ;
                     display(['Papertrad: R/maxDD =', num2str(risultato_temp)]);
                     display(['num operations =', num2str(temp_paperTrad.indexClose) ,', pips earned =', num2str(performance_temp.pipsEarned) ]);
                     
@@ -205,10 +205,10 @@ classdef bktFast < handle
             obj.bktfastTraining = feval(algo);
             obj.bktfastTraining = obj.bktfastTraining.spin(hisDataTraining(:,4), newHisDataTraining, actTimeScale, newTimeScale, bestN, bestM, transCost, pips_TP, pips_SL, stdev_TP, stdev_SL, 0);
             
-            p = Performance_05;
+            p = Performance_06;
             obj.performanceTraining = p.calcSinglePerformance(nameAlgo,'bktWeb',histName,Cross,newTimeScale,transCost,10000,10,obj.bktfastTraining.outputbkt,0);
             
-            risultato = obj.performanceTraining.pipsEarned / abs(obj.performanceTraining.maxDD);
+            risultato = obj.performanceTraining.pipsEarned / abs(obj.performanceTraining.maxDD_pips);
             
             if WhatToPlot > 0
                 
@@ -225,7 +225,7 @@ classdef bktFast < handle
             obj.bktfastPaperTrading = obj.bktfastPaperTrading.spin(hisDataPaperTrad(:,4), newHisDataPaperTrad, actTimeScale, newTimeScale, bestN, bestM, transCost, pips_TP, pips_SL, stdev_TP, stdev_SL, 0);
             
             obj.performancePaperTrad = p.calcSinglePerformance(nameAlgo,'bktWeb',histName,Cross,newTimeScale,transCost,10000,10,obj.bktfastPaperTrading.outputbkt,0);
-            risultato = obj.performancePaperTrad.pipsEarned / abs(obj.performancePaperTrad.maxDD);
+            risultato = obj.performancePaperTrad.pipsEarned / abs(obj.performancePaperTrad.maxDD_pips);
             
             if WhatToPlot > 0
                 
@@ -287,9 +287,9 @@ classdef bktFast < handle
             obj.bktfastTry = feval(algo);
             obj.bktfastTry = obj.bktfastTry.spin(hisData(:,4), newHisData, actTimeScale, newTimeScale, N, M, transCost, pips_TP, pips_SL, stdev_TP, stdev_SL, 0);
             
-            p = Performance_05;
+            p = Performance_06;
             obj.performanceTry = p.calcSinglePerformance(nameAlgo,'bktWeb',histName,Cross,newTimeScale,transCost,10000,10,obj.bktfastTry.outputbkt,1);
-            risultato = obj.performanceTry.pipsEarned / abs(obj.performanceTry.maxDD);
+            risultato = obj.performanceTry.pipsEarned / abs(obj.performanceTry.maxDD_pips);
             
             if WhatToPlot > 0
                 

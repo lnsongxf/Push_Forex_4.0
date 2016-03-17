@@ -74,7 +74,7 @@ classdef bkt_fast_016_double_repo < handle
             trigger1 = 0; % first penetration
             trigger2 = 0; % exit penetration
             
-            while i <= sizeStorico
+            while i < sizeStorico
                 
                 if ( trigger1~=0 && (i-trigger1)>15 ) % if too long has passed after the first penetration, reset
                     trigger1 = 0;
