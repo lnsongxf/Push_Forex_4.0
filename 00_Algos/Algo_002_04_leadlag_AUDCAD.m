@@ -1,4 +1,4 @@
-function [oper, openValue, closeValue, stopLoss, noLoose, minReturn] = Algo_002_leadlag(matrix,newTimeScalePoint,newTimeScalePointEnd,openValueReal,timeSeriesProperties,indexHisData)
+function [oper, openValue, closeValue, stopLoss, noLoose, minReturn] = Algo_002_04_leadlag_AUDCAD(matrix,newTimeScalePoint,newTimeScalePointEnd,openValueReal,timeSeriesProperties,indexHisData)
 
 
 %
@@ -73,14 +73,14 @@ if(isempty(countCycle) || countCycle == 0)
     countCycle = 1;
     operationState = OperationState;
     params = Parameters;
-    map('Algo_002_Ale') = RealAlgo(operationState,params);
+    map('Algo_002_04') = RealAlgo(operationState,params);
     oper = 0;
     return;
 end
 
 
-ra = map('Algo_002_Ale');
-remove(map,'Algo_002_Ale');
+ra = map('Algo_002_04');
+remove(map,'Algo_002_04');
 
 params = ra.p;
 operationState = ra.os;
@@ -205,7 +205,7 @@ end
 oper = operationState.actualOperation;
 
 real_Algo = RealAlgo(operationState,params);
-map('Algo_002_Ale')     = real_Algo;
+map('Algo_002_04')     = real_Algo;
 
 openValue = params.get('openValue_');
 closeValue= params.get('closeValue');

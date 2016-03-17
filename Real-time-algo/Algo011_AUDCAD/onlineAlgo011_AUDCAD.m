@@ -105,7 +105,7 @@ end
 
 listener1 = strcmp(topicSub,'TIMEFRAMEQUOTE@MT4@ACTIVTRADES@AUDCAD@m30@v100');
 listener2 = strcmp(topicSub,'TIMEFRAMEQUOTE@MT4@ACTIVTRADES@AUDCAD@m1@v1');
-listener3 = strcmp(topicSub,'STATUS@AUDCAD@1111');
+listener3 = strcmp(topicSub,'STATUS@AUDCAD@1011');
 
 if listener1 && ( strcmp(ms.machineStatus,'closed') || strcmp(ms.machineStatus,'open') ) %new 30minutes data array
     
