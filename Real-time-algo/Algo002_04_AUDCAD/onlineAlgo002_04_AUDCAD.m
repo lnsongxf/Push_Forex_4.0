@@ -302,7 +302,7 @@ if ( ( strcmp(ms.machineStatus,'closed') || strcmp(ms.machineStatus,'open') ) &&
     newTimeScalePoint = 0;
     updatedOperation  = newState{1};
     lastCloseValue = newState{3};
-    
+
 end
 
 if abs(updatedOperation) > 0 && startingOperation == 0
