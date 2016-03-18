@@ -62,7 +62,7 @@ topicPub = '';
 messagePub = '';
 nData=100;
 closingTimeScale = 1;
-openingTimeScale = 2;
+openingTimeScale = 1;
 nameAlgo='AlgoTest';
 server_exe = 0; % set to 1 when the Algo is running on the server as an .exe
 
