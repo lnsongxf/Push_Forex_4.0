@@ -236,8 +236,8 @@ classdef coreState_real02 < handle
             if (c0>0) && (candelotto1 == candelotto2) 
                 obj.state=1;
                 obj.suggestedDirection=candelotto1;
-                obj.suggestedTP = 5;
-                obj.suggestedSL = 5;
+                obj.suggestedTP = 4;
+                obj.suggestedSL = 4;
             else
                 obj.state=0;
             end
