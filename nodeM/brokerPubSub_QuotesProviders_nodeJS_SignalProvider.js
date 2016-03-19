@@ -123,7 +123,7 @@ var QuotesModule = (function(){
 
 		//ex: single quote == 11313,11315,11313,11316,30,03/18/2016 01:24  -->   apertura,massimo,minimo,chiusura,volume,time
 		
-		var tmpTimeFrameQuoteObjM1V1 = runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty][key0][0]['m1'][2]['v1'];
+		var tmpTimeFrameQuoteObjM1V1 = runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty][key0][0]['m1'][0]['v1'];
 
 		var totVolume = 0;
 		var maxVal = 0;
@@ -203,7 +203,7 @@ var QuotesModule = (function(){
 			//ex: runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty][key0][index][prevTimeFrame] == [{"v1":[]},{"v5":[]},{"v10":[]},{"v20":[]},{"v40":[]},{"v100":[]}];
 			//ex: single quote == 11313,11315,11313,11316,30,03/18/2016 01:24  -->   apertura,massimo,minimo,chiusura,volume,time
 
-			var tmpArrTimeFrameQuotesV1 = runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty][key0][index][timeFrame][2]['v1']; //thats the timeframe array to update with the new value. We will use this array to get the last close value 
+			var tmpArrTimeFrameQuotesV1 = runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty][key0][index][timeFrame][0]['v1']; //thats the timeframe array to update with the new value. We will use this array to get the last close value 
 			var tmpArrPreviousTimeFrameQuotesV10 = runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty][key0][index][prevTimeFrame][2]['v10']; //we are going to get the previous timeframe array(es: if timeframe is m5 we get m1)
 
 			var arrMaxValues = [];
