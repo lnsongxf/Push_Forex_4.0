@@ -418,8 +418,8 @@ var QuotesModule = (function(){
     	createRealTimeQuotesObj:  function(quotes_list,providerName){ 
       		return _createRealTimeQuotesObj(quotes_list,providerName);  
     	},
-    	updateTimeFrameQuotesObj: function(timeFrame,timeFrameQuotesObj,realTimeQuotesObj){
-    		return _updateTimeFrameQuotesObj(timeFrame,timeFrameQuotesObj,realTimeQuotesObj);
+    	updateTimeFrameQuotesObj: function(timeFrame,timeFrameQuotesObj,realTimeQuotesObj,tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty){
+    		return _updateTimeFrameQuotesObj(timeFrame,timeFrameQuotesObj,realTimeQuotesObj,tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty);
     	},
     	updateRealTimeQuotesObj: function(searchObjRealTimeQuote,messageArr){
     		return _updateRealTimeQuotesObj(searchObjRealTimeQuote,messageArr);
