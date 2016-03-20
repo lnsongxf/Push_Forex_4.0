@@ -131,6 +131,7 @@ var QuotesModule = (function(){
 		var open = "";
 		var close = runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][key0].last().split(',')[3];  //we will use the current close value in the current realtime quote, 
 
+		var currentdate = new Date(); 
 		var datetime = currentdate.getDate()+"/"+(currentdate.getMonth()+1)+"/"+currentdate.getFullYear()+" "+currentdate.getHours()+ ":"+currentdate.getMinutes(); 
 		var fullDate = currentdate.getDate()+"/"+(currentdate.getMonth()+1)+"/"+currentdate.getFullYear()+" "+currentdate.getHours()+ ":"+currentdate.getMinutes()+":"+currentdate.getSeconds();
 
