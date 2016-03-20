@@ -130,9 +130,13 @@ var QuotesModule = (function(){
 		var minVal = 0;
 		var open = "";
 		var close = runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][key0].last().split(',')[3];  //we will use the current close value in the current realtime quote, 
-		var time = runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][key0].last().split(',')[5];
 
-		if (timeframe == 'm1') {
+		var datetime = currentdate.getDate()+"/"+(currentdate.getMonth()+1)+"/"+currentdate.getFullYear()+" "+currentdate.getHours()+ ":"+currentdate.getMinutes(); 
+		var fullDate = currentdate.getDate()+"/"+(currentdate.getMonth()+1)+"/"+currentdate.getFullYear()+" "+currentdate.getHours()+ ":"+currentdate.getMinutes()+":"+currentdate.getSeconds();
+
+		var time = datetime;
+
+		if (timeFrame == 'm1') {
 
 			var arrMaxValues = [];
 			var arrMinValues = [];
@@ -146,7 +150,7 @@ var QuotesModule = (function(){
 				for(var i = 0; i <= runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][key0].length-1; i++){
 					var tmpArrSingleQuote = runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][key0][i].split(',');
 					//ex: tmpArrSingleQuote (single quote) == 11313,11315,11313,11316,30,03/18/2016 01:24  -->   apertura,massimo,minimo,chiusura,volume,time
-					totVolume = totVolume + tmpArrSingleQuote[4];
+					totVolume = totVolume + parseInt(tmpArrSingleQuote[4]);
 					arrMaxValues.push(tmpArrSingleQuote[1]);
 					arrMinValues.push(tmpArrSingleQuote[2]);
 				}
@@ -203,7 +207,7 @@ var QuotesModule = (function(){
 			//ex: runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty][key0][index][prevTimeFrame] == [{"v1":[]},{"v5":[]},{"v10":[]},{"v20":[]},{"v40":[]},{"v100":[]}];
 			//ex: single quote == 11313,11315,11313,11316,30,03/18/2016 01:24  -->   apertura,massimo,minimo,chiusura,volume,time
 
-			var tmpArrTimeFrameQuotesV1 = runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty][key0][index][timeFrame][0]['v1']; //thats the timeframe array to update with the new value. We will use this array to get the last close value 
+			var tmpArrTimeFrameQuotesV1 = runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty][key0][index+1][timeFrame][0]['v1']; //thats the timeframe array to update with the new value. We will use this array to get the last close value 
 			var tmpArrPreviousTimeFrameQuotesV10 = runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty][key0][index][prevTimeFrame][2]['v10']; //we are going to get the previous timeframe array(es: if timeframe is m5 we get m1)
 
 			var arrMaxValues = [];
@@ -216,9 +220,9 @@ var QuotesModule = (function(){
 			if( tmpArrPreviousTimeFrameQuotesV10.length > 0 ){
 				for(var i = 0; i <= numValues-1; i++){  //We iterate on each value of the previuos timeframe array (es: id m5, previous array is m1. In this case we iterate on the previous 5 values)
 					var tmpArrSingleQuote = tmpArrPreviousTimeFrameQuotesV10[i].split(',');;
-					totVolume = totVolume + tmpArrSingleQuote[4];
-					arrMaxValues.push(tmpArrSingleQuote[2]);
-					arrMinValues.push(tmpArrSingleQuote[3]);
+					totVolume = totVolume + parseInt(tmpArrSingleQuote[4]);
+					arrMaxValues.push(tmpArrSingleQuote[1]);
+					arrMinValues.push(tmpArrSingleQuote[2]);
 				}
 				maxVal = arrMaxValues.max();
 				minVal = arrMinValues.min();
