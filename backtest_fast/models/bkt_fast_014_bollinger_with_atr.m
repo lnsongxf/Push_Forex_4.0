@@ -1,5 +1,7 @@
 classdef bkt_fast_014_bollinger_with_atr < handle
     
+    % bktfast VERSION 3 (with arrayAperture and minimumReturns)
+    
     
     properties
         
@@ -15,13 +17,15 @@ classdef bkt_fast_014_bollinger_with_atr < handle
         ClDates;
         indexClose;
         latency;
+        arrayAperture;
+        minimumReturns;
         
     end
     
     
     methods
         
-        function obj = spin(obj, ~, matrixNewHisData, ~, ~, N, nstd, cost, ~, ~, ~, ~, plottami)
+        function obj = spin(obj, ~, matrixNewHisData, ~, newTimeScale, N, nstd, cost, ~, ~, ~, ~, plottami)
             
             % Pminute = prezzo al minuto
             % P = prezzo alla new time scale
@@ -39,20 +43,24 @@ classdef bkt_fast_014_bollinger_with_atr < handle
             P = matrixNewHisData(:,4);
             date = matrixNewHisData(:,6);
             
-            %pandl = zeros(size(P));
-            obj.trades = zeros(size(P));
-            obj.chei=zeros(size(P));
-            obj.openingPrices=zeros(size(P));
-            obj.closingPrices=zeros(size(P));
-            obj.direction=zeros(size(P));
-            obj.OpDates=zeros(size(P));
-            obj.ClDates=zeros(size(P));
-            obj.r =zeros(size(P));
-            obj.latency(size(P));
-            obj.indexClose = 0;
+            sizeStorico = size(matrixNewHisData,1);
+            
+            pandl = zeros(sizeStorico,1);
+            obj.trades = zeros(sizeStorico,1);
+            obj.chei=zeros(sizeStorico,1);
+            obj.openingPrices=zeros(sizeStorico,1);
+            obj.closingPrices=zeros(sizeStorico,1);
+            obj.direction=zeros(sizeStorico,1);
+            obj.OpDates=zeros(sizeStorico,1);
+            obj.ClDates=zeros(sizeStorico,1);
+            obj.r =zeros(sizeStorico,1);
+            obj.latency= zeros(sizeStorico,1);
+            obj.arrayAperture= zeros(sizeStorico,1);
+            obj.minimumReturns = zeros(sizeStorico,1);
             
             ntrades = 0;
-            s = zeros(size(P));
+            obj.indexClose = 0;
+            s = zeros(sizeStorico,1);
             
             % mid (prezzo smooth), upper band, lower band
             [mid, uppr, lowr] = bollinger(P, N, 2, nstd);
@@ -76,6 +84,7 @@ classdef bkt_fast_014_bollinger_with_atr < handle
                     
                     segnoOperazione = s(i);
                     ntrades = ntrades + 1;
+                    obj.arrayAperture(ntrades)=i;
                     [obj, Pbuy, ~] = obj.apri(i, P, 0, 0, ntrades, segnoOperazione, date);
                     
                     TakeP = min(floor(atr(i)),10);
@@ -111,10 +120,11 @@ classdef bkt_fast_014_bollinger_with_atr < handle
                             
                             obj.r(j) = (P(j) - Pbuy)*segnoOperazione - cost;
                             obj.closingPrices(ntrades) = P(j);
+                            obj.minimumReturns(ntrades)=calculate_min_return(Pbuy, P(obj.indexOpen:j), segnoOperazione);
                             obj.ClDates(ntrades) = date(j); %controlla
                             obj.chei(ntrades)=j;
                             obj.indexClose = obj.indexClose + 1;
-                            obj.latency(ntrades)=j - obj.indexOpen;
+                            obj.latency(ntrades)= newTimeScale*(j-obj.indexOpen); % uso solo le mezz ore
 %                             display( '---------------------' );
                             break
                             
@@ -148,9 +158,11 @@ classdef bkt_fast_014_bollinger_with_atr < handle
             obj.outputbkt(:,8) = obj.ClDates(1:obj.indexClose);                % closing date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
             obj.outputbkt(:,9) = ones(obj.indexClose,1)*1;                 % lots setted for single operation
             obj.outputbkt(:,10) = obj.latency(1:obj.indexClose);        % number of minutes the operation was open
-            obj.outputbkt(:,11) = ones(obj.indexClose,1);         % to be done     % minimum return touched during dingle operation
+            obj.outputbkt(:,11) = obj.minimumReturns(1:obj.indexClose,1);      % minimum return touched during dingle operation
             
-            
+            obj.latency = obj.latency(1:obj.indexClose);
+            obj.arrayAperture = obj.arrayAperture(1:obj.indexClose);
+             
             
             % Plot a richiesta
             if plottami
