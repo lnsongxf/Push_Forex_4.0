@@ -302,6 +302,10 @@ if ( ( strcmp(ms.machineStatus,'closed') || strcmp(ms.machineStatus,'open') ) &&
     newTimeScalePoint = 0;
     updatedOperation  = newState{1};
     lastCloseValue = newState{3};
+    
+    if abs(oper) == 1
+        LogObj.trace( 'MATLAB info', num2str(cell2mat(strcat(  'TP =',{' '},num2str(takeProfit),{' '},'-',{' '},'SL =',{' '},num2str(stopLoss)  ))) ) ;
+    end
 
 end
 
