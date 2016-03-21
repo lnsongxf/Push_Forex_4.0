@@ -95,19 +95,22 @@ classdef bkt_fast_017_1_alligator < handle
                 % se c'e' trend, controlla se vedi una doji o un engulfing
                 if ( abs( s_trend(i) ) )
                     
+                    % vedi se la candela sucessiva alla doji e' dello stesso segno del trend
                     if ( s_doji(i) )
                         
-%                         go = 1;
-%                         segnoOperazione = s_trend(i);
-%                         i = i+1; % in questo caso apri alla chiusura sucessiva
-                        
+                        i = i+1;
+                        if ( candle_sign(i) == s_trend(i) )
+                            go = 1;
+                            segnoOperazione = s_trend(i);
+                        end
+                         
                     % possible engulfing
                     elseif ( s_trend(i) == candle_inversion(i) )
                         
                         % bullish engulfing: inversione da prezzo calante a crescente,
                         % aperture(i) sotto le chiusure della candela precedente 
                         % e chiusure(i) sopra le aperture della candela precendente
-                        if ( candle_inversion(i) == 1 && ( P(i-1) - aperture(i) ) > 0 && ( P(i) - aperture(i-1) ) > 0 )
+                        if ( candle_inversion(i) == 1 && ( P(i-1) - aperture(i) ) >= 0 && ( P(i) - aperture(i-1) ) >0 ) %> 2 && abs(P(i-1)-aperture(i-1))<2 )
                             
                             go = 1;
                             segnoOperazione = candle_inversion(i);
@@ -115,7 +118,7 @@ classdef bkt_fast_017_1_alligator < handle
                         % bearish engulfing: inversione da prezzo da crescente a calante,
                         % aperture(i) sopra le chiusure della candela precedente 
                         % e chiusure(i) sotto le aperture della candela precendente
-                        elseif ( candle_inversion(i) == -1 && ( P(i-1) - aperture(i) ) < 0 && ( P(i) - aperture(i-1) ) < 0 )
+                        elseif ( candle_inversion(i) == -1 && ( P(i-1) - aperture(i) ) <= 0 && ( P(i) - aperture(i-1) ) <0 ) %< 2 && abs(P(i-1)-aperture(i-1))<2 )
                             
                             go = 1;
                             segnoOperazione = candle_inversion(i);
