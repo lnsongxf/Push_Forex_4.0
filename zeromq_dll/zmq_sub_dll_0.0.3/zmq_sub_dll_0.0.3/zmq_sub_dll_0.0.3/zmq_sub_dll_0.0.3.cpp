@@ -48,7 +48,7 @@ const wchar_t *conn_and_sub(wchar_t *addr, wchar_t *topic)
 	my_context = zmq_ctx_new();
 	subscriber = zmq_socket(my_context, ZMQ_SUB);
 	zmq_connect(subscriber, addr_chars);
-	zmq_setsockopt(subscriber, ZMQ_SUBSCRIBE, topic_chars, topic_chars_value);
+	zmq_setsockopt(subscriber, ZMQ_SUBSCRIBE, topic_chars, wcslen(topic));
 
 	std::string s = std::to_string((long long)subscriber);
 	const char * chars = s.c_str();
@@ -67,16 +67,20 @@ const wchar_t * receive(const wchar_t *sub_as_ws)
 
 	std::lock_guard<std::recursive_mutex> guard{ subscriber_mutex };
 	//  Read envelope with address
-	char *address = s_recv((void *)subscriber);
+	//char *address = s_recv((void *)subscriber);
 	//  Read message contents
-	if (address == nullptr)
-	{
-		return L"empty";
-	}
+	//if (address == nullptr)
+	//{
+	//	return L"empty";
+	//}
 	char *contents = s_recv((void *)subscriber);
+	if (contents == nullptr)
+	{
+		return L"";
+	}
 	size_t response_wide_length;
 	mbstowcs_s(&response_wide_length, last_message, contents, strlen(contents));
-	free(address);
+	//free(address);
 	free(contents);
 	return last_message;
 }

@@ -49,17 +49,16 @@ void OnTick()
 //---
    string msg;
    do {
-      msg = receive(listener);
+      msg = receive(listener); //topic
       if (StringLen(msg) > 0)
       {
-         if (StringCompare("empty", msg) != 0)
-         {
-            Alert("Message received: " + msg);
-            processInput(msg);
-         }
+         msg = receive(listener); //message
+         
+         Alert("Message received: " + msg);
+         processInput(msg);
          
       }
-   }while (StringCompare("empty", msg) != 0);
+   }while (StringLen(msg) != 0);
          
   }
   
@@ -183,7 +182,7 @@ void OnTick()
          sl = Ask-sl*Point;
       }
 
-      int ticket = OrderSend(Symbol(),OP_BUY,1,Ask,25,sl,tp,"commento",magic,0,CLR_NONE);      
+      int ticket = OrderSend(Symbol(),OP_BUY,1,Ask,50,sl,tp,"commento",magic,0,CLR_NONE);      
       string type = "open";
       int status = 1;
       int price = -1;
@@ -222,7 +221,7 @@ void OnTick()
       }
       string type = "open";
       int status = 1;
-      int ticket = OrderSend(Symbol(),OP_SELL,1,Bid,5,sl,tp,"commento",magic,0,CLR_NONE);
+      int ticket = OrderSend(Symbol(),OP_SELL,1,Bid,50,sl,tp,"commento",magic,0,CLR_NONE);
       int price = -1;
       Alert("Posizione Dollaro aperta: ticket ",ticket);
       if(ticket < 0){

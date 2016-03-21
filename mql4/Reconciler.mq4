@@ -57,12 +57,13 @@ int OnCalculate(const int rates_total,
    //Alert("Msg: " + msg);
    if (StringLen(msg) > 0)
    {
+      msg = receive(listener);
+   
       //Alert("Msg: " + msg);
-      if (StringCompare("FULL", msg) == 0)
-      {
-         Alert("Message received: " + msg);
-         processInput(msg);
-      }   
+      
+      Alert("Message received: " + msg);
+      processInput(msg);
+         
    }
    return 0;
 }

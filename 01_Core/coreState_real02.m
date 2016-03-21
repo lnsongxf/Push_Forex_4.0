@@ -223,24 +223,28 @@ classdef coreState_real02 < handle
         
         %%
         
-        function obj = CoreTest (obj,closure)
+        function obj = core_Algo_000_test (obj,closure)
             
             %NOTE: algoritmo di test per il bkt rispetto al demo
             %LOGICA: Se ho 2 candelotti dello dello stesso segno apro, e
             %vado in quella direzione
-            
+
             candelotto1=sign(closure(end)-closure(end-1));
             candelotto2=sign(closure(end-1)-closure(end-2));
-            
-            if candelotto1 == candelotto2
+            c0=abs(candelotto1);
+
+            if (c0>0) && (candelotto1 == candelotto2) 
                 obj.state=1;
                 obj.suggestedDirection=candelotto1;
+                obj.suggestedTP = 4;
+                obj.suggestedSL = 4;
             else
                 obj.state=0;
             end
             
             
         end
+        
         
         
         %%
