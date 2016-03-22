@@ -385,27 +385,39 @@ var QuotesModule = (function(){
 		  						for (var j = 0; j <= timeFrameQuotesObj[key1][index][timeFrame].length - 1; j++) {
 		  							tempObj = timeFrameQuotesObj[key1][index][timeFrame][j];
 		  							//console.log(tempObj);
+
+
+
+		  							if (timeFrame == 'm5' && Object.keys(tempObj)[0].split("v")[1] == '1') {
+		  								//var paramMarketStatus =  tmpTimeFrameQuoteProperty.split('$')[1]+'$'+tmpTimeFrameQuoteProperty.split('$')[2]+'$TRADEALLOWED';
+		  								//if ( marketStatus[paramMarketStatus] == 1 ) {};
+		  								logger.info('MARKET STATUS FROM METATRADER: '+JSON.stringify(marketStatus) );
+		  							}
+									//TO FIX - WE HAVE TO USE ONE MESSAGE FORM MT4 TO UNDERSTAND WHEN THE MARKET IS CLOSED
+		  							//TEMPORARY FIX FOR THE WEEKEND
+		  							//HERE WE CLEAN THE 1minuteObjs. This objs store the last 1minute values.
+		  							//AND WE CLEANTHE REAL TIME ARRAY OBJ. THIS RRAY STORE THE LAST REALTIME VALUES INTO ON1 MINUTE
+		  							if ( realTimeQuotesObj[key0] == tempObj[Object.keys(tempObj)[0]].last() ) {			  								
+		  								logger.info('CHECK WITH LAST(), MARKET IS CLOSED, RESETTING THE 1MINUTE OBJ, AND RESETTING REALTIME ARRAY: CROSS: '+key0);
+		  								for(var i=0; i<open1mObjs[tmpTimeFrameQuoteProperty][key0].length-1;i++){
+		  									for (var key1 in open1mObjs[tmpTimeFrameQuoteProperty][key0][i]) {
+		  										//EX:  open1mObjs[TIMEFRAMEQUOTE$MT4$ACTIVTRADES][EURUSD] = [{"m5":""},{"m15":""},{"m30":""},{"h1":""},{"h4":""},{"d1":""},{"w1":""}]
+		  										open1mObjs[tmpTimeFrameQuoteProperty][key0][i][key1] = "";
+		  									}
+		  								}
+		  								runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][key0] = [];
+		  							}
+
+
+
+
+
+
 			  						if (tempObj[Object.keys(tempObj)[0]].length < Object.keys(tempObj)[0].split("v")[1] ){
 			  							logger.trace('realTimeQuotesObj[key0] :'+realTimeQuotesObj[key0] );
 			  							logger.trace('tempObj[Object.keys(tempObj)[0]].last(): '+tempObj[Object.keys(tempObj)[0]].last());
 
-
-//TO FIX - WE HAVE TO USE ONE MESSAGE FORM MT4 TO UNDERSTAND WHEN THE MARKET IS CLOSED
-			  							//TEMPORARY FIX FOR THE WEEKEND
-			  							//HERE WE CLEAN THE 1minuteObjs. This objs store the last 1minute values.
-			  							//AND WE CLEANTHE REAL TIME ARRAY OBJ. THIS RRAY STORE THE LAST REALTIME VALUES INTO ON1 MINUTE
-			  							if ( realTimeQuotesObj[key0] == tempObj[Object.keys(tempObj)[0]].last() ) {			  								
-			  								logger.info('MARKET IS CLOSED, RESETTING THE 1MINUTE OBJ, AND RESETTING REALTIME ARRAY: CROSS: '+key0);
-			  								for(var i=0; i<open1mObjs[tmpTimeFrameQuoteProperty][key0].length-1;i++){
-			  									for (var key1 in open1mObjs[tmpTimeFrameQuoteProperty][key0][i]) {
-			  										//EX:  open1mObjs[TIMEFRAMEQUOTE$MT4$ACTIVTRADES][EURUSD] = [{"m5":""},{"m15":""},{"m30":""},{"h1":""},{"h4":""},{"d1":""},{"w1":""}]
-			  										open1mObjs[tmpTimeFrameQuoteProperty][key0][i][key1] = "";
-			  									}
-			  								}
-			  								runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][key0] = [];
-			  							}
-
-			  							//TEMPORARY FIX FOR THE WEEKEND: IF realTimeQuotesObj[key0] != tempObj[Object.keys(tempObj)[0]].last()  CONTINUE ELSE STOP
+//TEMPORARY FIX FOR THE WEEKEND: IF realTimeQuotesObj[key0] != tempObj[Object.keys(tempObj)[0]].last()  CONTINUE ELSE STOP
 			  							if (realTimeQuotesObj[key0] != "" && realTimeQuotesObj[key0] != null && realTimeQuotesObj[key0] != undefined && realTimeQuotesObj[key0] != tempObj[Object.keys(tempObj)[0]].last() ) {
 /////////////////////////////////////////////////////////////////////////////////////
 			  								//key0 is the cross (es: EURUSD) and its used like second "search key" in the global runningProviderRealTimeObjs
@@ -442,8 +454,9 @@ var QuotesModule = (function(){
 											//};
 			  							}
 			  						}else{
+//TEMPORARY FIX FOR THE WEEKEND: IF realTimeQuotesObj[key0] != tempObj[Object.keys(tempObj)[0]].last()  CONTINUE ELSE STOP
 		  								if (realTimeQuotesObj[key0] != "" && realTimeQuotesObj[key0] != tempObj[Object.keys(tempObj)[0]].last()) {
-
+///////////////////////////////////////////////////////
 			  								tempObj[Object.keys(tempObj)[0]].shift();
 			  								var newQuote = _createNewQuote(tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty,key0,timeFrame);
 			  								tempObj[Object.keys(tempObj)[0]].push(newQuote);
@@ -622,6 +635,7 @@ var runningProviderTopicList = [];
 var runningProviderTimeFrameObjs = {};
 var runningProviderRealTimeObjs = {};
 var open1mObjs = {};
+var marketStatus = {};
 
 
 // THE CODE BELOW SET THE SUBTASK TO UPDATED THE TIMEFRAME DATA EACH 1M,5M,15M ETC.. 
@@ -681,6 +695,10 @@ sockSubFromQuotesProvider.on('message', function(topic, message) {
   		case "NEWTOPICQUOTES":
   			//TOPIC MESSAGE EXAMPLE: "MT4@ACTIVTRADES@REALTIMEQUOTES";
   			if ( runningProviderTopicList.indexOf( message.toString() ) == "-1" ) {
+  				//CREATE MARKET STATUS TOPIC
+  				var newTopicMarketStatus = messageArr[0]+'@'+messageArr[1]+'@TRADEALLOWED';
+  				sockSubFromQuotesProvider.subscribe(newTopicMarketStatus);
+
 				//CREATE AND ADD NEW TOPICS (EX: MT4@ACTIVTRADES@REALTIMEQUOTES) IN THE ARRAY LIST
 				if ( messageArr[2] == "REALTIMEQUOTES" ||  messageArr[2] == "LISTQUOTES"){
 					runningProviderTopicList.push(message.toString());
@@ -766,6 +784,14 @@ sockSubFromQuotesProvider.on('message', function(topic, message) {
 					}else{
 						logger.error('topic: ' + JSON.stringify(topic.toString()) + ' message: ' + JSON.stringify(message.toString()) + 'Error in message received from Quotes provider. The Quotes Provider wants to publish a new message quote '+message.toString()+' on topic '+topic.toString()+', but the topic doesnt exist ' );
 					}
+				}else if (topicArr[2] == 'TRADEALLOWED') {
+					var platform_broker = topic[0]+'$'+topic[1]; 
+					if (marketStatus.hasOwnProperty( platform_broker )) { 
+						marketStatus[ platform_broker ] = messageArr[0];
+					}else{
+						marketStatus[ platform_broker ] = messageArr[0];
+					}
+
 				}else if (topicArr[0] == 'STATUS'){
 					//EX: STATUS@EURUSD@111		
 	  				sockPub.send([topic.toString(), message]);	
