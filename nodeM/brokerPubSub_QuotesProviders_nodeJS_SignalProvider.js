@@ -77,6 +77,30 @@ var QuotesModule = (function(){
 		return _realTimeQuotesObj
 	};
 
+	var _oneMinuteOpenObj = function(providerName){
+		this.provider = providerName, 
+		this.description = "This obj store all the open values at 1 minute"
+	};
+
+	var _createOneMinuteOpenObj = function(quotes_list,providerName){
+		if (quotes_list == null || quotes_list == undefined || providerName == null || providerName == undefined) {
+			logger.error('quotes_list %s or providerName '+quotes_list,providerName+' null or not defined into _createTimeFrameQuotesObj');
+			return null;
+		};
+		var _quotesObj = new _oneMinuteOpenObj(providerName);
+
+		var arr = quotes_list.quotes;
+		for(var i=0; i<arr.length; i++){
+		    for(var key in arr[i]){
+		        var attrName = key;
+		        var attrValue = arr[i][key];
+		        _quotesObj[attrValue]=[{"m5":""},{"m15":""},{"m30":""},{"h1":""},{"h4":""},{"d1":""},{"w1":""}];
+		    }
+		}
+		logger.trace("created new _oneMinuteOpenObj: "+JSON.stringify(_quotesObj)+ " providerName: "+providerName);  
+		return _quotesObj
+	};
+
 	var _updateRealTimeQuotesObj = function(searchObjRealTimeQuote,messageArr){
 		if (searchObjRealTimeQuote == null || searchObjRealTimeQuote == undefined || messageArr == null || messageArr == undefined) {
 			logger.error('searchObjRealTimeQuote '+searchObjRealTimeQuote+' or messageArr '+messageArr+' null or not defined into _updateRealTimeQuotesObj');
@@ -110,6 +134,17 @@ var QuotesModule = (function(){
 		}
 	};
 
+
+
+
+	var multipler_5min = 0;
+	var multipler_15min = 0;
+	var multipler_30min = 0;
+	var multipler_1h = 0;
+	var multipler_4h = 0;
+	var multipler_1d = 0;
+	var multipler_1w = 0;
+
 	var _createNewQuote = function(tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty,key0,timeFrame){
 		
 		//key0 is the cross (es: EURUSD) and its used like second "search key" in the global runningProviderRealTimeObjs
@@ -122,6 +157,53 @@ var QuotesModule = (function(){
 		//Example of research in runningProviderRealTimeObjs: runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][key0] --> return one array of values
 
 		//ex: single quote == 11313,11315,11313,11316,30,03/18/2016 01:24  -->   apertura,massimo,minimo,chiusura,volume,time
+		
+
+		var last1mOpenPrice = runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][key0].last().split(',')[0];
+
+		if (timeFrame == "m1") {
+			
+			multipler_5min++;
+			multipler_15min++;
+			multipler_30min++;
+			multipler_1h++;
+			multipler_4h++;
+			multipler_1d++;
+			multipler_1w++;
+
+			if (multipler_5min == 6) {
+    			open1mObjs[tmpTimeFrameQuoteProperty][key0][0]['m5'] = last1mOpenPrice;
+    			multipler_5min = 0;
+	    	}
+	    	if (multipler_15min == 16) {
+	    		open1mObjs[tmpTimeFrameQuoteProperty][key0][1]['m15'] = last1mOpenPrice;
+    			multipler_15min = 0;
+	    	};
+	    	if (multipler_30min == 31) {
+	    		open1mObjs[tmpTimeFrameQuoteProperty][key0][2]['m30'] = last1mOpenPrice;
+    			multipler_30min = 0;
+	    	};
+	    	if (multipler_1h == 61) {
+	    		open1mObjs[tmpTimeFrameQuoteProperty][key0][3]['h1'] = last1mOpenPrice;
+    			multipler_1h = 0;
+	    	};
+	    	if (multipler_4h == 241) {
+	    		open1mObjs[tmpTimeFrameQuoteProperty][key0][4]['h4'] = last1mOpenPrice;
+    			multipler_4h = 0;
+	    	};
+	    	if (multipler_1d == 1441) {
+	    		open1mObjs[tmpTimeFrameQuoteProperty][key0][5]['d1'] = last1mOpenPrice;
+    			multipler_1d = 0;
+	    	};
+	    	if (multipler_1w == 7201) {
+	    		open1mObjs[tmpTimeFrameQuoteProperty][key0][6]['w1'] = last1mOpenPrice;
+    			multipler_1w = 0;
+	    	};	
+		};
+
+		
+
+			
 		
 		var tmpTimeFrameQuoteObjM1V1 = runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty][key0][0]['m1'][0]['v1'];
 
@@ -142,11 +224,11 @@ var QuotesModule = (function(){
 			var arrMaxValues = [];
 			var arrMinValues = [];
 			
-			if( tmpTimeFrameQuoteObjM1V1.length > 0){
-				open = tmpTimeFrameQuoteObjM1V1[0].split(',')[3];  //we will use the close value in the last m1 quote at time (current time - 1minute). We are going to get this value in the m1 quotes array 
-			}else{
-				open = runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][key0].last().split(',')[3]; //if we dont have previous m1 quote we will use the close value of the oldest element in the realtime quote array
-			}
+			//if( tmpTimeFrameQuoteObjM1V1.length > 0){
+			//	open = tmpTimeFrameQuoteObjM1V1[0].split(',')[3];  //we will use the close value in the last m1 quote at time (current time - 1minute). We are going to get this value in the m1 quotes array 
+			//}else{
+			open = runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][key0].last().split(',')[3]; //if we dont have previous m1 quote we will use the close value of the oldest element in the realtime quote array
+			//}
 			if( runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][key0].length > 0 ){
 				for(var i = 0; i <= runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][key0].length-1; i++){
 					var tmpArrSingleQuote = runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][key0][i].split(',');
@@ -170,36 +252,43 @@ var QuotesModule = (function(){
 			switch (timeFrame){
 	    		case "m5":
 	    			prevTimeFrame = 'm1';
+	    			open = open1mObjs[tmpTimeFrameQuoteProperty][key0][0]['m5'];
 	    			index = 0;
 	    			numValues = 5;  // m1 x 5 = m5
 	    			break;
 	    		case "m15":
 	    			prevTimeFrame = 'm5';
+	    			open = open1mObjs[tmpTimeFrameQuoteProperty][key0][1]['m15'];
 	    			index = 1;
 	    			numValues = 3;   // m5 x 3 = m15
 	    			break;
 	    		case "m30":
 	    			prevTimeFrame = 'm15';
+	    			open = open1mObjs[tmpTimeFrameQuoteProperty][key0][2]['m30'];
 	    			index = 2;
 	    			numValues = 2;   // m15 x 2 = m30
 	    			break;
 	    		case "h1":
 	    			prevTimeFrame = 'm30';
+	    			open = open1mObjs[tmpTimeFrameQuoteProperty][key0][3]['h1'];
 	    			index = 3;
 	    			numValues = 2;  // m30 x 2 = h1
 	    			break;
 	    		case "h4":
 	    			prevTimeFrame = 'h1';
+	    			open = open1mObjs[tmpTimeFrameQuoteProperty][key0][4]['h4'];
 	    			index = 4;
 	    			numValues = 4;  // h1 x 4 = h4
 	    			break;
 				case "d1":
 	    			prevTimeFrame = 'h4';
+	    			open = open1mObjs[tmpTimeFrameQuoteProperty][key0][5]['d1'];
 	    			index = 5;
 	    			numValues = 6;  // h4 x 6 = d1
 	    			break;
 				case "w1":
 	    			prevTimeFrame = 'd1';
+	    			open = open1mObjs[tmpTimeFrameQuoteProperty][key0][6]['w1'];
 	    			index = 6;
 	    			numValues = 7;  // d1 x 7 = w1
 	    			break;
@@ -208,19 +297,21 @@ var QuotesModule = (function(){
 			//ex: runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty][key0][index][prevTimeFrame] == [{"v1":[]},{"v5":[]},{"v10":[]},{"v20":[]},{"v40":[]},{"v100":[]}];
 			//ex: single quote == 11313,11315,11313,11316,30,03/18/2016 01:24  -->   apertura,massimo,minimo,chiusura,volume,time
 
-			var tmpArrTimeFrameQuotesV1 = runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty][key0][index+1][timeFrame][0]['v1']; //thats the timeframe array to update with the new value. We will use this array to get the last close value 
+			//var tmpArrTimeFrameQuotesV1 = runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty][key0][index+1][timeFrame][0]['v1']; //thats the timeframe array to update with the new value. We will use this array to get the last close value 
 			var tmpArrPreviousTimeFrameQuotesV10 = runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty][key0][index][prevTimeFrame][2]['v10']; //we are going to get the previous timeframe array(es: if timeframe is m5 we get m1)
 
 			var arrMaxValues = [];
 			var arrMinValues = [];
-			if (tmpArrTimeFrameQuotesV1.length > 0) {
-				open = tmpArrTimeFrameQuotesV1[0].split(',')[3];   //We are going to get the close value in the v1 quotes array and push that in the open variable of the next quote
-			}else{
-				open = runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][key0].last().split(',')[3]; //if the timeframe quotes array to update is empty we will use the close value of the first element in the realtime quote array
-			}
+
+			//if (tmpArrTimeFrameQuotesV1.length > 0) {
+			//	open = tmpArrTimeFrameQuotesV1[0].split(',')[3];   //We are going to get the close value in the v1 quotes array and push that in the open variable of the next quote
+			//}else{
+			//	open = runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][key0].last().split(',')[3]; //if the timeframe quotes array to update is empty we will use the close value of the first element in the realtime quote array
+			//}
 			if( tmpArrPreviousTimeFrameQuotesV10.length > 0 ){
+				logger.trace('tmpArrPreviousTimeFrameQuotesV10 :'+JSON.stringify(tmpArrPreviousTimeFrameQuotesV10) );
 				for(var i = 0; i <= numValues-1; i++){  //We iterate on each value of the previuos timeframe array (es: id m5, previous array is m1. In this case we iterate on the previous 5 values)
-					var tmpArrSingleQuote = tmpArrPreviousTimeFrameQuotesV10[i].split(',');;
+					var tmpArrSingleQuote = tmpArrPreviousTimeFrameQuotesV10[i].split(',');
 					totVolume = totVolume + parseInt(tmpArrSingleQuote[4]);
 					arrMaxValues.push(tmpArrSingleQuote[1]);
 					arrMinValues.push(tmpArrSingleQuote[2]);
@@ -286,9 +377,25 @@ var QuotesModule = (function(){
 			  							logger.trace('realTimeQuotesObj[key0] :'+realTimeQuotesObj[key0] );
 			  							logger.trace('tempObj[Object.keys(tempObj)[0]].last(): '+tempObj[Object.keys(tempObj)[0]].last());
 
+
+//TO FIX - WE HAVE TO USE ONE MESSAGE FORM MT4 TO UNDERSTAND WHEN THE MARKET IS CLOSED
+			  							//TEMPORARY FIX FOR THE WEEKEND
+			  							//HERE WE CLEAN THE 1minuteObjs. This objs store the last 1minute values.
+			  							//AND WE CLEANTHE REAL TIME ARRAY OBJ. THIS RRAY STORE THE LAST REALTIME VALUES INTO ON1 MINUTE
+			  							if ( realTimeQuotesObj[key0] == tempObj[Object.keys(tempObj)[0]].last() ) {			  								
+			  								logger.info('MARKET IS CLOSED, RESETTING THE 1MINUTE OBJ, AND RESETTING REALTIME ARRAY: CROSS: '+key0);
+			  								for(var i=0; i<open1mObjs[tmpTimeFrameQuoteProperty][key0].length-1;i++){
+			  									for (var key1 in open1mObjs[tmpTimeFrameQuoteProperty][key0][i]) {
+			  										//EX:  open1mObjs[TIMEFRAMEQUOTE$MT4$ACTIVTRADES][EURUSD] = [{"m5":""},{"m15":""},{"m30":""},{"h1":""},{"h4":""},{"d1":""},{"w1":""}]
+			  										open1mObjs[tmpTimeFrameQuoteProperty][key0][i][key1] = "";
+			  									}
+			  								}
+			  								runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][key0] = [];
+			  							}
+
 			  							//TEMPORARY FIX FOR THE WEEKEND: IF realTimeQuotesObj[key0] != tempObj[Object.keys(tempObj)[0]].last()  CONTINUE ELSE STOP
 			  							if (realTimeQuotesObj[key0] != "" && realTimeQuotesObj[key0] != null && realTimeQuotesObj[key0] != undefined && realTimeQuotesObj[key0] != tempObj[Object.keys(tempObj)[0]].last() ) {
-
+/////////////////////////////////////////////////////////////////////////////////////
 			  								//key0 is the cross (es: EURUSD) and its used like second "search key" in the global runningProviderRealTimeObjs
 			  								//realTimeQuotesObj[key0] is the array with the last 60 seconds realtime quotes
 			  								//tmpRealTimeQuoteProperty is the first "search key" used in the global runningProviderRealTimeObjs (es: REALTIMEQUOTE$MT4$ACTIVTRADES)
@@ -416,6 +523,9 @@ var QuotesModule = (function(){
     	createTimeFrameQuotesObj: function(quotes_list,providerName){ 
       		return _createTimeFrameQuotesObj(quotes_list,providerName);  
     	},
+    	createOneMinuteOpenObj: function(quotes_list,providerName){ 
+    		return _createOneMinuteOpenObj(quotes_list,providerName)
+    	},
     	createRealTimeQuotesObj:  function(quotes_list,providerName){ 
       		return _createRealTimeQuotesObj(quotes_list,providerName);  
     	},
@@ -499,6 +609,7 @@ var serverSetting = require('./server_setting');
 var runningProviderTopicList = [];
 var runningProviderTimeFrameObjs = {};
 var runningProviderRealTimeObjs = {};
+var open1mObjs = {};
 
 
 // THE CODE BELOW SET THE SUBTASK TO UPDATED THE TIMEFRAME DATA EACH 1M,5M,15M ETC.. 
@@ -568,6 +679,7 @@ sockSubFromQuotesProvider.on('message', function(topic, message) {
 					var newValuePropertyTimeFrameQuote = "TIMEFRAMEQUOTE@"+messageArr[0]+"@"+messageArr[1];
 					var newValuePropertyRealTimeQuote = "REALTIMEQUOTE@"+messageArr[0]+"@"+messageArr[1];  
 					runningProviderTimeFrameObjs[newObjTimeFrameQuote] = QuotesModule.createTimeFrameQuotesObj(configQuotesList,newValuePropertyTimeFrameQuote);
+					open1mObjs[newObjTimeFrameQuote] = QuotesModule.createOneMinuteOpenObj(configQuotesList,newValuePropertyTimeFrameQuote);
 					if (runningProviderTimeFrameObjs[newObjTimeFrameQuote] == null || runningProviderTimeFrameObjs[newObjTimeFrameQuote] == undefined) {
 						logger.error( 'topic: '+ JSON.stringify(topicArr[0]) + ' message: ' +JSON.stringify(message.toString()) + ' runningProviderTimeFrameObjs[newObjTimeFrameQuote]: ' + JSON.stringify(runningProviderTimeFrameObjs[newObjTimeFrameQuote] ) + 'TimeFrame Obj is not created for topic: '+message.toString() );
 					};
