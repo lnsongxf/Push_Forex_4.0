@@ -56,6 +56,7 @@ int OnInit()
    Print("Connecting: " + speaker);
 
       string new_quotes_topic_message = "MT4@ACTIVTRADES@REALTIMEQUOTES";
+      
       string topic0 = "NEWTOPICQUOTES";
       sleepXIndicators(5000);
       if(send_with_topic(speaker, new_quotes_topic_message, topic0) == -1)
@@ -253,11 +254,16 @@ void write_history(int period) {
       // Publish current tick value.
       //string current_tick = Symbol()+"@" + Bid + ";" + Ask + ";" + Time[0];
       string topic2 = "MT4@ACTIVTRADES@REALTIMEQUOTES";
-      
+      string topic3 = "MT4@ACTIVTRADES@HISTORYQUOTES";
       if(send_with_topic(speaker, message, topic2) == -1)
          Print("Error sending message: " + message);
       else
-         Print("Published message: " + message);  
+         Print("Published message: " + message);
+      if(send_with_topic(speaker, message, topic3) == -1)
+         Print("Error sending message: " + message);
+      else
+         Print("Published message: " + message);
+          
       Alert("Finito davvero...");
       
    } // end method write_history(int)
