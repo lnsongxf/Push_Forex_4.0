@@ -137,13 +137,14 @@ var QuotesModule = (function(){
 
 
 
-	var multipler_5min = 0;
-	var multipler_15min = 0;
-	var multipler_30min = 0;
-	var multipler_1h = 0;
-	var multipler_4h = 0;
-	var multipler_1d = 0;
-	var multipler_1w = 0;
+	var _multipler_5min = 0;
+	var _multipler_15min = 0;
+	var _multipler_30min = 0;
+	var _multipler_1h = 0;
+	var _multipler_4h = 0;
+	var _multipler_1d = 0;
+	var _multipler_1w = 0;
+	var _firstMinute = false;
 
 	var _createNewQuote = function(tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty,key0,timeFrame){
 		
@@ -163,41 +164,52 @@ var QuotesModule = (function(){
 
 		if (timeFrame == "m1") {
 			
-			multipler_5min++;
-			multipler_15min++;
-			multipler_30min++;
-			multipler_1h++;
-			multipler_4h++;
-			multipler_1d++;
-			multipler_1w++;
+			_multipler_5min++;
+			_multipler_15min++;
+			_multipler_30min++;
+			_multipler_1h++;
+			_multipler_4h++;
+			_multipler_1d++;
+			_multipler_1w++;
+
+			if (_firstMinute == false) {
+				open1mObjs[tmpTimeFrameQuoteProperty][key0][0]['m5'] = last1mOpenPrice;
+				open1mObjs[tmpTimeFrameQuoteProperty][key0][1]['m15'] = last1mOpenPrice;
+				open1mObjs[tmpTimeFrameQuoteProperty][key0][2]['m30'] = last1mOpenPrice;
+				open1mObjs[tmpTimeFrameQuoteProperty][key0][3]['h1'] = last1mOpenPrice;
+				open1mObjs[tmpTimeFrameQuoteProperty][key0][4]['h4'] = last1mOpenPrice;
+				open1mObjs[tmpTimeFrameQuoteProperty][key0][5]['d1'] = last1mOpenPrice;
+				open1mObjs[tmpTimeFrameQuoteProperty][key0][6]['w1'] = last1mOpenPrice;
+				_firstMinute = true;
+			};
 
 			if (multipler_5min == 6) {
     			open1mObjs[tmpTimeFrameQuoteProperty][key0][0]['m5'] = last1mOpenPrice;
-    			multipler_5min = 0;
+    			_multipler_5min = 1;
 	    	}
 	    	if (multipler_15min == 16) {
 	    		open1mObjs[tmpTimeFrameQuoteProperty][key0][1]['m15'] = last1mOpenPrice;
-    			multipler_15min = 0;
+    			_multipler_15min = 1;
 	    	};
 	    	if (multipler_30min == 31) {
 	    		open1mObjs[tmpTimeFrameQuoteProperty][key0][2]['m30'] = last1mOpenPrice;
-    			multipler_30min = 0;
+    			_multipler_30min = 1;
 	    	};
 	    	if (multipler_1h == 61) {
 	    		open1mObjs[tmpTimeFrameQuoteProperty][key0][3]['h1'] = last1mOpenPrice;
-    			multipler_1h = 0;
+    			_multipler_1h = 1;
 	    	};
 	    	if (multipler_4h == 241) {
 	    		open1mObjs[tmpTimeFrameQuoteProperty][key0][4]['h4'] = last1mOpenPrice;
-    			multipler_4h = 0;
+    			_multipler_4h = 1;
 	    	};
 	    	if (multipler_1d == 1441) {
 	    		open1mObjs[tmpTimeFrameQuoteProperty][key0][5]['d1'] = last1mOpenPrice;
-    			multipler_1d = 0;
+    			_multipler_1d = 1;
 	    	};
 	    	if (multipler_1w == 7201) {
 	    		open1mObjs[tmpTimeFrameQuoteProperty][key0][6]['w1'] = last1mOpenPrice;
-    			multipler_1w = 0;
+    			_multipler_1w = 1;
 	    	};	
 		};
 
@@ -370,7 +382,7 @@ var QuotesModule = (function(){
 		  			for (var key1 in timeFrameQuotesObj) {
 		  				if (realTimeQuotesObj.hasOwnProperty(key1)) {
 		  					if (key0 == key1 && key0 != "provider" && key0 != "description") {
-		  						for (var j = timeFrameQuotesObj[key1][index][timeFrame].length - 1; j >= 0; j--) {
+		  						for (var j = 0; j <= timeFrameQuotesObj[key1][index][timeFrame].length - 1; j++) {
 		  							tempObj = timeFrameQuotesObj[key1][index][timeFrame][j];
 		  							//console.log(tempObj);
 			  						if (tempObj[Object.keys(tempObj)[0]].length < Object.keys(tempObj)[0].split("v")[1] ){
