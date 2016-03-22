@@ -54,7 +54,7 @@ void OnTick()
       {
 
         
-        string sep=",";                // A separator as a character
+        string sep="@";                // A separator as a character
         ushort u_sep;                  // The code of the separator character
         string result[];               // An array to get strings
         //--- Get the separator code
@@ -151,7 +151,7 @@ void OnTick()
        if(!OrderSelect(ticket, SELECT_BY_TICKET, MODE_TRADES))
        {
            Alert("Ticket da chiudere non trovato");
-           writeResponse(magic+"="+GetLastError());
+           writeResponse(magic+"="+GetLastError(), magic);
        }
        else
        {      
@@ -175,7 +175,7 @@ void OnTick()
    if(StringLen(buffer) > 0){
       //string output = StringSubstr(buffer,0,StringLen(buffer)-1);
       //writeResponse(output);
-      writeResponse(buffer);
+      writeResponse(buffer, magic);
    }
    else {
       Alert("Buffer is empty, what the hell ??");
@@ -302,7 +302,7 @@ void OnTick()
       buffer = status + "," + type + "," + price + "," + ticket;
    }
    
-   void writeResponse(string output){
+   void writeResponse(string output, int magic){
       string topic = "STATUS@"+ Symbol() +"@" + IntegerToString(magic);
       Alert("Message to send: " + output + " on topic: " + topic);
       int result = send_with_topic(speaker, output+"\n", topic);

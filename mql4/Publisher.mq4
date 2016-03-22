@@ -68,6 +68,8 @@ int OnInit()
       
       first_time = false;
    
+   EventSetTimer(60);
+   
    return(INIT_SUCCEEDED);
   }
   
@@ -276,10 +278,9 @@ int sleepXIndicators(int milli_seconds)
    return(sleepTime);
   }
 
-  void onTimer() {
+  void OnTimer() {
    string topic = "MT4@ACTIVTRADES@TRADEALLOWED";
-   string isMarketOpen = DoubleToStr(MarketInfo(Symbol(), MODE_TRADEALLOWED));
+   string isMarketOpen = IntegerToString(MarketInfo(Symbol(), MODE_TRADEALLOWED));
    send_with_topic(speaker, isMarketOpen, topic);
-   
   }
   
