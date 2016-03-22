@@ -17,7 +17,7 @@
 string listener;
 string buffer;
 string speaker;
-int magic;
+
 int OnInit()
   {
 //---
@@ -52,17 +52,30 @@ void OnTick()
       msg = receive(listener); //topic
       if (StringLen(msg) > 0)
       {
-         msg = receive(listener); //message
-         
-         Alert("Message received: " + msg);
-         processInput(msg);
-         
+
+        
+        string sep=",";                // A separator as a character
+        ushort u_sep;                  // The code of the separator character
+        string result[];               // An array to get strings
+        //--- Get the separator code
+        u_sep=StringGetCharacter(sep,0);
+        //--- Split the string to substrings
+        int k=StringSplit(msg,u_sep,result);
+        //--- Show a comment 
+        PrintFormat("Strings obtained: %d. Used separator '%s' with the code %d",k,sep,u_sep);
+        //--- Now output all obtained strings
+        if (k > 0) {
+          int magic = StrToInteger(result[k-1]);
+          msg = receive(listener); //message
+          Alert("Message received: " + msg);
+          processInput(msg, magic);
+        }
       }
    }while (StringLen(msg) != 0);
          
   }
   
-  void processInput(string msg)
+  void processInput(string msg, int magic)
 {
    buffer = "";
    int op=-999;

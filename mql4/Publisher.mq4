@@ -91,11 +91,11 @@ int OnCalculate(const int rates_total,
 
       period_string_file = "1";
 
-      string strline2 = DoubleToStr(iOpen  (Symbol(), PERIOD_M1, 1), 5);
-      string strline3 = DoubleToStr(iHigh  (Symbol(), PERIOD_M1, 1), 5);
-      string strline4 = DoubleToStr(iLow   (Symbol(), PERIOD_M1, 1), 5);
-      string strline  = DoubleToStr(iClose (Symbol(), PERIOD_M1, 1), 5);
-      string strline5 = DoubleToStr(iVolume(Symbol(), PERIOD_M1, 1), 5);
+      string strline2 = DoubleToStr(iOpen  (Symbol(), PERIOD_M1, 0), 5);
+      string strline3 = DoubleToStr(iHigh  (Symbol(), PERIOD_M1, 0), 5);
+      string strline4 = DoubleToStr(iLow   (Symbol(), PERIOD_M1, 0), 5);
+      string strline  = DoubleToStr(iClose (Symbol(), PERIOD_M1, 0), 5);
+      string strline5 = DoubleToStr(iVolume(Symbol(), PERIOD_M1, 0), 5);
       string strline6 = DoubleToStr(Bid, 5);
             int day = Day();
             string s_day;
@@ -275,3 +275,11 @@ int sleepXIndicators(int milli_seconds)
      }   
    return(sleepTime);
   }
+
+  void onTimer() {
+   string topic = "MT4@ACTIVTRADES@TRADEALLOWED";
+   string isMarketOpen = DoubleToStr(MarketInfo(Symbol(), MODE_TRADEALLOWED));
+   send_with_topic(speaker, isMarketOpen, topic);
+   
+  }
+  
