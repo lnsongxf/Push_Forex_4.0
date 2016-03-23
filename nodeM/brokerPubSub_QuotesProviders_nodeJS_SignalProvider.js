@@ -570,7 +570,7 @@ var logger = (function(){
 	var error = function(message){ sockLog.send([topicLogError, message]); }
 	var info = function(message){ sockLog.send([topicLogInfo, message]); }
 	var trace = function(message){ 
-		console.log("sending logs..");
+		//console.log("sending logs..");
 		sockLog.send([topicLogTrace, message]);
     }
 
