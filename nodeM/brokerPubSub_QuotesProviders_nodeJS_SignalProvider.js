@@ -94,7 +94,12 @@ var QuotesModule = (function(){
 		    for(var key in arr[i]){
 		        var attrName = key;
 		        var attrValue = arr[i][key];
-		        _quotesObj[attrValue]=[{"m5":""},{"m15":""},{"m30":""},{"h1":""},{"h4":""},{"d1":""},{"w1":""}];
+		        _quotesObj[attrValue] = {
+		        	minute1Array : [{"m5":""},{"m15":""},{"m30":""},{"h1":""},{"h4":""},{"d1":""},{"w1":""}],
+		        	minute1Count : [0,0,0,0,0,0,0],
+		        	firstMinute : 0
+		        }
+		        
 		    }
 		}
 		logger.trace("created new _oneMinuteOpenObj: "+JSON.stringify(_quotesObj)+ " providerName: "+providerName);  
@@ -134,18 +139,6 @@ var QuotesModule = (function(){
 		}
 	};
 
-
-
-
-	var _multipler_5min = 0;
-	var _multipler_15min = 0;
-	var _multipler_30min = 0;
-	var _multipler_1h = 0;
-	var _multipler_4h = 0;
-	var _multipler_1d = 0;
-	var _multipler_1w = 0;
-	var _firstMinute = false;
-
 	var _createNewQuote = function(tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty,key0,timeFrame){
 		
 		//key0 is the cross (es: EURUSD) and its used like second "search key" in the global runningProviderRealTimeObjs
@@ -164,52 +157,52 @@ var QuotesModule = (function(){
 
 		if (timeFrame == "m1") {
 			
-			_multipler_5min++;
-			_multipler_15min++;
-			_multipler_30min++;
-			_multipler_1h++;
-			_multipler_4h++;
-			_multipler_1d++;
-			_multipler_1w++;
+			open1mObjs[tmpTimeFrameQuoteProperty][key0]['minute1Count'][0]++;
+			open1mObjs[tmpTimeFrameQuoteProperty][key0]['minute1Count'][1]++;
+			open1mObjs[tmpTimeFrameQuoteProperty][key0]['minute1Count'][2]++;
+			open1mObjs[tmpTimeFrameQuoteProperty][key0]['minute1Count'][3]++;
+			open1mObjs[tmpTimeFrameQuoteProperty][key0]['minute1Count'][4]++;
+			open1mObjs[tmpTimeFrameQuoteProperty][key0]['minute1Count'][5]++;
+			open1mObjs[tmpTimeFrameQuoteProperty][key0]['minute1Count'][6]++;
 
-			if (_firstMinute == false) {
-				open1mObjs[tmpTimeFrameQuoteProperty][key0][0]['m5'] = last1mOpenPrice;
-				open1mObjs[tmpTimeFrameQuoteProperty][key0][1]['m15'] = last1mOpenPrice;
-				open1mObjs[tmpTimeFrameQuoteProperty][key0][2]['m30'] = last1mOpenPrice;
-				open1mObjs[tmpTimeFrameQuoteProperty][key0][3]['h1'] = last1mOpenPrice;
-				open1mObjs[tmpTimeFrameQuoteProperty][key0][4]['h4'] = last1mOpenPrice;
-				open1mObjs[tmpTimeFrameQuoteProperty][key0][5]['d1'] = last1mOpenPrice;
-				open1mObjs[tmpTimeFrameQuoteProperty][key0][6]['w1'] = last1mOpenPrice;
-				_firstMinute = true;
+			if (open1mObjs[tmpTimeFrameQuoteProperty][key0]['firstMinute'] == 0) {
+				open1mObjs[tmpTimeFrameQuoteProperty][key0]['minute1Array'][0]['m5'] = last1mOpenPrice;
+				open1mObjs[tmpTimeFrameQuoteProperty][key0]['minute1Array'][1]['m15'] = last1mOpenPrice;
+				open1mObjs[tmpTimeFrameQuoteProperty][key0]['minute1Array'][2]['m30'] = last1mOpenPrice;
+				open1mObjs[tmpTimeFrameQuoteProperty][key0]['minute1Array'][3]['h1'] = last1mOpenPrice;
+				open1mObjs[tmpTimeFrameQuoteProperty][key0]['minute1Array'][4]['h4'] = last1mOpenPrice;
+				open1mObjs[tmpTimeFrameQuoteProperty][key0]['minute1Array'][5]['d1'] = last1mOpenPrice;
+				open1mObjs[tmpTimeFrameQuoteProperty][key0]['minute1Array'][6]['w1'] = last1mOpenPrice;
+				open1mObjs[tmpTimeFrameQuoteProperty][key0]['firstMinute'] = 1;
 			};
 
-			if (multipler_5min == 6) {
-    			open1mObjs[tmpTimeFrameQuoteProperty][key0][0]['m5'] = last1mOpenPrice;
-    			_multipler_5min = 1;
+			if (open1mObjs[tmpTimeFrameQuoteProperty][key0]['minute1Count'][0] == 6) {
+    			open1mObjs[tmpTimeFrameQuoteProperty][key0]['minute1Array'][0]['m5'] = last1mOpenPrice;
+    			open1mObjs[tmpTimeFrameQuoteProperty][key0]['minute1Count'][0] = 1;
 	    	}
-	    	if (multipler_15min == 16) {
-	    		open1mObjs[tmpTimeFrameQuoteProperty][key0][1]['m15'] = last1mOpenPrice;
-    			_multipler_15min = 1;
+	    	if (open1mObjs[tmpTimeFrameQuoteProperty][key0]['minute1Count'][1] == 16) {
+	    		open1mObjs[tmpTimeFrameQuoteProperty][key0]['minute1Array'][1]['m15'] = last1mOpenPrice;
+    			open1mObjs[tmpTimeFrameQuoteProperty][key0]['minute1Count'][1] = 1;
 	    	};
-	    	if (multipler_30min == 31) {
-	    		open1mObjs[tmpTimeFrameQuoteProperty][key0][2]['m30'] = last1mOpenPrice;
-    			_multipler_30min = 1;
+	    	if (open1mObjs[tmpTimeFrameQuoteProperty][key0]['minute1Count'][2] == 31) {
+	    		open1mObjs[tmpTimeFrameQuoteProperty][key0]['minute1Array'][2]['m30'] = last1mOpenPrice;
+    			open1mObjs[tmpTimeFrameQuoteProperty][key0]['minute1Count'][2] = 1;
 	    	};
-	    	if (multipler_1h == 61) {
-	    		open1mObjs[tmpTimeFrameQuoteProperty][key0][3]['h1'] = last1mOpenPrice;
-    			_multipler_1h = 1;
+	    	if (open1mObjs[tmpTimeFrameQuoteProperty][key0]['minute1Count'][3] == 61) {
+	    		open1mObjs[tmpTimeFrameQuoteProperty][key0]['minute1Array'][3]['h1'] = last1mOpenPrice;
+    			open1mObjs[tmpTimeFrameQuoteProperty][key0]['minute1Count'][3] = 1;
 	    	};
-	    	if (multipler_4h == 241) {
-	    		open1mObjs[tmpTimeFrameQuoteProperty][key0][4]['h4'] = last1mOpenPrice;
-    			_multipler_4h = 1;
+	    	if (open1mObjs[tmpTimeFrameQuoteProperty][key0]['minute1Count'][4] == 241) {
+	    		open1mObjs[tmpTimeFrameQuoteProperty][key0]['minute1Array'][4]['h4'] = last1mOpenPrice;
+    			open1mObjs[tmpTimeFrameQuoteProperty][key0]['minute1Count'][4] = 1;
 	    	};
-	    	if (multipler_1d == 1441) {
-	    		open1mObjs[tmpTimeFrameQuoteProperty][key0][5]['d1'] = last1mOpenPrice;
-    			_multipler_1d = 1;
+	    	if (open1mObjs[tmpTimeFrameQuoteProperty][key0]['minute1Count'][5] == 1441) {
+	    		open1mObjs[tmpTimeFrameQuoteProperty][key0]['minute1Array'][5]['d1'] = last1mOpenPrice;
+    			open1mObjs[tmpTimeFrameQuoteProperty][key0]['minute1Count'][5] = 1;
 	    	};
-	    	if (multipler_1w == 7201) {
-	    		open1mObjs[tmpTimeFrameQuoteProperty][key0][6]['w1'] = last1mOpenPrice;
-    			_multipler_1w = 1;
+	    	if (open1mObjs[tmpTimeFrameQuoteProperty][key0]['minute1Count'][6] == 7201) {
+	    		open1mObjs[tmpTimeFrameQuoteProperty][key0]['minute1Array'][6]['w1'] = last1mOpenPrice;
+    			open1mObjs[tmpTimeFrameQuoteProperty][key0]['minute1Count'][6] = 1;
 	    	};	
 		};
 
@@ -264,43 +257,43 @@ var QuotesModule = (function(){
 			switch (timeFrame){
 	    		case "m5":
 	    			prevTimeFrame = 'm1';
-	    			open = open1mObjs[tmpTimeFrameQuoteProperty][key0][0]['m5'];
+	    			open = open1mObjs[tmpTimeFrameQuoteProperty][key0]['minute1Array'][0]['m5'];
 	    			index = 0;
 	    			numValues = 5;  // m1 x 5 = m5
 	    			break;
 	    		case "m15":
 	    			prevTimeFrame = 'm5';
-	    			open = open1mObjs[tmpTimeFrameQuoteProperty][key0][1]['m15'];
+	    			open = open1mObjs[tmpTimeFrameQuoteProperty][key0]['minute1Array'][1]['m15'];
 	    			index = 1;
 	    			numValues = 3;   // m5 x 3 = m15
 	    			break;
 	    		case "m30":
 	    			prevTimeFrame = 'm15';
-	    			open = open1mObjs[tmpTimeFrameQuoteProperty][key0][2]['m30'];
+	    			open = open1mObjs[tmpTimeFrameQuoteProperty][key0]['minute1Array'][2]['m30'];
 	    			index = 2;
 	    			numValues = 2;   // m15 x 2 = m30
 	    			break;
 	    		case "h1":
 	    			prevTimeFrame = 'm30';
-	    			open = open1mObjs[tmpTimeFrameQuoteProperty][key0][3]['h1'];
+	    			open = open1mObjs[tmpTimeFrameQuoteProperty][key0]['minute1Array'][3]['h1'];
 	    			index = 3;
 	    			numValues = 2;  // m30 x 2 = h1
 	    			break;
 	    		case "h4":
 	    			prevTimeFrame = 'h1';
-	    			open = open1mObjs[tmpTimeFrameQuoteProperty][key0][4]['h4'];
+	    			open = open1mObjs[tmpTimeFrameQuoteProperty][key0]['minute1Array'][4]['h4'];
 	    			index = 4;
 	    			numValues = 4;  // h1 x 4 = h4
 	    			break;
 				case "d1":
 	    			prevTimeFrame = 'h4';
-	    			open = open1mObjs[tmpTimeFrameQuoteProperty][key0][5]['d1'];
+	    			open = open1mObjs[tmpTimeFrameQuoteProperty][key0]['minute1Array'][5]['d1'];
 	    			index = 5;
 	    			numValues = 6;  // h4 x 6 = d1
 	    			break;
 				case "w1":
 	    			prevTimeFrame = 'd1';
-	    			open = open1mObjs[tmpTimeFrameQuoteProperty][key0][6]['w1'];
+	    			open = open1mObjs[tmpTimeFrameQuoteProperty][key0]['minute1Array'][6]['w1'];
 	    			index = 6;
 	    			numValues = 7;  // d1 x 7 = w1
 	    			break;
@@ -382,108 +375,102 @@ var QuotesModule = (function(){
 		  			for (var key1 in timeFrameQuotesObj) {
 		  				if (realTimeQuotesObj.hasOwnProperty(key1)) {
 		  					if (key0 == key1 && key0 != "provider" && key0 != "description") {
-		  						for (var j = 0; j <= timeFrameQuotesObj[key1][index][timeFrame].length - 1; j++) {
-		  							tempObj = timeFrameQuotesObj[key1][index][timeFrame][j];
-		  							//console.log(tempObj);
 
+		  						if (timeFrame == 'm5') {
+	  								//var paramMarketStatus =  tmpTimeFrameQuoteProperty.split('$')[1]+'$'+tmpTimeFrameQuoteProperty.split('$')[2]+'$TRADEALLOWED';
+	  								//if ( marketStatus[paramMarketStatus] == 1 ) {};
+	  								logger.info('MARKET STATUS FROM METATRADER: '+JSON.stringify(marketStatus) );
+	  							}
+								//TO FIX - WE HAVE TO USE ONE MESSAGE FORM MT4 TO UNDERSTAND WHEN THE MARKET IS CLOSED
+	  							//TEMPORARY FIX FOR THE WEEKEND
+	  							//HERE WE CLEAN THE 1minuteObjs. This objs store the last 1minute values.
+	  							//AND WE CLEANTHE REAL TIME ARRAY OBJ. THIS RRAY STORE THE LAST REALTIME VALUES INTO ON1 MINUTE
+	  							if ( marketStatus[paramMarketStatus] == 1 ) {			  								
+	  								logger.info('MARKET IS CLOSED, RESETTING THE 1MINUTE OBJ, AND RESETTING REALTIME ARRAY: CROSS: '+key0)+ ' Market status: '+JSON.stringify(marketStatus);
+	  								open1mObjs[tmpTimeFrameQuoteProperty][key0]['minute1Array'] = [{"m5":""},{"m15":""},{"m30":""},{"h1":""},{"h4":""},{"d1":""},{"w1":""}];
+	  								open1mObjs[tmpTimeFrameQuoteProperty][key0]['minute1Count'] = [0,0,0,0,0,0,0];
+	  								open1mObjs[tmpTimeFrameQuoteProperty][key0]['firstMinute'] = 0;
+	  								runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][key0] = [];
+	  							}else{
 
+			  						var newQuote = _createNewQuote(tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty,key0,timeFrame);
+			  						
+			  						for (var j = 0; j <= timeFrameQuotesObj[key1][index][timeFrame].length - 1; j++) {
+			  							tempObj = timeFrameQuotesObj[key1][index][timeFrame][j];
+			  							//console.log(tempObj);
 
-		  							if (timeFrame == 'm5' && Object.keys(tempObj)[0].split("v")[1] == '1') {
-		  								//var paramMarketStatus =  tmpTimeFrameQuoteProperty.split('$')[1]+'$'+tmpTimeFrameQuoteProperty.split('$')[2]+'$TRADEALLOWED';
-		  								//if ( marketStatus[paramMarketStatus] == 1 ) {};
-		  								logger.info('MARKET STATUS FROM METATRADER: '+JSON.stringify(marketStatus) );
-		  							}
-									//TO FIX - WE HAVE TO USE ONE MESSAGE FORM MT4 TO UNDERSTAND WHEN THE MARKET IS CLOSED
-		  							//TEMPORARY FIX FOR THE WEEKEND
-		  							//HERE WE CLEAN THE 1minuteObjs. This objs store the last 1minute values.
-		  							//AND WE CLEANTHE REAL TIME ARRAY OBJ. THIS RRAY STORE THE LAST REALTIME VALUES INTO ON1 MINUTE
-		  							if ( realTimeQuotesObj[key0] == tempObj[Object.keys(tempObj)[0]].last() ) {			  								
-		  								logger.info('CHECK WITH LAST(), MARKET IS CLOSED, RESETTING THE 1MINUTE OBJ, AND RESETTING REALTIME ARRAY: CROSS: '+key0);
-		  								for(var i=0; i<open1mObjs[tmpTimeFrameQuoteProperty][key0].length-1;i++){
-		  									for (var key1 in open1mObjs[tmpTimeFrameQuoteProperty][key0][i]) {
-		  										//EX:  open1mObjs[TIMEFRAMEQUOTE$MT4$ACTIVTRADES][EURUSD] = [{"m5":""},{"m15":""},{"m30":""},{"h1":""},{"h4":""},{"d1":""},{"w1":""}]
-		  										open1mObjs[tmpTimeFrameQuoteProperty][key0][i][key1] = "";
-		  									}
-		  								}
-		  								runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][key0] = [];
-		  							}
+				  						if (tempObj[Object.keys(tempObj)[0]].length < Object.keys(tempObj)[0].split("v")[1] ){
+				  							logger.trace('realTimeQuotesObj[key0] :'+realTimeQuotesObj[key0] );
+				  							logger.trace('tempObj[Object.keys(tempObj)[0]].last(): '+tempObj[Object.keys(tempObj)[0]].last());
 
+	//TEMPORARY FIX FOR THE WEEKEND: IF realTimeQuotesObj[key0] != tempObj[Object.keys(tempObj)[0]].last()  CONTINUE ELSE STOP
+				  							if (realTimeQuotesObj[key0] != "" && realTimeQuotesObj[key0] != null && realTimeQuotesObj[key0] != undefined ) {
+	/////////////////////////////////////////////////////////////////////////////////////
+				  								//key0 is the cross (es: EURUSD) and its used like second "search key" in the global runningProviderRealTimeObjs
+				  								//realTimeQuotesObj[key0] is the array with the last 60 seconds realtime quotes
+				  								//tmpRealTimeQuoteProperty is the first "search key" used in the global runningProviderRealTimeObjs (es: REALTIMEQUOTE$MT4$ACTIVTRADES)
+				  								//tmpTimeFrameQuoteProperty is the first "search key" used in the global runningProviderTimeFrameObjs (es: TIMEFRAMEQUOTE$MT4$ACTIVTRADES)
+				  								//timeframe is the value used to specify the type of timeframe (ex: m1,m5,m15,..). Its used also like 
+				  								
+				  								//Example of research in runningProviderTimeFrameObjs: runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty][key0][index0][timeFrame][index1]	--> return one array of values
+				  								//Example of research in runningProviderRealTimeObjs: runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][key0] --> return one array of values	
 
+				  								
+				  								tempObj[Object.keys(tempObj)[0]].push( newQuote );	
 
+				  								logger.trace('Updated timeFrameQuotesObj(operation:adding) : ' + tempObj[Object.keys(tempObj)[0]].toString() + ' for TimeFrame: '+timeFrame+ ' for number of values: '+Object.keys(tempObj)[0]+' on Cross: '+key1 );
+				  								var topic = key1;
+				  								//"TIMEFRAMEQUOTE@MT4@ACTIVTRADES   +     @EURUSD     +     @m1     +    @v1 
+				  								var topicToSignalProvider = timeFrameQuotesObj.provider+"@"+key1+"@"+timeFrame+"@"+Object.keys(tempObj)[0];
+				  								if (topicToSignalProvider == null || topicToSignalProvider == undefined ) {
+													logger.error('timeFrameQuotesObjProvider: ' +JSON.stringify(timeFrameQuotesObj.provider) + ' key1: ' + key1 + ' timeFrame: ' +timeFrame + ' totValues: ' + JSON.stringify( Object.keys(tempObj)[0] ) + ' In _updateTimeFrameQuotesObj topicToSignalProvider is notDefined/null');
+												}else if (tempObj[Object.keys(tempObj)[0]].toString() == null || tempObj[Object.keys(tempObj)[0]].toString() == undefined ) {
+													logger.error('objWithMessageToSend: '+ JSON.stringify(tempObj) + ' _updateTimeFrameQuotesObj is sending a message (Quotes) notDefined/null');
+												}else{
+				  									sockPub.send([topicToSignalProvider, tempObj[Object.keys(tempObj)[0]].join(";")]);
+				  									if (timeFrame == 'm5' && Object.keys(tempObj)[0].split("v")[1] == '1') {
+														logger.info('Sent new timeFrame value message (ex: logs only for m5 and v1): '+tempObj[Object.keys(tempObj)[0]].join(";")+ 'for TimeFrame: '+timeFrame+ 'for Cross: '+key1+' on topic: '+topicToSignalProvider);
+				  									}else if (timeFrame == 'm30' && Object.keys(tempObj)[0].split("v")[1] == '5') {
+														logger.info('Sent new timeFrame value message (ex: logs only for m30 and v5): '+tempObj[Object.keys(tempObj)[0]].join(";")+ 'for TimeFrame: '+timeFrame+ 'for Cross: '+key1+' on topic: '+topicToSignalProvider);
+				  									}
+				  								}
+				  							}else{
+				  								//if (topicToSignalProvider == null || topicToSignalProvider == undefined ) {
+												//	logger.error('In _updateTimeFrameQuotesObj, realTimeQuotesObj[key0] is null');
+												//};
+				  							}
+				  						}else{
+	//TEMPORARY FIX FOR THE WEEKEND: IF realTimeQuotesObj[key0] != tempObj[Object.keys(tempObj)[0]].last()  CONTINUE ELSE STOP
+			  								if (realTimeQuotesObj[key0] != "" && realTimeQuotesObj[key0] != null && realTimeQuotesObj[key0] != undefined) {
+	///////////////////////////////////////////////////////
+				  								tempObj[Object.keys(tempObj)[0]].shift();
+				  								
+				  								tempObj[Object.keys(tempObj)[0]].push(newQuote);
 
-
-
-			  						if (tempObj[Object.keys(tempObj)[0]].length < Object.keys(tempObj)[0].split("v")[1] ){
-			  							logger.trace('realTimeQuotesObj[key0] :'+realTimeQuotesObj[key0] );
-			  							logger.trace('tempObj[Object.keys(tempObj)[0]].last(): '+tempObj[Object.keys(tempObj)[0]].last());
-
-//TEMPORARY FIX FOR THE WEEKEND: IF realTimeQuotesObj[key0] != tempObj[Object.keys(tempObj)[0]].last()  CONTINUE ELSE STOP
-			  							if (realTimeQuotesObj[key0] != "" && realTimeQuotesObj[key0] != null && realTimeQuotesObj[key0] != undefined && realTimeQuotesObj[key0] != tempObj[Object.keys(tempObj)[0]].last() ) {
-/////////////////////////////////////////////////////////////////////////////////////
-			  								//key0 is the cross (es: EURUSD) and its used like second "search key" in the global runningProviderRealTimeObjs
-			  								//realTimeQuotesObj[key0] is the array with the last 60 seconds realtime quotes
-			  								//tmpRealTimeQuoteProperty is the first "search key" used in the global runningProviderRealTimeObjs (es: REALTIMEQUOTE$MT4$ACTIVTRADES)
-			  								//tmpTimeFrameQuoteProperty is the first "search key" used in the global runningProviderTimeFrameObjs (es: TIMEFRAMEQUOTE$MT4$ACTIVTRADES)
-			  								//timeframe is the value used to specify the type of timeframe (ex: m1,m5,m15,..). Its used also like 
-			  								
-			  								//Example of research in runningProviderTimeFrameObjs: runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty][key0][index0][timeFrame][index1]	--> return one array of values
-			  								//Example of research in runningProviderRealTimeObjs: runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][key0] --> return one array of values	
-
-			  								var newQuote = _createNewQuote(tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty,key0,timeFrame);
-			  								tempObj[Object.keys(tempObj)[0]].push( newQuote );	
-
-			  								logger.trace('Updated timeFrameQuotesObj(operation:adding) : ' + tempObj[Object.keys(tempObj)[0]].toString() + ' for TimeFrame: '+timeFrame+ ' for number of values: '+Object.keys(tempObj)[0]+' on Cross: '+key1 );
-			  								var topic = key1;
-			  								//"TIMEFRAMEQUOTE@MT4@ACTIVTRADES   +     @EURUSD     +     @m1     +    @v1 
-			  								var topicToSignalProvider = timeFrameQuotesObj.provider+"@"+key1+"@"+timeFrame+"@"+Object.keys(tempObj)[0];
-			  								if (topicToSignalProvider == null || topicToSignalProvider == undefined ) {
-												logger.error('timeFrameQuotesObjProvider: ' +JSON.stringify(timeFrameQuotesObj.provider) + ' key1: ' + key1 + ' timeFrame: ' +timeFrame + ' totValues: ' + JSON.stringify( Object.keys(tempObj)[0] ) + ' In _updateTimeFrameQuotesObj topicToSignalProvider is notDefined/null');
-											}else if (tempObj[Object.keys(tempObj)[0]].toString() == null || tempObj[Object.keys(tempObj)[0]].toString() == undefined ) {
-												logger.error('objWithMessageToSend: '+ JSON.stringify(tempObj) + ' _updateTimeFrameQuotesObj is sending a message (Quotes) notDefined/null');
-											}else{
-			  									sockPub.send([topicToSignalProvider, tempObj[Object.keys(tempObj)[0]].join(";")]);
-			  									if (timeFrame == 'm5' && Object.keys(tempObj)[0].split("v")[1] == '1') {
-													logger.info('Sent new timeFrame value message (ex: logs only for m5 and v1): '+tempObj[Object.keys(tempObj)[0]].join(";")+ 'for TimeFrame: '+timeFrame+ 'for Cross: '+key1+' on topic: '+topicToSignalProvider);
-			  									}else if (timeFrame == 'm30' && Object.keys(tempObj)[0].split("v")[1] == '5') {
-													logger.info('Sent new timeFrame value message (ex: logs only for m30 and v5): '+tempObj[Object.keys(tempObj)[0]].join(";")+ 'for TimeFrame: '+timeFrame+ 'for Cross: '+key1+' on topic: '+topicToSignalProvider);
-			  									}
-			  								}
-			  							}else{
-			  								//if (topicToSignalProvider == null || topicToSignalProvider == undefined ) {
-											//	logger.error('In _updateTimeFrameQuotesObj, realTimeQuotesObj[key0] is null');
-											//};
-			  							}
-			  						}else{
-//TEMPORARY FIX FOR THE WEEKEND: IF realTimeQuotesObj[key0] != tempObj[Object.keys(tempObj)[0]].last()  CONTINUE ELSE STOP
-		  								if (realTimeQuotesObj[key0] != "" && realTimeQuotesObj[key0] != tempObj[Object.keys(tempObj)[0]].last()) {
-///////////////////////////////////////////////////////
-			  								tempObj[Object.keys(tempObj)[0]].shift();
-			  								var newQuote = _createNewQuote(tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty,key0,timeFrame);
-			  								tempObj[Object.keys(tempObj)[0]].push(newQuote);
-
-			  								logger.trace('Updated timeFrameQuotesObj(operation:shifting) : ' + tempObj[Object.keys(tempObj)[0]].toString() + 'for TimeFrame: '+timeFrame+ ' for number of values: '+Object.keys(tempObj)[0]+' for Cross: '+key1 );
-			  								//"TIMEFRAMEQUOTE@MT4@ACTIVTRADES   +     @EURUSD     +     @m1     +    @v10 
-			  								var topicToSignalProvider = timeFrameQuotesObj.provider+"@"+key1+"@"+timeFrame+"@"+Object.keys(tempObj)[0];
-			  								if (topicToSignalProvider == null || topicToSignalProvider == undefined ) {
-												logger.error('timeFrameQuotesObjProvider: '+ JSON.stringify(timeFrameQuotesObj.provider) + ' key1: ' + key1 + ' timeFrame: '+ timeFrame + 'totValues: ' + JSON.stringify(Object.keys(tempObj)[0]) +' In _updateTimeFrameQuotesObj topicToSignalProvider is notDefined/null');
-											}else if (tempObj[Object.keys(tempObj)[0]].toString() == null || tempObj[Object.keys(tempObj)[0]].toString() == undefined ) {
-												logger.error('objWithMessageToSend: ' + JSON.stringify(tempObj) + ' _updateTimeFrameQuotesObj is sending a message (Quotes) notDefined/null');
-											}else{
-			  									sockPub.send([topicToSignalProvider, tempObj[Object.keys(tempObj)[0]].join(";")]);
-			  									if (timeFrame == 'm5' && Object.keys(tempObj)[0].split("v")[1] == '1') {
-			  										logger.info('Sent new timeFrame value message (logs only for m5 and v1): '+tempObj[Object.keys(tempObj)[0]].join(";")+ 'for TimeFrame: '+timeFrame+ 'for Cross: '+key1+' on topic: '+topicToSignalProvider);
-			  									}else if (timeFrame == 'm30' && Object.keys(tempObj)[0].split("v")[1] == '5') {
-													logger.info('Sent new timeFrame value message (ex: logs only for m30 and v5): '+tempObj[Object.keys(tempObj)[0]].join(";")+ 'for TimeFrame: '+timeFrame+ 'for Cross: '+key1+' on topic: '+topicToSignalProvider);
-			  									}
-			  								}
-			  							}else{
-			  								//if (topicToSignalProvider == null || topicToSignalProvider == undefined ) {
-											//	logger.error('In _updateTimeFrameQuotesObj, realTimeQuotesObj[key0] is null');
-											//};
-			  							}
+				  								logger.trace('Updated timeFrameQuotesObj(operation:shifting) : ' + tempObj[Object.keys(tempObj)[0]].toString() + 'for TimeFrame: '+timeFrame+ ' for number of values: '+Object.keys(tempObj)[0]+' for Cross: '+key1 );
+				  								//"TIMEFRAMEQUOTE@MT4@ACTIVTRADES   +     @EURUSD     +     @m1     +    @v10 
+				  								var topicToSignalProvider = timeFrameQuotesObj.provider+"@"+key1+"@"+timeFrame+"@"+Object.keys(tempObj)[0];
+				  								if (topicToSignalProvider == null || topicToSignalProvider == undefined ) {
+													logger.error('timeFrameQuotesObjProvider: '+ JSON.stringify(timeFrameQuotesObj.provider) + ' key1: ' + key1 + ' timeFrame: '+ timeFrame + 'totValues: ' + JSON.stringify(Object.keys(tempObj)[0]) +' In _updateTimeFrameQuotesObj topicToSignalProvider is notDefined/null');
+												}else if (tempObj[Object.keys(tempObj)[0]].toString() == null || tempObj[Object.keys(tempObj)[0]].toString() == undefined ) {
+													logger.error('objWithMessageToSend: ' + JSON.stringify(tempObj) + ' _updateTimeFrameQuotesObj is sending a message (Quotes) notDefined/null');
+												}else{
+				  									sockPub.send([topicToSignalProvider, tempObj[Object.keys(tempObj)[0]].join(";")]);
+				  									if (timeFrame == 'm5' && Object.keys(tempObj)[0].split("v")[1] == '1') {
+				  										logger.info('Sent new timeFrame value message (logs only for m5 and v1): '+tempObj[Object.keys(tempObj)[0]].join(";")+ 'for TimeFrame: '+timeFrame+ 'for Cross: '+key1+' on topic: '+topicToSignalProvider);
+				  									}else if (timeFrame == 'm30' && Object.keys(tempObj)[0].split("v")[1] == '5') {
+														logger.info('Sent new timeFrame value message (ex: logs only for m30 and v5): '+tempObj[Object.keys(tempObj)[0]].join(";")+ 'for TimeFrame: '+timeFrame+ 'for Cross: '+key1+' on topic: '+topicToSignalProvider);
+				  									}
+				  								}
+				  							}else{
+				  								//if (topicToSignalProvider == null || topicToSignalProvider == undefined ) {
+												//	logger.error('In _updateTimeFrameQuotesObj, realTimeQuotesObj[key0] is null');
+												//};
+				  							}
+				  						}
+				  						timeFrameQuotesObj[key1][index][timeFrame][j] = tempObj;
 			  						}
-			  						timeFrameQuotesObj[key1][index][timeFrame][j] = tempObj;
-		  						};
+			  					}
 		  						//uncomment this file if you want to check how are stored the quotes values
 		  						//logger.trace('Updated timeFrameQuotesObj[key1][index][timeFrame]: ' + JSON.stringify(timeFrameQuotesObj[key1][index][timeFrame] ) +  ' TimeFrame Obj Updated');
 		  						//console.log("timeFrameQuotesObj[key1][index][timeFrame]: ",timeFrameQuotesObj[key1][index][timeFrame]);
@@ -785,7 +772,9 @@ sockSubFromQuotesProvider.on('message', function(topic, message) {
 						logger.error('topic: ' + JSON.stringify(topic.toString()) + ' message: ' + JSON.stringify(message.toString()) + 'Error in message received from Quotes provider. The Quotes Provider wants to publish a new message quote '+message.toString()+' on topic '+topic.toString()+', but the topic doesnt exist ' );
 					}
 				}else if (topicArr[2] == 'TRADEALLOWED') {
-					var platform_broker = topic[0]+'$'+topic[1]; 
+					//EX: MT4@ACTIVTRADES@TRADEALLOWED
+					var platform_broker = topicArr[0]+'$'+topicArr[1]; 
+					logger.info('create topic TRADEALLOWED: '+ JSON.stringify(topicArr) );
 					if (marketStatus.hasOwnProperty( platform_broker )) { 
 						marketStatus[ platform_broker ] = messageArr[0];
 					}else{
