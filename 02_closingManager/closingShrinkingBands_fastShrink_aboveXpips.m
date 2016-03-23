@@ -17,8 +17,9 @@ dynamicOn = 0;
 
 
 % ShrinkAdded sets how much to reduce the SL at every new step
-ShrinkTP = dynamicParameters {1};
-ShrinkSL = dynamicParameters {2};
+ShrinkTP      = dynamicParameters {1};
+ShrinkSL      = dynamicParameters {2};
+speedFactorSL = dynamicParameters {3};
 min_gain = 100;
 
 % MeanPrice is the mid value between TP and SL
@@ -44,10 +45,10 @@ if ( distance > 0 )
         
     else
         
-        StopLossPrice = StopLossPrice + direction * ( distance + 2*ShrinkSL );
+        StopLossPrice = StopLossPrice + direction * ( distance + speedFactorSL*ShrinkSL );
         TakeProfitPrice = TakeProfitPrice + direction * ( distance - ShrinkTP );
         
-        newStopL = StopL - ( distance + 2*ShrinkSL );
+        newStopL = StopL - ( distance + speedFactorSL*ShrinkSL );
         newTakeP = TakeP + ( distance - ShrinkTP );
         
         display(strcat('faster dynam shrinking bands: TP = ',num2str(newTakeP),' SL = ',num2str(newStopL)));
