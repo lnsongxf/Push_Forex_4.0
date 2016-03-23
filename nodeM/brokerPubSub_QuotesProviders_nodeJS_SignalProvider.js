@@ -130,7 +130,7 @@ var QuotesModule = (function(){
 
 
 
-			  				logger.trace("Updated realTimeQuotesObj with the last value: "+JSON.stringify(runningProviderRealTimeObjs[key0][key]) +" ,key0: "+key0+ " ,key: "+key);
+			  				////logger.trace("Updated realTimeQuotesObj with the last value: "+JSON.stringify(runningProviderRealTimeObjs[key0][key]) +" ,key0: "+key0+ " ,key: "+key);
 			  				return true;
 			  			};	
 			  		}
