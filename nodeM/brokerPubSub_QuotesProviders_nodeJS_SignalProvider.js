@@ -152,7 +152,7 @@ var QuotesModule = (function(){
 		runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][cross][timeFrame]['volume'] = 0;
 
 		//11313,11315,11313,11316,30,03/18/2016 01:24  -->   apertura,massimo,minimo,chiusura,volume,time
-		var newQuote =  open+','+max+','+min+','+close+','+totVolume+','+time;
+		var newQuote =  open+','+max+','+min+','+close+','+volume+','+datetime;
 
 		if (timeFrame == 'm5' || timeFrame == 'm15') {
 			
