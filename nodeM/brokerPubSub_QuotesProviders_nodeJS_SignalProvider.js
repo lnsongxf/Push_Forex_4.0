@@ -122,7 +122,7 @@ var QuotesModule = (function(){
 								    runningProviderRealTimeObjs[platform][cross][timeFrame]['open'] = realOpen;
 								}
 							    runningProviderRealTimeObjs[platform][cross][timeFrame]['close'] = realClose;
-							    runningProviderRealTimeObjs[platform][cross][timeFrame]['volume'] = runningProviderRealTimeObjs[platform][cross][timeFrame]['volume']  +  realVolume;
+							    runningProviderRealTimeObjs[platform][cross][timeFrame]['volume'] = parseInt(runningProviderRealTimeObjs[platform][cross][timeFrame]['volume'])  +  parseInt(realVolume);
 							}
 			  				
 			  			};	
