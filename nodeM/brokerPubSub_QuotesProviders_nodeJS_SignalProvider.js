@@ -82,7 +82,7 @@ var QuotesModule = (function(){
 		    }
 		}
 
-		console.log("created new realTimeQuotesObj: "+JSON.stringify( _realTimeQuotesObj)+ " providerName: "+providerName);
+		//console.log("created new realTimeQuotesObj: "+JSON.stringify( _realTimeQuotesObj)+ " providerName: "+providerName);
 		return _realTimeQuotesObj
 	};
 
@@ -97,7 +97,7 @@ var QuotesModule = (function(){
 		//runningProviderRealTimeObjs['REALTIMEQUOTE$MT4@ACTIVTRADES']={'EURUSD':'','EURGBP':''}
 		//11313,11315,11313,11316,30,03/18/2016 01:24  -->   apertura,massimo,minimo,chiusura,volume,time
 		console.log("messageArr: "+JSON.stringify(messageArr) );
-		console.log("runningProviderRealTimeObjs[platform][cross][timeFrame]: "+JSON.stringify(runningProviderRealTimeObjs[platform][cross][timeFrame]) );
+		
 		var realOpen = messageArr[1].split(',')[0]
 		var realMax = messageArr[1].split(',')[1]
 		var realMin = messageArr[1].split(',')[2]
@@ -130,6 +130,7 @@ var QuotesModule = (function(){
 				}
 			}
 		}
+		console.log("runningProviderRealTimeObjs[platform][cross][timeFrame]: "+JSON.stringify(runningProviderRealTimeObjs[platform]['EURUSD']['m1']) );
 	};
 
 	var _createNewQuote = function(tmpRealTimeQuoteProperty,cross,timeFrame){
