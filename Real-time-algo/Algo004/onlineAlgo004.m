@@ -40,7 +40,9 @@ function [topicPub,messagePub] = onlineAlgo004(topicSub,messageSub,password)
 
 persistent matrix;
 persistent newTimeScalePoint;
+persistent newTimeScalePointEnd;
 persistent startingOperation;
+persistent numberOf1minPoints;
 persistent updatedOperation;
 persistent lastCloseValue
 persistent openValueReal;
@@ -73,6 +75,7 @@ if(isempty(matrix))
     ticket = -1;
     updatedOperation = 0;
     newTimeScalePoint = 0;
+    numberOf1minPoints = 0;
     ms = machineStateManager;
     ms.machineStatus = 'closed';
     nFile=0;
@@ -124,6 +127,8 @@ if listener1 && ( strcmp(ms.machineStatus,'closed') || strcmp(ms.machineStatus,'
     matrix(:,end)=matrix(:,end-1); % copio l'ultima mezz ora cm se fosse il dato al minuto
     
 elseif listener2 && ( strcmp(ms.machineStatus,'closed') || strcmp(ms.machineStatus,'open') ) %new 1minute data point
+    
+    numberOf1minPoints = numberOf1minPoints + 1 ;
     
     LogObj.info('MATLAB info','new data point at 1min received');
     newData = textscan(messageSub,'%d %d %d %d %d %s','Delimiter',','); % messageSub: open,max,min,close,volume,data
@@ -207,7 +212,7 @@ elseif listener3 && ( strcmp(ms.machineStatus,'closing') || strcmp(ms.machineSta
                 
                 receiver = '4castersltd@gmail.com';
                 mail     = '4castersltd@gmail.com';
-                subject  = num2str(cell2mat( strcat('MT4 failed in closing the operation',{' '}, num2str(ticket)) ));
+                subject  = num2str(cell2mat( strcat(nameAlgo,': MT4 failed in closing the operation',{' '}, num2str(ticket)) ));
                 content  = num2str(cell2mat( strcat('Please close the operation',{' '},num2str(ticket),{' '},'manually. Matlab will consider it closed') ));
                 sendgmail(receiver, subject, content, mail, password)
                 
@@ -237,6 +242,8 @@ elseif listener1 && ( strcmp(ms.machineStatus,'closing') || strcmp(ms.machineSta
     
 elseif listener2 && ( strcmp(ms.machineStatus,'closing') || strcmp(ms.machineStatus,'opening'))
     
+    numberOf1minPoints = numberOf1minPoints + 1 ;
+    
     LogObj.trace('MATLAB info',num2str(cell2mat(strcat('skipping data point at',{' '}, num2str(closingTimeScale),'min'))) );
     LogObj.info('MATLAB info',num2str(cell2mat(strcat('still waiting for the Status ...',{' '},ms.machineStatus))) );
     
@@ -262,7 +269,7 @@ if strcmp(ms.machineStatus,'closing')
         
         receiver = '4castersltd@gmail.com';
         mail     = '4castersltd@gmail.com';
-        subject  = num2str(cell2mat( strcat('no Status message received for closing the position',{' '}, num2str(ticket)) ));
+        subject  = num2str(cell2mat( strcat(nameAlgo,': no Status message received for closing the position',{' '}, num2str(ticket)) ));
         content  = num2str(cell2mat( strcat('We suppose that the operation',{' '},num2str(ticket),{' '},'has been closed by MT4, please check if it is true') ));
         sendgmail(receiver, subject, content, mail, password)
         
@@ -272,11 +279,17 @@ if strcmp(ms.machineStatus,'closing')
     end
 end
 
+if numberOf1minPoints == openingTimeScale;
+    newTimeScalePointEnd = 1;
+    numberOf1minPoints   = 0;
+else
+    newTimeScalePointEnd = 0;
+end    
+
 
 if ( ( strcmp(ms.machineStatus,'closed') || strcmp(ms.machineStatus,'open') ) && ms.statusNotification == 0 )
     t=now;
     timeMin=t*60*24;
-    newTimeScalePointEnd = 0;
     [oper,openValue, closeValue, stopLoss, takeProfit, minReturn] = Algo_004_statTrend(matrix,newTimeScalePoint,newTimeScalePointEnd,openValueReal,timeSeriesProperties,timeMin);
     
     newState{1} = oper;
@@ -290,6 +303,10 @@ if ( ( strcmp(ms.machineStatus,'closed') || strcmp(ms.machineStatus,'open') ) &&
     updatedOperation  = newState{1};
     lastCloseValue = newState{3};
     
+    if abs(oper) == 1
+        LogObj.trace( 'MATLAB info', num2str(cell2mat(strcat(  'TP =',{' '},num2str(takeProfit),{' '},'-',{' '},'SL =',{' '},num2str(stopLoss)  ))) ) ;
+    end
+
 end
 
 if abs(updatedOperation) > 0 && startingOperation == 0
