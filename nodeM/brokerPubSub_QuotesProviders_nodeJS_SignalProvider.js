@@ -125,8 +125,8 @@ var QuotesModule = (function(){
 							    runningProviderRealTimeObjs[platform][cross][timeFrame]['volume'] = parseInt(runningProviderRealTimeObjs[platform][cross][timeFrame]['volume'])  +  parseInt(realVolume);
 							
 								if (cross == 'EURUSD' && timeFrame == 'm1') {
-									console.log("messageArr: "+JSON.stringify(messageArr) );
-									console.log("runningProviderRealTimeObjs[platform][cross][timeFrame]: "+JSON.stringify(runningProviderRealTimeObjs[platform]['EURUSD']['m1']) );
+									//console.log("messageArr: "+JSON.stringify(messageArr) );
+									//console.log("runningProviderRealTimeObjs[platform][cross][timeFrame]: "+JSON.stringify(runningProviderRealTimeObjs[platform]['EURUSD']['m1']) );
 								};
 
 							}
@@ -146,6 +146,9 @@ var QuotesModule = (function(){
 		//timeframe is the value used to specify the type of timeframe (ex: m1,m5,m15,..). Its used also like 
 
 		//ex: single quote == 11313,11315,11313,11316,30,03/18/2016 01:24  -->   apertura,massimo,minimo,chiusura,volume,time
+
+		console.log("runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][cross] cross "+cross+" timeframe "+timeFrame+ ": "+JSON.stringify(runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][cross]) );
+
 		var open = runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][cross][timeFrame]['open'];
 		var max = runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][cross][timeFrame]['max'];
 		var min = runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][cross][timeFrame]['min'];
