@@ -82,7 +82,7 @@ var QuotesModule = (function(){
 		    }
 		}
 
-		logger.info("created new realTimeQuotesObj: "+JSON.stringify( _realTimeQuotesObj)+ " providerName: "+providerName);
+		console.log("created new realTimeQuotesObj: "+JSON.stringify( _realTimeQuotesObj)+ " providerName: "+providerName);
 		return _realTimeQuotesObj
 	};
 
@@ -96,6 +96,8 @@ var QuotesModule = (function(){
 		//ex: searchObjRealTimeQuote == "REALTIMEQUOTE$MT4$ACTIVTRADES"
 		//runningProviderRealTimeObjs['REALTIMEQUOTE$MT4@ACTIVTRADES']={'EURUSD':'','EURGBP':''}
 		//11313,11315,11313,11316,30,03/18/2016 01:24  -->   apertura,massimo,minimo,chiusura,volume,time
+		console.log("messageArr: "+JSON.stringify(messageArr) );
+		console.log("runningProviderRealTimeObjs[platform][cross][timeFrame]: "+JSON.stringify(runningProviderRealTimeObjs[platform][cross][timeFrame]) );
 		var realOpen = messageArr[1].split(',')[0]
 		var realMax = messageArr[1].split(',')[1]
 		var realMin = messageArr[1].split(',')[2]
@@ -240,10 +242,10 @@ var QuotesModule = (function(){
 				  								
 				  								//Example of research in runningProviderTimeFrameObjs: runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty][key0][index0][timeFrame][index1]	--> return one array of values
 				  								//Example of research in runningProviderRealTimeObjs: runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][key0] --> return one array of values	
-				  								
+				  								logger.info('NewQuote:'+newQuote);
 				  								tempObj[Object.keys(tempObj)[0]].push( newQuote );	
 
-				  								logger.trace('Updated timeFrameQuotesObj(operation:adding) : ' + tempObj[Object.keys(tempObj)[0]].toString() + ' for TimeFrame: '+timeFrame+ ' for number of values: '+Object.keys(tempObj)[0]+' on Cross: '+key1 );
+				  								//logger.trace('Updated timeFrameQuotesObj(operation:adding) : ' + tempObj[Object.keys(tempObj)[0]].toString() + ' for TimeFrame: '+timeFrame+ ' for number of values: '+Object.keys(tempObj)[0]+' on Cross: '+key1 );
 				  								var topic = key1;
 				  								//"TIMEFRAMEQUOTE@MT4@ACTIVTRADES   +     @EURUSD     +     @m1     +    @v1 
 				  								var topicToSignalProvider = timeFrameQuotesObj.provider+"@"+key1+"@"+timeFrame+"@"+Object.keys(tempObj)[0];
@@ -272,7 +274,7 @@ var QuotesModule = (function(){
 				  								
 				  								tempObj[Object.keys(tempObj)[0]].push(newQuote);
 
-				  								logger.trace('Updated timeFrameQuotesObj(operation:shifting) : ' + tempObj[Object.keys(tempObj)[0]].toString() + 'for TimeFrame: '+timeFrame+ ' for number of values: '+Object.keys(tempObj)[0]+' for Cross: '+key1 );
+				  								//logger.trace('Updated timeFrameQuotesObj(operation:shifting) : ' + tempObj[Object.keys(tempObj)[0]].toString() + 'for TimeFrame: '+timeFrame+ ' for number of values: '+Object.keys(tempObj)[0]+' for Cross: '+key1 );
 				  								//"TIMEFRAMEQUOTE@MT4@ACTIVTRADES   +     @EURUSD     +     @m1     +    @v10 
 				  								var topicToSignalProvider = timeFrameQuotesObj.provider+"@"+key1+"@"+timeFrame+"@"+Object.keys(tempObj)[0];
 				  								if (topicToSignalProvider == null || topicToSignalProvider == undefined ) {
@@ -498,7 +500,7 @@ sockSubFromQuotesProvider.subscribe('DELETETOPICQUOTES');
 sockSubFromQuotesProvider.on('message', function(topic, message) {
 	//console.log("mess: ",message.toString());
 	//console.log("topic: ",topic.toString());
-	logger.trace('Received message from Quotes Provider: '+message+ 'on topic: '+topic);
+	//logger.trace('Received message from Quotes Provider: '+message+ 'on topic: '+topic);
 	var topicArr = topic.toString().split("@");
   	var messageArr = message.toString().split("@");
 
