@@ -147,8 +147,6 @@ var QuotesModule = (function(){
 
 		//ex: single quote == 11313,11315,11313,11316,30,03/18/2016 01:24  -->   apertura,massimo,minimo,chiusura,volume,time
 
-		console.log("runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][cross] cross "+cross+" timeframe "+timeFrame+ ": "+JSON.stringify(runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][cross]) );
-
 		var open = runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][cross][timeFrame]['open'];
 		var max = runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][cross][timeFrame]['max'];
 		var min = runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][cross][timeFrame]['min'];
@@ -232,82 +230,85 @@ var QuotesModule = (function(){
 	  							//HERE WE CLEAN THE 1minuteObjs. This objs store the last 1minute values.
 	  							//AND WE CLEANTHE REAL TIME ARRAY OBJ. THIS RRAY STORE THE LAST REALTIME VALUES INTO ON1 MINUTE
 	  							var paramMarketStatus =  tmpTimeFrameQuoteProperty.split('$')[1]+'$'+tmpTimeFrameQuoteProperty.split('$')[2]+'$TRADEALLOWED';
-	  							if ( marketStatus[paramMarketStatus] == 1 ) {			  								
+	  							if ( marketStatus[paramMarketStatus] == 0 ) {			  								
 	  								runningProviderRealTimeObjs[tmpRealTimeQuoteProperty] = _createRealTimeQuotesObj(configQuotesList, tmpRealTimeQuoteProperty.replace("$", "@").replace("$", "@") );
 	  								logger.info('MARKET IS CLOSED, RESETTING runningProviderRealTimeObjs[tmpRealTimeQuoteProperty]: '+JSON.stringify(runningProviderRealTimeObjs[tmpRealTimeQuoteProperty]) );
 	  							}else{
 
 			  						var newQuote = _createNewQuote(tmpRealTimeQuoteProperty,key0,timeFrame);
-			  						
-			  						for (var j = 0; j <= timeFrameQuotesObj[key1][index][timeFrame].length - 1; j++) {
-			  							tempObj = timeFrameQuotesObj[key1][index][timeFrame][j];
 
-				  						if (tempObj[Object.keys(tempObj)[0]].length < Object.keys(tempObj)[0].split("v")[1] ){
-	
-				  							if (realTimeQuotesObj[key0] != "" && realTimeQuotesObj[key0] != null && realTimeQuotesObj[key0] != undefined ) {
-				  								//key0 is the cross (es: EURUSD) and its used like second "search key" in the global runningProviderRealTimeObjs
-				  								//realTimeQuotesObj[key0] is the array with the last 60 seconds realtime quotes
-				  								//tmpRealTimeQuoteProperty is the first "search key" used in the global runningProviderRealTimeObjs (es: REALTIMEQUOTE$MT4$ACTIVTRADES)
-				  								//tmpTimeFrameQuoteProperty is the first "search key" used in the global runningProviderTimeFrameObjs (es: TIMEFRAMEQUOTE$MT4$ACTIVTRADES)
-				  								//timeframe is the value used to specify the type of timeframe (ex: m1,m5,m15,..). Its used also like 
-				  								
-				  								//Example of research in runningProviderTimeFrameObjs: runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty][key0][index0][timeFrame][index1]	--> return one array of values
-				  								//Example of research in runningProviderRealTimeObjs: runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][key0] --> return one array of values	
-				  								logger.info('NewQuote:'+newQuote);
-				  								tempObj[Object.keys(tempObj)[0]].push( newQuote );	
+			  						var tmpNewQuote = newQuote.split(',');
+			  						if ( tmpNewQuote[0] != null && tmpNewQuote[1] != null && tmpNewQuote[2] != null && tmpNewQuote[3] != null ) {
+				  						for (var j = 0; j <= timeFrameQuotesObj[key1][index][timeFrame].length - 1; j++) {
+				  							tempObj = timeFrameQuotesObj[key1][index][timeFrame][j];
 
-				  								//logger.trace('Updated timeFrameQuotesObj(operation:adding) : ' + tempObj[Object.keys(tempObj)[0]].toString() + ' for TimeFrame: '+timeFrame+ ' for number of values: '+Object.keys(tempObj)[0]+' on Cross: '+key1 );
-				  								var topic = key1;
-				  								//"TIMEFRAMEQUOTE@MT4@ACTIVTRADES   +     @EURUSD     +     @m1     +    @v1 
-				  								var topicToSignalProvider = timeFrameQuotesObj.provider+"@"+key1+"@"+timeFrame+"@"+Object.keys(tempObj)[0];
-				  								if (topicToSignalProvider == null || topicToSignalProvider == undefined ) {
-													logger.error('timeFrameQuotesObjProvider: ' +JSON.stringify(timeFrameQuotesObj.provider) + ' key1: ' + key1 + ' timeFrame: ' +timeFrame + ' totValues: ' + JSON.stringify( Object.keys(tempObj)[0] ) + ' In _updateTimeFrameQuotesObj topicToSignalProvider is notDefined/null');
-												}else if (tempObj[Object.keys(tempObj)[0]].toString() == null || tempObj[Object.keys(tempObj)[0]].toString() == undefined ) {
-													logger.error('objWithMessageToSend: '+ JSON.stringify(tempObj) + ' _updateTimeFrameQuotesObj is sending a message (Quotes) notDefined/null');
-												}else{
-				  									sockPub.send([topicToSignalProvider, tempObj[Object.keys(tempObj)[0]].join(";")]);
-				  									if (timeFrame == 'm5' && Object.keys(tempObj)[0].split("v")[1] == '1') {
-														logger.info('Sent new timeFrame value message (ex: logs only for m5 and v1): '+tempObj[Object.keys(tempObj)[0]].join(";")+ 'for TimeFrame: '+timeFrame+ 'for Cross: '+key1+' on topic: '+topicToSignalProvider);
-				  									}else if (timeFrame == 'm30' && Object.keys(tempObj)[0].split("v")[1] == '5') {
-														logger.info('Sent new timeFrame value message (ex: logs only for m30 and v5): '+tempObj[Object.keys(tempObj)[0]].join(";")+ 'for TimeFrame: '+timeFrame+ 'for Cross: '+key1+' on topic: '+topicToSignalProvider);
-				  									}
-				  								}
-				  							}else{
-				  								//if (topicToSignalProvider == null || topicToSignalProvider == undefined ) {
-												//	logger.error('In _updateTimeFrameQuotesObj, realTimeQuotesObj[key0] is null');
-												//};
-				  							}
-				  						}else{
-	
-			  								if (realTimeQuotesObj[key0] != "" && realTimeQuotesObj[key0] != null && realTimeQuotesObj[key0] != undefined) {
-	
-				  								tempObj[Object.keys(tempObj)[0]].shift();
-				  								
-				  								tempObj[Object.keys(tempObj)[0]].push(newQuote);
+					  						if (tempObj[Object.keys(tempObj)[0]].length < Object.keys(tempObj)[0].split("v")[1] ){
+		
+					  							if (realTimeQuotesObj[key0] != "" && realTimeQuotesObj[key0] != null && realTimeQuotesObj[key0] != undefined ) {
+					  								//key0 is the cross (es: EURUSD) and its used like second "search key" in the global runningProviderRealTimeObjs
+					  								//realTimeQuotesObj[key0] is the array with the last 60 seconds realtime quotes
+					  								//tmpRealTimeQuoteProperty is the first "search key" used in the global runningProviderRealTimeObjs (es: REALTIMEQUOTE$MT4$ACTIVTRADES)
+					  								//tmpTimeFrameQuoteProperty is the first "search key" used in the global runningProviderTimeFrameObjs (es: TIMEFRAMEQUOTE$MT4$ACTIVTRADES)
+					  								//timeframe is the value used to specify the type of timeframe (ex: m1,m5,m15,..). Its used also like 
+					  								
+					  								//Example of research in runningProviderTimeFrameObjs: runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty][key0][index0][timeFrame][index1]	--> return one array of values
+					  								//Example of research in runningProviderRealTimeObjs: runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][key0] --> return one array of values	
+					  								
+					  								tempObj[Object.keys(tempObj)[0]].push( newQuote );	
 
-				  								//logger.trace('Updated timeFrameQuotesObj(operation:shifting) : ' + tempObj[Object.keys(tempObj)[0]].toString() + 'for TimeFrame: '+timeFrame+ ' for number of values: '+Object.keys(tempObj)[0]+' for Cross: '+key1 );
-				  								//"TIMEFRAMEQUOTE@MT4@ACTIVTRADES   +     @EURUSD     +     @m1     +    @v10 
-				  								var topicToSignalProvider = timeFrameQuotesObj.provider+"@"+key1+"@"+timeFrame+"@"+Object.keys(tempObj)[0];
-				  								if (topicToSignalProvider == null || topicToSignalProvider == undefined ) {
-													logger.error('timeFrameQuotesObjProvider: '+ JSON.stringify(timeFrameQuotesObj.provider) + ' key1: ' + key1 + ' timeFrame: '+ timeFrame + 'totValues: ' + JSON.stringify(Object.keys(tempObj)[0]) +' In _updateTimeFrameQuotesObj topicToSignalProvider is notDefined/null');
-												}else if (tempObj[Object.keys(tempObj)[0]].toString() == null || tempObj[Object.keys(tempObj)[0]].toString() == undefined ) {
-													logger.error('objWithMessageToSend: ' + JSON.stringify(tempObj) + ' _updateTimeFrameQuotesObj is sending a message (Quotes) notDefined/null');
-												}else{
-				  									sockPub.send([topicToSignalProvider, tempObj[Object.keys(tempObj)[0]].join(";")]);
-				  									if (timeFrame == 'm5' && Object.keys(tempObj)[0].split("v")[1] == '1') {
-				  										logger.info('Sent new timeFrame value message (logs only for m5 and v1): '+tempObj[Object.keys(tempObj)[0]].join(";")+ 'for TimeFrame: '+timeFrame+ 'for Cross: '+key1+' on topic: '+topicToSignalProvider);
-				  									}else if (timeFrame == 'm30' && Object.keys(tempObj)[0].split("v")[1] == '5') {
-														logger.info('Sent new timeFrame value message (ex: logs only for m30 and v5): '+tempObj[Object.keys(tempObj)[0]].join(";")+ 'for TimeFrame: '+timeFrame+ 'for Cross: '+key1+' on topic: '+topicToSignalProvider);
-				  									}
-				  								}
-				  							}else{
-				  								//if (topicToSignalProvider == null || topicToSignalProvider == undefined ) {
-												//	logger.error('In _updateTimeFrameQuotesObj, realTimeQuotesObj[key0] is null');
-												//};
-				  							}
+					  								//logger.trace('Updated timeFrameQuotesObj(operation:adding) : ' + tempObj[Object.keys(tempObj)[0]].toString() + ' for TimeFrame: '+timeFrame+ ' for number of values: '+Object.keys(tempObj)[0]+' on Cross: '+key1 );
+					  								var topic = key1;
+					  								//"TIMEFRAMEQUOTE@MT4@ACTIVTRADES   +     @EURUSD     +     @m1     +    @v1 
+					  								var topicToSignalProvider = timeFrameQuotesObj.provider+"@"+key1+"@"+timeFrame+"@"+Object.keys(tempObj)[0];
+					  								if (topicToSignalProvider == null || topicToSignalProvider == undefined ) {
+														logger.error('timeFrameQuotesObjProvider: ' +JSON.stringify(timeFrameQuotesObj.provider) + ' key1: ' + key1 + ' timeFrame: ' +timeFrame + ' totValues: ' + JSON.stringify( Object.keys(tempObj)[0] ) + ' In _updateTimeFrameQuotesObj topicToSignalProvider is notDefined/null');
+													}else if (tempObj[Object.keys(tempObj)[0]].toString() == null || tempObj[Object.keys(tempObj)[0]].toString() == undefined ) {
+														logger.error('objWithMessageToSend: '+ JSON.stringify(tempObj) + ' _updateTimeFrameQuotesObj is sending a message (Quotes) notDefined/null');
+													}else{
+					  									sockPub.send([topicToSignalProvider, tempObj[Object.keys(tempObj)[0]].join(";")]);
+					  									if (timeFrame == 'm5' && Object.keys(tempObj)[0].split("v")[1] == '1') {
+															logger.info('Sent new timeFrame value message (ex: logs only for m5 and v1): '+tempObj[Object.keys(tempObj)[0]].join(";")+ 'for TimeFrame: '+timeFrame+ 'for Cross: '+key1+' on topic: '+topicToSignalProvider);
+					  									}else if (timeFrame == 'm30' && Object.keys(tempObj)[0].split("v")[1] == '5') {
+															logger.info('Sent new timeFrame value message (ex: logs only for m30 and v5): '+tempObj[Object.keys(tempObj)[0]].join(";")+ 'for TimeFrame: '+timeFrame+ 'for Cross: '+key1+' on topic: '+topicToSignalProvider);
+					  									}
+					  								}
+					  							}else{
+					  								//if (topicToSignalProvider == null || topicToSignalProvider == undefined ) {
+													//	logger.error('In _updateTimeFrameQuotesObj, realTimeQuotesObj[key0] is null');
+													//};
+					  							}
+					  						}else{
+		
+				  								if (realTimeQuotesObj[key0] != "" && realTimeQuotesObj[key0] != null && realTimeQuotesObj[key0] != undefined) {
+		
+					  								tempObj[Object.keys(tempObj)[0]].shift();
+					  								
+					  								tempObj[Object.keys(tempObj)[0]].push(newQuote);
+
+					  								//logger.trace('Updated timeFrameQuotesObj(operation:shifting) : ' + tempObj[Object.keys(tempObj)[0]].toString() + 'for TimeFrame: '+timeFrame+ ' for number of values: '+Object.keys(tempObj)[0]+' for Cross: '+key1 );
+					  								//"TIMEFRAMEQUOTE@MT4@ACTIVTRADES   +     @EURUSD     +     @m1     +    @v10 
+					  								var topicToSignalProvider = timeFrameQuotesObj.provider+"@"+key1+"@"+timeFrame+"@"+Object.keys(tempObj)[0];
+					  								if (topicToSignalProvider == null || topicToSignalProvider == undefined ) {
+														logger.error('timeFrameQuotesObjProvider: '+ JSON.stringify(timeFrameQuotesObj.provider) + ' key1: ' + key1 + ' timeFrame: '+ timeFrame + 'totValues: ' + JSON.stringify(Object.keys(tempObj)[0]) +' In _updateTimeFrameQuotesObj topicToSignalProvider is notDefined/null');
+													}else if (tempObj[Object.keys(tempObj)[0]].toString() == null || tempObj[Object.keys(tempObj)[0]].toString() == undefined ) {
+														logger.error('objWithMessageToSend: ' + JSON.stringify(tempObj) + ' _updateTimeFrameQuotesObj is sending a message (Quotes) notDefined/null');
+													}else{
+					  									sockPub.send([topicToSignalProvider, tempObj[Object.keys(tempObj)[0]].join(";")]);
+					  									if (timeFrame == 'm5' && Object.keys(tempObj)[0].split("v")[1] == '1') {
+					  										logger.info('Sent new timeFrame value message (logs only for m5 and v1): '+tempObj[Object.keys(tempObj)[0]].join(";")+ 'for TimeFrame: '+timeFrame+ 'for Cross: '+key1+' on topic: '+topicToSignalProvider);
+					  									}else if (timeFrame == 'm30' && Object.keys(tempObj)[0].split("v")[1] == '5') {
+															logger.info('Sent new timeFrame value message (ex: logs only for m30 and v5): '+tempObj[Object.keys(tempObj)[0]].join(";")+ 'for TimeFrame: '+timeFrame+ 'for Cross: '+key1+' on topic: '+topicToSignalProvider);
+					  									}
+					  								}
+					  							}else{
+					  								//if (topicToSignalProvider == null || topicToSignalProvider == undefined ) {
+													//	logger.error('In _updateTimeFrameQuotesObj, realTimeQuotesObj[key0] is null');
+													//};
+					  							}
+					  						}
+					  						timeFrameQuotesObj[key1][index][timeFrame][j] = tempObj;
 				  						}
-				  						timeFrameQuotesObj[key1][index][timeFrame][j] = tempObj;
-			  						}
+				  					}
 			  					}
 		  						//uncomment this file if you want to check how are stored the quotes values
 		  						//logger.trace('Updated timeFrameQuotesObj[key1][index][timeFrame]: ' + JSON.stringify(timeFrameQuotesObj[key1][index][timeFrame] ) +  ' TimeFrame Obj Updated');
