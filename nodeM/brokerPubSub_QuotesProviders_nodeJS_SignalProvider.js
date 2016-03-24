@@ -124,13 +124,14 @@ var QuotesModule = (function(){
 							    runningProviderRealTimeObjs[platform][cross][timeFrame]['close'] = realClose;
 							    runningProviderRealTimeObjs[platform][cross][timeFrame]['volume'] = runningProviderRealTimeObjs[platform][cross][timeFrame]['volume']  +  realVolume;
 							}
-			  				return true;
+			  				
 			  			};	
 			  		}
 				}
 			}
 		}
 		console.log("runningProviderRealTimeObjs[platform][cross][timeFrame]: "+JSON.stringify(runningProviderRealTimeObjs[platform]['EURUSD']['m1']) );
+		return true;
 	};
 
 	var _createNewQuote = function(tmpRealTimeQuoteProperty,cross,timeFrame){
