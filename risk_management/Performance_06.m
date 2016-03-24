@@ -435,21 +435,35 @@ classdef Performance_06 < handle
                 % frequency histogram of the latency
                 [latn,xlatn]=hist(Latency,20);
                 figure
+                subLat(1) = subplot(2,1,1);
+                plot(xlatn,cumsum(latn)/sum(latn));
+                title('cdf of the latency (in mins)')
+                subLat(2) = subplot(2,1,2);
                 bar(xlatn,latn/sum(latn));
                 title('frequency histogram of the latency (in mins)')
+                
+                linkaxes(subLat,'x');
                 
                 % frequency histogram of the lacency, split in won and lost operations
                 [latplus,xlatplus]=hist( Latency(find(returns>0)) );
                 figure
-                subl(1) = subplot(1,2,1);
+                subl(1) = subplot(2,2,1);
+                plot(xlatplus,cumsum(latplus)/sum(latplus));
+                title('cdf of the latency (in mins), won operations')
+                subl(3) = subplot(2,2,3);
                 bar(xlatplus,latplus/sum(latplus));
-                title('frequency histogram of latency, won operations only')
+                title('frequency histogram of latency, won operations')
                 [latlost,xlatlost]=hist( Latency(find(returns<0)) );
-                subl(2) = subplot(1,2,2);
+                subl(2) = subplot(2,2,2);
+                plot(xlatlost,cumsum(latlost)/sum(latlost));
+                title('cdf of the latency (in mins), lost operations')
+                subl(4) = subplot(2,2,4);
                 bar(xlatlost,latlost/sum(latlost));
-                title('frequency histogram of latency, lost operations only')
+                title('frequency histogram of latency, lost operations')
                 
-                linkaxes(subl,'y');
+                linkaxes(subl,'x');
+                linkaxes(subl(1:2),'y');
+                linkaxes(subl(3:4),'y');
 
 %                 % frequency histogram of latency, ratio between won and lost operations
 %                 [latplus,~]=hist( Latency( find(returns>0) ), xlatn );
@@ -467,8 +481,14 @@ classdef Performance_06 < handle
                 % frequency histogram of minimum returns, won operations
                 [nplus,xoutplus]=hist( minReturns(find(returns>0)) );
                 figure
+                subMR(1) = subplot(2,1,1);
+                plot(xoutplus,cumsum(nplus)/sum(nplus));
+                title('cdf of the min returns, won operations')
+                subMR(2) = subplot(2,1,2);
                 bar(xoutplus,nplus/sum(nplus));
-                title('frequency histogram of min returns, won operations only')
+                title('frequency histogram of min returns, won operations')
+                
+                linkaxes(subMR,'x');
                 
                 % plot of cumulative returns in Euro
                 figure
