@@ -103,27 +103,25 @@ var QuotesModule = (function(){
 		var realVolume = messageArr[1].split(',')[4]
 
 
-		for (var key0 in runningProviderRealTimeObjs) {
-			if (key0 == searchObjRealTimeQuote) {
-  				for (var cross in runningProviderRealTimeObjs[key0]) {
-			  		if (runningProviderRealTimeObjs[key0].hasOwnProperty(cross)) {
+		for (var platform in runningProviderRealTimeObjs) {
+			if (platform == searchObjRealTimeQuote) {
+  				for (var cross in runningProviderRealTimeObjs[platform]) {
+			  		if (runningProviderRealTimeObjs[platform].hasOwnProperty(cross)) {
 			  			if (cross == messageArr[0]) {
 			  				
-							for( timeFrame in runningProviderRealTimeObjs[key0][cross] ){
-							   	if (realMax > realtimeQuotesObj[query1][cross][timeFrame]['max'] || realtimeQuotesObj[query1][cross][timeFrame]['max'] == null){
-							       realtimeQuotesObj[query1][cross][timeFrame]['max'] = realMax;
+							for( timeFrame in runningProviderRealTimeObjs[platform][cross] ){
+							   	if (realMax > runningProviderRealTimeObjs[platform][cross][timeFrame]['max'] || runningProviderRealTimeObjs[platform][cross][timeFrame]['max'] == null){
+							       runningProviderRealTimeObjs[platform][cross][timeFrame]['max'] = realMax;
 							   	}
-							   	if (realMin < realtimeQuotesObj[query1][cross][timeFrame]['min'] || rrealtimeQuotesObj[query1][cross][timeFrame]['min'] == null){
-							       realtimeQuotesObj[query1][cross][timeFrame]['min'] = realMin;
+							   	if (realMin < runningProviderRealTimeObjs[platform][cross][timeFrame]['min'] || runningProviderRealTimeObjs[platform][cross][timeFrame]['min'] == null){
+							       runningProviderRealTimeObjs[platform][cross][timeFrame]['min'] = realMin;
 							   	}
-							   	if( realtimeQuotesObj[query1][cross][timeFrame]['open']  == null){
-								    realtimeQuotesObj[query1][cross][timeFrame]['open'] = realOpen;
+							   	if( runningProviderRealTimeObjs[platform][cross][timeFrame]['open']  == null){
+								    runningProviderRealTimeObjs[platform][cross][timeFrame]['open'] = realOpen;
 								}
-							    realtimeQuotesObj[query1][cross][timeFrame]['close'] = realClose;
-							    realtimeQuotesObj[query1][cross][timeFrame]['volume'] = realtimeQuotesObj[query1][cross][timeFrame]['volume']  +  realVolume;
+							    runningProviderRealTimeObjs[platform][cross][timeFrame]['close'] = realClose;
+							    runningProviderRealTimeObjs[platform][cross][timeFrame]['volume'] = runningProviderRealTimeObjs[platform][cross][timeFrame]['volume']  +  realVolume;
 							}
-
-			  				//logger.trace("Updated realTimeQuotesObj with the last value: "+JSON.stringify(runningProviderRealTimeObjs[key0][key]) +" ,key0: "+key0+ " ,key: "+key);
 			  				return true;
 			  			};	
 			  		}
