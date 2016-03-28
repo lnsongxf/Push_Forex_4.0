@@ -3,6 +3,7 @@ var zmq = require('zmq');
 var schedule = require('node-schedule');
 var bunyan = require('bunyan');
 var BunyanSlack = require('bunyan-slack');
+var later = require('later');
 
 /*
 "fatal" (60): The service/app is going to stop or become unusable now. An operator should definitely look into this soon.
@@ -86,8 +87,8 @@ var QuotesModule = (function(){
 		return _realTimeQuotesObj
 	};
 
-	var _updateRealTimeQuotesObj = function(searchObjRealTimeQuote,messageArr){
-		if (searchObjRealTimeQuote == null || searchObjRealTimeQuote == undefined || messageArr == null || messageArr == undefined) {
+	var _updateRealTimeQuotesObj = function(platform,messageArr){
+		if (platform == null || platform == undefined || messageArr == null || messageArr == undefined) {
 			logger.error('searchObjRealTimeQuote '+searchObjRealTimeQuote+' or messageArr '+messageArr+' null or not defined into _updateRealTimeQuotesObj');
 			return null;
 		};
@@ -104,43 +105,44 @@ var QuotesModule = (function(){
 		var realClose = messageArr[1].split(',')[3]
 		var realVolume = messageArr[1].split(',')[4]
 
-
-		for (var platform in runningProviderRealTimeObjs) {
-			if (platform == searchObjRealTimeQuote) {
-  				for (var cross in runningProviderRealTimeObjs[platform]) {
-			  		if (runningProviderRealTimeObjs[platform].hasOwnProperty(cross)) {
-			  			if (cross == messageArr[0]) {
-			  				
-							for( timeFrame in runningProviderRealTimeObjs[platform][cross] ){
-							   	if (realMax > runningProviderRealTimeObjs[platform][cross][timeFrame]['max'] || runningProviderRealTimeObjs[platform][cross][timeFrame]['max'] == null){
-							       runningProviderRealTimeObjs[platform][cross][timeFrame]['max'] = realMax;
-							   	}
-							   	if (realMin < runningProviderRealTimeObjs[platform][cross][timeFrame]['min'] || runningProviderRealTimeObjs[platform][cross][timeFrame]['min'] == null){
-							       runningProviderRealTimeObjs[platform][cross][timeFrame]['min'] = realMin;
-							   	}
-							   	if( runningProviderRealTimeObjs[platform][cross][timeFrame]['open']  == null){
-								    runningProviderRealTimeObjs[platform][cross][timeFrame]['open'] = realOpen;
-								}
-							    runningProviderRealTimeObjs[platform][cross][timeFrame]['close'] = realClose;
-							    runningProviderRealTimeObjs[platform][cross][timeFrame]['volume'] = parseInt(runningProviderRealTimeObjs[platform][cross][timeFrame]['volume'])  +  parseInt(realVolume);
-							
-								if (cross == 'EURUSD' && timeFrame == 'm1') {
-									//console.log("messageArr: "+JSON.stringify(messageArr) );
-									//console.log("runningProviderRealTimeObjs[platform][cross][timeFrame]: "+JSON.stringify(runningProviderRealTimeObjs[platform]['EURUSD']['m1']) );
-								};
-
-							}
-			  				
-			  			};	
-			  		}
-				}
-			}
+		if (runningProviderRealTimeObjs[platform] == null || runningProviderRealTimeObjs[platform] == undefined) {
+			logger.error("Unable to find platform " + platform);
+			return null;
 		}
-		
+
+		var cross = messageArr[0];
+		if (runningProviderRealTimeObjs[platform][cross] == null || runningProviderRealTimeObjs[platform][cross] == undefined) {
+			logger.error("Unable to find cross " + cross + " in platform " + platform);
+			return null;
+		}		
+			  				
+		for( timeFrame in runningProviderRealTimeObjs[platform][cross] ){
+		    if (realMax > runningProviderRealTimeObjs[platform][cross][timeFrame]['max'] || runningProviderRealTimeObjs[platform][cross][timeFrame]['max'] == null){
+			    runningProviderRealTimeObjs[platform][cross][timeFrame]['max'] = realMax;
+			}
+			if (realMin < runningProviderRealTimeObjs[platform][cross][timeFrame]['min'] || runningProviderRealTimeObjs[platform][cross][timeFrame]['min'] == null){
+			    runningProviderRealTimeObjs[platform][cross][timeFrame]['min'] = realMin;
+			}
+			if( runningProviderRealTimeObjs[platform][cross][timeFrame]['open']  == null){
+				runningProviderRealTimeObjs[platform][cross][timeFrame]['open'] = realOpen;
+			}
+			runningProviderRealTimeObjs[platform][cross][timeFrame]['close'] = realClose;
+			if (timeFrame == 'm1') {
+				runningProviderRealTimeObjs[platform][cross][timeFrame]['volume'] = parseInt(realVolume);
+			}
+			else {
+
+			}
+							
+			if (cross == 'EURUSD' && timeFrame == 'm1') {
+				//console.log("messageArr: "+JSON.stringify(messageArr) );
+				//console.log("runningProviderRealTimeObjs[platform][cross][timeFrame]: "+JSON.stringify(runningProviderRealTimeObjs[platform]['EURUSD']['m1']) );
+			};
+		}
 		return true;
 	};
 
-	var _createNewQuote = function(tmpRealTimeQuoteProperty,cross,timeFrame){
+	var _createNewQuote = function(tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty,cross,timeFrame){
 			
 		//tmpRealTimeQuoteProperty is the first "search key" used in the global runningProviderRealTimeObjs (es: REALTIMEQUOTE$MT4$ACTIVTRADES)
 		//timeframe is the value used to specify the type of timeframe (ex: m1,m5,m15,..). Its used also like 
@@ -151,25 +153,82 @@ var QuotesModule = (function(){
 		var max = runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][cross][timeFrame]['max'];
 		var min = runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][cross][timeFrame]['min'];
 		var close = runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][cross][timeFrame]['close'] ;
-		var volume = runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][cross][timeFrame]['volume'];
+		var volume = runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][cross][timeFrame]['volume'];  //needed only for m1
 		var currentdate = new Date(); 
 		var datetime = currentdate.getDate()+"/"+(currentdate.getMonth()+1)+"/"+currentdate.getFullYear()+" "+currentdate.getHours()+":"+currentdate.getMinutes(); 
-							
+
+		if (timeFrame != 'm1') {
+
+			var prevTimeFrame = "";  // this variable is used to store the previous timeframe (es: i want to update m5 array i have to consider m1 array. In this case prevTimeFrame = m1 )
+			var index = "";
+			numValues = "";
+			switch (timeFrame){
+	    		case "m5":
+	    			prevTimeFrame = 'm1';
+	    			index = 0;
+	    			numValues = 5;  // m1 x 5 = m5
+	    			break;
+	    		case "m15":
+	    			prevTimeFrame = 'm5';
+	    			index = 1;
+	    			numValues = 3;   // m5 x 3 = m15
+	    			break;
+	    		case "m30":
+	    			prevTimeFrame = 'm15';
+	    			index = 2;
+	    			numValues = 2;   // m15 x 2 = m30
+	    			break;
+	    		case "h1":
+	    			prevTimeFrame = 'm30';
+	    			index = 3;
+	    			numValues = 2;  // m30 x 2 = h1
+	    			break;
+	    		case "h4":
+	    			prevTimeFrame = 'h1';
+	    			index = 4;
+	    			numValues = 4;  // h1 x 4 = h4
+	    			break;
+				case "d1":
+	    			prevTimeFrame = 'h4';
+	    			index = 5;
+	    			numValues = 6;  // h4 x 6 = d1
+	    			break;
+				case "w1":
+	    			prevTimeFrame = 'd1';
+	    			index = 6;
+	    			numValues = 5;  // d1 x 7 = w1
+	    			break;
+			}
+
+			var tmpArrPreviousTimeFrameQuotesV10 = runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty][cross][index][prevTimeFrame][2]['v10']; //we are going to get the previous timeframe array(es: if timeframe is m5 we get m1)
+			if( tmpArrPreviousTimeFrameQuotesV10.length >= numValues ){
+				volume = 0;
+				
+				for(var i = numValues-1; i >= 0; i--){  //We iterate on each value of the previuos timeframe array (es: id m5, previous array is m1. In this case we iterate on the previous 5 values)
+					var tmpArrSingleQuote = tmpArrPreviousTimeFrameQuotesV10[tmpArrPreviousTimeFrameQuotesV10.length-1-i].split(',');
+					volume = volume + parseInt(tmpArrSingleQuote[4]);
+				}
+			}else{
+				logger.error('Error on timeframe '+timeFrame+' tmpArrPreviousTimeFrameQuotesV10 :'+JSON.stringify(tmpArrPreviousTimeFrameQuotesV10) );
+			}
+
+		}
+
+		//11313,11315,11313,11316,30,03/18/2016 01:24  -->   apertura,massimo,minimo,chiusura,volume,time
+		var newQuote =  open+','+max+','+min+','+close+','+volume+','+datetime;
+
+		if (timeFrame == 'm1' || timeFrame == 'm30' && cross == 'EURUSD' ) {
+			
+			logger.info('Creating new quote - Cross:'+cross+' timeframe:'+timeFrame+' newQuote:'+newQuote);
+			logger.info('Resetting values for cross '+cross+' timeframe '+timeFrame+' : '+JSON.stringify(runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][cross][timeFrame]) );
+		};
+
 		//Resetting runningProviderRealTimeObjs[tmpRealTimeQuoteProperty] for the this specific cross
 		runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][cross][timeFrame]['open'] = null
 		runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][cross][timeFrame]['max'] = null;
 		runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][cross][timeFrame]['min'] = null;
 		runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][cross][timeFrame]['close'] = null;
 		runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][cross][timeFrame]['volume'] = 0;
-
-		//11313,11315,11313,11316,30,03/18/2016 01:24  -->   apertura,massimo,minimo,chiusura,volume,time
-		var newQuote =  open+','+max+','+min+','+close+','+volume+','+datetime;
-
-		if (timeFrame == 'm5' || timeFrame == 'm15') {
-			
-			logger.info('Creating new quote - Cross:'+cross+' timeframe:'+timeFrame+' newQuote:'+newQuote);
-			logger.info('Resetting values for cross '+cross+' timeframe '+timeFrame+' : '+JSON.stringify(runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][cross][timeFrame]) );
-		};
 
 		return newQuote;
 	};
@@ -235,7 +294,7 @@ var QuotesModule = (function(){
 	  								logger.info('MARKET IS CLOSED, RESETTING runningProviderRealTimeObjs[tmpRealTimeQuoteProperty]: '+JSON.stringify(runningProviderRealTimeObjs[tmpRealTimeQuoteProperty]) );
 	  							}else{
 
-			  						var newQuote = _createNewQuote(tmpRealTimeQuoteProperty,key0,timeFrame);
+			  						var newQuote = _createNewQuote(tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty,key0,timeFrame);
 
 			  						var tmpNewQuote = newQuote.split(',');
 			  						if ( tmpNewQuote[0] != null && tmpNewQuote[1] != null && tmpNewQuote[2] != null && tmpNewQuote[3] != null ) {
@@ -472,14 +531,14 @@ if (startSchedule == null || startSchedule == undefined){
 	logger.info('Server Start Date'+serverSetting.serverSettingList[0].startScheduleTime);
 };
 var date_start_schedule = new Date(startSchedule[0],startSchedule[1],startSchedule[2],startSchedule[3],startSchedule[4],startSchedule[5]);
-var minutesList=[{'m1':60000},{'m5':300000},{'m15':900000},{'m30':1800000},{'h1':3600000},{'h4':14400000},{'d1':86400000},{'w1':604800000}];
+//var minutesList=[{'m1':60000},{'m5':300000},{'m15':900000},{'m30':1800000},{'h1':3600000},{'h4':14400000},{'d1':86400000},{'w1':604800000}];
 
 
 var updatingTimeFrameTaskFunction = function(timeFrameToUpdate){
 
 	if (runningProviderTopicList.length > 0) {
 
-		logger.trace( '//////////////////////////////////////////////////////////////////////Start Task , updating TimeFrame: '+timeFrameToUpdate +' ////////////////////////////////////////////////////////////////////////////////////////////////');//+minutesList[i][Object.keys(minutesList[i])[0]] );
+		logger.info( '//////////////////////////////////////////////////////////////////////Start Task , updating TimeFrame: '+timeFrameToUpdate +' ////////////////////////////////////////////////////////////////////////////////////////////////');//+minutesList[i][Object.keys(minutesList[i])[0]] );
 		for (var i = 0; i < runningProviderTopicList.length; i++) {
 	    	var tmpTopicArr = runningProviderTopicList[i].toString().split("@");
 	    	//TOPIC EXAMPLE: "MT4@ACTIVTRADES@REALTIMEQUOTES";
@@ -488,23 +547,30 @@ var updatingTimeFrameTaskFunction = function(timeFrameToUpdate){
 	    	//EX Time Frame Obj Property: runningProviderTimeFrameObjs["TIMEFRAMEQUOTE$MT4$ACTIVTRADES"];
 	   		var new_timeFrameQuotesObj = QuotesModule.updateTimeFrameQuotesObj(timeFrameToUpdate,runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty],runningProviderRealTimeObjs[tmpRealTimeQuoteProperty],tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty);
 	   		if ( new_timeFrameQuotesObj == null || new_timeFrameQuotesObj == undefined) {
-	   			logger.error('timeFrameObjToUpdate: '+JSON.stringify(runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty])+ ' CurrentRealTimeObj: '+JSON.stringify(runningProviderRealTimeObjs[tmpRealTimeQuoteProperty] ) + ' new_timeFrameQuotesObj is null or undefined. TimeFrame' +minutesList[i][Object.keys(minutesList[i])[0]]+ 'is not updated' );
+	   			logger.error('timeFrameObjToUpdate: '+JSON.stringify(runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty])+ ' CurrentRealTimeObj: '+JSON.stringify(runningProviderRealTimeObjs[tmpRealTimeQuoteProperty] )   );
 	   		};
 	   		runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty] = new_timeFrameQuotesObj;
 		}
 	}
 }
 
-//var startTask0 = schedule.scheduleJob(date_start_schedule, function(){
-    //console.log('Start Scheduling! Scheduled Time:'+startSchedule+'   Current Time: '+Date());
-    for (var i = 0; i <= minutesList.length - 1; i++) {
-    	//console.log("subtasks: ",minutesList[i][Object.keys(minutesList[i])[0]]," ",Object.keys(minutesList[i])[0]);
-    	//console.log("prova: "+minutesList[i][Object.keys(minutesList[i])[0]] );
-    	//logger.info( 'Setting tasks each' +minutesList[i][Object.keys(minutesList[i])[0]]+ 'to update the timeframe Objs' );
-
-    	setInterval( updatingTimeFrameTaskFunction.bind(this) ,minutesList[i][Object.keys(minutesList[i])[0]], Object.keys(minutesList[i])[0]   );  // 1M 5M etc..
-    };
-//});
+var sched_m1 = later.parse.recur().every(1).minute();
+var sched_m5 = later.parse.recur().every(5).minute();
+var sched_m15 = later.parse.recur().every(15).minute();
+var sched_m30 = later.parse.recur().every(30).minute();
+var sched_h1 = later.parse.recur().every(1).hour();
+var sched_h4 = later.parse.recur().every(4).hour();
+var sched_d1 = later.parse.recur().every(24).hour();
+var sched_w1 = later.parse.recur().every(1).dayOfWeek(); 
+ 
+later.setInterval(function() { updatingTimeFrameTaskFunction('m1') }, sched_m1);
+later.setInterval(function() { updatingTimeFrameTaskFunction('m5') }, sched_m5);
+later.setInterval(function() { updatingTimeFrameTaskFunction('m15') }, sched_m15);
+later.setInterval(function() { updatingTimeFrameTaskFunction('m30') }, sched_m30);
+later.setInterval(function() { updatingTimeFrameTaskFunction('h1') }, sched_h1);
+later.setInterval(function() { updatingTimeFrameTaskFunction('h4') }, sched_h4);
+later.setInterval(function() { updatingTimeFrameTaskFunction('d1') }, sched_d1);
+later.setInterval(function() { updatingTimeFrameTaskFunction('w1') }, sched_w1);
 
 sockSubFromQuotesProvider.subscribe('NEWTOPICQUOTES');
 sockSubFromQuotesProvider.subscribe('DELETETOPICQUOTES');
@@ -611,13 +677,12 @@ sockSubFromQuotesProvider.on('message', function(topic, message) {
 				}else if (topicArr[2] == 'TRADEALLOWED') {
 					//EX: MT4@ACTIVTRADES@TRADEALLOWED
 					var platform_broker = topicArr[0]+'$'+topicArr[1]; 
-					logger.info('create topic TRADEALLOWED: '+ JSON.stringify(topicArr) );
 					if (marketStatus.hasOwnProperty( platform_broker )) { 
 						marketStatus[ platform_broker ] = messageArr[0];
 					}else{
+						logger.info('create topic TRADEALLOWED: '+ JSON.stringify(topicArr) );
 						marketStatus[ platform_broker ] = messageArr[0];
 					}
-
 				}else if (topicArr[0] == 'STATUS'){
 					//EX: STATUS@EURUSD@111		
 	  				sockPub.send([topic.toString(), message]);	
@@ -662,14 +727,14 @@ setInterval(function(){ updatingSignalProviderTopicOperationListAndTopicStatusLi
 sockSubFromSignalProvider.subscribe('NEWTOPICFROMSIGNALPROVIDER');
 sockSubFromSignalProvider.on('message', function() {
   
-  	console.log('Message from signal provider: ' + arguments);
+  	//console.log('Message from signal provider: ' + arguments);
 	var data = [];//messageSub.toString().split(" ");
 	Array.prototype.slice.call(arguments).forEach(function(arg) {
         data.push(arg.toString());
     });
   	var topic = data[0];
   	var message = data[1];
-  	console.log('received a message related to:', data[0], ' containing message: ', data[1]);
+  	//console.log('received a message related to:', data[0], ' containing message: ', data[1]);
   	logger.info('Received message from Signal Provider: '+message+ 'on topic: '+topic);
 
   	switch (topic) {

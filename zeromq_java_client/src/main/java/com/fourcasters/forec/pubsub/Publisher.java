@@ -11,15 +11,15 @@ public class Publisher {
         Context context = ZMQ.context(1);
         Socket publisher = context.socket(ZMQ.PUB);
 
-        publisher.bind("tcp://*:5562");
+        publisher.bind("tcp://*:5563");
         //publisher.connect("tcp://localhost:5563");
         while (!Thread.currentThread ().isInterrupted ()) {
             // Write two messages, each with an envelope and content
             publisher.sendMore ("A");
             publisher.send ("We don't want to see this");
-            publisher.sendMore ("eurusd");
-            publisher.send("We would like to see this");
-            Thread.sleep(60000L);
+            publisher.sendMore ("OPERATIONS@ACTIVTRADES@EURUSD@1024");
+            publisher.send("price=11214,lots=1,slippage=0.2,ticket=100358333,op=0");
+            Thread.sleep(10000L);
         }
         publisher.close ();
         context.term ();
