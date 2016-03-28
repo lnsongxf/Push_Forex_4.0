@@ -217,10 +217,11 @@ var QuotesModule = (function(){
 		//11313,11315,11313,11316,30,03/18/2016 01:24  -->   apertura,massimo,minimo,chiusura,volume,time
 		var newQuote =  open+','+max+','+min+','+close+','+volume+','+datetime;
 
-		if (timeFrame == 'm1' || timeFrame == 'm30' && cross == 'EURUSD' ) {
-			
-			logger.info('Creating new quote - Cross:'+cross+' timeframe:'+timeFrame+' newQuote:'+newQuote);
-			logger.info('Resetting values for cross '+cross+' timeframe '+timeFrame+' : '+JSON.stringify(runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][cross][timeFrame]) );
+		if (timeFrame == 'm1' || timeFrame == 'm30' || timeFrame == 'm15'){ 
+			if( cross == 'EURUSD' ) {
+				logger.info('Creating new quote - Cross:'+cross+' timeframe:'+timeFrame+' newQuote:'+newQuote);
+				logger.info('Resetting values for cross '+cross+' timeframe '+timeFrame+' : '+JSON.stringify(runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][cross][timeFrame]) );
+			}
 		};
 
 		//Resetting runningProviderRealTimeObjs[tmpRealTimeQuoteProperty] for the this specific cross
@@ -297,7 +298,7 @@ var QuotesModule = (function(){
 			  						var newQuote = _createNewQuote(tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty,key0,timeFrame);
 
 			  						var tmpNewQuote = newQuote.split(',');
-			  						if ( tmpNewQuote[0] != null && tmpNewQuote[1] != null && tmpNewQuote[2] != null && tmpNewQuote[3] != null ) {
+			  						if ( tmpNewQuote[0] != null && tmpNewQuote[1] != null && tmpNewQuote[2] != null && tmpNewQuote[3] != null && tmpNewQuote[0] != 'null' && tmpNewQuote[1] != 'null' && tmpNewQuote[2] != 'null' && tmpNewQuote[3] != 'null') {
 				  						for (var j = 0; j <= timeFrameQuotesObj[key1][index][timeFrame].length - 1; j++) {
 				  							tempObj = timeFrameQuotesObj[key1][index][timeFrame][j];
 
@@ -417,7 +418,10 @@ var QuotesModule = (function(){
 			  									}
 			  								}
 			  							}
-			  							logger.trace("Updated TimeFrameObj with History Quotes. Key0(Quote Provider Name): "+key0+" ,Cross: "+key+" ,Values: "+JSON.stringify( runningProviderTimeFrameObjs[key0][key][i] ) );
+			  							if (messageArr[0] == 'EURUSD' && messageArr[1] == 'm1' ) {
+			  								logger.info('Updated history timeframe m1 (v10) for cross EURUSD: '+JSON.stringify( runningProviderTimeFrameObjs[key0][key][i]) )
+			  							};
+			  							logger.trace("Updated TimeFrameObj with History Quotes. Key0(Quote Provider Name): "+key0+" ,Cross: "+key+" ,Values: "+JSON.stringify( runningProviderTimeFrameObjs[searchObjTimeFrameQuote][messageArr[0]][0][messageArr[1]][2]['v10'] ) );
 			  							return true;	
 			  						}			
 			  					}
