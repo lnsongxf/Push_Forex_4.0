@@ -419,9 +419,9 @@ var QuotesModule = (function(){
 			  								}
 			  							}
 			  							if (messageArr[0] == 'EURUSD' && messageArr[1] == 'm1' ) {
-			  								logger.info('Updated history timeframe m1 (v10) for cross EURUSD: '+JSON.stringify( runningProviderTimeFrameObjs[key0][key][i]) )
+			  								logger.info('Updated history timeframe m1 (v10) for cross EURUSD: '+JSON.stringify( runningProviderTimeFrameObjs[key0][key][i]) );
 			  							};
-			  							logger.trace("Updated TimeFrameObj with History Quotes. Key0(Quote Provider Name): "+key0+" ,Cross: "+key+" ,Values: "+JSON.stringify( runningProviderTimeFrameObjs[searchObjTimeFrameQuote][messageArr[0]][0][messageArr[1]][2]['v10'] ) );
+			  							logger.trace("Updated TimeFrameObj with History Quotes. Key0(Quote Provider Name): "+key0+" ,Cross: "+key+" ,Values: "+JSON.stringify( runningProviderTimeFrameObjs[key0][key][i] ) );
 			  							return true;	
 			  						}			
 			  					}
