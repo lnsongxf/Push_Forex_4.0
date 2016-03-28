@@ -209,7 +209,9 @@ var QuotesModule = (function(){
 					volume = volume + parseInt(tmpArrSingleQuote[4]);
 				}
 			}else{
-				logger.error('Error on timeframe '+timeFrame+' tmpArrPreviousTimeFrameQuotesV10 :'+JSON.stringify(tmpArrPreviousTimeFrameQuotesV10) );
+				if (cross == 'EURUSD') {
+					logger.error('Error on timeframe '+timeFrame+', cross '+ cross+' tmpArrPreviousTimeFrameQuotesV10 :'+JSON.stringify(tmpArrPreviousTimeFrameQuotesV10) );
+				}
 			}
 
 		}
