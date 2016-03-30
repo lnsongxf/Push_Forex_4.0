@@ -328,6 +328,7 @@ var QuotesModule = (function(){
 														logger.error('objWithMessageToSend: '+ JSON.stringify(tempObj) + ' _updateTimeFrameQuotesObj is sending a message (Quotes) notDefined/null');
 													}else{
 					  									sockPub.send([topicToSignalProvider, tempObj[Object.keys(tempObj)[0]].join(";")]);
+					  									testSockPub.send([topicToSignalProvider, tempObj[Object.keys(tempObj)[0]].join(";")]);
 					  									if (timeFrame == 'm5' && Object.keys(tempObj)[0].split("v")[1] == '1') {
 															logger.info('Sent new timeFrame value message (ex: logs only for m5 and v1): '+tempObj[Object.keys(tempObj)[0]].join(";")+ 'for TimeFrame: '+timeFrame+ 'for Cross: '+key1+' on topic: '+topicToSignalProvider);
 					  									}else if (timeFrame == 'm30' && Object.keys(tempObj)[0].split("v")[1] == '5') {
@@ -356,6 +357,7 @@ var QuotesModule = (function(){
 														logger.error('objWithMessageToSend: ' + JSON.stringify(tempObj) + ' _updateTimeFrameQuotesObj is sending a message (Quotes) notDefined/null');
 													}else{
 					  									sockPub.send([topicToSignalProvider, tempObj[Object.keys(tempObj)[0]].join(";")]);
+					  									testSockPub.send([topicToSignalProvider, tempObj[Object.keys(tempObj)[0]].join(";")]);
 					  									if (timeFrame == 'm5' && Object.keys(tempObj)[0].split("v")[1] == '1') {
 					  										logger.info('Sent new timeFrame value message (logs only for m5 and v1): '+tempObj[Object.keys(tempObj)[0]].join(";")+ 'for TimeFrame: '+timeFrame+ 'for Cross: '+key1+' on topic: '+topicToSignalProvider);
 					  									}else if (timeFrame == 'm30' && Object.keys(tempObj)[0].split("v")[1] == '5') {
@@ -486,6 +488,9 @@ var sockPub = zmq.socket('pub');
 var sockSubFromQuotesProvider = zmq.socket('sub');
 var sockSubFromSignalProvider = zmq.socket('sub');
 
+var testSockPub = zmq.socket('pub');
+var testSockSub = zmq.socket('sub');
+
 //var hwm = 1000;
 //var verbose = 0;
 var sockLog = zmq.socket('pub');
@@ -497,6 +502,9 @@ sockSubFromQuotesProvider.bindSync('tcp://*:50025');
 sockSubFromSignalProvider.bindSync('tcp://*:50026');    
 sockPub.bindSync('tcp://*:50027');  
 sockLog.bindSync('tcp://*:50028');
+
+testSockPub.bindSync('tcp://*:50023');
+testSockSub.bindSync('tcp://*:50024');
 
 
 /*sockLog.on('message', function(data, bla) {
@@ -682,7 +690,7 @@ sockSubFromQuotesProvider.on('message', function(topic, message) {
 					}
 				}else if (topicArr[2] == 'TRADEALLOWED') {
 					//EX: MT4@ACTIVTRADES@TRADEALLOWED
-					var platform_broker = topicArr[0]+'$'+topicArr[1]; 
+					var platform_broker = topicArr[0]+'$'+topicArr[1]+'$TRADEALLOWED'; 
 					if (marketStatus.hasOwnProperty( platform_broker )) { 
 						marketStatus[ platform_broker ] = messageArr[0];
 					}else{
@@ -691,6 +699,7 @@ sockSubFromQuotesProvider.on('message', function(topic, message) {
 					}
 				}else if (topicArr[0] == 'STATUS'){
 					//EX: STATUS@EURUSD@111		
+					logger.info('Received status message from QuoteProvider to SignalProvider. Topic: '+topic.toString()+ 'message: '+JSON.stringify(message.toString()) );
 	  				sockPub.send([topic.toString(), message]);	
 	  			}else{
 					logger.error('topic: ' + JSON.stringify(topic.toString()) + ' message: ' + JSON.stringify(message.toString()) + 'Error in message received from Quotes Provider. The Quotes Provider wants to publish a new message quote '+message.toString()+',but the topic '+topic.toString()+' is not valid' );
@@ -893,5 +902,36 @@ setTimeout(function(){
 
 
 
+//TESTING ALGORITHMS INTEGRATION
+testSockSub.subscribe('NEWTOPICFROMSIGNALPROVIDER');
+testSockSub.on('message', function(topic, message) {
+  	var topic = topic.toString();
+  	var message = message.toString();
+  	switch (topic) {
+  		case "NEWTOPICFROMSIGNALPROVIDER":
+  			var newTopic = message.split('@');
+  			if (newTopic[0] == 'OPERATIONS') {
+  				//EX: OPERATIONS@ACTIVTRADES@EURUSD
+				testSockSub.subscribe(message);
+  			}else if (newTopic[0] == 'STATUS'){
+  				//EX: STATUS@EURUSD@111		
+				testSockSub.subscribe(message);
+  			}
+  			var response_message = "Testing Algo - Received message from Signal Provider on topic: "+topic+" .The message include these data: "+message;
+  			var response_topic = "TEST@ALGO";
+  			testSockPub.send([response_topic,response_message]);
+			break;
+		case "DELETETOPICQUOTES":
+			var response_message = "Testing Algo - Received message from Signal Provider on topic: "+topic+" .The message include these data: "+message;
+  			var response_topic = "TEST@ALGO";
+  			testSockPub.send([response_topic,response_message]);
+			break;
+		default:
+			var response_message = "Testing Algo - Received message from Signal Provider on topic: "+topic+" .The message include these data: "+message;
+  			var response_topic = "TEST@ALGO";
+  			testSockPub.send([response_topic,response_message]);
+			break;
+	}
 
+});
 
