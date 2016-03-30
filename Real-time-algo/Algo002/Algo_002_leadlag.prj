@@ -91,9 +91,7 @@
       <param.create.log />
       <param.log.file />
     </unset>
-    <fileset.main>
-      <file>${PROJECT_ROOT}\StartAlgo.m</file>
-    </fileset.main>
+    <fileset.main />
     <fileset.resources>
       <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\00_Algos\Algo_002_leadlag.m</file>
       <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\01_Core\coreState_real02.m</file>
@@ -112,27 +110,7 @@
       <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\backtest_real\parameter.m</file>
       <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\backtest_real\Parameters.m</file>
       <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\backtest_real\RealAlgo.m</file>
-      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\close.m</file>
-      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\close.mexw64</file>
-      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\connect.m</file>
-      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\connect.mexw64</file>
-      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\ctx_new.m</file>
-      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\ctx_new.mexw64</file>
-      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\ctx_shutdown.m</file>
-      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\ctx_shutdown.mexw64</file>
-      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\ctx_term.m</file>
-      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\ctx_term.mexw64</file>
-      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\disconnect.m</file>
-      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\disconnect.mexw64</file>
       <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\libzmq-v120-mt-4_0_4.dll</file>
-      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\recv.m</file>
-      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\recv.mexw64</file>
-      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\send.m</file>
-      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\send.mexw64</file>
-      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\setsockopt.m</file>
-      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\setsockopt.mexw64</file>
-      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\socket.m</file>
-      <file>C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\socket.mexw64</file>
       <file>${PROJECT_ROOT}\configListeners002.txt</file>
       <file>${PROJECT_ROOT}\configPublishers002.txt</file>
       <file>${PROJECT_ROOT}\onlineAlgo002.m</file>

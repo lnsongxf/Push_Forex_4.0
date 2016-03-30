@@ -1,4 +1,4 @@
-function [topicPub,messagePub] = onlineAlgo004(topicSub,messageSub,password)
+function [topicPub,messagePub] = onlineAlgo004_client00(topicSub,messageSub,password)
 
 
 % DESCRIPTION:

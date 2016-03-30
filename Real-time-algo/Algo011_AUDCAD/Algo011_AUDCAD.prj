@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
+  <configuration target="target.ezdeploy.standalone" target-name="MATLAB Compiler for Standalone Applications" name="Algo011_AUDCAD" location="C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0" file="C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\Algo011_AUDCAD.prj" preferred-package-type="package.type.exe" build-checksum="1888595838" preferred-package-location="C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\Algo011_AUDCAD\for_redistribution">
+    <param.appname>Algo011_AUDCAD</param.appname>
+    <param.authnamewatermark>Ale</param.authnamewatermark>
+    <param.email>4castersltd@gmail.com</param.email>
+    <param.company>4casters Ltd</param.company>
+    <param.icon />
+    <param.icons />
+    <param.summary>Algo011_AUDCAD.exe</param.summary>
+    <param.description />
+    <param.screenshot />
+    <param.version>1.0</param.version>
+    <param.namespace>Algo011_AUDCAD</param.namespace>
+    <param.guid />
+    <param.installpath.string>\4casters Ltd\Algo011_AUDCAD\</param.installpath.string>
+    <param.installpath.combo>option.installpath.programfiles</param.installpath.combo>
+    <param.logo />
+    <param.install.notes />
+    <param.intermediate>${PROJECT_ROOT}\Algo011_AUDCAD\for_testing</param.intermediate>
+    <param.output>${PROJECT_ROOT}\Algo011_AUDCAD\for_redistribution</param.output>
+    <param.embed.ctf>true</param.embed.ctf>
+    <param.target.type>subtarget.standalone</param.target.type>
+    <param.classorg />
+    <param.web.mcr>true</param.web.mcr>
+    <param.package.mcr>false</param.package.mcr>
+    <param.no.mcr>false</param.no.mcr>
+    <param.web.mcr.name>MyAppInstaller_web</param.web.mcr.name>
+    <param.package.mcr.name>MyAppInstaller_mcr</param.package.mcr.name>
+    <param.no.mcr.name>MyAppInstaller_app</param.no.mcr.name>
+    <param.user.defined.mcr.options />
+    <param.windows.command.prompt>true</param.windows.command.prompt>
+    <param.user.only.registration>false</param.user.only.registration>
+    <param.mads.no.java>false</param.mads.no.java>
+    <param.mads.exclusive.mcr>false</param.mads.exclusive.mcr>
+    <param.net.framework>option.net.framework.default</param.net.framework>
+    <param.assembly.type>false</param.assembly.type>
+    <param.encryption.key.file />
+    <param.net.enable.remoting>false</param.net.enable.remoting>
+    <param.net.tsa.enable>false</param.net.tsa.enable>
+    <param.net.tsa.assembly />
+    <param.net.tsa.interface />
+    <param.net.tsa.namespace>Algo011_AUDCAD</param.net.tsa.namespace>
+    <param.net.tsa.superclass />
+    <param.net.tsa.metadata />
+    <param.net.tsa.metadata.assembly>H:\My Documents</param.net.tsa.metadata.assembly>
+    <param.create.log>false</param.create.log>
+    <param.log.file />
+    <unset>
+      <param.icon />
+      <param.icons />
+      <param.description />
+      <param.screenshot />
+      <param.version />
+      <param.namespace />
+      <param.guid />
+      <param.installpath.string />
+      <param.logo />
+      <param.install.notes />
+      <param.intermediate />
+      <param.output />
+      <param.embed.ctf />
+      <param.target.type />
+      <param.classorg />
+      <param.web.mcr />
+      <param.package.mcr />
+      <param.no.mcr />
+      <param.web.mcr.name />
+      <param.package.mcr.name />
+      <param.no.mcr.name />
+      <param.user.defined.mcr.options />
+      <param.windows.command.prompt />
+      <param.user.only.registration />
+      <param.mads.no.java />
+      <param.mads.exclusive.mcr />
+      <param.net.framework />
+      <param.assembly.type />
+      <param.encryption.key.file />
+      <param.net.enable.remoting />
+      <param.net.tsa.enable />
+      <param.net.tsa.assembly />
+      <param.net.tsa.interface />
+      <param.net.tsa.namespace />
+      <param.net.tsa.superclass />
+      <param.net.tsa.metadata />
+      <param.net.tsa.metadata.assembly />
+      <param.create.log />
+      <param.log.file />
+    </unset>
+    <fileset.main>
+      <file>${PROJECT_ROOT}\Real-time-algo\Algo011_AUDCAD\StartAlgo011_AUDCAD.m</file>
+    </fileset.main>
+    <fileset.resources>
+      <file>${PROJECT_ROOT}\00_Algos\Algo_011_stocOsc_AUDCAD.m</file>
+      <file>${PROJECT_ROOT}\01_Core\coreState_real02.m</file>
+      <file>${PROJECT_ROOT}\02_closingManager\closingHighSL.m</file>
+      <file>${PROJECT_ROOT}\02_closingManager\directTakeProfitManager.m</file>
+      <file>${PROJECT_ROOT}\02_closingManager\dynamicalTPandSLManager.m</file>
+      <file>${PROJECT_ROOT}\03_decisionMaker\additional functions\altiBassicontatore.m</file>
+      <file>${PROJECT_ROOT}\03_decisionMaker\DecisionMaker_real02.m</file>
+      <file>${PROJECT_ROOT}\05_timeSeriesExpert\fourierComponent1D.m</file>
+      <file>${PROJECT_ROOT}\05_timeSeriesExpert\RescaleMinAndMax.m</file>
+      <file>${PROJECT_ROOT}\05_timeSeriesExpert\TimeSeriesExpert_11.m</file>
+      <file>${PROJECT_ROOT}\06_indicators\AvgTrueRange.m</file>
+      <file>${PROJECT_ROOT}\06_indicators\calcVolatility.m</file>
+      <file>${PROJECT_ROOT}\06_indicators\cointegrationTests.m</file>
+      <file>${PROJECT_ROOT}\06_indicators\genhurst.m</file>
+      <file>${PROJECT_ROOT}\06_indicators\indicators.m</file>
+      <file>${PROJECT_ROOT}\06_indicators\indicatorsOffline.m</file>
+      <file>${PROJECT_ROOT}\06_indicators\more\hhigh.m</file>
+      <file>${PROJECT_ROOT}\06_indicators\more\llow.m</file>
+      <file>${PROJECT_ROOT}\06_indicators\more\stochosc.m</file>
+      <file>${PROJECT_ROOT}\06_indicators\more\tsmovavg.m</file>
+      <file>${PROJECT_ROOT}\06_indicators\smoothDiff.m</file>
+      <file>${PROJECT_ROOT}\06_indicators\smoothGradient.m</file>
+      <file>${PROJECT_ROOT}\06_indicators\stationarity.m</file>
+      <file>${PROJECT_ROOT}\06_indicators\stationarityTests.m</file>
+      <file>${PROJECT_ROOT}\06_indicators\tech_indicators.m</file>
+      <file>${PROJECT_ROOT}\06_indicators\vratiotest.m</file>
+      <file>${PROJECT_ROOT}\API\iqFeed.m</file>
+      <file>${PROJECT_ROOT}\backtest_classic\getSimpleAmplitude.m</file>
+      <file>${PROJECT_ROOT}\backtest_classic\MapIterator.m</file>
+      <file>${PROJECT_ROOT}\backtest_classic\takeProfitFunction.m</file>
+      <file>${PROJECT_ROOT}\backtest_classic\updateParamsOnMaxIncrease.m</file>
+      <file>${PROJECT_ROOT}\backtest_real\OperationState.m</file>
+      <file>${PROJECT_ROOT}\backtest_real\parameter.m</file>
+      <file>${PROJECT_ROOT}\backtest_real\Parameters.m</file>
+      <file>${PROJECT_ROOT}\backtest_real\RealAlgo.m</file>
+      <file>${PROJECT_ROOT}\backtest_real\SingleValue.m</file>
+      <file>${PROJECT_ROOT}\nodeM\MatlabZeroMQ\matlab-zmq\compile_list.m</file>
+      <file>${PROJECT_ROOT}\nodeM\MatlabZeroMQ\matlab-zmq\config.m</file>
+      <file>${PROJECT_ROOT}\nodeM\MatlabZeroMQ\matlab-zmq\config_osx.m</file>
+      <file>${PROJECT_ROOT}\nodeM\MatlabZeroMQ\matlab-zmq\config_unix.m</file>
+      <file>${PROJECT_ROOT}\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\bind.m</file>
+      <file>${PROJECT_ROOT}\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\bind.mexw64</file>
+      <file>${PROJECT_ROOT}\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\close.m</file>
+      <file>${PROJECT_ROOT}\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\close.mexw64</file>
+      <file>${PROJECT_ROOT}\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\connect.m</file>
+      <file>${PROJECT_ROOT}\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\connect.mexw64</file>
+      <file>${PROJECT_ROOT}\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\ctx_get.m</file>
+      <file>${PROJECT_ROOT}\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\ctx_get.mexw64</file>
+      <file>${PROJECT_ROOT}\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\ctx_new.m</file>
+      <file>${PROJECT_ROOT}\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\ctx_new.mexw64</file>
+      <file>${PROJECT_ROOT}\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\ctx_set.m</file>
+      <file>${PROJECT_ROOT}\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\ctx_set.mexw64</file>
+      <file>${PROJECT_ROOT}\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\ctx_shutdown.m</file>
+      <file>${PROJECT_ROOT}\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\ctx_shutdown.mexw64</file>
+      <file>${PROJECT_ROOT}\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\ctx_term.m</file>
+      <file>${PROJECT_ROOT}\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\ctx_term.mexw64</file>
+      <file>${PROJECT_ROOT}\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\disconnect.m</file>
+      <file>${PROJECT_ROOT}\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\disconnect.mexw64</file>
+      <file>${PROJECT_ROOT}\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\getsockopt.m</file>
+      <file>${PROJECT_ROOT}\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\getsockopt.mexw64</file>
+      <file>${PROJECT_ROOT}\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\libzmq-v120-mt-4_0_4.dll</file>
+      <file>${PROJECT_ROOT}\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\recv.m</file>
+      <file>${PROJECT_ROOT}\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\recv.mexw64</file>
+      <file>${PROJECT_ROOT}\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\send.m</file>
+      <file>${PROJECT_ROOT}\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\send.mexw64</file>
+      <file>${PROJECT_ROOT}\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\setsockopt.m</file>
+      <file>${PROJECT_ROOT}\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\setsockopt.mexw64</file>
+      <file>${PROJECT_ROOT}\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\socket.m</file>
+      <file>${PROJECT_ROOT}\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\socket.mexw64</file>
+      <file>${PROJECT_ROOT}\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\unbind.m</file>
+      <file>${PROJECT_ROOT}\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\unbind.mexw64</file>
+      <file>${PROJECT_ROOT}\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\version.m</file>
+      <file>${PROJECT_ROOT}\nodeM\MatlabZeroMQ\matlab-zmq\lib\+zmq\+core\version.mexw64</file>
+      <file>${PROJECT_ROOT}\nodeM\MatlabZeroMQ\matlab-zmq\make.m</file>
+      <file>${PROJECT_ROOT}\nodeM\MatlabZeroMQ\matlab-zmq\tests\runner.m</file>
+      <file>${PROJECT_ROOT}\Real-time-algo\Algo011_AUDCAD\configListeners011_AUDCAD.txt</file>
+      <file>${PROJECT_ROOT}\Real-time-algo\Algo011_AUDCAD\configPublishers011_AUDCAD.txt</file>
+      <file>${PROJECT_ROOT}\Real-time-algo\Algo011_AUDCAD\onlineAlgo011_AUDCAD.m</file>
+      <file>${PROJECT_ROOT}\Real-time-algo\Algo011_AUDCAD\onlineClose011_AUDCAD.m</file>
+      <file>${PROJECT_ROOT}\Real-time-algo\Algo011_AUDCAD\onlineOpen011_AUDCAD.m</file>
+      <file>${PROJECT_ROOT}\Real-time-algo\createLogFile.m</file>
+      <file>${PROJECT_ROOT}\Real-time-algo\log4m.m</file>
+      <file>${PROJECT_ROOT}\Real-time-algo\machineStateManager.m</file>
+      <file>${PROJECT_ROOT}\Real-time-algo\sendgmail.m</file>
+      <file>${PROJECT_ROOT}\Real-time-algo\strsplit.m</file>
+      <file>${PROJECT_ROOT}\risk_management\fitting\cuveFits\linear1.m</file>
+      <file>${PROJECT_ROOT}\risk_management\fitting\fit1.m</file>
+      <file>${PROJECT_ROOT}\risk_management\fitting\fitlsq.m</file>
+      <file>${PROJECT_ROOT}\spatial-econometrics\coint\adf.m</file>
+      <file>${PROJECT_ROOT}\spatial-econometrics\coint\c_sja.m</file>
+      <file>${PROJECT_ROOT}\spatial-econometrics\coint\c_sjt.m</file>
+      <file>${PROJECT_ROOT}\spatial-econometrics\coint\cadf.m</file>
+      <file>${PROJECT_ROOT}\spatial-econometrics\coint\detrend.m</file>
+      <file>${PROJECT_ROOT}\spatial-econometrics\coint\johansen.m</file>
+      <file>${PROJECT_ROOT}\spatial-econometrics\coint\prt_coint.m</file>
+      <file>${PROJECT_ROOT}\spatial-econometrics\coint\ptrend.m</file>
+      <file>${PROJECT_ROOT}\spatial-econometrics\coint\rztcrit.m</file>
+      <file>${PROJECT_ROOT}\spatial-econometrics\coint\ztcrit.m</file>
+      <file>${PROJECT_ROOT}\spatial-econometrics\distrib\beta_inv.m</file>
+      <file>${PROJECT_ROOT}\spatial-econometrics\distrib\beta_pdf.m</file>
+      <file>${PROJECT_ROOT}\spatial-econometrics\distrib\chis_prb.m</file>
+      <file>${PROJECT_ROOT}\spatial-econometrics\distrib\norm_prb.m</file>
+      <file>${PROJECT_ROOT}\spatial-econometrics\distrib\tdis_inv.m</file>
+      <file>${PROJECT_ROOT}\spatial-econometrics\distrib\tdis_prb.m</file>
+      <file>${PROJECT_ROOT}\spatial-econometrics\gibbs\prt_coda.m</file>
+      <file>${PROJECT_ROOT}\spatial-econometrics\regress\ols.m</file>
+      <file>${PROJECT_ROOT}\spatial-econometrics\regress\prt_eqs.m</file>
+      <file>${PROJECT_ROOT}\spatial-econometrics\regress\prt_felogit.m</file>
+      <file>${PROJECT_ROOT}\spatial-econometrics\regress\prt_gibbs.m</file>
+      <file>${PROJECT_ROOT}\spatial-econometrics\regress\prt_multilogit.m</file>
+      <file>${PROJECT_ROOT}\spatial-econometrics\regress\prt_reg.m</file>
+      <file>${PROJECT_ROOT}\spatial-econometrics\regress\prt_swm.m</file>
+      <file>${PROJECT_ROOT}\spatial-econometrics\regress\prt_tvp.m</file>
+      <file>${PROJECT_ROOT}\spatial-econometrics\spatial\casetti_models\prt_cas.m</file>
+      <file>${PROJECT_ROOT}\spatial-econometrics\spatial\far_models\prt_far.m</file>
+      <file>${PROJECT_ROOT}\spatial-econometrics\spatial\gmm_models\prt_gmm.m</file>
+      <file>${PROJECT_ROOT}\spatial-econometrics\spatial\gwr_models\prt_gwr.m</file>
+      <file>${PROJECT_ROOT}\spatial-econometrics\spatial\mess_models\prt_mess.m</file>
+      <file>${PROJECT_ROOT}\spatial-econometrics\spatial\panel\prt_spnew.m</file>
+      <file>${PROJECT_ROOT}\spatial-econometrics\spatial\sac_models\prt_sac.m</file>
+      <file>${PROJECT_ROOT}\spatial-econometrics\spatial\sar_models\cr_interval.m</file>
+      <file>${PROJECT_ROOT}\spatial-econometrics\spatial\sar_models\prt_sar.m</file>
+      <file>${PROJECT_ROOT}\spatial-econometrics\spatial\sdm_models\prt_sdm.m</file>
+      <file>${PROJECT_ROOT}\spatial-econometrics\spatial\sem_models\prt_sem.m</file>
+      <file>${PROJECT_ROOT}\spatial-econometrics\spatial\semip\prt_semip.m</file>
+      <file>${PROJECT_ROOT}\spatial-econometrics\spatial\stats\prt_spat.m</file>
+      <file>${PROJECT_ROOT}\spatial-econometrics\util\cols.m</file>
+      <file>${PROJECT_ROOT}\spatial-econometrics\util\lag.m</file>
+      <file>${PROJECT_ROOT}\spatial-econometrics\util\mlag.m</file>
+      <file>${PROJECT_ROOT}\spatial-econometrics\util\mprint.m</file>
+      <file>${PROJECT_ROOT}\spatial-econometrics\util\prt.m</file>
+      <file>${PROJECT_ROOT}\spatial-econometrics\util\rows.m</file>
+      <file>${PROJECT_ROOT}\spatial-econometrics\util\tdiff.m</file>
+      <file>${PROJECT_ROOT}\spatial-econometrics\util\trimr.m</file>
+      <file>${PROJECT_ROOT}\spatial-econometrics\var_bvar\prt_var.m</file>
+      <file>${PROJECT_ROOT}\spatial-econometrics\var_bvar\prt_varg.m</file>
+    </fileset.resources>
+    <fileset.package />
+    <build-deliverables>
+      <file name="Algo011_AUDCAD.exe" location="${PROJECT_ROOT}\Algo011_AUDCAD\for_testing" optional="false">C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\Algo011_AUDCAD\for_testing\Algo011_AUDCAD.exe</file>
+      <file name="readme.txt" location="${PROJECT_ROOT}\Algo011_AUDCAD\for_testing" optional="true">C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\Algo011_AUDCAD\for_testing\readme.txt</file>
+    </build-deliverables>
+    <workflow />
+    <matlab>
+      <root>C:\Program Files\Matlab\R2013b</root>
+      <toolboxes>
+        <toolbox name="fixedpoint" />
+      </toolboxes>
+    </matlab>
+    <platform>
+      <unix>false</unix>
+      <mac>false</mac>
+      <windows>true</windows>
+      <win2k>false</win2k>
+      <winxp>false</winxp>
+      <vista>false</vista>
+      <linux>false</linux>
+      <solaris>false</solaris>
+      <osver>6.1</osver>
+      <os32>false</os32>
+      <os64>true</os64>
+      <arch>win64</arch>
+      <matlab>true</matlab>
+    </platform>
+  </configuration>
+</deployment-project>
+

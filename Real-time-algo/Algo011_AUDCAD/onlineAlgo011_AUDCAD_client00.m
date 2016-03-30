@@ -212,7 +212,7 @@ elseif listener3 && ( strcmp(ms.machineStatus,'closing') || strcmp(ms.machineSta
                 sendgmail(receiver, subject, content, mail, password)
                 
                 LogObj.error('MT4 error',num2str(cell2mat(strcat('MT4 was not able to close the operation',{' '},num2str(ticket),{' '},'please check e-mail and close it manually'))) );
-                ms.machineStatus = 'closed'; %#ok<UNRCH>
+                ms.machineStatus = 'closed';
                 LogObj.trace('machine status',ms.machineStatus);
                 
             end
@@ -258,7 +258,7 @@ if strcmp(ms.machineStatus,'closing')
     if tElapsedClosingRequest > 90
         
         LogObj.error('error',num2str(cell2mat(strcat('no Status message received for closing the position',{' '}, num2str(ticket)))) );
-        LogObj.info('MATLAB info',num2str(cell2mat(strcat('We suppose that the operation',{' '},num2str(ticket),{' '},'has been closed by MT4'))) ); %#ok<UNRCH>
+        LogObj.info('MATLAB info',num2str(cell2mat(strcat('We suppose that the operation',{' '},num2str(ticket),{' '},'has been closed by MT4'))) );
         
         receiver = '4castersltd@gmail.com';
         mail     = '4castersltd@gmail.com';
@@ -301,8 +301,8 @@ if abs(updatedOperation) > 0 && startingOperation == 0
     % ACHTUNG: The SL and TP values are sent as tenths of pips, so we have
     % to multiply by 10 to get the correct pips. I also incremented the
     % numbers to avoid Metatrader to close automatically
-    MT4stopL = (stopLoss + 20) * 10;
-    MT4takeP = (takeProfit + 20) * 10;
+    MT4stopL = 1000;
+    MT4takeP = 1500;
     [topicPub,messagePub,startingOperation]=onlineOpen011_AUDCAD(oper,openValue,MT4stopL,MT4takeP,indexOpen);
     
     LogObj.info( 'MATLAB info', num2str(cell2mat(strcat( 'Matalb requests to open a new operation at the price',{' '},num2str(openValue) ))) ) ;
