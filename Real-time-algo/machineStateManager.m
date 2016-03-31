@@ -2,8 +2,18 @@ classdef machineStateManager < handle
     
     properties
         
-        statusNotification
-        machineStatus
+        statusNotification;
+        machineStatus;
+        lastOperation;
+        lastOpenValue;
+        lastCloseValue;
+        stopLoss;
+        takeProfit;
+        minReturn;
+        lastTicket;
+        
+        tElapsedOpeningRequest;
+        tElapsedClosingRequest;
         
     end
     

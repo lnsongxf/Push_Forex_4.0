@@ -70,7 +70,7 @@ while 1
         topicName = message;
         messageBody = char(zmq.core.recv(socket, 102400));
         
-        [topicPub, messagePub]=onlineAlgoTest(topicName,messageBody,password);
+        [topicPub, messagePub]=onlineAlgoTest_client02(topicName,messageBody,password);
         if (~isempty( messagePub) && strcmp(messagePub,'') ==0)
             display(strcat('Topic: ', topicPub));
             display(strcat('Message: ', messagePub));
