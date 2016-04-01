@@ -10,7 +10,9 @@ classdef machineStateManager < handle
         stopLoss;
         takeProfit;
         minReturn;
-        lastTicket;
+        openTicket;
+        closeTicket;
+        
         
         tElapsedOpeningRequest;
         tElapsedClosingRequest;
