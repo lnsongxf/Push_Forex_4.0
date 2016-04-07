@@ -299,7 +299,7 @@ int sleepXIndicators(int milli_seconds)
      {
       datetime begin=0;
       datetime end=0;
-      datetime now=TimeTradeServer();
+      datetime now=TimeLocal();
       uint     session_index=0;
 
       MqlDateTime today;
