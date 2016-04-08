@@ -63,8 +63,12 @@ nData             = 100;
 operLots          = 1;
 operOpenSlippage  = 1.5;
 operCloseSlippage = 0.2;
-tOpenRequest      = 300;
+tOpenRequest      = 90;
 tCloseRequest     = 90;
+
+listener1 = strcmp(topicSub,'TIMEFRAMEQUOTE@MT4@ACTIVTRADES@AUDCAD@m5@v100');
+listener2 = strcmp(topicSub,'TIMEFRAMEQUOTE@MT4@ACTIVTRADES@AUDCAD@m1@v1');
+listener3 = strcmp(topicSub,'STATUS@AUDCAD@9999');
 
 topicPub   = '';
 messagePub = '';
@@ -72,7 +76,7 @@ receiver   = '4castersltd@gmail.com';
 mail       = '4castersltd@gmail.com';
 
 closingTimeScale = 1;
-openingTimeScale = 1;
+openingTimeScale = 5;
 server_exe = 0; % set to 1 when the Algo is running on the server as an .exe
 
 indexOpen = 0;
@@ -81,7 +85,6 @@ indexClose = 0;
 if(isempty(matrix))
     matrix = zeros(nData+1,6);
     startingOperation = 0;
-    ticket = -1;
     newTimeScalePoint = 0;
     numberOf1minPoints = 0;
     ms = machineStateManager;
@@ -115,10 +118,6 @@ elseif logFileDimension > 10000000
     fclose('all');
     [LogObj,logFile] = createLogFile (logFolderName,nameAlgo,nFile);
 end
-
-listener1 = strcmp(topicSub,'TIMEFRAMEQUOTE@MT4@ACTIVTRADES@AUDCAD@m1@v100');
-listener2 = strcmp(topicSub,'TIMEFRAMEQUOTE@MT4@ACTIVTRADES@AUDCAD@m1@v1');
-listener3 = strcmp(topicSub,'STATUS@AUDCAD@9999');
 
 if listener1 && ( strcmp(ms.machineStatus,'closed') || strcmp(ms.machineStatus,'open') ) %new 30minutes data array
     
@@ -164,8 +163,8 @@ elseif listener3
     
     LogObj.info('MATLAB info',num2str(cell2mat(strcat('STATUS received for the Ticket:',{' '}, num2str(ticket)))) );
     
-    open  = strcmp(type,'open');
-    close = strcmp(type,'close');
+     open  = strcmp(type,'open');
+     close = strcmp(type,'close');
     
     ms.statusNotification = 1;
     
@@ -257,11 +256,12 @@ elseif listener3
                         
                     else
                         
+                        LogObj.error('MT4 error',num2str(cell2mat(strcat('MT4 was not able to close the operation',{' '},num2str(ms.openTicket),{' '},'please check e-mail and close it manually'))) );
+                        
                         subject  = num2str(cell2mat( strcat(nameAlgo,': MT4 failed in closing the operation',{' '}, num2str(ms.openTicket)) ));
                         content  = num2str(cell2mat( strcat('Please close the operation',{' '},num2str(ms.openTicket),{' '},'manually. Matlab will consider it closed') ));
                         sendgmail(receiver, subject, content, mail, password)
-                        
-                        LogObj.error('MT4 error',num2str(cell2mat(strcat('MT4 was not able to close the operation',{' '},num2str(ms.openTicket),{' '},'please check e-mail and close it manually'))) );
+                                                
                         ms.machineStatus = 'closed';
                         LogObj.trace('machine status',ms.machineStatus);
                         
@@ -285,7 +285,7 @@ elseif listener3
                     LogObj.error('MT4 info',num2str(cell2mat(strcat('This stasus format is wrong and we already received the status for the operation:',{' '},num2str(ms.openTicket),{' '},', it is the previous OPEN operation!'))) );
                     
                     subject  = num2str(cell2mat( strcat(nameAlgo,': We already received the status: OPEN, for this operation:',{' '}, num2str(ms.openTicket)) ));
-                    content  = num2str(cell2mat( strcat('The status format is wrong! Please check on server, it is the previous OPEN operation!') ));
+                    content  = strcat('The status format is wrong! Please check on server, this is the stutus of the previous OPEN operation!');
                     sendgmail(receiver, subject, content, mail, password)
                     
                 else
@@ -294,13 +294,14 @@ elseif listener3
                     LogObj.trace('MATLAB info','Matlab will be resetted' )
                     openValueReal = -1 ;
                     startingOperation = 0;
+                    
+                    subject  = num2str(cell2mat( strcat(nameAlgo,': problems in the received status format',{' '},messageSub)) );
+                    content  = num2str(cell2mat( strcat('The status format is wrong! Please check if MT4 operated the opening request and proceed to close it manually:',{' '},num2str(ticket),{' '},'Matlab will consider it closed') ));
+                    sendgmail(receiver, subject, content, mail, password)
+                    
                     ms.machineStatus = 'closed';
                     LogObj.trace('machine status',ms.machineStatus);
                     ms.statusNotification = 0;
-                    
-                    subject  = strcat(nameAlgo,': problems in the received status format',{' '},messageSub );
-                    content  = num2str(cell2mat( strcat('The status format is wrong! Please check if MT4 operated the opening request and proceed to close it manually:',{' '},num2str(ms.openTicket),{' '},'Matlab will consider it closed') ));
-                    sendgmail(receiver, subject, content, mail, password)
                     
                 end
                 
@@ -308,15 +309,20 @@ elseif listener3
                 
                 if (ticket == ms.openTicket)
                     
-                    LogObj.warn('warn',num2str(cell2mat(strcat('problems in the received status format, please check if MT4 operated the closing request and proceed manually',{' '}, messageSub))) );
+                    LogObj.warn('warn',num2str(cell2mat(strcat('problems in the received status format, please check if MT4 operated the closing request and proceed manually',{' '}, messageSub))) ); 
                     LogObj.trace('MATLAB info','Matlab will ignore this message and consider the operation closed' )
+                    
+                    subject  = num2str(cell2mat( strcat(nameAlgo,': problems in the received status format',{' '},messageSub)) );
+                    content  = num2str(cell2mat( strcat('The status format is wrong! Please check if MT4 operated the closing request or proceed to close it manually:',{' '},num2str(ms.openTicket),{' '},'Matlab will consider it closed') ));
+                    sendgmail(receiver, subject, content, mail, password)
+                    
                     ms.machineStatus = 'closed';
                     ms.closeTicket = ticket;
                     LogObj.trace('machine status',ms.machineStatus);
                     
                 else
                     
-                    subject  = strcat(nameAlgo,': problems in the received status format',{' '},messageSub );
+                    subject  = num2str(cell2mat( strcat(nameAlgo,': problems in the received status format',{' '},messageSub)) );
                     content  = num2str(cell2mat( strcat('The status format is wrong! Matlab received an unknown, or an already closed, operation ticket:',{' '},num2str(ms.openTicket),{' '},'Please check if MT4 operated the closing request and proceed to close it manually, Matlab will consider it closed') ));
                     sendgmail(receiver, subject, content, mail, password)
                     
@@ -330,17 +336,17 @@ elseif listener3
         
         if open
             
-            LogObj.warn( 'warn',num2str(cell2mat(strcat('WTF?, We Received a message of Status: OPEN at the price',{' '},num2str(price),{' '},'even if the machine state is already OPEN', messageSub))) );
+            LogObj.warn( 'warn',num2str(cell2mat(strcat('WTF?, We Received a message of Status: OPEN at the price',{' '},num2str(price),{' '},'even if the machine state is:',{' '},ms.machineStatus,{' '},messageSub))) );
             
-            subject  = strcat(nameAlgo,': We Received a message of Status: OPEN even if the machine state is already OPEN');
-            content  = num2str(cell2mat( strcat('Possible explanation: 1) This is the status of an old operation did not open beacause of timeout, 2) This is a copy message. The message is:',{' '},messageSub,{' '},'please check on the server')) );
+            subject  = num2str(cell2mat( strcat(nameAlgo,': We Received a message of Status: OPEN even if the machine state is:',{' '},ms.machineStatus)) );
+            content  = num2str(cell2mat( strcat('Possible explanation: 1) This is the status of an old operation did not open because of timeout, 2) This is a copy message. The message is:',{' '},messageSub,{' '},'please check on the server')) );
             sendgmail(receiver, subject, content, mail, password)
             
         elseif close
             
-            LogObj.warn( 'warn',num2str(cell2mat(strcat('WTF?, We Received a message of Status: CLOSE at the price',{' '},num2str(price),{' '},'even if the machine state is already CLOSE', messageSub))) );
+            LogObj.warn( 'warn',num2str(cell2mat(strcat('WTF?, We Received a message of Status: CLOSE at the price',{' '},num2str(price),{' '},'even if the machine state is:',{' '},ms.machineStatus,{' '},messageSub))) );
             
-            subject  = num2str(cell2mat( strcat(nameAlgo,': We Received a message of Status: CLOSE even if the machine state is already CLOSE.',{' '},'Operation:',{' '},num2str(ticket)) ));
+            subject  = num2str(cell2mat( strcat(nameAlgo,': We Received a message of Status: CLOSE even if the machine state is:',{' '},ms.machineStatus',{' '},'Operation:',{' '},num2str(ticket)) ));
             content  = num2str(cell2mat( strcat('We suppose that the operation',{' '},num2str(ticket),{' '},'has been already closed, this could be a copy message.') ));
             sendgmail(receiver, subject, content, mail, password)
             
@@ -378,11 +384,11 @@ if strcmp(ms.machineStatus,'closing')
     
     if (ms.tElapsedClosingRequest) > tCloseRequest
         
-        LogObj.error('error',num2str(cell2mat(strcat('no Status message received for closing the position',{' '},num2str(ms.openTicket),{' '},'after',{' '}, num2str(tCloseRequest),{' '},'seconds'))));
-        LogObj.info('MATLAB info',num2str(cell2mat(strcat('We suppose that the operation',{' '},num2str(ms.openTicket),{' '},'has been closed by MT4'))) );
+        LogObj.error('error',num2str(cell2mat(strcat('no Status message received for closing the position',{' '},num2str(ms.openTicket),{' '},'after',{' '}, num2str(ms.tElapsedClosingRequest),{' '},'seconds'))));
+        LogObj.info('MATLAB info',num2str(cell2mat(strcat('We suppose that the operation',{' '},num2str(ms.openTicket),{' '},'has been closed by MT4, otherwise proceed to close it manually, please'))) );
         
         subject  = num2str(cell2mat( strcat(nameAlgo,': no Status message received for closing the position',{' '}, num2str(ms.openTicket)) ));
-        content  = num2str(cell2mat( strcat('We suppose that the operation',{' '},num2str(ms.openTicket),{' '},'has been closed by MT4, please check if it is true') ));
+        content  = num2str(cell2mat( strcat('We suppose that the operation',{' '},num2str(ms.openTicket),{' '},'has been closed by MT4, otherwise proceed to close it manually, please') ));
         sendgmail(receiver, subject, content, mail, password)
         
         ms.machineStatus = 'closed';
@@ -399,11 +405,11 @@ if strcmp(ms.machineStatus,'opening')
     
     if (ms.tElapsedOpeningRequest) > tOpenRequest
         
-        LogObj.error('error',num2str(cell2mat(strcat('no Status message received for opening the requested position after',{' '}, num2str(tOpenRequest),{' '},'seconds'))));
-        LogObj.info('MATLAB info','We suppose that the requested operation has not been opened by MT4');
+        LogObj.error('error',num2str(cell2mat(strcat('no Status message received for opening the requested position after',{' '}, num2str(ms.tElapsedOpeningRequest),{' '},'seconds'))));
+        LogObj.info('MATLAB info','We suppose that the requested operation has not been opened by MT4, otherwise proceed to close it manually, please');
         
         subject  = strcat(nameAlgo,': no Status message received for opening the requested position');
-        content  = 'We suppose that the requested operation has not been opened by MT4, please check what happened';
+        content  = 'We suppose that the requested operation has not been opened by MT4, otherwise proceed to close it manually, please';
         sendgmail(receiver, subject, content, mail, password)
         
         LogObj.info('MATLAB info','The status of the Algo will be resetted to closed');
@@ -463,7 +469,7 @@ if abs(ms.lastOperation) > 0 && startingOperation == 0
     
     tStartOpeningRequest = tic;
     
-    LogObj.info( 'MATLAB info', num2str(cell2mat(strcat( 'Matalb requests to open a new operation at the price',{' '},num2str(ms.lastOpenValue) ))) ) ;
+    LogObj.info( 'MATLAB info', num2str(cell2mat(strcat( 'Matalb requests to open a new operation at the price',{' '},num2str(ms.lastOpenValue),{' '},'direction:',{' '},num2str(ms.lastOperation) ))) ) ;
     ms.machineStatus = 'opening';
     LogObj.trace('machine status',ms.machineStatus);
     
