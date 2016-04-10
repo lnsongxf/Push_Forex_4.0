@@ -20,7 +20,7 @@ dynamicOn = 0;
 ShrinkTP      = dynamicParameters {1};
 ShrinkSL      = dynamicParameters {2};
 speedFactorSL = dynamicParameters {3};
-min_gain = 100;
+min_gain = dynamicParameters {4}; % ad es 100 pips;
 
 % MeanPrice is the mid value between TP and SL
 MeanPrice = floor( (TakeProfitPrice + StopLossPrice) / 2 );
