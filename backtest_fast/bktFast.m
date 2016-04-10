@@ -10,6 +10,11 @@ classdef bktFast < handle
     % test = bktFast;
     % test = test.tryme('parameters_file.txt')
     %
+    %%% or to compare results:
+    %
+    % test = bktFast;
+    % test.plotme('parameters_file.txt')
+    %
     %%%%%%%%%%%%%%%%
     
     
@@ -307,6 +312,73 @@ classdef bktFast < handle
             
             
         end % end of function tryme
+        
+        
+        function [obj] = plotme(obj,parameters)
+            
+            % DESCRIPTION:
+            % -------------------------------------------------------------
+            % Performs simple run of the specified algorithm on given historical data
+            % and compare result overplotting them on a single plot
+            %
+            %
+            % How to use it:
+            %
+            % test = bktFast;
+            % test = test.plotme('parameters_file.txt')
+            %
+            % -------------------------------------------------------------
+            
+            
+            %% Import parameters:
+            
+            fid=fopen(parameters);
+            C = textscan(fid, '%s', 'Delimiter', '', 'CommentStyle', '%');
+            fclose(fid);
+            cellfun(@eval, C{1});
+            
+            
+            algo = str2func(nameAlgo);
+            
+            
+            %% Load and check historical
+            
+            [hisData, newHisData] = load_historical(histName, actTimeScale, newTimeScale);
+            
+            figure
+            hold on
+            
+            Legend = cell( size(N,2)*size(M,2) , 1);
+            LegNum=1;
+            
+            for n = N
+                
+                display(['n =', num2str(n)]);
+                
+                
+                for m = M
+                    
+                    if( N_greater_than_M && n<=m )
+                        continue
+                    end
+                    
+                    obj.bktfastTry = feval(algo);
+                    obj.bktfastTry = obj.bktfastTry.spin(hisData(:,4), newHisData, actTimeScale, newTimeScale, n, m, transCost, pips_TP, pips_SL, stdev_TP, stdev_SL, 0);
+                    
+%                     subpl(LegNum) = subplot( size(N,2), size(M,2), LegNum );                    
+                    plot(cumsum(obj.bktfastTry.outputbkt(:,4) - transCost),'color',rand(1,3))
+                    Legend{LegNum}=strcat( num2str(n),'-',num2str(m) );
+                    LegNum= LegNum+1;
+                    
+                end
+                
+            end
+
+%             linkaxes(subpl,'y')
+             legend(Legend)
+             title('Cumulative Results of various trials')
+            
+        end % end of function plotme
         
         
     end % end of methods

@@ -607,7 +607,7 @@ classdef TimeSeriesExpert_11 < handle
             %
             % DESCRIPTION:
             % -------------------------------------------------------------
-            % This function calculate the linear regrssion of a vector of
+            % This function calculates the linear regression of a vector of
             % values
             %
             % INPUT parameters:
