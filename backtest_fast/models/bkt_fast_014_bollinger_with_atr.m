@@ -2,7 +2,6 @@ classdef bkt_fast_014_bollinger_with_atr < handle
     
     % bktfast VERSION 3 (with arrayAperture and minimumReturns)
     
-    
     properties
         
         outputbkt;
@@ -67,8 +66,8 @@ classdef bkt_fast_014_bollinger_with_atr < handle
             
             
             % signals
-            s(P < mid) = -1;
-            s(P > mid) = 1;
+            s(P < lowr) = 1;
+            s(P > uppr) = -1;
             
             % calculate the average true range (used to set TP e SL)
             atr = tech_indicators( [hi,lo,P] , 'atr' , 20);
@@ -77,10 +76,10 @@ classdef bkt_fast_014_bollinger_with_atr < handle
             i = 101;
             
             
-            while i <= length(P)
+            while i < sizeStorico
                 
-                % se il prezzo incrocia la middle band di Bollinger, parte l'operazione
-                if   ( s(i)*s(i-1) < 0 )
+                % se il prezzo sfonda le bande (esterne) di Bollinger, parte l'operazione
+                if   ( abs(s(i)) )
                     
                     segnoOperazione = s(i);
                     ntrades = ntrades + 1;
@@ -97,7 +96,7 @@ classdef bkt_fast_014_bollinger_with_atr < handle
 %                     display(['TakeProfitPrice =' num2str(TakeProfitPrice)]);
 %                     display(['StopLossPrice =' num2str(StopLossPrice)]);
 %                     
-                    for j = i+1 : length(P)
+                    for j = i+1 : sizeStorico
                         %%%%%%%%%%% dynamicalTPandSL using atr
                         
                         if ( sign( P(j) - P(j-1) ) == segnoOperazione )
@@ -130,6 +129,7 @@ classdef bkt_fast_014_bollinger_with_atr < handle
                             
                         end
                         
+                        i = j;
                         
                     end
                     
@@ -163,7 +163,6 @@ classdef bkt_fast_014_bollinger_with_atr < handle
             obj.latency = obj.latency(1:obj.indexClose);
             obj.arrayAperture = obj.arrayAperture(1:obj.indexClose);
              
-            
             % Plot a richiesta
             if plottami
                 

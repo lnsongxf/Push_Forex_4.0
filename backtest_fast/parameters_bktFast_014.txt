@@ -24,10 +24,10 @@
 nameAlgo = 'bkt_fast_014_bollinger_with_atr' 
 
 % N qui e' il lookback period per calcolare media e stdev
-N = 2:20
+N = 5 % 1:20
 
 % M is nstd per le bande                        		
-M = 1:4
+M = 2 % 1:5
 
 N_greater_than_M = 0               
 Cross = 'EURUSD'            
