@@ -239,7 +239,7 @@ var QuotesModule = (function(){
 	
 
 	var _updateTimeFrameQuotesObj = function(timeFrame,timeFrameQuotesObj,realTimeQuotesObj,tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty){
-
+                                   //(timeFrameToUpdate,runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty],runningProviderRealTimeObjs[tmpRealTimeQuoteProperty],tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty);
 		if (timeFrame == null || timeFrame == undefined || timeFrameQuotesObj == null || timeFrameQuotesObj == undefined || realTimeQuotesObj == null || realTimeQuotesObj == undefined ) {
 			logger.error('In _updateTimeFrameQuotesObj timeframe or timeFrameQuotesObj or realTimeQuotesObj is notDefined/null');
 			return null;
@@ -287,14 +287,28 @@ var QuotesModule = (function(){
 	  								var paramMarketStatus =  tmpTimeFrameQuoteProperty.split('$')[1]+'$'+tmpTimeFrameQuoteProperty.split('$')[2]+'$TRADEALLOWED';
 	  								logger.info('MARKET STATUS FROM METATRADER: '+marketStatus[paramMarketStatus] );
 	  							}
-								//TO FIX - WE HAVE TO USE ONE MESSAGE FORM MT4 TO UNDERSTAND WHEN THE MARKET IS CLOSED
-	  							//TEMPORARY FIX FOR THE WEEKEND
-	  							//HERE WE CLEAN THE 1minuteObjs. This objs store the last 1minute values.
-	  							//AND WE CLEANTHE REAL TIME ARRAY OBJ. THIS RRAY STORE THE LAST REALTIME VALUES INTO ON1 MINUTE
+								
+	  							//AND WE CLEAN THE REAL TIME ARRAY OBJ. THIS RRAY STORE THE LAST REALTIME VALUES INTO ON1 MINUTE
 	  							var paramMarketStatus =  tmpTimeFrameQuoteProperty.split('$')[1]+'$'+tmpTimeFrameQuoteProperty.split('$')[2]+'$TRADEALLOWED';
-	  							if ( marketStatus[paramMarketStatus] == 0 ) {			  								
-	  								runningProviderRealTimeObjs[tmpRealTimeQuoteProperty] = _createRealTimeQuotesObj(configQuotesList, tmpRealTimeQuoteProperty.replace("$", "@").replace("$", "@") );
-	  								logger.info('MARKET IS CLOSED, RESETTING runningProviderRealTimeObjs[tmpRealTimeQuoteProperty]: '+JSON.stringify(runningProviderRealTimeObjs[tmpRealTimeQuoteProperty]) );
+	  							if ( marketStatus[paramMarketStatus] == 0 ) {	
+
+	  								runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][key0] = "";
+	  								runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][key0] = {
+							        	"m1":{open:null,max:null,min:null,close:null,volume:0},
+							        	"m5":{open:null,max:null,min:null,close:null,volume:0},
+							        	"m15":{open:null,max:null,min:null,close:null,volume:0},
+							        	"m30":{open:null,max:null,min:null,close:null,volume:0},
+							        	"h1":{open:null,max:null,min:null,close:null,volume:0},
+							        	"h4":{open:null,max:null,min:null,close:null,volume:0},
+							        	"d1":{open:null,max:null,min:null,close:null,volume:0},
+							        	"w1":{open:null,max:null,min:null,close:null,volume:0}
+							        }
+
+	  								//runningProviderRealTimeObjs[tmpRealTimeQuoteProperty] = _createRealTimeQuotesObj(configQuotesList, tmpRealTimeQuoteProperty.replace("$", "@").replace("$", "@") );
+	  								if (timeFrame == 'm15') {
+	  									logger.info('MARKET IS CLOSED, RESETTING runningProviderRealTimeObjs[tmpRealTimeQuoteProperty]["EURUSD"] for EURUSD: '+JSON.stringify(runningProviderRealTimeObjs[tmpRealTimeQuoteProperty]['EURUSD']   ) );
+	  								}
+
 	  							}else{
 
 			  						var newQuote = _createNewQuote(tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty,key0,timeFrame);
@@ -689,14 +703,17 @@ sockSubFromQuotesProvider.on('message', function(topic, message) {
 						logger.error('topic: ' + JSON.stringify(topic.toString()) + ' message: ' + JSON.stringify(message.toString()) + 'Error in message received from Quotes provider. The Quotes Provider wants to publish a new message quote '+message.toString()+' on topic '+topic.toString()+', but the topic doesnt exist ' );
 					}
 				}else if (topicArr[2] == 'TRADEALLOWED') {
+
 					//EX: MT4@ACTIVTRADES@TRADEALLOWED
 					var platform_broker = topicArr[0]+'$'+topicArr[1]+'$TRADEALLOWED'; 
+					logger.info('message TRADEALLOWED: '+ JSON.stringify(messageArr) );
 					if (marketStatus.hasOwnProperty( platform_broker )) { 
 						marketStatus[ platform_broker ] = messageArr[0];
 					}else{
 						logger.info('create topic TRADEALLOWED: '+ JSON.stringify(topicArr) );
 						marketStatus[ platform_broker ] = messageArr[0];
 					}
+
 				}else if (topicArr[0] == 'STATUS'){
 					//EX: STATUS@EURUSD@111		
 					logger.info('Received status message from QuoteProvider to SignalProvider. Topic: '+topic.toString()+ 'message: '+JSON.stringify(message.toString()) );
