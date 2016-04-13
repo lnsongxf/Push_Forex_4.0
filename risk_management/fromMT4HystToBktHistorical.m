@@ -1,4 +1,5 @@
-function [HistData_1min_,HistData_freq_]=fromRawHystToHistorical(actTimeScale,newTimeScale)
+function [test]=fromMT4HystToBktHistorical(actTimeScale,newTimeScale)
+%[HistData_1min_,HistData_freq_]=fromMT4HystToBktHistorical(actTimeScale,newTimeScale)
 
 %%% NOTE
 % actTimeScale = 1
@@ -13,10 +14,13 @@ filename = 'EURUSD1_09032016_13042016';
 %filename = '2013_jan_sept_5min_history';   use an input historical with specific freq 
 %                                           if the backtest is done on it and not on rescaled data
 filedir = 'C:\Users\alericci\Desktop\Forex 4.0 noShared\';
-Fullname  = strcat(filedir, filename,'.mat');
+Fullname  = strcat(filedir, filename,'.csv');
 
-tempMatrix = load(Fullname);
-matrixHist=tempMatrix.history;
+fileID = fopen(Fullname);
+test = textscan(fileID,'%s %s %f %f %f %f %f','Delimiter',',');
+format long
+test{1,5}(1)
+
 
 expert=TimeSeriesExpert_11;
 
@@ -43,3 +47,8 @@ HistData_freq_(:,6)=expert.openDrescaled;
 toc
 
 end
+
+
+
+
+
