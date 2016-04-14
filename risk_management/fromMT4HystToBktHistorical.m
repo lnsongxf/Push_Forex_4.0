@@ -1,53 +1,72 @@
-function [test]=fromMT4HystToBktHistorical(actTimeScale,newTimeScale)
-%[HistData_1min_,HistData_freq_]=fromMT4HystToBktHistorical(actTimeScale,newTimeScale)
+function [HistData_1min,HistData_freq]=fromMT4HystToBktHistorical(actTimeScale,newTimeScale)
 
-%%% NOTE
-% actTimeScale = 1
-% newTimeScale or freq ... frequency (ex: 5 min)
-% [history_1min]=fromRawHystToHistorical
-% [outputHyst,HistData_freq_]=fromRawHystToHistorical(actTimeScale,newTimeScale)
-% 
-% 
+%
+% DESCRIPTION:
+% -------------------------------------------------------------
+% this function reformat the hystorical data from MT4 to a standard format
+% used in the bkt.
+%
+% INPUT parameters:
+% -------------------------------------------------------------
+% actTimeScale ... 1 minute time scale
+% newTimeScale ... working time scale (ex: 30 mins)
+%
+% EXAMPLE of use:
+% -------------------------------------------------------------
+% [HistData_1min,HistData_freq]=fromMT4HystToBktHistorical(1,30)
+%
+
 
 tic
+
 filename = 'EURUSD1_09032016_13042016';
-%filename = '2013_jan_sept_5min_history';   use an input historical with specific freq 
-%                                           if the backtest is done on it and not on rescaled data
 filedir = 'C:\Users\alericci\Desktop\Forex 4.0 noShared\';
 Fullname  = strcat(filedir, filename,'.csv');
+factor = 10000;
 
-fileID = fopen(Fullname);
-test = textscan(fileID,'%s %s %f %f %f %f %f','Delimiter',',');
 format long
-test{1,5}(1)
-
+fileID = fopen(Fullname);
+hystorical = textscan(fileID,'%s %s %f %f %f %f %f','Delimiter',',');
 
 expert=TimeSeriesExpert_11;
+date1 = num2str(cell2mat(hystorical{1,1}(:)));
+date2 = num2str(cell2mat(hystorical{1,2}(:)));
 
-date=strcat(num2str(matrixHist(:,7)+1),'/',num2str(matrixHist(:,8)),'/',num2str(matrixHist(:,6)),{' '},num2str(matrixHist(:,9)),':',num2str(matrixHist(:,10)));
-dateNum=datenum(date, 'mm/dd/yyyy HH:MM');
+date=strcat(date1,{' '},date2);
+dateNum=datenum(date, 'yyyy.mm.dd HH:MM');
+l=length(dateNum);
 
+HistData_1min(:,1) = hystorical{1,3}(:).*factor;        % opening price
+HistData_1min(:,2) = hystorical{1,4}(:).*factor;        % max price
+HistData_1min(:,3) = hystorical{1,5}(:).*factor;        % min price
+HistData_1min(:,4) = hystorical{1,6}(:).*factor;        % closure
+HistData_1min(:,5) = hystorical{1,7}(:);                % volume
+HistData_1min(:,6) = dateNum;                              % opening date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
 
-HistData_1min_(:,1)=matrixHist(:,1);        % opening price
-HistData_1min_(:,2)=matrixHist(:,2);        % min price
-HistData_1min_(:,3)=matrixHist(:,3);        % max price
-HistData_1min_(:,4)=matrixHist(:,4);        % closure
-HistData_1min_(:,5)=matrixHist(:,5);        % volume
-HistData_1min_(:,6)=dateNum;                % opening date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
+expert=expert.readData(HistData_1min);
+expert=expert.rescaleData(HistData_1min,actTimeScale,newTimeScale);
+HistData_freq(:,1)=expert.openVrescaled;
+HistData_freq(:,2)=expert.maxVrescaled;
+HistData_freq(:,3)=expert.minVrescaled;
+HistData_freq(:,4)=expert.closeVrescaled;
+HistData_freq(:,5)=expert.volrescaled;
+HistData_freq(:,6)=expert.openDrescaled;
 
-expert=expert.readData(matrixHist);
-expert=expert.rescaleData(HistData_1min_,actTimeScale,newTimeScale);
-HistData_freq_(:,1)=expert.openVrescaled;
-HistData_freq_(:,2)=expert.maxVrescaled;           % da correggere anche nella classe TimeSeriesExpert (sono in min)
-HistData_freq_(:,3)=expert.minVrescaled;           % da correggere anche nella classe TimeSeriesExpert (sono in max)
-HistData_freq_(:,4)=expert.closeVrescaled;
-HistData_freq_(:,5)=expert.volrescaled;
-HistData_freq_(:,6)=expert.openDrescaled;
+suffix = '_bkt';
+savingName = strcat(filedir,filename,suffix,'.csv');
+% dlmwrite(savingName, HistData_1min, '-append','precision','%.3f%.1f%.1f%.1f%f%.10f') ;
+
+fileID = fopen(savingName,'w');
+formatSpec = '%.1f,%.1f,%.1f,%.1f,%.0f,%.10f\r\n';
+for i = 1:l
+    fprintf(fileID,formatSpec,HistData_1min(i,:));
+end
+fclose(fileID);
+
 
 toc
 
 end
-
 
 
 

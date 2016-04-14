@@ -98,13 +98,12 @@ classdef TimeSeriesExpert_11 < handle
             obj.closeVrescaled=c(nRescale:nRescale:(newL)*nRescale);
             obj.openDrescaled=od(1:nRescale:(newL)*nRescale);
             
-            vv=[newL,1];
-            
+            vv = zeros(newL,1);
             for i = 1:newL
-                vv(i)=sum(v(((i-1)*nRescale+1):(nRescale*i)));
+                vv(i,1)=sum(v(((i-1)*nRescale+1):(nRescale*i)));
             end
             
-            obj.volrescaled=vv';
+            obj.volrescaled=vv(:,1);
             
             
             
