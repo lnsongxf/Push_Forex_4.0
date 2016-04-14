@@ -180,10 +180,46 @@ classdef Performance_07 < handle
         function obj=calcComparedPerformance(obj,nameAlgo_,origin1_,origin2_,cross_,freq_,transCost1_,transCost2_,inputResultsMatrix1_,inputResultsMatrix2_,plotPerformance)
             
             %
-            % example of the use:
-            % After having created the object with the name: 'objname'
-            % objname=objname.calcComparedPerformance('real_17','bktWeb','demo','EURUSD',5,1,0,outputBktWeb,outputDemo);
+            % DESCRIPTION:
+            % -------------------------------------------------------------
+            % This function compare the Performance of the Algo in demo with the bkt
             %
+            % TO DO BEFORE:
+            % -------------------------------------------------------------
+            % a) dowload the historical data corresponding to the traded
+            % period in "demo" from MT4 (check the first data received by
+            % the Algo reading the logs)
+            % b) adjust the historical data using the function fromMT4HystToBktHistorical
+            % c) calculate the "bkt" results using bktOffline_02, they will
+            % be saved in inputResultsMatrix1_
+            % c) dowload "demo" results and save them into inputResultsMatrix2_
+            %
+            % INPUT parameters:
+            % -------------------------------------------------------------
+            % nameAlgo_             ... name of the tested Algo
+            % origin1_              ... origin of the first set of results to compare (ex: bktWeb, demo, bkt)
+            % origin2_              ... origin of the second set of results to compare (ex: bktWeb, demo, bkt)
+            % cross_                ... cross considered (ex: EURUSD)
+            % freq_                 ... frequency of data used (ex: 30 mins)
+            % transCost1_           ... transaction cost of the first set of results (spread)
+            % transCost1_           ... transaction cost of the second set of results (spread)
+            % inputResultsMatrix1_  ... matrix of the first set of results
+            % inputResultsMatrix2_  ... matrix of the second set of results
+            % plotPerformance       ... check variable for plotting (1) or
+            %                           not, all the calculated Performance
+            %                           properties
+            %
+            % OUTPUT parameters:
+            % -------------------------------------------------------------
+            % The conmpared Performance parameters will be saved.
+            %
+            % EXAMPLE of use:
+            % -------------------------------------------------------------
+            % After having created the object with the name: 'objname'
+            % objname=Performance_07;
+            % Performance_07=Performance_07.calcComparedPerformance('real_17','bktWeb','demo','EURUSD',5,1,0,outputBktWeb,outputDemo);
+            %
+            
             
             
             if strcmp(origin1_,'bktWeb')
