@@ -15,9 +15,9 @@ function [histData, newHistData] = load_historical_02(histName, actTimeScale, ne
             hisDataRaw=load(histName);
             
             % remove lines with no data (holes)
-            hisDataTemp = hisDataRaw( (hisDataRaw(:,1) ~=0), : );
+            histData = hisDataRaw( (hisDataRaw(:,1) ~=0), : );
             
-            [r,c] = size(hisDataTemp);
+            [r,c] = size(histData);
             
             if c == 5
                 

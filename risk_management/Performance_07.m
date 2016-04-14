@@ -403,11 +403,11 @@ classdef Performance_07 < handle
             NetReturnsEuroPerc=(NetReturnsEuro./obj.initialStack).*100;
             obj.marginePerTrade=lots./obj.leverage;
             
-            dateFirstOperationNum=obj.inputResultsMatrix(row(1),8);
+            dateFirstOperationNum=obj.inputResultsMatrix(row(1),7);
             dateFirstOperation=datestr(dateFirstOperationNum, 'mm/dd/yyyy HH:MM');
             temp=regexp(dateFirstOperation, '[ ]', 'split');
             firstDay=temp(1);
-            dateLastOperationNum=obj.inputResultsMatrix(row(end),8);
+            dateLastOperationNum=obj.inputResultsMatrix(row(end),7);
             dateLastOperation=datestr(dateLastOperationNum, 'mm/dd/yyyy HH:MM');
             temp=regexp(dateLastOperation, '[ ]', 'split');
             lastDay=temp(1);
