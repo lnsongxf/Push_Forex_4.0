@@ -22,8 +22,8 @@
 
             
 nameAlgo = 'bkt_fast_004_optimize_with_hurst' 
-N = 51 % 4:55
-M = 11:15 % 2:30
+N = 5:55 % 4:55
+M = 2:30 % 2:30
 N_greater_than_M = 1               
 Cross = 'EURUSD'            
 histName = 'EURUSD-04-2014-02-2016.csv' % 'EURUSD_smallsample2014_2015.csv'	   
@@ -36,4 +36,4 @@ pips_SL = 1
 stdev_TP = 5
 stdev_SL = 5   		
 WhatToPlot = 2
-reverse_optimization = 0
+reverse_optimization = 1

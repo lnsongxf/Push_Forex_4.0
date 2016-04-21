@@ -228,6 +228,11 @@ classdef bktFast_hurst < handle
                 temp(isnan( temp) )=0;
                 sweepPlot_BKT_Fast(temp)
                 
+                figure
+                contour(temp)
+                grid on
+                colorbar
+                
             end
             
             %% display results of training
