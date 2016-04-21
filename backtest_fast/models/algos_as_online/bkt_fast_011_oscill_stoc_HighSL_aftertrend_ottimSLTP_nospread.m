@@ -1,4 +1,4 @@
-classdef bkt_fast_011_oscill_stocastico_HighSL_aftertrend_ottimizzaSLTP < handle
+classdef bkt_fast_011_oscill_stoc_HighSL_aftertrend_ottimSLTP_nospread < handle
     
     % bktfast VERSION 3 (with arrayAperture and minimumReturns)
     
@@ -61,6 +61,8 @@ classdef bkt_fast_011_oscill_stocastico_HighSL_aftertrend_ottimizzaSLTP < handle
             obj.arrayAperture= zeros(sizeStorico,1);
             obj.minimumReturns = zeros(sizeStorico,1);
             
+            cost = 3; % qui sovrascrivo lo spread (nel fast dev esser =0 x semplicita')
+            
             ntrades = 0;
             obj.indexClose = 0;
             s = zeros(sizeStorico,1);
@@ -101,7 +103,12 @@ classdef bkt_fast_011_oscill_stocastico_HighSL_aftertrend_ottimizzaSLTP < handle
                         dynamicParameters {1} = 0;
                         dynamicParameters {2} = 1;
                         dynamicParameters {3} = 81;
-                        [TakeProfitPrice,StopLossPrice,TakeP,StopL,~] = closingHighSL(Pbuy,Pminute(j),segnoOperazione,TakeP,StopL, 0, dynamicParameters);
+                        if segnoOperazione==1 % storno lo spread se sn entrato long
+                            PminuteCorrected = Pminute(j) - cost;
+                        else
+                            PminuteCorrected = Pminute(j);
+                        end
+                        [TakeProfitPrice,StopLossPrice,TakeP,StopL,~] = closingHighSL(Pbuy,PminuteCorrected,segnoOperazione,TakeP,StopL, 0, dynamicParameters);
 %                          display(['TP =', num2str(TakeP),' SL =', num2str(StopL)]);
 %                          display(['StopLossPrice =', num2str(StopLossPrice)]);
                         
@@ -192,7 +199,7 @@ classdef bkt_fast_011_oscill_stocastico_HighSL_aftertrend_ottimizzaSLTP < handle
         function [obj, Pbuy, devFluct2] = apri(obj, i, P, cost, ntrades, segnoOperazione, date)
             
             obj.trades(i) = 1;
-            if segnoOperazione==1
+            if segnoOperazione==1 % storno lo spread in apertura se sn short
                 Pbuy = P(i);
             else
                 Pbuy = P(i) - cost;
