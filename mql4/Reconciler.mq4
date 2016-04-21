@@ -126,34 +126,34 @@ string nextOrderToString()
 
    string buffer =
    StringConcatenate(
-   OrderOpenTime(),";",
-   OrderCloseTime(),";",
-   OrderSymbol(),";",
-   OrderType(),";",
-   OrderLots(),";",
-   OrderStopLoss(),";",
-   OrderTakeProfit(),";",
-   OrderOpenPrice(),";",
-   OrderClosePrice(),";",
-   OrderCommission(),";",
-   OrderSwap(),";",
-   OrderProfit(),";",
-   OrderComment(),";",
-   OrderMagicNumber(),";",
+   OrderOpenTime(),",",
+   OrderCloseTime(),",",
+   OrderSymbol(),",",
+   OrderType(),",",
+   OrderLots(),",",
+   OrderStopLoss(),",",
+   OrderTakeProfit(),",",
+   OrderOpenPrice(),",",
+   OrderClosePrice(),",",
+   OrderCommission(),",",
+   OrderSwap(),",",
+   OrderProfit(),",",
+   OrderComment(),",",
+   OrderMagicNumber(),",",
 
-   "-1;", //Duration
-   "-1;", //Profitable
-   "-1;", //Profitable
-   "-1;", //Drawdown
-   "-1;", //Risk:Reward
-   "-1;", //Max
-   "-1;", //Max
-   "-1;", //Min
-   "-1;", //Min
-   "-1;", //Entry Accuracy
-   "-1;", //Exit Accuracy
-   "-1;", //ProfitMissed
-   "-1;", //ProfitMissed
+   "-1,", //Duration
+   "-1,", //Profitable
+   "-1,", //Profitable
+   "-1,", //Drawdown
+   "-1,", //Risk:Reward
+   "-1,", //Max
+   "-1,", //Max
+   "-1,", //Min
+   "-1,", //Min
+   "-1,", //Entry Accuracy
+   "-1,", //Exit Accuracy
+   "-1,", //ProfitMissed
+   "-1,", //ProfitMissed
 
    OrderTicket());
 

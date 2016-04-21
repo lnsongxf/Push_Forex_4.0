@@ -158,7 +158,7 @@ else
             closingTime = params.get('closeTime_');
             operationState.latency = closingTime - openingTime;
             
-            dynamicParameters {1} = 1.2;  %closingForApproaching
+            dynamicParameters {1} = 1.18;  %closingForApproaching
             %dynamicParameters {1} = 0.1;      %closingShrinkingBands
             %dynamicParameters {2} = 1.5;    %closingShrinkingBands
             [params,TakeProfitPrice,StopLossPrice,dynamicOn] = dynamicalTPandSLManager(operationState, chiusure, params, @closingForApproaching, dynamicParameters);

@@ -9,10 +9,10 @@ function [HistData_1min_,HistData_freq_]=fromRawHystToHistorical(actTimeScale,ne
 % 
 
 tic
-filename = 'EURUSD2mesi2012';
+filename = 'EURUSD1_09032016_13042016';
 %filename = '2013_jan_sept_5min_history';   use an input historical with specific freq 
 %                                           if the backtest is done on it and not on rescaled data
-filedir = 'C:\Users\alericci\Desktop\Forex 4.0\backtest_real\historical_data\';
+filedir = 'C:\Users\alericci\Desktop\Forex 4.0 noShared\';
 Fullname  = strcat(filedir, filename,'.mat');
 
 tempMatrix = load(Fullname);
