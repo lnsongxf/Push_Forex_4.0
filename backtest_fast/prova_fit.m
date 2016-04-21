@@ -19,6 +19,13 @@ movingFit3 = zeros(length(P),1);
 movingLead10 = zeros(length(P),1);
 movingLead15 = zeros(length(P),1);
 movingLead20 = zeros(length(P),1);
+sigma10 = zeros(length(P),1);
+mean10 = zeros(length(P),1);
+sigma15 = zeros(length(P),1);
+mean15 = zeros(length(P),1);
+sigma20 = zeros(length(P),1);
+mean20 = zeros(length(P),1);
+
 
 for i=npunti:length(P)
     
@@ -74,6 +81,17 @@ derivLead20 = [0 ; diff(movingLead20)];
 % deriv100Bin(find(deriv100>=0))=1;
 % diffDeriv100Bin=[0; diff(deriv100Bin)];  % =2 quando passa da neg a pos, e viceversa
 
+for j=80:length(P)
+    
+    sigma10(j) = std( derivLead10(j-20:j) ); % calcolo le statistiche usando una finestra 2x quella del fit
+    mean10(j) = mean( derivLead10(j-20:j) );
+    sigma15(j) = std( derivLead15(j-30:j) );
+    mean15(j) = mean( derivLead15(j-30:j) );
+    sigma20(j) = std( derivLead20(j-40:j) );
+    mean20(j) = mean( derivLead20(j-40:j) );
+    
+end
+
 % plotta prezzo e fit con diversi polinomi
 figure
 plot(Price)
@@ -83,6 +101,7 @@ plot(movingFit2,'g')
 plot(movingFit3,'b')
 legend('Price','linear','poly2','poly3')
 title(['fit con differenti polinomi, finestra ',num2str(npunti)])
+
 
 % plotta 1) prezzo e fit lineare, 2) coeff angolare del fit, 3) derivata del coeff
 figure
@@ -110,3 +129,44 @@ hold on
 plot(derivLead15,'m')
 plot(derivLead20,'k')
 linkaxes(suu,'x')
+
+
+
+% plotta 1) prezzo e fit10 lineare, 2) derivata del coeff con bande della distribuzione di probab della derivata
+figure
+ss(1)=subplot(2,1,1);
+plot(Price)
+hold on
+plot(movingLead10,'g')
+ss(2)=subplot(2,1,2);
+plot(derivLead10)
+hold on
+plot( (mean10+sigma10), 'r')
+plot( (mean10-sigma10), 'r')
+linkaxes(ss,'x')
+
+% plotta 1) prezzo e fit15 lineare, 2) derivata del coeff con bande della distribuzione di probab della derivata
+figure
+sss(1)=subplot(2,1,1);
+plot(Price)
+hold on
+plot(movingLead15,'g')
+sss(2)=subplot(2,1,2);
+plot(derivLead15)
+hold on
+plot( (mean15+sigma15), 'r')
+plot( (mean15-sigma15), 'r')
+linkaxes(sss,'x')
+
+% plotta 1) prezzo e fit20 lineare, 2) derivata del coeff con bande della distribuzione di probab della derivata
+figure
+su(1)=subplot(2,1,1);
+plot(Price)
+hold on
+plot(movingLead20,'g')
+su(2)=subplot(2,1,2);
+plot(derivLead20)
+hold on
+plot( (mean20+sigma20), 'r')
+plot( (mean20-sigma20), 'r')
+linkaxes(su,'x')
