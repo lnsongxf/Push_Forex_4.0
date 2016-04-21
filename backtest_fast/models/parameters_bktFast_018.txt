@@ -22,14 +22,14 @@
 
             
 nameAlgo = 'bkt_fast_018_fittingbands' 
-N =  8 % 2:10 % 8
-M =  5 % 1:8 % 3
+N =  10:20 % 2:10
+M =  5 % 1:8
 N_greater_than_M = 1              
 Cross = 'EURUSD'            
 histName = 'AUDCAD.csv'   %  'EURUSD-04-2014-02-2016.csv' %    'EURGBP.csv'  %      'EURUSD_smallsample2014_2015.csv' %
 actTimeScale = 1             		
 newTimeScale = 60             		
-transCost = 1
+transCost = 3
 pips_TP = 10
 pips_SL = 10
 stdev_TP = 10
