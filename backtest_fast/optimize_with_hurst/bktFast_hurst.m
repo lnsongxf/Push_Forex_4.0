@@ -82,46 +82,6 @@ classdef bktFast_hurst < handle
             [r,~] = size(hisData);
             %[rn,~] = size(newHisData);
             
-            if ( exist('reverse_optimization','var') && reverse_optimization == 1 )
-                
-                % split historical and perform optimization on the MOST RECENT HISTORICAL DATA!!!!
-                % default for reverse_optimization: 50% Training, 50% paper trading)
-                rTraining = floor(r*0.5);
-                rnTraining = floor(rTraining/newTimeScale);
-                
-                hisDataTraining = hisData(rTraining+1:end,:);
-                hisDataPaperTrad = hisData(1:rTraining,:);
-                newHisDataTraining = newHisData(rnTraining+1:end,:);
-                newHisDataPaperTrad = newHisData(1:rnTraining,:);
-                
-            else % standard way!
-                
-                % split historical into trainging set for optimization and paper trading
-                % default: 75% Training, 25% paper trading)
-                rTraining = floor(r*0.75);
-                rnTraining = floor(rTraining/newTimeScale);
-                
-                % use this to skip some of the very old hist data:
-                %             skipMe = floor(r*0.20);
-                %             skipMeNewTime = floor(skipMe/newTimeScale);
-                %             hisDataTraining = hisData(skipMe:rTraining,:);
-                %             newHisDataTraining = newHisData(skipMeNewTime:rnTraining,:);
-                
-                hisDataTraining = hisData(1:rTraining,:);
-                hisDataPaperTrad = hisData(rTraining+1:end,:);
-                newHisDataTraining = newHisData(1:rnTraining,:);
-                newHisDataPaperTrad = newHisData(rnTraining+1:end,:);
-                
-            end
-            
-            
-            %% Perform optimization using training set
-            
-            matrixsize = max([ N M ]);
-            obj.R_over_maxDD = nan(matrixsize);
-            
-            tic
-            
             P = newHisData(:,4);
             
             % iterative (slow!!) stationarity test (calcolates Hurst exponent once for all)
@@ -146,6 +106,51 @@ classdef bktFast_hurst < handle
                 
             end
             
+            
+            if ( exist('reverse_optimization','var') && reverse_optimization == 1 )
+                
+                % split historical and perform optimization on the MOST RECENT HISTORICAL DATA!!!!
+                % default for reverse_optimization: 50% Training, 50% paper trading)
+                rTraining = floor(r*0.5);
+                rnTraining = floor(rTraining/newTimeScale);
+                
+                hisDataTraining = hisData(rTraining+1:end,:);
+                hisDataPaperTrad = hisData(1:rTraining,:);
+                newHisDataTraining = newHisData(rnTraining+1:end,:);
+                newHisDataPaperTrad = newHisData(1:rnTraining,:);
+                hurstTraining = smoothHurstDiff(rnTraining+1:end,:);
+                hurstPaperTrad = smoothHurstDiff(1:rnTraining,:);
+                
+            else % standard way!
+                
+                % split historical into trainging set for optimization and paper trading
+                % default: 75% Training, 25% paper trading)
+                rTraining = floor(r*0.75);
+                rnTraining = floor(rTraining/newTimeScale);
+                
+                % use this to skip some of the very old hist data:
+                %             skipMe = floor(r*0.20);
+                %             skipMeNewTime = floor(skipMe/newTimeScale);
+                %             hisDataTraining = hisData(skipMe:rTraining,:);
+                %             newHisDataTraining = newHisData(skipMeNewTime:rnTraining,:);
+                
+                hisDataTraining = hisData(1:rTraining,:);
+                hisDataPaperTrad = hisData(rTraining+1:end,:);
+                newHisDataTraining = newHisData(1:rnTraining,:);
+                newHisDataPaperTrad = newHisData(rnTraining+1:end,:);
+                hurstTraining = smoothHurstDiff(1:rnTraining,:);
+                hurstPaperTrad = smoothHurstDiff(rnTraining+1:end,:);
+                
+            end
+            
+            
+            %% Perform optimization using training set
+            
+            matrixsize = max([ N M ]);
+            obj.R_over_maxDD = nan(matrixsize);
+            
+            tic
+
             for n = N
                 
                 display(['n =', num2str(n)]);
@@ -158,7 +163,7 @@ classdef bktFast_hurst < handle
                     
                     bktfast = feval(algo);
                     %                       spin(            Pmin,           matrixNewTimeScale, actTimeScale, newTimeScale, N, M, transCost, pips_TP, pips_SL, stdev_TP,stdev_SL, plot, Hurst_vector)
-                    bktfast = bktfast.spin(hisDataTraining(:,4), newHisDataTraining, actTimeScale, newTimeScale, n, m, transCost, pips_TP, pips_SL, stdev_TP, stdev_SL, 0, smoothHurstDiff(1:rnTraining,:));
+                    bktfast = bktfast.spin(hisDataTraining(:,4), newHisDataTraining, actTimeScale, newTimeScale, n, m, transCost, pips_TP, pips_SL, stdev_TP, stdev_SL, 0, hurstTraining);
                     
                     % if there are enough operations then save the stats
                     if bktfast.indexClose>20
@@ -176,7 +181,7 @@ classdef bktFast_hurst < handle
                 [current_best,ind_best] = max(obj.R_over_maxDD(n,:));
                 
                 temp_Training = feval(algo);
-                temp_Training = temp_Training.spin(hisDataTraining(:,4), newHisDataTraining, actTimeScale, newTimeScale, n, ind_best, transCost, pips_TP, pips_SL, stdev_TP, stdev_SL, 0, smoothHurstDiff(1:rnTraining,:));
+                temp_Training = temp_Training.spin(hisDataTraining(:,4), newHisDataTraining, actTimeScale, newTimeScale, n, ind_best, transCost, pips_TP, pips_SL, stdev_TP, stdev_SL, 0, hurstTraining);
                 
                 if temp_Training.indexClose>20
                     performance_temp_Training = p.calcSinglePerformance(nameAlgo,'bktWeb',histName,Cross,newTimeScale,transCost,10000,10,temp_Training.outputbkt,0);
@@ -187,7 +192,7 @@ classdef bktFast_hurst < handle
                     % try paper trading on partial result and display some numbers
                     
                     temp_paperTrad = feval(algo);
-                    temp_paperTrad = temp_paperTrad.spin(hisDataPaperTrad(:,4), newHisDataPaperTrad, actTimeScale, newTimeScale, n, ind_best, transCost, pips_TP, pips_SL, stdev_TP, stdev_SL, 0, smoothHurstDiff(rnTraining+1:end,:));
+                    temp_paperTrad = temp_paperTrad.spin(hisDataPaperTrad(:,4), newHisDataPaperTrad, actTimeScale, newTimeScale, n, ind_best, transCost, pips_TP, pips_SL, stdev_TP, stdev_SL, 0, hurstPaperTrad);
                     performance_temp = p.calcSinglePerformance(nameAlgo,'bktWeb',histName,Cross,newTimeScale,transCost,10000,10,temp_paperTrad.outputbkt,0);
                     
                     risultato_temp = performance_temp.pipsEarned / abs(performance_temp.maxDD_pips) ;
@@ -233,7 +238,7 @@ classdef bktFast_hurst < handle
             display(['bestN =', num2str(bestN),' bestM =', num2str(bestM)]);
             
             obj.bktfastTraining = feval(algo);
-            obj.bktfastTraining = obj.bktfastTraining.spin(hisDataTraining(:,4), newHisDataTraining, actTimeScale, newTimeScale, bestN, bestM, transCost, pips_TP, pips_SL, stdev_TP, stdev_SL, 0, smoothHurstDiff(1:rnTraining,:));
+            obj.bktfastTraining = obj.bktfastTraining.spin(hisDataTraining(:,4), newHisDataTraining, actTimeScale, newTimeScale, bestN, bestM, transCost, pips_TP, pips_SL, stdev_TP, stdev_SL, 0, hurstTraining);
             
             p = Performance_06;
             obj.performanceTraining = p.calcSinglePerformance(nameAlgo,'bktWeb',histName,Cross,newTimeScale,transCost,10000,10,obj.bktfastTraining.outputbkt,0);
@@ -252,7 +257,7 @@ classdef bktFast_hurst < handle
             %% perform paper trading
             
             obj.bktfastPaperTrading = feval(algo);
-            obj.bktfastPaperTrading = obj.bktfastPaperTrading.spin(hisDataPaperTrad(:,4), newHisDataPaperTrad, actTimeScale, newTimeScale, bestN, bestM, transCost, pips_TP, pips_SL, stdev_TP, stdev_SL, smoothHurstDiff(rnTraining+1:end,:));
+            obj.bktfastPaperTrading = obj.bktfastPaperTrading.spin(hisDataPaperTrad(:,4), newHisDataPaperTrad, actTimeScale, newTimeScale, bestN, bestM, transCost, pips_TP, pips_SL, stdev_TP, stdev_SL, hurstPaperTrad);
             
             obj.performancePaperTrad = p.calcSinglePerformance(nameAlgo,'bktWeb',histName,Cross,newTimeScale,transCost,10000,10,obj.bktfastPaperTrading.outputbkt,0);
             risultato = obj.performancePaperTrad.pipsEarned / abs(obj.performancePaperTrad.maxDD_pips);
