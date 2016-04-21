@@ -262,7 +262,7 @@ classdef bktFast_hurst < handle
             %% perform paper trading
             
             obj.bktfastPaperTrading = feval(algo);
-            obj.bktfastPaperTrading = obj.bktfastPaperTrading.spin(hisDataPaperTrad(:,4), newHisDataPaperTrad, actTimeScale, newTimeScale, bestN, bestM, transCost, pips_TP, pips_SL, stdev_TP, stdev_SL, hurstPaperTrad);
+            obj.bktfastPaperTrading = obj.bktfastPaperTrading.spin(hisDataPaperTrad(:,4), newHisDataPaperTrad, actTimeScale, newTimeScale, bestN, bestM, transCost, pips_TP, pips_SL, stdev_TP, stdev_SL, 0, hurstPaperTrad);
             
             obj.performancePaperTrad = p.calcSinglePerformance(nameAlgo,'bktWeb',histName,Cross,newTimeScale,transCost,10000,10,obj.bktfastPaperTrading.outputbkt,0);
             risultato = obj.performancePaperTrad.pipsEarned / abs(obj.performancePaperTrad.maxDD_pips);
