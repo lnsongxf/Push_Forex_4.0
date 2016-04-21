@@ -126,35 +126,24 @@ string nextOrderToString()
 
    string buffer =
    StringConcatenate(
-   OrderOpenTime(),",",
-   OrderCloseTime(),",",
-   OrderSymbol(),",",
-   OrderType(),",",
-   OrderLots(),",",
-   OrderStopLoss(),",",
-   OrderTakeProfit(),",",
+   "-1,", //index of stick
    OrderOpenPrice(),",",
    OrderClosePrice(),",",
-   OrderCommission(),",",
-   OrderSwap(),",",
    OrderProfit(),",",
-   OrderComment(),",",
-   OrderMagicNumber(),",",
-
+   OrderType(),",",
+   "1,", //real
+   TimeToStringNS(OrderOpenTime()),",",
+   TimeToStringNS(OrderCloseTime()),",",
+   OrderLots(),",",
    "-1,", //Duration
    "-1,", //Profitable
-   "-1,", //Profitable
-   "-1,", //Drawdown
-   "-1,", //Risk:Reward
-   "-1,", //Max
-   "-1,", //Max
-   "-1,", //Min
-   "-1,", //Min
-   "-1,", //Entry Accuracy
-   "-1,", //Exit Accuracy
-   "-1,", //ProfitMissed
-   "-1,", //ProfitMissed
-
+   OrderSymbol(),",",
+   OrderStopLoss(),",",
+   OrderTakeProfit(),",",
+   OrderCommission(),",",
+   OrderSwap(),",",
+   OrderComment(),",",
+   OrderMagicNumber(),",",
    OrderTicket());
 
    return buffer;
@@ -181,3 +170,15 @@ int sleepXIndicators(int milli_seconds)
      }   
    return(sleepTime);
   }
+
+ string TimeToStringNS(datetime when){
+  string withSep = TimeToStr(when),              // "yyyy.mm.dd hh:mi"
+         withOut = StringSubstr(withSep,  5, 2)  // yyyy
+				 + "/"
+                 + StringSubstr(withSep,  0, 4)  // mm
+                 + "/"
+                 + StringSubstr(withSep,  8, 5)  // dd hh
+                 + ":"
+                 + StringSubstr(withSep, 14, 3); // mi
+  return(withOut);                               // "yyyymmdd hhmi"
+}
