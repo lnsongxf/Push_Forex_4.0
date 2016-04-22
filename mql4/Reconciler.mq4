@@ -130,7 +130,7 @@ string nextOrderToString()
    OrderOpenPrice(),",",
    OrderClosePrice(),",",
    OrderProfit(),",",
-   OrderType()*2-1,",",
+   OrderType()*(-2)+1,",",
    "1,", //real
    TimeToStringNS(OrderOpenTime()),",",
    TimeToStringNS(OrderCloseTime()),",",
