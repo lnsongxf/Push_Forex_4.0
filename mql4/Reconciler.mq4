@@ -178,7 +178,7 @@ int sleepXIndicators(int milli_seconds)
 		 + StringSubstr(withSep,  8, 2)  // dd
 		 + "/"
                  + StringSubstr(withSep,  0, 4)  // yyyy
-                 + "/"
+                 + " "
                  + StringSubstr(withSep,  11, 2)  // dd hh
                  + ":"
                  + StringSubstr(withSep, 14, 2); // mi
