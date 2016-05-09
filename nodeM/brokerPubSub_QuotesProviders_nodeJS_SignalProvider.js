@@ -802,7 +802,7 @@ sockSubFromSignalProvider.on('message', function() {
 
 		default:
 
-		 	//EX: MATLAB@111@EURUSD@OPERATIONS
+		 	//EX: OPERATIONS@ACTIVTRADES@EURUSD@1002
 			var topicType = topic.split('@');
   			if (topicType[0] == 'OPERATIONS') {
   				//if ( runningSignalProviderTopicOperationList.indexOf( topic ) > -1 ) {
