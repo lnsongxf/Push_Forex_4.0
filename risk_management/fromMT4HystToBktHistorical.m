@@ -19,8 +19,8 @@ function [HistData_1min,HistData_freq]=fromMT4HystToBktHistorical(actTimeScale,n
 
 tic
 
-filename = 'EURUSD1_04022016_13042016';
-filedir = 'C:\Users\alericci\Desktop\Forex 4.0 noShared\';
+filename = 'AUDCAD';
+filedir = 'C:\Users\alericci\Google Drive\FOREX 4.0\Forex 4.0\historical_data\';
 Fullname  = strcat(filedir, filename,'.csv');
 factor = 10000;
 

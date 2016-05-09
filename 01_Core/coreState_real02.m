@@ -471,8 +471,8 @@ classdef coreState_real02 < handle
                     
                     obj.state=1;
                     obj.suggestedDirection=prev_signal;
-                    obj.suggestedTP=10;
-                    obj.suggestedSL=10;
+                    obj.suggestedTP=26;
+                    obj.suggestedSL=26;
                     
                 end
                 

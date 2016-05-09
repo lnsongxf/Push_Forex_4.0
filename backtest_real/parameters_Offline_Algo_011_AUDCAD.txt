@@ -15,15 +15,15 @@
             %
             % EXAMPLE of use:
             % -------------------------------------------------------------
-            % clear all; bkt_Algo_011=bktOffline
-            % bkt_Algo_011=bkt_Algo_011.spin('parameters_Offline_Algo_011.txt')
+            % clear all; bkt_Algo_011=bktOffline_02
+            % bkt_Algo_011=bkt_Algo_011.spin('parameters_Offline_Algo_011_AUDCAD.txt')
 
 
 
 nameAlgo = 'Algo_011_stocOsc_AUDCAD'
 Cross = 'AUDCAD'
 nData_ = 100
-histName = 'AUDCAD.csv' % 'AUDCAD_short2.csv'
+histName = 'AUDCAD.csv'  % 'AUDCAD_short2.csv'
 actTimeScale = 1
 newTimeScale = 30
 transCost = 1
