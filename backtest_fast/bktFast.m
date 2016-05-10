@@ -353,35 +353,37 @@ classdef bktFast < handle
             figure
             hold on
             
-            Legend = cell( size(N,2)*size(M,2) , 1);
+            Legend = cell( length(N), 1);
             LegNum=1;
             
-            for n = N
+            for i=1:length(N);
+                
+                n=N(i);
+                m=M(i);
+                
                 
                 display(['n =', num2str(n)]);
                 
                 
-                for m = M
-                    
-                    if( N_greater_than_M && n<=m )
-                        continue
-                    end
-                    
-                    obj.bktfastTry = feval(algo);
-                    obj.bktfastTry = obj.bktfastTry.spin(hisData(:,4), newHisData, actTimeScale, newTimeScale, n, m, transCost, pips_TP, pips_SL, stdev_TP, stdev_SL, 0);
-                    
-%                     subpl(LegNum) = subplot( size(N,2), size(M,2), LegNum );                    
-                    plot(cumsum(obj.bktfastTry.outputbkt(:,4) - transCost),'color',rand(1,3))
-                    Legend{LegNum}=strcat( num2str(n),'-',num2str(m) );
-                    LegNum= LegNum+1;
-                    
+                
+                if( N_greater_than_M && n<=m )
+                    continue
                 end
                 
+                obj.bktfastTry = feval(algo);
+                obj.bktfastTry = obj.bktfastTry.spin(hisData(:,4), newHisData, actTimeScale, newTimeScale, n, m, transCost, pips_TP, pips_SL, stdev_TP, stdev_SL, 0);
+                
+                %                     subpl(LegNum) = subplot( size(N,2), size(M,2), LegNum );
+                plot(cumsum(obj.bktfastTry.outputbkt(:,4) - transCost),'color',rand(1,3))
+                Legend{LegNum}=strcat( num2str(n),'-',num2str(m) );
+                LegNum= LegNum+1;
+                
+                
             end
-
-%             linkaxes(subpl,'y')
-             legend(Legend)
-             title('Cumulative Results of various trials')
+            
+            %             linkaxes(subpl,'y')
+            legend(Legend)
+            title('Cumulative Results of various trials')
             
         end % end of function plotme
         
