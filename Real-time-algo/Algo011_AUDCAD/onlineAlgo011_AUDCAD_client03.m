@@ -186,7 +186,8 @@ elseif listener3
                     
                 else
                     
-                    openValueReal = price ;
+                    % openValueReal = price ;
+                    openValueReal = ms.lastOpenValue;
                     LogObj.info('MT4 info',num2str(cell2mat(strcat('MT4 opened the requested operation',{' '},num2str(ticket),{' '},' at the price ',{' '},num2str(price)))) );
                     ms.machineStatus = 'open';
                     ms.openTicket = ticket;

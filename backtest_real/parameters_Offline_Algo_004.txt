@@ -23,7 +23,7 @@
 nameAlgo = 'Algo_004_statTrend'
 Cross = 'EURUSD'
 nData_ = 100
-histName = 'EURUSD_smallsample2014_2015.csv'
+histName = 'C:\Users\alericci\Google Drive\FOREX 4.0\Forex 4.0\historical_data\EURUSD-04-2014-02-2016.csv'  % 'EURUSD_smallsample2014_2015.csv'
 actTimeScale = 1
 newTimeScale = 30
 transCost = 1

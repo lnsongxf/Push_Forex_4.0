@@ -363,7 +363,7 @@ classdef coreState_real02 < handle
         
         %%
         
-        function obj = core_Algo_004_statTrend (obj,closure,params,timeSeriesProperties)
+        function obj = core_Algo_004_statTrend (obj,closure,params,windowSize1,windowSize2,timeSeriesProperties)
             
             %NOTE:
             %LOGICA: fa 2 smoothing e quando si incrociano apre se sono concordi
@@ -374,7 +374,6 @@ classdef coreState_real02 < handle
             
             closePrice=closure;
             
-            windowSize1 = 15;
             a = (1/windowSize1)*ones(1,windowSize1);
             smoothClose1 = filter(a,1,closePrice);
             %             fluctuations1=abs(closure-smoothClose1);
@@ -382,7 +381,6 @@ classdef coreState_real02 < handle
             %             actualFluct1=closure(end)-smoothClose1(end);
             %             signDirection1=sign(actualFluct1);
             
-            windowSize2 = 51;
             b = (1/windowSize2)*ones(1,windowSize2);
             smoothClose2 = filter(b,1,closePrice);
             fluctuations2=abs(closePrice-smoothClose2);

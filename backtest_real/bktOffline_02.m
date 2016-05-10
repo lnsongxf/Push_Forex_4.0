@@ -178,7 +178,7 @@ classdef bktOffline_02 < handle
                             openingDateNum(indexOpen) = obj.newHisData(i,6);
                             lots(indexOpen)           = 1;
                             
-                            % closing
+                        % closing
                         elseif updatedOperation == 0 && abs(startingOperation) > 0
                             
                             openValueReal     = 0;

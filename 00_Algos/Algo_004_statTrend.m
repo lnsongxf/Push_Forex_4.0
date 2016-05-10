@@ -131,7 +131,7 @@ if newTimeScalePoint
 
     % 01c
     % -------- coreState filter -------------------- %
-    cState.core_Algo_004_statTrend(chiusure(1:end-1),params,timeSeriesProperties);
+    cState.core_Algo_004_statTrend(chiusure(1:end-1),params,17,51,timeSeriesProperties);
     
 end
 state=cState.state;
@@ -170,7 +170,7 @@ else
             operationState.latency = closingTime - openingTime;
             
             dynamicParameters {1} = 0;
-            dynamicParameters {2} = 2;
+            dynamicParameters {2} = 1;
             [params,TakeProfitPrice,StopLossPrice,dynamicOn] = dynamicalTPandSLManager(operationState, chiusure, params, @closingShrinkingBands, dynamicParameters);
             if dynamicOn  == 1
                 params.set('openTime__',indexHisData);
