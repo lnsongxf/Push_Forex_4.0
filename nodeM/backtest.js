@@ -628,7 +628,25 @@ sockPub.bindSync('tcp://*:50027');
 //Topic: STATUS@EURUSD@1002message: "1,open,11403,105634693\n"
 
 var operations = [];
-var tot_backtest = 0;
+var tot_backtest_comulative = [0];
+var tot_backtest_all_operations = [];
+var profit = 0;
+var loss = 0;
+var profit_trades = 0;
+var loss_trades = 0;
+var total_profit = 0;
+var average_pips_trade = null;
+var consecutive_profit_trades_arr = [];
+var consecutive_loss_trades_arr = [];
+var consecutive_profit_trades = 0;
+var consecutive_loss_trades = 0;
+var worst_trade = null;
+var best_trade = null;
+var long_trades = 0;
+var short_trades = 0;
+var max_drawdown_arr [];
+var max_drawdown = 0;
+var min_drawdown = 0;
 var operation_unique_id = 1;
 
 sockSubFromSignalProvider.subscribe('NEWTOPICFROMSIGNALPROVIDER');
@@ -724,7 +742,84 @@ sockSubFromSignalProvider.on('message', function() {
 					var ticket = ticket_rv;
 					for(var i=0; i<=operations.length-1; i++){
 						if (operations[i].id == ticket) {
-							tot_backtest = tot_backtest + ((price - operations[i].open) * operations[i].op) / 10;  //IF WE HAVE 5 NUMBERS, IN ORDER TO CALCULATE THE TOTAL OF PIPS WE HAVE DELETE FOR 10 
+
+							var operation_result = ((price - operations[i].open) * operations[i].op) / 10;
+							var last_operation = tot_backtest_all_operations[tot_backtest_all_operations.length-1];
+
+							tot_backtest_comulative.push( tot_backtest_comulative[tot_backtest_comulative.length-1] + operation_result );  //IF WE HAVE 5 NUMBERS, IN ORDER TO CALCULATE THE TOTAL OF PIPS WE HAVE DELETE FOR 10 
+							tot_backtest_all_operations.push( operation_result );
+
+							// TOTAL PROFIT
+							total_profit = tot_backtest_comulative[tot_backtest_comulative.length-1];
+
+							// AVERAGE PIPS TRADE
+							average_pips_trade = tot_backtest_comulative[tot_backtest_comulative.length-1] / tot_backtest_comulative[tot_backtest_comulative.length;
+
+							// PROFIT&LOSS_PIPS   and   PROFIT&LOSS_TRADES   and   CONSECUTIVE_PROFIT&LOSS_TRADES  and  BEST&WORST_TRADE
+							if (operation_result > 0) {
+								profit_trades++;
+								profit = profit + operation_result;
+								if (last_operation > 0) {
+									consecutive_profit_trades_arr.push(1);
+								}else if (last_operation < 0) {
+									if (consecutive_profit_trades < consecutive_profit_trades_arr.length) {
+										consecutive_profit_trades = consecutive_profit_trades_arr.length;
+									}
+									consecutive_profit_trades_arr.push(1);
+								};
+								if (best_trade != null) {
+									if (best_trade < operation_result) {
+										best_trade = operation_result;
+									};
+								}else{
+									best_trade = operation_result;
+								}
+							}else if (operation_result <= 0) {
+								loss_trades++;
+								loss = loss + operation_result;
+								if (last_operation < 0) {
+									consecutive_loss_trades_arr.push(1);
+								}else if (last_operation > 0) {
+									if (consecutive_loss_trades < consecutive_loss_trades_arr.length) {
+										consecutive_loss_trades = consecutive_loss_trades_arr.length;
+									}
+									consecutive_loss_trades_arr.push(1);
+								};
+								if (worst_trade != null) {
+									if (worst_trade > operation_result) {
+										worst_trade = operation_result;
+									};
+								}else{
+									worst_trade = operation_result;
+								}
+
+							};
+
+							// LONG(BUY) AND SHORT(SELL)
+							if (operations[i].op == '1') {
+								long_trades++;
+							}else if (operations[i].op == '-1') {
+								short_trades++;
+							};
+
+							// MAX DRAWDOWN 
+							if ( max_drawdown_arr[max_drawdown_arr.length-1] != undefined && max_drawdown_arr[max_drawdown_arr.length-1] != null ){
+								var first_max_drawdown_arr_value = max_drawdown_arr[0];
+								
+								var current_max_drawdown_arr_value = tot_backtest_comulative[tot_backtest_comulative.length-1];
+								if ( first_max_drawdown_arr_value >= current_max_drawdown_arr_value) {
+									max_drawdown_arr.push( current_max_drawdown_arr_value );
+								}else if (first_max_drawdown_arr_value < current_max_drawdown_arr_value) {
+									var new_drawdown = ( (max_drawdown_arr.min() - max_drawdown_arr[0])/max_drawdown_arr[0] )*100;
+									if (new_drawdown > max_drawdown) {
+										max_drawdown = ( (max_drawdown_arr.min() - max_drawdown_arr[0])/max_drawdown_arr[0] )*100;
+									};
+									max_drawdown_arr[];
+								};
+							}else{
+								max_drawdown_arr.push( tot_backtest_comulative[tot_backtest_comulative.length-1] );
+							}
+
 							operations[i].close = price;
 							var status_mess = "1,close,"+price+","+operations[i].id;
 							var status_topic = "STATUS@"+cross+"@"+operations[i].magic;
