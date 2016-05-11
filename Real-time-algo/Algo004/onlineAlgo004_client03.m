@@ -133,7 +133,7 @@ if listener1 && ( strcmp(ms.machineStatus,'closed') || strcmp(ms.machineStatus,'
         
     end
     
-    matrix(:,end)=matrix(:,end-1); % copio l'ultima mezz ora cm se fosse il dato al minuto
+    % matrix(:,end)=matrix(:,end-1); % copio l'ultima mezz ora cm se fosse il dato al minuto
     
 elseif listener2 && ( strcmp(ms.machineStatus,'closed') || strcmp(ms.machineStatus,'open') ) %new 1minute data point
     

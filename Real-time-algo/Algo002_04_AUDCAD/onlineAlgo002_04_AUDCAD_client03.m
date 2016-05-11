@@ -121,6 +121,8 @@ end
 
 if listener1 && ( strcmp(ms.machineStatus,'closed') || strcmp(ms.machineStatus,'open') ) %new 30minutes data array
     
+%     time30 = tic;        % used for measuring the time spent for parsing
+    
     LogObj.info('MATLAB info','new data array at 30min received');
     myData = strsplit(messageSub, ';');
     newTimeScalePoint = 1;
@@ -133,7 +135,10 @@ if listener1 && ( strcmp(ms.machineStatus,'closed') || strcmp(ms.machineStatus,'
         
     end
     
-    matrix(:,end)=matrix(:,end-1); % copio l'ultima mezz ora cm se fosse il dato al minuto
+    % matrix(:,end)=matrix(:,end-1); % copio l'ultima mezz ora cm se fosse il dato al minuto
+    
+%     time30close = toc(time30);
+%     display (time30close);
     
 elseif listener2 && ( strcmp(ms.machineStatus,'closed') || strcmp(ms.machineStatus,'open') ) %new 1minute data point
     
@@ -432,7 +437,7 @@ else
     newTimeScalePointEnd = 0;
 end
 
-if ( ( strcmp(ms.machineStatus,'closed') || strcmp(ms.machineStatus,'open') ) && ms.statusNotification == 0 )
+if ( ( strcmp(ms.machineStatus,'closed') || strcmp(ms.machineStatus,'open') ) && (ms.statusNotification == 0) )
     t=now;
     timeMin=t*60*24;
     [oper,openValue, closeValue, stopLoss, takeProfit, minReturn] = Algo_002_04_leadlag_AUDCAD(matrix,newTimeScalePoint,newTimeScalePointEnd,openValueReal,timeSeriesProperties,timeMin);
