@@ -21,10 +21,10 @@ int MAX_NUM_OF_TRADES_PER_MESSAGE = 25;
 //+------------------------------------------------------------------+
 int OnInit()
   {
-   listener = conn_and_sub("tcp://localhost:51127", "RECONCILER@ACTIVTRADES@" + Symbol());
-   speaker = connect("tcp://localhost:51125");
+   listener = conn_and_sub("tcp://192.168.11.3:51127", "RECONCILER@ACTIVTRADES@" + Symbol());
+   speaker = connect("tcp://192.168.11.3:51125");
    Print("Connecting: " + listener);
-   
+   MathSrand(GetTickCount());
    return(INIT_SUCCEEDED);
   }
   
@@ -54,9 +54,9 @@ int OnCalculate(const int rates_total,
    
    //Alert("Tick!");
    msg = receive(listener);
-   //Alert("Msg: " + msg);
    if (StringLen(msg) > 0)
    {
+      Alert("Msg: " + msg);
       msg = receive(listener);
    
       //Alert("Msg: " + msg);
@@ -70,9 +70,11 @@ int OnCalculate(const int rates_total,
 
 void processInput(string msg)
 {
+   int id = MathRand()%1024;
    if (StringCompare("FULL", msg) == 0)
    {
-      string buffer = "";
+      
+      string buffer = IntegerToString(id) + "=FULL=";
       string topic = "HISTORY@ACTIVTRADES@EURUSD";
       // retrieving info from trade history
       int i,j=0,hstTotal=OrdersHistoryTotal();
@@ -104,6 +106,15 @@ void processInput(string msg)
       }
       send(topic, buffer);
    }
+   else if(StringFind(msg, "SINGLE=", 0) == 0) {
+      int ticket = (int)StringToInteger(StringSubstr(msg, 7));
+      if(OrderSelect(ticket,SELECT_BY_TICKET,MODE_TRADES)==false)
+      {
+         Print("Access to history failed with error (",GetLastError(),")");
+      }
+      string buffer = IntegerToString(id) + "=SINGLE=" + nextOrderToString();
+      send(topic, buffer);
+   }
    else {
    	Print("Invalid command " + msg);
    }
@@ -130,7 +141,7 @@ string nextOrderToString()
    OrderOpenPrice(),",",
    OrderClosePrice(),",",
    OrderProfit(),",",
-   OrderType()*(-2)+1,",",
+   OrderType(),",",
    "1,", //real
    TimeToStringNS(OrderOpenTime()),",",
    TimeToStringNS(OrderCloseTime()),",",
@@ -173,14 +184,12 @@ int sleepXIndicators(int milli_seconds)
 
  string TimeToStringNS(datetime when){
   string withSep = TimeToStr(when),              // "yyyy.mm.dd hh:mi"
-         withOut = StringSubstr(withSep,  5, 2)  // mm
-		 + "/"
-		 + StringSubstr(withSep,  8, 2)  // dd
-		 + "/"
-                 + StringSubstr(withSep,  0, 4)  // yyyy
-                 + " "
-                 + StringSubstr(withSep,  11, 2)  // dd hh
+         withOut = StringSubstr(withSep,  5, 2)  // yyyy
+				 + "/"
+                 + StringSubstr(withSep,  0, 4)  // mm
+                 + "/"
+                 + StringSubstr(withSep,  8, 5)  // dd hh
                  + ":"
-                 + StringSubstr(withSep, 14, 2); // mi
+                 + StringSubstr(withSep, 14, 3); // mi
   return(withOut);                               // "yyyymmdd hhmi"
 }
