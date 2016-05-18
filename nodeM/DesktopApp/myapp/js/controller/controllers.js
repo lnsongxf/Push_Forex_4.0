@@ -22,7 +22,121 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
     var crypto = require('crypto');
     var mv = require('mv');
     require('nw.gui').Window.get().showDevTools();
+    var JSFtp = require("jsftp");
+    var zmq = require('zmq'); 
+    var tcpPortUsed = require('tcp-port-used');
 
+   
+
+    var Ftp = new JSFtp({
+      host: "52.33.13.29",
+      port: 21, // defaults to 21
+      user: "trader", // defaults to "anonymous"
+      pass: "abc123" // defaults to "@anonymous"
+    });
+
+
+    $scope.activeWorker = [];
+
+    $scope.startBacktest = function(cross_list,from,to){
+
+      var current_worker = {
+        worker: '',
+        sockPub: '',
+        sockSub: '',
+        pub_port: '',
+        sub_port: ''
+      };
+      var crosses_data = [];
+      var ports_list = [];
+      var pub_port_set = false;
+      var sub_port_set = false;
+
+      for(var i=0; i<=cross_list.length-1; i++){
+
+        //CHECK IN DATABASE IF WE ALREADY HAVE THIS CROSS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+        //EX: 'history_backtest/EURGBP_2016-01-21_2016-05-17.csv'
+        var quotes_query = 'history_backtest/'+cross_list[i].cross+'_'+from+'_'+to+'.csv';
+
+        var store_history_in_memory = ""; // Will store the contents of the file 
+        Ftp.get(quotes_query, function(err, socket) {
+            if(err){
+              console.log("error to download the backtest quotes from server");
+            }else{
+              socket.on("data", function(d) { 
+                store_history_in_memory += d.toString(); 
+                console.log("data chunk: "+d.toString() );
+              })
+              socket.on("close", function(hadErr) {
+                if (hadErr){
+                  console.error('There was an error retrieving the file.');
+                }else{
+                  crosses_data.push({cross:cross_list[i].cross,history_quotes:store_history_in_memory,from:from,to:to,dataLenght:cross_list[i].dataLenght});
+                }
+              });
+              socket.resume();
+            }
+        });
+      }
+      
+      for(var i=1;i<=100;i++){
+        ports_list.push(53650+i);
+      }
+      for(var j=0;j<=ports_list.length-1;j++){
+
+        tcpPortUsed.check(ports_list[j], '127.0.0.1')
+        .then(function(inUse) {
+
+          if (inUse == false) {
+            console.log('Port '+ports_list[j]+' usage: '+inUse);
+            if (pub_port_set == false) {
+              current_worker.pub_port = ports_list[j];
+            }else{
+              current_worker.sub_port = ports_list[j];
+              break;
+            }
+          }else{
+            console.log('Port '+ports_list[j]+' usage: '+inUse);  
+          }
+          
+        }, function(err) {
+          console.error('Error on check:', err.message);
+        });
+      } 
+
+      
+
+      var w;
+      if(typeof(Worker) !== "undefined") {
+          if(typeof(w) == "undefined") {
+              current_worker.worker.push(new Worker("js/backtest.js") );
+          }
+
+          current_worker.sockPub = zmq.socket('pub');
+          current_worker.sockSub = zmq.socket('sub');
+          current_worker.sockPub.bindSync('tcp://*:'+current_worker.pub_port);
+          current_worker.sockSub.bindSync('tcp://*:'+current_worker.sub_port);
+
+          current_worker.worker.postMessage(crosses_data);
+          $scope.activeWorker/push(current_worker);
+
+
+          //$scope.activeWorker[$scope.activeWorker.length-1].onmessage = function(event) {
+              //document.getElementById("result").innerHTML = event.data;
+          //};
+      }else{
+          //document.getElementById("result").innerHTML = "Sorry! No Web Worker support.";
+      }
+      
+
+      //$scope.activeWorker[$scope.activeWorker.length-1].terminate();
+      //$scope.activeWorker[$scope.activeWorker.length-1] = undefined;
+      
+      
+    }
+
+    $scope.startBacktest([{'cross':'EURGBP','dataLenght':'v5'}],'2016-01-21','2016-05-17');
 
     //////////////////////////////Config panel//////////////////
     $scope.openPanel = false;

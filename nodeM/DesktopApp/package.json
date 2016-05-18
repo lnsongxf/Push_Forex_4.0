@@ -6,7 +6,11 @@
   "dependencies": {
     "crypto": "",
     "fs": "",
+    "jsftp":"",
+    "tcp-port-used":"",
     "mv": "",
-    "request": ""
+    "request": "",
+    "node-gyp": "*",
+    "zmq": "*"
   }
 }
