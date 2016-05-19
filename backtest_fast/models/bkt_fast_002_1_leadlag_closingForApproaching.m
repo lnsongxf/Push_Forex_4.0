@@ -1,4 +1,4 @@
-classdef bkt_fast_002_4_leadlag_dynamicalTPandSL_maxvolat_fluctlimit < handle
+classdef bkt_fast_002_1_leadlag_closingForApproaching < handle
     
     % bktfast VERSION 3 (with arrayAperture and minimumReturns)
     
@@ -98,11 +98,11 @@ classdef bkt_fast_002_4_leadlag_dynamicalTPandSL_maxvolat_fluctlimit < handle
                             
                             %%%%%%%%%%% dynamicalTPandSLManager
                             
-                            dynamicParameters {1} = 1.18;
+                            dynamicParameters {1} = 1.25; %1.18;
                             %dynamicParameters {2} = 2;
-                            [TakeProfitPrice,StopLossPrice,TakeP,StopL,~] = closingAfterReachedTP(Pbuy,Pminute(j),segnoOperazione,TakeP,StopL, 0, dynamicParameters);
-                            display(['TP =', num2str(TakeP),' SL =', num2str(StopL)]);
-                            display(['StopLossPrice =', num2str(StopLossPrice)]);
+                            [TakeProfitPrice,StopLossPrice,TakeP,StopL,~] = closingForApproaching(Pbuy,Pminute(j),segnoOperazione,TakeP,StopL, 0, dynamicParameters);
+%                             display(['TP =', num2str(TakeP),' SL =', num2str(StopL)]);
+%                             display(['StopLossPrice =', num2str(StopLossPrice)]);
                             
                             %%%%%%%%%%%%%%%%%%%%%%%%%%
                             

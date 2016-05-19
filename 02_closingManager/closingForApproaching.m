@@ -27,7 +27,7 @@ if abs( (LastClosePrice - StopLossPrice) ) > abs(StopL)*gain
     
     StopLossPrice    = OpenPrice - direction * newStopL;
     
-    display(strcat('dynamical SL, the new SL is ',' ',num2str(newStopL)));
+%     display(strcat('dynamical SL, the new SL is ',' ',num2str(newStopL)));
     dynamicOn = 1;
     
 end
@@ -44,7 +44,7 @@ if ( (LastClosePrice - TakeProfitPrice) * direction ) >= 0
     
     StopLossPrice    = OpenPrice - direction * newStopL;
     
-    display(strcat('dynamical TP = ',num2str(newTakeP),' / ','dynamical SL = ',num2str(newStopL)));
+%     display(strcat('dynamical TP = ',num2str(newTakeP),' / ','dynamical SL = ',num2str(newStopL)));
     dynamicOn = 1;
     
 end

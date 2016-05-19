@@ -411,7 +411,7 @@ classdef coreState_real02 < handle
             inversion=oldSign*newSign;
             newState=sign(newGradient1*newGradient2);
             oldState=sign(oldGradient1*oldGradient2);
-            trend=newState+oldState;
+%             trend=newState+oldState;
             trendDirection=sign(newGradient2);
             
             Hurst         = timeSeriesProperties.HurstSmooth(end);
