@@ -40,6 +40,13 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
 
     $scope.startBacktest = function(cross_list,from,to){
 
+      var domain = "C:/4CastersApp/";
+      if(!fs.existsSync(domain+"historyQuotes/")){
+        fs.mkdir(domain+"historyQuotes/", 0766, function(err){
+              if(err){console.log("ERROR! Can't make the directory: "+err)}
+          });  
+      }
+
       var current_worker = {
         worker: '',
         sockPub: '',
@@ -109,22 +116,41 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
 
       var w;
       if(typeof(Worker) !== "undefined") {
-          if(typeof(w) == "undefined") {
-              current_worker.worker.push(new Worker("js/backtest.js") );
+        if(typeof(w) == "undefined") {
+          // CREATE ONE WORKER FOR EACH BACKTEST
+          current_worker.worker.push(new Worker("js/backtest.js") );
+        }
+
+        // OPEN AND SET ZMQ CHANNEL ON ONE SPECIFIC SOCKET
+        current_worker.sockPub = zmq.socket('pub');
+        current_worker.sockSub = zmq.socket('sub');
+        current_worker.sockPub.bindSync('tcp://*:'+current_worker.pub_port);
+        current_worker.sockSub.bindSync('tcp://*:'+current_worker.sub_port);
+
+        // SEND INITIAL HISTORY QUOTE TO THE WORKER
+        current_worker.worker.postMessage({'d':crosses_data,'type':'initialHistoryQuotes'});
+
+        current_worker.sockSub.subscribe('NEWTOPICFROMSIGNALPROVIDER');
+        // LISTEN ALL MESSAGES FROM SIGNAL PROVIDER AND REDIRECT ALL THE MESSAGE TO WORKER
+        current_worker.sockSub.on('message', function() {
+          current_worker.worker.postMessage({'d': arguments,'type':'messageFromSignalProvider'});
+        });
+
+        // LISTEN ALL MESSAGE FROM THE WORKER AND SEND ALL THE MESSAGE TO SIGNALPROVIDER 
+        current_worker.worker.addEventListener('message',  function(event){
+          if ( event.data.type == 'sendQuoteToSignalProvider' ) {
+            current_worker.sockPub.send(event.data.d);
+          }else if (event.data.type == 'sendStatusToSignalProvider') {
+            current_worker.sockPub.send(event.data.d);
+          }else if (event.data.type == 'subscribe') {
+            current_worker.sockSub.subscribe(event.data.d);
+          }else if (event.data.type == 'unsubscribe') {
+            current_worker.sockSub.unsubscribe(event.data.d);
           }
+        };
 
-          current_worker.sockPub = zmq.socket('pub');
-          current_worker.sockSub = zmq.socket('sub');
-          current_worker.sockPub.bindSync('tcp://*:'+current_worker.pub_port);
-          current_worker.sockSub.bindSync('tcp://*:'+current_worker.sub_port);
-
-          current_worker.worker.postMessage(crosses_data);
-          $scope.activeWorker/push(current_worker);
-
-
-          //$scope.activeWorker[$scope.activeWorker.length-1].onmessage = function(event) {
-              //document.getElementById("result").innerHTML = event.data;
-          //};
+        // PUSH THE WORKER IN THE ACTIVE WORKERS ARRAY
+        $scope.activeWorker.push(current_worker);
       }else{
           //document.getElementById("result").innerHTML = "Sorry! No Web Worker support.";
       }

@@ -1,19 +1,5 @@
 console.log("started worker");
 
-
-var domain = "C:/4CastersApp/";
-if(!fs.existsSync(domain+"historyQuotes/")){
-	fs.mkdir(domain+"historyQuotes/", 0766, function(err){
-        if(err){console.log("ERROR! Can't make the directory: "+err)}
-    });  
-}
-
-/*
-"fatal" (60): The service/app is going to stop or become unusable now. An operator should definitely look into this soon.
-"error" (50): Fatal for a particular request, but the service/app continues servicing other requests. An operator should look at this soon(ish).
-"info" (30):  Detail on topics and message exchanged
-"trace" (10): Detail on regular operation. 
-*/
 if (!Array.prototype.last){
     Array.prototype.last = function(){
         return this[this.length - 1];
@@ -26,7 +12,6 @@ Array.prototype.min = function() {
   return Math.min.apply(null, this);
 };
 
-
 var BacktestModule = (function(){
 
 	var _timeFrameQuotes = function(providerName){
@@ -36,7 +21,7 @@ var BacktestModule = (function(){
 
 	var _createTimeFrameQuotesObj = function(quotes_list,providerName){
 		if (quotes_list == null || quotes_list == undefined || providerName == null || providerName == undefined) {
-			logger.error('quotes_list %s or providerName '+quotes_list,providerName+' null or not defined into _createTimeFrameQuotesObj');
+			console.log('quotes_list %s or providerName '+quotes_list,providerName+' null or not defined into _createTimeFrameQuotesObj');
 			return null;
 		};
 		var _quotesObj = new _timeFrameQuotes(providerName);
@@ -52,7 +37,7 @@ var BacktestModule = (function(){
 		        }
 		    }
 		}
-		logger.trace("created new TimeFrameQuotesObj: "+JSON.stringify(_quotesObj)+ " providerName: "+providerName);  
+		console.log("created new TimeFrameQuotesObj: "+JSON.stringify(_quotesObj)+ " providerName: "+providerName);  
 		return _quotesObj
 	};
 
@@ -64,7 +49,7 @@ var BacktestModule = (function(){
 
 	var _createRealTimeQuotesObj = function(quotes_list,providerName){
 		if (quotes_list == null || quotes_list == undefined || providerName == null || providerName == undefined) {
-			logger.error('quotes_list '+quotes_list+' or providerName '+providerName+' null or not defined into _createRealTimeQuotesObj');
+			console.log('quotes_list '+quotes_list+' or providerName '+providerName+' null or not defined into _createRealTimeQuotesObj');
 			return null;
 		};
 		var _realTimeQuotesObj = new _realTimeQuotes(providerName);
@@ -94,7 +79,7 @@ var BacktestModule = (function(){
 
 	var _updateRealTimeQuotesObj = function(platform,messageArr){
 		if (platform == null || platform == undefined || messageArr == null || messageArr == undefined) {
-			logger.error('searchObjRealTimeQuote '+searchObjRealTimeQuote+' or messageArr '+messageArr+' null or not defined into _updateRealTimeQuotesObj');
+			console.log('searchObjRealTimeQuote '+searchObjRealTimeQuote+' or messageArr '+messageArr+' null or not defined into _updateRealTimeQuotesObj');
 			return null;
 		};
 
@@ -111,13 +96,13 @@ var BacktestModule = (function(){
 		var realVolume = messageArr[1].split(',')[4]
 
 		if (runningProviderRealTimeObjs[platform] == null || runningProviderRealTimeObjs[platform] == undefined) {
-			logger.error("Unable to find platform " + platform);
+			console.log("Unable to find platform " + platform);
 			return null;
 		}
 
 		var cross = messageArr[0];
 		if (runningProviderRealTimeObjs[platform][cross] == null || runningProviderRealTimeObjs[platform][cross] == undefined) {
-			logger.error("Unable to find cross " + cross + " in platform " + platform);
+			console.log("Unable to find cross " + cross + " in platform " + platform);
 			return null;
 		}		
 			  				
@@ -215,7 +200,7 @@ var BacktestModule = (function(){
 				}
 			}else{
 				if (cross == 'EURUSD') {
-					logger.error('Error on timeframe '+timeFrame+', cross '+ cross+' tmpArrPreviousTimeFrameQuotesV10 :'+JSON.stringify(tmpArrPreviousTimeFrameQuotesV10) );
+					console.log('Error on timeframe '+timeFrame+', cross '+ cross+' tmpArrPreviousTimeFrameQuotesV10 :'+JSON.stringify(tmpArrPreviousTimeFrameQuotesV10) );
 				}
 			}
 
@@ -226,8 +211,8 @@ var BacktestModule = (function(){
 
 		if (timeFrame == 'm1' || timeFrame == 'm30' || timeFrame == 'm15'){ 
 			if( cross == 'EURUSD' ) {
-				logger.info('Creating new quote - Cross:'+cross+' timeframe:'+timeFrame+' newQuote:'+newQuote);
-				logger.info('Resetting values for cross '+cross+' timeframe '+timeFrame+' : '+JSON.stringify(runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][cross][timeFrame]) );
+				console.log('Creating new quote - Cross:'+cross+' timeframe:'+timeFrame+' newQuote:'+newQuote);
+				console.log('Resetting values for cross '+cross+' timeframe '+timeFrame+' : '+JSON.stringify(runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][cross][timeFrame]) );
 			}
 		};
 
@@ -246,7 +231,7 @@ var BacktestModule = (function(){
 	var _updateTimeFrameQuotesObj = function(timeFrame,timeFrameQuotesObj,realTimeQuotesObj,tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty){
                                    //(timeFrameToUpdate,runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty],runningProviderRealTimeObjs[tmpRealTimeQuoteProperty],tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty);
 		if (timeFrame == null || timeFrame == undefined || timeFrameQuotesObj == null || timeFrameQuotesObj == undefined || realTimeQuotesObj == null || realTimeQuotesObj == undefined ) {
-			logger.error('In _updateTimeFrameQuotesObj timeframe or timeFrameQuotesObj or realTimeQuotesObj is notDefined/null');
+			console.log('In _updateTimeFrameQuotesObj timeframe or timeFrameQuotesObj or realTimeQuotesObj is notDefined/null');
 			return null;
 		};
 
@@ -286,7 +271,7 @@ var BacktestModule = (function(){
 		  				if (realTimeQuotesObj.hasOwnProperty(key1)) {
 		  					if (key0 == key1 && key0 != "provider" && key0 != "description") {
 
-		  						logger.trace("TIMEFRAME TO UPDATE: "+timeFrame);
+		  						console.log("TIMEFRAME TO UPDATE: "+timeFrame);
 								
 	  							//AND WE CLEAN THE REAL TIME ARRAY OBJ. THIS RRAY STORE THE LAST REALTIME VALUES INTO ON1 MINUTE
 			  						var newQuote = _createNewQuote(tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty,key0,timeFrame);
@@ -311,26 +296,26 @@ var BacktestModule = (function(){
 					  								tempObj[Object.keys(tempObj)[0]].push( newQuote );	
 
 					  								/*
-					  								//logger.trace('Updated timeFrameQuotesObj(operation:adding) : ' + tempObj[Object.keys(tempObj)[0]].toString() + ' for TimeFrame: '+timeFrame+ ' for number of values: '+Object.keys(tempObj)[0]+' on Cross: '+key1 );
+					  								//console.log.trace('Updated timeFrameQuotesObj(operation:adding) : ' + tempObj[Object.keys(tempObj)[0]].toString() + ' for TimeFrame: '+timeFrame+ ' for number of values: '+Object.keys(tempObj)[0]+' on Cross: '+key1 );
 					  								var topic = key1;
 					  								//"TIMEFRAMEQUOTE@MT4@ACTIVTRADES   +     @EURUSD     +     @m1     +    @v1 
 					  								var topicToSignalProvider = timeFrameQuotesObj.provider+"@"+key1+"@"+timeFrame+"@"+Object.keys(tempObj)[0];
 					  								if (topicToSignalProvider == null || topicToSignalProvider == undefined ) {
-														logger.error('timeFrameQuotesObjProvider: ' +JSON.stringify(timeFrameQuotesObj.provider) + ' key1: ' + key1 + ' timeFrame: ' +timeFrame + ' totValues: ' + JSON.stringify( Object.keys(tempObj)[0] ) + ' In _updateTimeFrameQuotesObj topicToSignalProvider is notDefined/null');
+														console.log.error('timeFrameQuotesObjProvider: ' +JSON.stringify(timeFrameQuotesObj.provider) + ' key1: ' + key1 + ' timeFrame: ' +timeFrame + ' totValues: ' + JSON.stringify( Object.keys(tempObj)[0] ) + ' In _updateTimeFrameQuotesObj topicToSignalProvider is notDefined/null');
 													}else if (tempObj[Object.keys(tempObj)[0]].toString() == null || tempObj[Object.keys(tempObj)[0]].toString() == undefined ) {
-														logger.error('objWithMessageToSend: '+ JSON.stringify(tempObj) + ' _updateTimeFrameQuotesObj is sending a message (Quotes) notDefined/null');
+														console.log.error('objWithMessageToSend: '+ JSON.stringify(tempObj) + ' _updateTimeFrameQuotesObj is sending a message (Quotes) notDefined/null');
 													}else{
 					  									sockPub.send([topicToSignalProvider, tempObj[Object.keys(tempObj)[0]].join(";")]);
 					  									testSockPub.send([topicToSignalProvider, tempObj[Object.keys(tempObj)[0]].join(";")]);
 					  									if (timeFrame == 'm5' && Object.keys(tempObj)[0].split("v")[1] == '1') {
-															logger.info('Sent new timeFrame value message (ex: logs only for m5 and v1): '+tempObj[Object.keys(tempObj)[0]].join(";")+ 'for TimeFrame: '+timeFrame+ 'for Cross: '+key1+' on topic: '+topicToSignalProvider);
+															console.log.info('Sent new timeFrame value message (ex: logs only for m5 and v1): '+tempObj[Object.keys(tempObj)[0]].join(";")+ 'for TimeFrame: '+timeFrame+ 'for Cross: '+key1+' on topic: '+topicToSignalProvider);
 					  									}else if (timeFrame == 'm30' && Object.keys(tempObj)[0].split("v")[1] == '5') {
-															logger.info('Sent new timeFrame value message (ex: logs only for m30 and v5): '+tempObj[Object.keys(tempObj)[0]].join(";")+ 'for TimeFrame: '+timeFrame+ 'for Cross: '+key1+' on topic: '+topicToSignalProvider);
+															console.log.info('Sent new timeFrame value message (ex: logs only for m30 and v5): '+tempObj[Object.keys(tempObj)[0]].join(";")+ 'for TimeFrame: '+timeFrame+ 'for Cross: '+key1+' on topic: '+topicToSignalProvider);
 					  									}
 					  								}*/
 					  							}else{
 					  								//if (topicToSignalProvider == null || topicToSignalProvider == undefined ) {
-													//	logger.error('In _updateTimeFrameQuotesObj, realTimeQuotesObj[key0] is null');
+													//	console.log.error('In _updateTimeFrameQuotesObj, realTimeQuotesObj[key0] is null');
 													//};
 					  							}
 					  						}else{
@@ -342,25 +327,25 @@ var BacktestModule = (function(){
 					  								tempObj[Object.keys(tempObj)[0]].push(newQuote);
 
 					  								/*
-					  								//logger.trace('Updated timeFrameQuotesObj(operation:shifting) : ' + tempObj[Object.keys(tempObj)[0]].toString() + 'for TimeFrame: '+timeFrame+ ' for number of values: '+Object.keys(tempObj)[0]+' for Cross: '+key1 );
+					  								//console.log.trace('Updated timeFrameQuotesObj(operation:shifting) : ' + tempObj[Object.keys(tempObj)[0]].toString() + 'for TimeFrame: '+timeFrame+ ' for number of values: '+Object.keys(tempObj)[0]+' for Cross: '+key1 );
 					  								//"TIMEFRAMEQUOTE@MT4@ACTIVTRADES   +     @EURUSD     +     @m1     +    @v10 
 					  								var topicToSignalProvider = timeFrameQuotesObj.provider+"@"+key1+"@"+timeFrame+"@"+Object.keys(tempObj)[0];
 					  								if (topicToSignalProvider == null || topicToSignalProvider == undefined ) {
-														logger.error('timeFrameQuotesObjProvider: '+ JSON.stringify(timeFrameQuotesObj.provider) + ' key1: ' + key1 + ' timeFrame: '+ timeFrame + 'totValues: ' + JSON.stringify(Object.keys(tempObj)[0]) +' In _updateTimeFrameQuotesObj topicToSignalProvider is notDefined/null');
+														console.log.error('timeFrameQuotesObjProvider: '+ JSON.stringify(timeFrameQuotesObj.provider) + ' key1: ' + key1 + ' timeFrame: '+ timeFrame + 'totValues: ' + JSON.stringify(Object.keys(tempObj)[0]) +' In _updateTimeFrameQuotesObj topicToSignalProvider is notDefined/null');
 													}else if (tempObj[Object.keys(tempObj)[0]].toString() == null || tempObj[Object.keys(tempObj)[0]].toString() == undefined ) {
-														logger.error('objWithMessageToSend: ' + JSON.stringify(tempObj) + ' _updateTimeFrameQuotesObj is sending a message (Quotes) notDefined/null');
+														console.log.error('objWithMessageToSend: ' + JSON.stringify(tempObj) + ' _updateTimeFrameQuotesObj is sending a message (Quotes) notDefined/null');
 													}else{
 					  									sockPub.send([topicToSignalProvider, tempObj[Object.keys(tempObj)[0]].join(";")]);
 					  									testSockPub.send([topicToSignalProvider, tempObj[Object.keys(tempObj)[0]].join(";")]);
 					  									if (timeFrame == 'm5' && Object.keys(tempObj)[0].split("v")[1] == '1') {
-					  										logger.info('Sent new timeFrame value message (logs only for m5 and v1): '+tempObj[Object.keys(tempObj)[0]].join(";")+ 'for TimeFrame: '+timeFrame+ 'for Cross: '+key1+' on topic: '+topicToSignalProvider);
+					  										console.log.info('Sent new timeFrame value message (logs only for m5 and v1): '+tempObj[Object.keys(tempObj)[0]].join(";")+ 'for TimeFrame: '+timeFrame+ 'for Cross: '+key1+' on topic: '+topicToSignalProvider);
 					  									}else if (timeFrame == 'm30' && Object.keys(tempObj)[0].split("v")[1] == '5') {
-															logger.info('Sent new timeFrame value message (ex: logs only for m30 and v5): '+tempObj[Object.keys(tempObj)[0]].join(";")+ 'for TimeFrame: '+timeFrame+ 'for Cross: '+key1+' on topic: '+topicToSignalProvider);
+															console.log.info('Sent new timeFrame value message (ex: logs only for m30 and v5): '+tempObj[Object.keys(tempObj)[0]].join(";")+ 'for TimeFrame: '+timeFrame+ 'for Cross: '+key1+' on topic: '+topicToSignalProvider);
 					  									}
 					  								}*/
 					  							}else{
 					  								//if (topicToSignalProvider == null || topicToSignalProvider == undefined ) {
-													//	logger.error('In _updateTimeFrameQuotesObj, realTimeQuotesObj[key0] is null');
+													//	console.log.error('In _updateTimeFrameQuotesObj, realTimeQuotesObj[key0] is null');
 													//};
 					  							}
 					  						}
@@ -369,7 +354,7 @@ var BacktestModule = (function(){
 				  					}
 			  					
 		  						//uncomment this file if you want to check how are stored the quotes values
-		  						//logger.trace('Updated timeFrameQuotesObj[key1][index][timeFrame]: ' + JSON.stringify(timeFrameQuotesObj[key1][index][timeFrame] ) +  ' TimeFrame Obj Updated');
+		  						//console.log.trace('Updated timeFrameQuotesObj[key1][index][timeFrame]: ' + JSON.stringify(timeFrameQuotesObj[key1][index][timeFrame] ) +  ' TimeFrame Obj Updated');
 		  						//console.log("timeFrameQuotesObj[key1][index][timeFrame]: ",timeFrameQuotesObj[key1][index][timeFrame]);
 		  					}	
 						}
@@ -404,6 +389,7 @@ var BacktestModule = (function(){
     }
 });
 
+// TO CHANGE
 
 var configQuotesList = require('./config_quotes');
 if (configQuotesList == null || configQuotesList == undefined){
@@ -509,61 +495,259 @@ self.addEventListener('message',  function(event){
 
 	//EX: {cross:cross_list[i].cross,history_quotes:store_history_in_memory,from:from,to:to,dataLenght:cross_list[i].dataLenght}
 
-	for(var j=0; j<event.data.length-1; j++){
+	if (event.data.type == 'initialHistoryQuotes') {
 
-		setting.push( {'cross':event.data[j].cross,'dataLenght':event.data[j].dataLenght} );
+		for(var j=0; j<event.data.d.length-1; j++){
 
-	    var history_quote_arr = CSVToArray(event.data[j].history_quotes,';');
-	    for(var i=0; i<=history_quote_arr.length-1; i++){
+			setting.push( {'cross':event.data.d[j].cross,'dataLenght':event.data.d[j].dataLenght} );
 
-	    	var tmpQuote = history_quote_arr[i].split(',');
-	    	var date = tmpQuote[0];
-	    	var time = tmpQuote[1];
-	    	var open = tmpQuote[2];
-	    	var high = tmpQuote[3];
-	    	var low = tmpQuote[4];
-	    	var close = tmpQuote[5];
-	    	var volume = tmpQuote[6];
+		    var history_quote_arr = CSVToArray(event.data.d[j].history_quotes,';');
+		    for(var i=0; i<=history_quote_arr.length-1; i++){
 
-	    	var messageArr = [event.data[j].cross,open,high,low,close,volume];
+		    	var tmpQuote = history_quote_arr[i].split(',');
+		    	var date = tmpQuote[0];
+		    	var time = tmpQuote[1];
+		    	var open = tmpQuote[2];
+		    	var high = tmpQuote[3];
+		    	var low = tmpQuote[4];
+		    	var close = tmpQuote[5];
+		    	var volume = tmpQuote[6];
 
-			var result = QuotesModule.updateRealTimeQuotesObj(searchObjRealTimeQuote,messageArr);
+		    	var messageArr = [event.data.d[j].cross,open,high,low,close,volume];
 
-			var timeFrameToUpdate = 'm1';   //m1,m5,m15,m30,h1,h4,d1,w1
-			var new_timeFrameQuotesObj = QuotesModule.updateTimeFrameQuotesObj(timeFrameToUpdate,runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty],runningProviderRealTimeObjs[tmpRealTimeQuoteProperty],tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty);
-			runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty] = new_timeFrameQuotesObj;
+				var result = QuotesModule.updateRealTimeQuotesObj(searchObjRealTimeQuote,messageArr);
 
-			if ( count == 5) {
-				timeFrameToUpdate = 'm5';   //m1,m5,m15,m30,h1,h4,d1,w1
-				new_timeFrameQuotesObj = QuotesModule.updateTimeFrameQuotesObj(timeFrameToUpdate,runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty],runningProviderRealTimeObjs[tmpRealTimeQuoteProperty],tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty);
-				runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty] = new_timeFrameQuotesObj;
-			}else if ( count == 15) {
-				timeFrameToUpdate = 'm15';   //m1,m5,m15,m30,h1,h4,d1,w1
-				new_timeFrameQuotesObj = QuotesModule.updateTimeFrameQuotesObj(timeFrameToUpdate,runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty],runningProviderRealTimeObjs[tmpRealTimeQuoteProperty],tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty);
-				runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty] = new_timeFrameQuotesObj;
-			}else if ( count == 30) {
-				timeFrameToUpdate = 'm30';   //m1,m5,m15,m30,h1,h4,d1,w1
+				var timeFrameToUpdate = 'm1';   //m1,m5,m15,m30,h1,h4,d1,w1
 				var new_timeFrameQuotesObj = QuotesModule.updateTimeFrameQuotesObj(timeFrameToUpdate,runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty],runningProviderRealTimeObjs[tmpRealTimeQuoteProperty],tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty);
 				runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty] = new_timeFrameQuotesObj;
-			}else if ( count == 60) { 
-				timeFrameToUpdate = 'h1';   //m1,m5,m15,m30,h1,h4,d1,w1
-				var new_timeFrameQuotesObj = QuotesModule.updateTimeFrameQuotesObj(timeFrameToUpdate,runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty],runningProviderRealTimeObjs[tmpRealTimeQuoteProperty],tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty);
-				runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty] = new_timeFrameQuotesObj;
-			}else if ( count == 240) {
-				timeFrameToUpdate = 'h4';   //m1,m5,m15,m30,h1,h4,d1,w1
-				var new_timeFrameQuotesObj = QuotesModule.updateTimeFrameQuotesObj(timeFrameToUpdate,runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty],runningProviderRealTimeObjs[tmpRealTimeQuoteProperty],tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty);
-				runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty] = new_timeFrameQuotesObj;
-			}else if ( count == 1440) {
-				timeFrameToUpdate = 'd1';   //m1,m5,m15,m30,h1,h4,d1,w1
-				var new_timeFrameQuotesObj = QuotesModule.updateTimeFrameQuotesObj(timeFrameToUpdate,runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty],runningProviderRealTimeObjs[tmpRealTimeQuoteProperty],tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty);
-				runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty] = new_timeFrameQuotesObj;
-			}else if ( count == 7200) {
-				timeFrameToUpdate = 'w1';   //m1,m5,m15,m30,h1,h4,d1,w1
-				var new_timeFrameQuotesObj = QuotesModule.updateTimeFrameQuotesObj(timeFrameToUpdate,runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty],runningProviderRealTimeObjs[tmpRealTimeQuoteProperty],tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty);
-				runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty] = new_timeFrameQuotesObj;
-			};
+
+				if ( count == 5) {
+					timeFrameToUpdate = 'm5';   //m1,m5,m15,m30,h1,h4,d1,w1
+					new_timeFrameQuotesObj = QuotesModule.updateTimeFrameQuotesObj(timeFrameToUpdate,runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty],runningProviderRealTimeObjs[tmpRealTimeQuoteProperty],tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty);
+					runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty] = new_timeFrameQuotesObj;
+				}else if ( count == 15) {
+					timeFrameToUpdate = 'm15';   //m1,m5,m15,m30,h1,h4,d1,w1
+					new_timeFrameQuotesObj = QuotesModule.updateTimeFrameQuotesObj(timeFrameToUpdate,runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty],runningProviderRealTimeObjs[tmpRealTimeQuoteProperty],tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty);
+					runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty] = new_timeFrameQuotesObj;
+				}else if ( count == 30) {
+					timeFrameToUpdate = 'm30';   //m1,m5,m15,m30,h1,h4,d1,w1
+					var new_timeFrameQuotesObj = QuotesModule.updateTimeFrameQuotesObj(timeFrameToUpdate,runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty],runningProviderRealTimeObjs[tmpRealTimeQuoteProperty],tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty);
+					runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty] = new_timeFrameQuotesObj;
+				}else if ( count == 60) { 
+					timeFrameToUpdate = 'h1';   //m1,m5,m15,m30,h1,h4,d1,w1
+					var new_timeFrameQuotesObj = QuotesModule.updateTimeFrameQuotesObj(timeFrameToUpdate,runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty],runningProviderRealTimeObjs[tmpRealTimeQuoteProperty],tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty);
+					runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty] = new_timeFrameQuotesObj;
+				}else if ( count == 240) {
+					timeFrameToUpdate = 'h4';   //m1,m5,m15,m30,h1,h4,d1,w1
+					var new_timeFrameQuotesObj = QuotesModule.updateTimeFrameQuotesObj(timeFrameToUpdate,runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty],runningProviderRealTimeObjs[tmpRealTimeQuoteProperty],tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty);
+					runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty] = new_timeFrameQuotesObj;
+				}else if ( count == 1440) {
+					timeFrameToUpdate = 'd1';   //m1,m5,m15,m30,h1,h4,d1,w1
+					var new_timeFrameQuotesObj = QuotesModule.updateTimeFrameQuotesObj(timeFrameToUpdate,runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty],runningProviderRealTimeObjs[tmpRealTimeQuoteProperty],tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty);
+					runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty] = new_timeFrameQuotesObj;
+				}else if ( count == 7200) {
+					timeFrameToUpdate = 'w1';   //m1,m5,m15,m30,h1,h4,d1,w1
+					var new_timeFrameQuotesObj = QuotesModule.updateTimeFrameQuotesObj(timeFrameToUpdate,runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty],runningProviderRealTimeObjs[tmpRealTimeQuoteProperty],tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty);
+					runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty] = new_timeFrameQuotesObj;
+				};
+			}
 		}
-	}
+	}else if (event.data.type == 'messageFromSignalProvider') {
+
+		console.log('Message from signal provider: ' + event.data.d);
+		var data = [];
+		Array.prototype.slice.call( event.data.d ).forEach(function(arg) {
+	        data.push(arg.toString());
+	    });
+	  	var topic = data[0];
+	  	var message = data[1];
+	  	console.log('Received message from Signal Provider: '+message+ 'on topic: '+topic);
+
+	  	switch (topic) {
+	  		case "NEWTOPICFROMSIGNALPROVIDER":
+
+	  			var newTopic = message.split('@');
+	  			if (newTopic[0] == 'OPERATIONS') {
+	  				//EX: OPERATIONS@ACTIVTRADES@EURUSD
+	  				self.postMessage({'d':message,'type':'subscribe'});
+					//sockSubFromSignalProvider.subscribe(message);
+	  			}else if (newTopic[0] == 'STATUS'){
+	  				//EX: STATUS@EURUSD@111		
+	  				self.postMessage({'d':message,'type':'subscribe'});
+					//sockSubFromSignalProvider.subscribe(message);
+	  			}else{
+	  				console.log("error message: ",newTopic[0])
+	  			}
+				break;
+
+			case "DELETETOPICQUOTES":
+				//EX: OPERATIONS@ACTIVTRADES@EURUSD STATUS@EURUSD@111	
+				var deleteTopic = message.split('@');
+	  			if (deleteTopic[0] == 'OPERATIONS') {
+	  				self.postMessage({'d':message,'type':'unsubscribe'});
+					//sockSubFromSignalProvider.unsubscribe( message );
+				}else if (deleteTopic[0] == 'STATUS'){
+					self.postMessage({'d':message,'type':'unsubscribe'});
+					//sockSubFromSignalProvider.unsubscribe( message );
+	  			}else{
+	  				console.log("error message: ",newTopic[0]);
+	  			}
+				break;
+
+			default:
+
+			 	//EX: OPERATIONS@ACTIVTRADES@EURUSD@1002
+				var topicType = topic.split('@');
+	  			if (topicType[0] == 'OPERATIONS') {
+	  				console.log('New Operation: '+message+ 'from (on topic): '+topic);
+	  				//open    price=11295,lots=1,slippage=1.5,sl=1220,tp=1220,magic=1002,op=-1
+	  				//close   price=11279,lots=1,slippage=0.2,ticket=103510387,op=0
+	  				var operation = message.split(",");
+	  				var cross = topicType[2];
+
+	  				if ( operation[6] != undefined && operation[6] != null && operation[6].split('=')[0]=='op'   ) {
+	  					console.log("in open operation");
+	  					//open    price=11295,lots=1,slippage=1.5,sl=1220,tp=1220,magic=1002,op=-1
+
+	  					var price_rv = operation[0].split('=')[1];
+		  				var lots_rv = operation[1].split('=')[1];
+		  				var slippage_rv = operation[2].split('=')[1];
+		  				var sl_rv = operation[3].split('=')[1];
+		  				var tp_rv = operation[4].split('=')[1];
+		  				var magic_rv = operation[5].split('=')[1];
+		  				var op_rv = operation[6].split('=')[1];
+
+						var op_id = operation_unique_id;  //generate unique id
+						operation_unique_id++;
+						var price = price_rv;
+						var sl = sl_rv;
+						var tp = tp_rv;
+						var magic = magic_rv;
+						operations.push( {'open':price,'id':op_id,'op':op_rv,'close':'','sl':sl,'tp':tp,'magic':magic} );
+						var status_mess = "1,open,"+price+","+op_id;
+						var status_topic = "STATUS@"+cross+"@"+magic;
+						
+						var topic = "STATUS@"+cross+"@"+magic;
+						var mesage = "1,open,"+price+","+op_id;
+
+						//1,open,11295,103510387 on topic: STATUS@EURUSD@1002
+						self.postMessage({'d':[topic, message],'type':'sendStatusToSignalProvider'});
+						//sockPub.send([topic, message]);
+
+
+					}else if ( operation[4].split('=')[0]=='op' ) {
+						console.log("in close operation");
+						//close   price=11279,lots=1,slippage=0.2,ticket=103510387,op=0
+
+						var price_rv = operation[0].split('=')[1];
+		  				var lots_rv = operation[1].split('=')[1];
+		  				var slippage_rv = operation[2].split('=')[1];
+		  				var ticket_rv = operation[3].split('=')[1];
+		  				var op_rv = operation[4].split('=')[1];
+
+						var price = price_rv;
+						var ticket = ticket_rv;
+						for(var i=0; i<=operations.length-1; i++){
+							if (operations[i].id == ticket) {
+
+								var operation_result = ((price - operations[i].open) * operations[i].op) / 10;
+								var last_operation = tot_backtest_all_operations[tot_backtest_all_operations.length-1];
+
+								tot_backtest_comulative.push( tot_backtest_comulative[tot_backtest_comulative.length-1] + operation_result );  //IF WE HAVE 5 NUMBERS, IN ORDER TO CALCULATE THE TOTAL OF PIPS WE HAVE DELETE FOR 10 
+								tot_backtest_all_operations.push( operation_result );
+
+								// TOTAL PROFIT
+								total_profit = tot_backtest_comulative[tot_backtest_comulative.length-1];
+
+								// AVERAGE PIPS TRADE
+								average_pips_trade = tot_backtest_comulative[tot_backtest_comulative.length-1] / tot_backtest_comulative[tot_backtest_comulative.length];
+
+								// PROFIT&LOSS_PIPS   and   PROFIT&LOSS_TRADES   and   CONSECUTIVE_PROFIT&LOSS_TRADES  and  BEST&WORST_TRADE
+								if (operation_result > 0) {
+									profit_trades++;
+									profit = profit + operation_result;
+									if (last_operation > 0) {
+										consecutive_profit_trades_arr.push(1);
+									}else if (last_operation < 0) {
+										if (consecutive_profit_trades < consecutive_profit_trades_arr.length) {
+											consecutive_profit_trades = consecutive_profit_trades_arr.length;
+										}
+										consecutive_profit_trades_arr.push(1);
+									};
+									if (best_trade != null) {
+										if (best_trade < operation_result) {
+											best_trade = operation_result;
+										};
+									}else{
+										best_trade = operation_result;
+									}
+								}else if (operation_result <= 0) {
+									loss_trades++;
+									loss = loss + operation_result;
+									if (last_operation < 0) {
+										consecutive_loss_trades_arr.push(1);
+									}else if (last_operation > 0) {
+										if (consecutive_loss_trades < consecutive_loss_trades_arr.length) {
+											consecutive_loss_trades = consecutive_loss_trades_arr.length;
+										}
+										consecutive_loss_trades_arr.push(1);
+									};
+									if (worst_trade != null) {
+										if (worst_trade > operation_result) {
+											worst_trade = operation_result;
+										};
+									}else{
+										worst_trade = operation_result;
+									}
+
+								};
+
+								// LONG(BUY) AND SHORT(SELL)
+								if (operations[i].op == '1') {
+									long_trades++;
+								}else if (operations[i].op == '-1') {
+									short_trades++;
+								};
+
+								// MAX DRAWDOWN 
+								if ( max_drawdown_arr[max_drawdown_arr.length-1] != undefined && max_drawdown_arr[max_drawdown_arr.length-1] != null ){
+									var first_max_drawdown_arr_value = max_drawdown_arr[0];
+									
+									var current_max_drawdown_arr_value = tot_backtest_comulative[tot_backtest_comulative.length-1];
+									if ( first_max_drawdown_arr_value >= current_max_drawdown_arr_value) {
+										max_drawdown_arr.push( current_max_drawdown_arr_value );
+									}else if (first_max_drawdown_arr_value < current_max_drawdown_arr_value) {
+										var new_drawdown = ( (max_drawdown_arr.min() - max_drawdown_arr[0])/max_drawdown_arr[0] )*100;
+										if (new_drawdown > max_drawdown) {
+											max_drawdown = ( (max_drawdown_arr.min() - max_drawdown_arr[0])/max_drawdown_arr[0] )*100;
+										};
+										max_drawdown_arr = [];
+									};
+								}else{
+									max_drawdown_arr.push( tot_backtest_comulative[tot_backtest_comulative.length-1] );
+								}
+
+								operations[i].close = price;
+								var status_mess = "1,close,"+price+","+operations[i].id;
+								var status_topic = "STATUS@"+cross+"@"+operations[i].magic;
+								
+								//1,close,11280,103510387 on topic: STATUS@EURUSD@1002
+								self.postMessage({'d':[status_topic, status_message],'type':'sendStatusToSignalProvider'});
+								//sockPub.send([status_topic, status_mess]);
+							};
+						}
+						
+					};
+					sendNewDataToSignalProvider(indexQuote);
+				}else if (topicType[0] == 'SKIP') {
+					//EX: SKIP@ACTIVTRADES@EURUSD@1002
+					sendNewDataToSignalProvider(indexQuote);
+				}
+				break;
+			};
+
+		};
+	};
 });
 
 
@@ -611,7 +795,8 @@ var sendNewDataToSignalProvider = function(indexQuote){
 					//"TIMEFRAMEQUOTE@MT4@ACTIVTRADES   +     @EURUSD     +     @m1     +    @v1 
 					//"TIMEFRAMEQUOTE@BACKTEST@BACKTEST
 					var topicToSignalProvider = "TIMEFRAMEQUOTE@BACKTEST@BACKTEST@"+setting[i].cross+"@"+timeFrame+"@"+setting[i].dataLenght;
-					sockPub.send([topicToSignalProvider, quote.join(";")]);
+					self.postMessage({'d':[topicToSignalProvider, quote.join(";")],'type':'sendQuoteToSignalProvider'});
+					//sockPub.send([topicToSignalProvider, quote.join(";")]);
 				}
 	    		break;
 			case ( (indexQuote/5).toString().split('.')[1] == undefined ):
@@ -623,7 +808,8 @@ var sendNewDataToSignalProvider = function(indexQuote){
 					//"TIMEFRAMEQUOTE@MT4@ACTIVTRADES   +     @EURUSD     +     @m1     +    @v1 
 					//"TIMEFRAMEQUOTE@BACKTEST@BACKTEST
 					var topicToSignalProvider = "TIMEFRAMEQUOTE@BACKTEST@BACKTEST@"+setting[i].cross+"@"+timeFrame+"@"+setting[i].dataLenght;
-					sockPub.send([topicToSignalProvider, quote.join(";")]);
+					self.postMessage({'d':[topicToSignalProvider, quote.join(";")],'type':'sendQuoteToSignalProvider'});
+					//sockPub.send([topicToSignalProvider, quote.join(";")]);
 				}
 				break;
 			case ( (indexQuote/15).toString().split('.')[1] == undefined ):
@@ -635,7 +821,8 @@ var sendNewDataToSignalProvider = function(indexQuote){
 					//"TIMEFRAMEQUOTE@MT4@ACTIVTRADES   +     @EURUSD     +     @m1     +    @v1 
 					//"TIMEFRAMEQUOTE@BACKTEST@BACKTEST
 					var topicToSignalProvider = "TIMEFRAMEQUOTE@BACKTEST@BACKTEST@"+setting[i].cross+"@"+timeFrame+"@"+setting[i].dataLenght;
-					sockPub.send([topicToSignalProvider, quote.join(";")]);
+					self.postMessage({'d':[topicToSignalProvider, quote.join(";")],'type':'sendQuoteToSignalProvider'});
+					//sockPub.send([topicToSignalProvider, quote.join(";")]);
 				}
 				break;
 			case ( (indexQuote/30).toString().split('.')[1] == undefined ):
@@ -647,7 +834,8 @@ var sendNewDataToSignalProvider = function(indexQuote){
 					//"TIMEFRAMEQUOTE@MT4@ACTIVTRADES   +     @EURUSD     +     @m1     +    @v1 
 					//"TIMEFRAMEQUOTE@BACKTEST@BACKTEST
 					var topicToSignalProvider = "TIMEFRAMEQUOTE@BACKTEST@BACKTEST@"+setting[i].cross+"@"+timeFrame+"@"+setting[i].dataLenght;
-					sockPub.send([topicToSignalProvider, quote.join(";")]);
+					self.postMessage({'d':[topicToSignalProvider, quote.join(";")],'type':'sendQuoteToSignalProvider'});
+					//sockPub.send([topicToSignalProvider, quote.join(";")]);
 				}
 				break;
 			case ( (indexQuote/60).toString().split('.')[1] == undefined ):
@@ -659,7 +847,8 @@ var sendNewDataToSignalProvider = function(indexQuote){
 					//"TIMEFRAMEQUOTE@MT4@ACTIVTRADES   +     @EURUSD     +     @m1     +    @v1 
 					//"TIMEFRAMEQUOTE@BACKTEST@BACKTEST
 					var topicToSignalProvider = "TIMEFRAMEQUOTE@BACKTEST@BACKTEST@"+setting[i].cross+"@"+timeFrame+"@"+setting[i].dataLenght;
-					sockPub.send([topicToSignalProvider, quote.join(";")]);
+					self.postMessage({'d':[topicToSignalProvider, quote.join(";")],'type':'sendQuoteToSignalProvider'});
+					//sockPub.send([topicToSignalProvider, quote.join(";")]);
 				}
 				break;
 			case ( (indexQuote/240).toString().split('.')[1] == undefined ):
@@ -671,7 +860,8 @@ var sendNewDataToSignalProvider = function(indexQuote){
 					//"TIMEFRAMEQUOTE@MT4@ACTIVTRADES   +     @EURUSD     +     @m1     +    @v1 
 					//"TIMEFRAMEQUOTE@BACKTEST@BACKTEST
 					var topicToSignalProvider = "TIMEFRAMEQUOTE@BACKTEST@BACKTEST@"+setting[i].cross+"@"+timeFrame+"@"+setting[i].dataLenght;
-					sockPub.send([topicToSignalProvider, quote.join(";")]);
+					self.postMessage({'d':[topicToSignalProvider, quote.join(";")],'type':'sendQuoteToSignalProvider'});
+					//sockPub.send([topicToSignalProvider, quote.join(";")]);
 				}
 				break;
 			case ( (indexQuote/1440).toString().split('.')[1] == undefined ):
@@ -683,7 +873,8 @@ var sendNewDataToSignalProvider = function(indexQuote){
 					//"TIMEFRAMEQUOTE@MT4@ACTIVTRADES   +     @EURUSD     +     @m1     +    @v1 
 					//"TIMEFRAMEQUOTE@BACKTEST@BACKTEST
 					var topicToSignalProvider = "TIMEFRAMEQUOTE@BACKTEST@BACKTEST@"+setting[i].cross+"@"+timeFrame+"@"+setting[i].dataLenght;
-					sockPub.send([topicToSignalProvider, quote.join(";")]);
+					self.postMessage({'d':[topicToSignalProvider, quote.join(";")],'type':'sendQuoteToSignalProvider'});
+					//sockPub.send([topicToSignalProvider, quote.join(";")]);
 				}
 				break;
 			case ( (indexQuote/7200).toString().split('.')[1] == undefined ):
@@ -695,7 +886,8 @@ var sendNewDataToSignalProvider = function(indexQuote){
 					//"TIMEFRAMEQUOTE@MT4@ACTIVTRADES   +     @EURUSD     +     @m1     +    @v1 
 					//"TIMEFRAMEQUOTE@BACKTEST@BACKTEST
 					var topicToSignalProvider = "TIMEFRAMEQUOTE@BACKTEST@BACKTEST@"+setting[i].cross+"@"+timeFrame+"@"+setting[i].dataLenght;
-					sockPub.send([topicToSignalProvider, quote.join(";")]);
+					self.postMessage({'d':[topicToSignalProvider, quote.join(";")],'type':'sendQuoteToSignalProvider'});
+					//sockPub.send([topicToSignalProvider, quote.join(";")]);
 				}
 				break;
 		};
@@ -705,10 +897,7 @@ var sendNewDataToSignalProvider = function(indexQuote){
 
 
 
-var sockPub = zmq.socket('pub');
-var sockSubFromSignalProvider = zmq.socket('sub');
-sockSubFromSignalProvider.bindSync('tcp://*:50026');    
-sockPub.bindSync('tcp://*:50027');
+
 
 
 //STATUS  2016.04.22 07:54:00.246	Subscriber EURUSD,M30: Alert: Message sent: 1,close,11280,103510387 on topic: STATUS@EURUSD@1002
@@ -740,195 +929,6 @@ var max_drawdown = 0;
 var min_drawdown = 0;
 var operation_unique_id = 1;
 
-sockSubFromSignalProvider.subscribe('NEWTOPICFROMSIGNALPROVIDER');
-sockSubFromSignalProvider.on('message', function() {
-  
-  	console.log('Message from signal provider: ' + arguments);
-	var data = [];
-	Array.prototype.slice.call(arguments).forEach(function(arg) {
-        data.push(arg.toString());
-    });
-  	var topic = data[0];
-  	var message = data[1];
-  	console.log('Received message from Signal Provider: '+message+ 'on topic: '+topic);
-
-  	switch (topic) {
-  		case "NEWTOPICFROMSIGNALPROVIDER":
-
-  			var newTopic = message.split('@');
-  			if (newTopic[0] == 'OPERATIONS') {
-  				//EX: OPERATIONS@ACTIVTRADES@EURUSD
-				sockSubFromSignalProvider.subscribe(message);
-  			}else if (newTopic[0] == 'STATUS'){
-  				//EX: STATUS@EURUSD@111		
-				sockSubFromSignalProvider.subscribe(message);
-  			}else{
-  				console.log("error message: ",newTopic[0])
-  			}
-			break;
-
-		case "DELETETOPICQUOTES":
-			//EX: OPERATIONS@ACTIVTRADES@EURUSD STATUS@EURUSD@111	
-			var deleteTopic = message.split('@');
-  			if (deleteTopic[0] == 'OPERATIONS') {
-				sockSubFromSignalProvider.unsubscribe( message );
-			}else if (deleteTopic[0] == 'STATUS'){
-				sockSubFromSignalProvider.unsubscribe( message );
-  			}else{
-  				console.log("error message: ",newTopic[0]);
-  			}
-			break;
-
-		default:
-
-		 	//EX: OPERATIONS@ACTIVTRADES@EURUSD@1002
-			var topicType = topic.split('@');
-  			if (topicType[0] == 'OPERATIONS') {
-  				console.log('New Operation: '+message+ 'from (on topic): '+topic);
-  				//open    price=11295,lots=1,slippage=1.5,sl=1220,tp=1220,magic=1002,op=-1
-  				//close   price=11279,lots=1,slippage=0.2,ticket=103510387,op=0
-  				var operation = message.split(",");
-  				var cross = topicType[2];
-
-  				if ( operation[6] != undefined && operation[6] != null && operation[6].split('=')[0]=='op'   ) {
-  					console.log("in open operation");
-  					//open    price=11295,lots=1,slippage=1.5,sl=1220,tp=1220,magic=1002,op=-1
-
-  					var price_rv = operation[0].split('=')[1];
-	  				var lots_rv = operation[1].split('=')[1];
-	  				var slippage_rv = operation[2].split('=')[1];
-	  				var sl_rv = operation[3].split('=')[1];
-	  				var tp_rv = operation[4].split('=')[1];
-	  				var magic_rv = operation[5].split('=')[1];
-	  				var op_rv = operation[6].split('=')[1];
-
-					var op_id = operation_unique_id;  //generate unique id
-					operation_unique_id++;
-					var price = price_rv;
-					var sl = sl_rv;
-					var tp = tp_rv;
-					var magic = magic_rv;
-					operations.push( {'open':price,'id':op_id,'op':op_rv,'close':'','sl':sl,'tp':tp,'magic':magic} );
-					var status_mess = "1,open,"+price+","+op_id;
-					var status_topic = "STATUS@"+cross+"@"+magic;
-					
-					var topic = "STATUS@"+cross+"@"+magic;
-					var mesage = "1,open,"+price+","+op_id;
-
-					//1,open,11295,103510387 on topic: STATUS@EURUSD@1002
-					sockPub.send([topic, message]);
-
-
-				}else if ( operation[4].split('=')[0]=='op' ) {
-					console.log("in close operation");
-					//close   price=11279,lots=1,slippage=0.2,ticket=103510387,op=0
-
-					var price_rv = operation[0].split('=')[1];
-	  				var lots_rv = operation[1].split('=')[1];
-	  				var slippage_rv = operation[2].split('=')[1];
-	  				var ticket_rv = operation[3].split('=')[1];
-	  				var op_rv = operation[4].split('=')[1];
-
-					var price = price_rv;
-					var ticket = ticket_rv;
-					for(var i=0; i<=operations.length-1; i++){
-						if (operations[i].id == ticket) {
-
-							var operation_result = ((price - operations[i].open) * operations[i].op) / 10;
-							var last_operation = tot_backtest_all_operations[tot_backtest_all_operations.length-1];
-
-							tot_backtest_comulative.push( tot_backtest_comulative[tot_backtest_comulative.length-1] + operation_result );  //IF WE HAVE 5 NUMBERS, IN ORDER TO CALCULATE THE TOTAL OF PIPS WE HAVE DELETE FOR 10 
-							tot_backtest_all_operations.push( operation_result );
-
-							// TOTAL PROFIT
-							total_profit = tot_backtest_comulative[tot_backtest_comulative.length-1];
-
-							// AVERAGE PIPS TRADE
-							average_pips_trade = tot_backtest_comulative[tot_backtest_comulative.length-1] / tot_backtest_comulative[tot_backtest_comulative.length];
-
-							// PROFIT&LOSS_PIPS   and   PROFIT&LOSS_TRADES   and   CONSECUTIVE_PROFIT&LOSS_TRADES  and  BEST&WORST_TRADE
-							if (operation_result > 0) {
-								profit_trades++;
-								profit = profit + operation_result;
-								if (last_operation > 0) {
-									consecutive_profit_trades_arr.push(1);
-								}else if (last_operation < 0) {
-									if (consecutive_profit_trades < consecutive_profit_trades_arr.length) {
-										consecutive_profit_trades = consecutive_profit_trades_arr.length;
-									}
-									consecutive_profit_trades_arr.push(1);
-								};
-								if (best_trade != null) {
-									if (best_trade < operation_result) {
-										best_trade = operation_result;
-									};
-								}else{
-									best_trade = operation_result;
-								}
-							}else if (operation_result <= 0) {
-								loss_trades++;
-								loss = loss + operation_result;
-								if (last_operation < 0) {
-									consecutive_loss_trades_arr.push(1);
-								}else if (last_operation > 0) {
-									if (consecutive_loss_trades < consecutive_loss_trades_arr.length) {
-										consecutive_loss_trades = consecutive_loss_trades_arr.length;
-									}
-									consecutive_loss_trades_arr.push(1);
-								};
-								if (worst_trade != null) {
-									if (worst_trade > operation_result) {
-										worst_trade = operation_result;
-									};
-								}else{
-									worst_trade = operation_result;
-								}
-
-							};
-
-							// LONG(BUY) AND SHORT(SELL)
-							if (operations[i].op == '1') {
-								long_trades++;
-							}else if (operations[i].op == '-1') {
-								short_trades++;
-							};
-
-							// MAX DRAWDOWN 
-							if ( max_drawdown_arr[max_drawdown_arr.length-1] != undefined && max_drawdown_arr[max_drawdown_arr.length-1] != null ){
-								var first_max_drawdown_arr_value = max_drawdown_arr[0];
-								
-								var current_max_drawdown_arr_value = tot_backtest_comulative[tot_backtest_comulative.length-1];
-								if ( first_max_drawdown_arr_value >= current_max_drawdown_arr_value) {
-									max_drawdown_arr.push( current_max_drawdown_arr_value );
-								}else if (first_max_drawdown_arr_value < current_max_drawdown_arr_value) {
-									var new_drawdown = ( (max_drawdown_arr.min() - max_drawdown_arr[0])/max_drawdown_arr[0] )*100;
-									if (new_drawdown > max_drawdown) {
-										max_drawdown = ( (max_drawdown_arr.min() - max_drawdown_arr[0])/max_drawdown_arr[0] )*100;
-									};
-									max_drawdown_arr = [];
-								};
-							}else{
-								max_drawdown_arr.push( tot_backtest_comulative[tot_backtest_comulative.length-1] );
-							}
-
-							operations[i].close = price;
-							var status_mess = "1,close,"+price+","+operations[i].id;
-							var status_topic = "STATUS@"+cross+"@"+operations[i].magic;
-							
-							//1,close,11280,103510387 on topic: STATUS@EURUSD@1002
-							sockPub.send([status_topic, status_mess]);
-						};
-					}
-					
-				};
-				sendNewDataToSignalProvider(indexQuote);
-			}else if (topicType[0] == 'SKIP') {
-				//EX: SKIP@ACTIVTRADES@EURUSD@1002
-				sendNewDataToSignalProvider(indexQuote);
-			}
-			break;
-	};
-});
 
 
 sendNewDataToSignalProvider(indexQuote);
