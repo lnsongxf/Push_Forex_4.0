@@ -12,7 +12,7 @@ Array.prototype.min = function() {
   return Math.min.apply(null, this);
 };
 
-var BacktestModule = (function(){
+var QuotesModule = (function(){
 
 	var _timeFrameQuotes = function(providerName){
 		this.provider = providerName, 
@@ -387,17 +387,17 @@ var BacktestModule = (function(){
     		return _importHistoryTimeFrameQuotesObj(searchObjTimeFrameQuote,messageArr);
     	}
     }
-});
+    
+})();
 
 // TO CHANGE
 
-var configQuotesList = require('./config_quotes');
-if (configQuotesList == null || configQuotesList == undefined){
-	config.log('The file confing_quotes.json is not in the path or is empty ');
+var configQuotesList = {
+    "quotes":[
+    	{"value":"AUDNZD"},{"value":"AUDCAD"},{"value":"AUDCHF"},{"value":"AUDJPY"},{"value":"AUDUSD"},{"value":"CADJPY"},{"value":"CADCHF"},{"value":"CHFJPY"},{"value":"EURUSD"},{"value":"EURGBP"},{"value":"EURAUD"},{"value":"EURCHF"},{"value":"EURJPY"},{"value":"EURNZD"},{"value":"EURCAD"},{"value":"GBPUSD"},{"value":"GBPCHF"},{"value":"GBPJPY"},{"value":"GBPAUD"},{"value":"GBPCAD"},{"value":"NZDJPY"},{"value":"NZDUSD"},{"value":"USDCHF"},{"value":"USDCAD"},{"value":"USDJPY"},{"value":"USDCHF"}
+    ]
 }
-if (configQuotesList.quotes.length < 0){
-	config.log('The quotes list in the file config_quotes.json is empty');	
-}
+
 
 var runningProviderTimeFrameObjs = {};
 var runningProviderRealTimeObjs = {};
@@ -744,7 +744,7 @@ self.addEventListener('message',  function(event){
 					sendNewDataToSignalProvider(indexQuote);
 				}
 				break;
-			};
+			
 
 		};
 	};

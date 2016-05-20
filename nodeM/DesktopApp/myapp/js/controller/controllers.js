@@ -1,11 +1,15 @@
+
+
 movieStubApp.controller("homeCtrl", function ($scope, $location) {
+    
+
     //$scope.headerSrc = "tmpl/header.html";
     //$scope.movies = movieStubFactory.query();
     $scope.ipServer = "http://127.0.0.1:3000";
     //$scope.ipProdServer = "";
     $scope.ipProdServer = "http://127.0.0.1:3002";
     $scope.userName = 'Alessandro';
-    $scope.password = 'p@ssword'
+    $scope.password = 'p@ssword';
     $scope.uploading_algo = true;
     $scope.errorMsg = "";
     $scope.statusAlert = "";
@@ -16,14 +20,16 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
     //$domain = "/Applications/4Casters/";
     $scope.domain = "C:/4CastersApp/";
 
-
+    var zmq = require('zmq');
     var fs = require("fs");
     var request = require('request');
     var crypto = require('crypto');
     var mv = require('mv');
     require('nw.gui').Window.get().showDevTools();
     var JSFtp = require("jsftp");
-    var zmq = require('zmq'); 
+    console.log("in00");
+    
+    console.log("in11"); 
     var tcpPortUsed = require('tcp-port-used');
 
    
@@ -73,7 +79,7 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
             }else{
               socket.on("data", function(d) { 
                 store_history_in_memory += d.toString(); 
-                console.log("data chunk: "+d.toString() );
+                //console.log("data chunk: "+d.toString() );
               })
               socket.on("close", function(hadErr) {
                 if (hadErr){
@@ -85,12 +91,17 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
               socket.resume();
             }
         });
-      }
+      };
+
+      console.log("crosses_data.history_quotes: ",crosses_data.history_quotes);
       
       for(var i=1;i<=100;i++){
         ports_list.push(53650+i);
       }
-      for(var j=0;j<=ports_list.length-1;j++){
+     
+      //for(var j=0;j<=ports_list.length-1;j++){
+      var index = 0;  
+      var checkPort = function(j){  
 
         tcpPortUsed.check(ports_list[j], '127.0.0.1')
         .then(function(inUse) {
@@ -98,19 +109,24 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
           if (inUse == false) {
             console.log('Port '+ports_list[j]+' usage: '+inUse);
             if (pub_port_set == false) {
+              pub_port_set = true;
               current_worker.pub_port = ports_list[j];
+              index++;
+              checkPort(index);
             }else{
               current_worker.sub_port = ports_list[j];
-              break;
             }
           }else{
-            console.log('Port '+ports_list[j]+' usage: '+inUse);  
+            console.log('Port '+ports_list[j]+' usage: '+inUse);
+            index++;
+            checkPort(index);  
           }
           
         }, function(err) {
           console.error('Error on check:', err.message);
         });
       } 
+      checkPort(index);
 
       
 
@@ -118,11 +134,13 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
       if(typeof(Worker) !== "undefined") {
         if(typeof(w) == "undefined") {
           // CREATE ONE WORKER FOR EACH BACKTEST
-          current_worker.worker.push(new Worker("js/backtest.js") );
+          current_worker.worker = new Worker("js/backtest.js");
         }
 
         // OPEN AND SET ZMQ CHANNEL ON ONE SPECIFIC SOCKET
+        console.log("in0");
         current_worker.sockPub = zmq.socket('pub');
+        console.log("in1");
         current_worker.sockSub = zmq.socket('sub');
         current_worker.sockPub.bindSync('tcp://*:'+current_worker.pub_port);
         current_worker.sockSub.bindSync('tcp://*:'+current_worker.sub_port);
@@ -147,7 +165,7 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
           }else if (event.data.type == 'unsubscribe') {
             current_worker.sockSub.unsubscribe(event.data.d);
           }
-        };
+        });
 
         // PUSH THE WORKER IN THE ACTIVE WORKERS ARRAY
         $scope.activeWorker.push(current_worker);
