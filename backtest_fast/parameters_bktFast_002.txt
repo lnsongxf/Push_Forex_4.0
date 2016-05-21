@@ -21,9 +21,10 @@
             % -------------------------------------------------------------
 
             
-nameAlgo = 'bkt_fast_002_1_leadlag_closingForApproaching' % 'bkt_fast_002_4_leadlag_dynamicalTPandSL_maxvolat_fluctlimit' 
-N =   [50]  % 5:50 %  12
-M =   [7] % 2:30 %  1:20 % 4
+nameAlgo = 'bkt_fast_002_1_leadlag_closingForApproaching_3D' % 'bkt_fast_002_4_leadlag_dynamicalTPandSL_maxvolat_fluctlimit' 
+N =  10:50 % [50]  %   12
+M =  3:20 % [7] %   1:20 % 4
+Z = 10:2:26
 N_greater_than_M = 1               
 Cross = 'EURUSD'            
 histName =  'EURUSD-04-2014-02-2016.csv' % 'EURGBP.csv' % 'AUDCAD.csv'   %   
