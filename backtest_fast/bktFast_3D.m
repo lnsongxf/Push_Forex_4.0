@@ -197,11 +197,11 @@ classdef bktFast_3D < handle
                 hold off
                 
                 temp = R_over_maxDD_slice;
-                temp(isnan( R_over_maxDD_slice) )=0;
+                temp(isnan( temp) )=0;
 %                 sweepPlot_BKT_Fast(temp)
                 
                 figure
-                contour(temp(min(M)-1:max(M)+1 , min(Z)-1:max(Z)+1) )
+                contour(temp)
                 grid on
                 title(['Result, slice ', 'N =', num2str(n) ])
                 colorbar
@@ -369,6 +369,7 @@ classdef bktFast_3D < handle
                 
                 n=N(i);
                 m=M(i);
+                z=Z(i);
                 
                 
                 display(['n =', num2str(n)]);
@@ -380,11 +381,11 @@ classdef bktFast_3D < handle
                 end
                 
                 obj.bktfastTry = feval(algo);
-                obj.bktfastTry = obj.bktfastTry.spin(hisData(:,4), newHisData, actTimeScale, newTimeScale, n, m, transCost, pips_TP, pips_SL, stdev_TP, stdev_SL, 0);
+                obj.bktfastTry = obj.bktfastTry.spin(hisData(:,4), newHisData, actTimeScale, newTimeScale, n, m, transCost, pips_TP, pips_SL, stdev_TP, stdev_SL, z);
                 
                 %                     subpl(LegNum) = subplot( size(N,2), size(M,2), LegNum );
                 plot(cumsum(obj.bktfastTry.outputbkt(:,4) - transCost),'color',rand(1,3))
-                Legend{LegNum}=strcat( num2str(n),'-',num2str(m) );
+                Legend{LegNum}=strcat( num2str(n),'-',num2str(m),'-',num2str(z) );
                 LegNum= LegNum+1;
                 
                 
