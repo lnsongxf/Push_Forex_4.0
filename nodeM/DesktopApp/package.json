@@ -7,6 +7,7 @@
     "crypto": "",
     "fs": "",
     "jsftp":"",
+    "ftp":"",
     "tcp-port-used":"",
     "mv": "",
     "request": "",

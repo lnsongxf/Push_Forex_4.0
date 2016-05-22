@@ -492,19 +492,21 @@ var setting = [];
 var indexQuote = 1;
 
 self.addEventListener('message',  function(event){
-
+	console.log("message: ",event);
 	//EX: {cross:cross_list[i].cross,history_quotes:store_history_in_memory,from:from,to:to,dataLenght:cross_list[i].dataLenght}
 
 	if (event.data.type == 'initialHistoryQuotes') {
-
-		for(var j=0; j<event.data.d.length-1; j++){
-
+		console.log("initialHistoryQuotes");
+		for(var j=0; j<=event.data.d.length-1; j++){
+			//console.log("event.data.d[j].cross: ",event.data.d[j].cross);
+			//console.log("dataLenght: ",event.data.d[j].dataLenght);
 			setting.push( {'cross':event.data.d[j].cross,'dataLenght':event.data.d[j].dataLenght} );
-
+			console.log("setting: ",setting);
 		    var history_quote_arr = CSVToArray(event.data.d[j].history_quotes,';');
+		    console.log("history_quote_arr: ",history_quote_arr);
 		    for(var i=0; i<=history_quote_arr.length-1; i++){
 
-		    	var tmpQuote = history_quote_arr[i].split(',');
+		    	var tmpQuote = history_quote_arr[i].toString().split(',');
 		    	var date = tmpQuote[0];
 		    	var time = tmpQuote[1];
 		    	var open = tmpQuote[2];

@@ -26,21 +26,16 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
     var crypto = require('crypto');
     var mv = require('mv');
     require('nw.gui').Window.get().showDevTools();
-    var JSFtp = require("jsftp");
-    console.log("in00");
-    
-    console.log("in11"); 
     var tcpPortUsed = require('tcp-port-used');
 
-   
-
-    var Ftp = new JSFtp({
-      host: "52.33.13.29",
-      port: 21, // defaults to 21
-      user: "trader", // defaults to "anonymous"
-      pass: "abc123" // defaults to "@anonymous"
-    });
-
+    var Client = require('ftp');
+    $scope.c = new Client();
+    var connectionProperties = {
+        host: "52.33.13.29",
+        user: "trader",
+        port:"21",
+        password: "abc123"
+    };
 
     $scope.activeWorker = [];
 
@@ -64,120 +59,142 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
       var ports_list = [];
       var pub_port_set = false;
       var sub_port_set = false;
+      
+      var create_worker = function(){
 
-      for(var i=0; i<=cross_list.length-1; i++){
+        console.log("CREATE WORKER, crosses_data: ",crosses_data);
+        
+        for(var i=1;i<=100;i++){
+          ports_list.push(53650+i);
+        }
+       
+        //for(var j=0;j<=ports_list.length-1;j++){
+        var index = 0;  
+        var checkPort = function(j){  
+
+          tcpPortUsed.check(ports_list[j], '127.0.0.1')
+          .then(function(inUse) {
+
+            if (inUse == false) {
+              console.log('Port '+ports_list[j]+' usage: '+inUse);
+              if (pub_port_set == false) {
+                pub_port_set = true;
+                current_worker.pub_port = ports_list[j];
+                index++;
+                checkPort(index);
+              }else{
+                current_worker.sub_port = ports_list[j];
+
+                var w;
+                if(typeof(Worker) !== "undefined") {
+                  if(typeof(w) == "undefined") {
+                    // CREATE ONE WORKER FOR EACH BACKTEST
+                    current_worker.worker = new Worker("js/backtest.js");
+                    console.log("worker: ",current_worker.worker);
+                  }
+
+                  // OPEN AND SET ZMQ CHANNEL ON ONE SPECIFIC SOCKET
+                  console.log("in0");
+                  current_worker.sockPub = zmq.socket('pub');
+                  console.log("in1");
+                  current_worker.sockSub = zmq.socket('sub');
+                  console.log("current_worker.pub_port: ",current_worker.pub_port);
+                  console.log("current_worker.sub_port: ",current_worker.sub_port);
+                  current_worker.sockPub.bindSync('tcp://*:'+current_worker.pub_port);
+                  current_worker.sockSub.bindSync('tcp://*:'+current_worker.sub_port);
+
+                  // SEND INITIAL HISTORY QUOTE TO THE WORKER
+                  console.log("sending data to worker");
+                  setTimeout(function(){
+                    current_worker.worker.postMessage({'d':crosses_data,'type':'initialHistoryQuotes'});  
+                  },1000);
+                  
+                  current_worker.sockSub.subscribe('NEWTOPICFROMSIGNALPROVIDER');
+                  // LISTEN ALL MESSAGES FROM SIGNAL PROVIDER AND REDIRECT ALL THE MESSAGE TO WORKER
+                  current_worker.sockSub.on('message', function() {
+                    current_worker.worker.postMessage({'d': arguments,'type':'messageFromSignalProvider'});
+                  });
+
+                  // LISTEN ALL MESSAGE FROM THE WORKER AND SEND ALL THE MESSAGE TO SIGNALPROVIDER 
+                  current_worker.worker.addEventListener('message',  function(event){
+                    if ( event.data.type == 'sendQuoteToSignalProvider' ) {
+                      current_worker.sockPub.send(event.data.d);
+                    }else if (event.data.type == 'sendStatusToSignalProvider') {
+                      current_worker.sockPub.send(event.data.d);
+                    }else if (event.data.type == 'subscribe') {
+                      current_worker.sockSub.subscribe(event.data.d);
+                    }else if (event.data.type == 'unsubscribe') {
+                      current_worker.sockSub.unsubscribe(event.data.d);
+                    }
+                  });
+
+                  // PUSH THE WORKER IN THE ACTIVE WORKERS ARRAY
+                  $scope.activeWorker.push(current_worker);
+                }else{
+                    //document.getElementById("result").innerHTML = "Sorry! No Web Worker support.";
+                }
+
+
+
+
+
+
+
+
+
+
+
+              }
+            }else{
+              console.log('Port '+ports_list[j]+' usage: '+inUse);
+              index++;
+              checkPort(index);  
+            }
+            
+          }, function(err) {
+            console.error('Error on check:', err.message);
+          });
+        } 
+        checkPort(index);
+      
+      }
+
+
+      //for(var i=0; i<=cross_list.length-1; i++){
+      var callback_number = 0;
+      var get_quotes = function(cross,length,from,to){ 
 
         //CHECK IN DATABASE IF WE ALREADY HAVE THIS CROSS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
         //EX: 'history_backtest/EURGBP_2016-01-21_2016-05-17.csv'
-        var quotes_query = 'history_backtest/'+cross_list[i].cross+'_'+from+'_'+to+'.csv';
-
+        var quotes_query = 'Algos/history_backtest/'+cross+'_'+from+'_'+to+'.csv';
         var store_history_in_memory = ""; // Will store the contents of the file 
-        Ftp.get(quotes_query, function(err, socket) {
-            if(err){
-              console.log("error to download the backtest quotes from server");
-            }else{
-              socket.on("data", function(d) { 
-                store_history_in_memory += d.toString(); 
-                //console.log("data chunk: "+d.toString() );
-              })
-              socket.on("close", function(hadErr) {
-                if (hadErr){
-                  console.error('There was an error retrieving the file.');
-                }else{
-                  crosses_data.push({cross:cross_list[i].cross,history_quotes:store_history_in_memory,from:from,to:to,dataLenght:cross_list[i].dataLenght});
-                }
-              });
-              socket.resume();
-            }
+        $scope.c.on('ready', function() {
+          $scope.c.get(quotes_query, function(err, stream) {
+            if (err){ console.log("error ftp: ",err ) }
+            stream.once('close', function() { 
+              console.log("store_history_in_memory: ",store_history_in_memory);  
+              callback_number++;
+              crosses_data.push({cross:cross,history_quotes:store_history_in_memory,from:from,to:to,dataLenght:length});
+              console.log("02: ",crosses_data[callback_number-1]);
+              if( callback_number == cross_list.length){
+                console.log("03 create worker");
+                $scope.c.end();
+                create_worker();
+              }else if ( callback_number < cross_list.length ) {
+                console.log("continue to download");
+                get_quotes(cross_list[callback_number].cross,cross_list[callback_number].dataLenght,from,to);            
+              };
+            });
+            stream.on('data', function(chunk) {
+              store_history_in_memory+=chunk.toString();
+            });
+            //stream.pipe(fs.createWriteStream('foo.local-copy.txt'));
+          });
         });
       };
-
-      console.log("crosses_data.history_quotes: ",crosses_data.history_quotes);
-      
-      for(var i=1;i<=100;i++){
-        ports_list.push(53650+i);
-      }
-     
-      //for(var j=0;j<=ports_list.length-1;j++){
-      var index = 0;  
-      var checkPort = function(j){  
-
-        tcpPortUsed.check(ports_list[j], '127.0.0.1')
-        .then(function(inUse) {
-
-          if (inUse == false) {
-            console.log('Port '+ports_list[j]+' usage: '+inUse);
-            if (pub_port_set == false) {
-              pub_port_set = true;
-              current_worker.pub_port = ports_list[j];
-              index++;
-              checkPort(index);
-            }else{
-              current_worker.sub_port = ports_list[j];
-            }
-          }else{
-            console.log('Port '+ports_list[j]+' usage: '+inUse);
-            index++;
-            checkPort(index);  
-          }
-          
-        }, function(err) {
-          console.error('Error on check:', err.message);
-        });
-      } 
-      checkPort(index);
-
-      
-
-      var w;
-      if(typeof(Worker) !== "undefined") {
-        if(typeof(w) == "undefined") {
-          // CREATE ONE WORKER FOR EACH BACKTEST
-          current_worker.worker = new Worker("js/backtest.js");
-        }
-
-        // OPEN AND SET ZMQ CHANNEL ON ONE SPECIFIC SOCKET
-        console.log("in0");
-        current_worker.sockPub = zmq.socket('pub');
-        console.log("in1");
-        current_worker.sockSub = zmq.socket('sub');
-        current_worker.sockPub.bindSync('tcp://*:'+current_worker.pub_port);
-        current_worker.sockSub.bindSync('tcp://*:'+current_worker.sub_port);
-
-        // SEND INITIAL HISTORY QUOTE TO THE WORKER
-        current_worker.worker.postMessage({'d':crosses_data,'type':'initialHistoryQuotes'});
-
-        current_worker.sockSub.subscribe('NEWTOPICFROMSIGNALPROVIDER');
-        // LISTEN ALL MESSAGES FROM SIGNAL PROVIDER AND REDIRECT ALL THE MESSAGE TO WORKER
-        current_worker.sockSub.on('message', function() {
-          current_worker.worker.postMessage({'d': arguments,'type':'messageFromSignalProvider'});
-        });
-
-        // LISTEN ALL MESSAGE FROM THE WORKER AND SEND ALL THE MESSAGE TO SIGNALPROVIDER 
-        current_worker.worker.addEventListener('message',  function(event){
-          if ( event.data.type == 'sendQuoteToSignalProvider' ) {
-            current_worker.sockPub.send(event.data.d);
-          }else if (event.data.type == 'sendStatusToSignalProvider') {
-            current_worker.sockPub.send(event.data.d);
-          }else if (event.data.type == 'subscribe') {
-            current_worker.sockSub.subscribe(event.data.d);
-          }else if (event.data.type == 'unsubscribe') {
-            current_worker.sockSub.unsubscribe(event.data.d);
-          }
-        });
-
-        // PUSH THE WORKER IN THE ACTIVE WORKERS ARRAY
-        $scope.activeWorker.push(current_worker);
-      }else{
-          //document.getElementById("result").innerHTML = "Sorry! No Web Worker support.";
-      }
-      
-
-      //$scope.activeWorker[$scope.activeWorker.length-1].terminate();
-      //$scope.activeWorker[$scope.activeWorker.length-1] = undefined;
-      
-      
+      $scope.c.connect(connectionProperties);
+      get_quotes(cross_list[0].cross,cross_list[0].dataLenght,from,to);      
     }
 
     $scope.startBacktest([{'cross':'EURGBP','dataLenght':'v5'}],'2016-01-21','2016-05-17');
