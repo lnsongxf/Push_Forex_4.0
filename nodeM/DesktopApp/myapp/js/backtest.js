@@ -61,14 +61,14 @@ var QuotesModule = (function(){
 		        var attrValue = arr[i][key];
 		        //_realTimeQuotesObj[attrValue]="";  17/03 changed
 		        _realTimeQuotesObj[attrValue]={
-		        	"m1":{open:null,max:null,min:null,close:null,volume:0},
-		        	"m5":{open:null,max:null,min:null,close:null,volume:0},
-		        	"m15":{open:null,max:null,min:null,close:null,volume:0},
-		        	"m30":{open:null,max:null,min:null,close:null,volume:0},
-		        	"h1":{open:null,max:null,min:null,close:null,volume:0},
-		        	"h4":{open:null,max:null,min:null,close:null,volume:0},
-		        	"d1":{open:null,max:null,min:null,close:null,volume:0},
-		        	"w1":{open:null,max:null,min:null,close:null,volume:0}
+		        	"m1":{open:null,max:null,min:null,close:null,volume:0,dateTime:null},
+		        	"m5":{open:null,max:null,min:null,close:null,volume:0,dateTime:null},
+		        	"m15":{open:null,max:null,min:null,close:null,volume:0,dateTime:null},
+		        	"m30":{open:null,max:null,min:null,close:null,volume:0,dateTime:null},
+		        	"h1":{open:null,max:null,min:null,close:null,volume:0,dateTime:null},
+		        	"h4":{open:null,max:null,min:null,close:null,volume:0,dateTime:null},
+		        	"d1":{open:null,max:null,min:null,close:null,volume:0,dateTime:null},
+		        	"w1":{open:null,max:null,min:null,close:null,volume:0,dateTime:null}
 		        }
 		    }
 		}
@@ -83,24 +83,21 @@ var QuotesModule = (function(){
 			return null;
 		};
 
-
-		//ex: searchObjRealTimeQuote == "REALTIMEQUOTE$MT4$ACTIVTRADES"
-		//runningProviderRealTimeObjs['REALTIMEQUOTE$MT4@ACTIVTRADES']={'EURUSD':'','EURGBP':''}
-		//11313,11315,11313,11316,30,03/18/2016 01:24  -->   apertura,massimo,minimo,chiusura,volume,time
+		//messageArr: [event.data.d[j].cross,open,high,low,close,volume];
 		
-		
-		var realOpen = messageArr[1].split(',')[0]
-		var realMax = messageArr[1].split(',')[1]
-		var realMin = messageArr[1].split(',')[2]
-		var realClose = messageArr[1].split(',')[3]
-		var realVolume = messageArr[1].split(',')[4]
+		var realOpen = messageArr[1];
+		var realMax = messageArr[2];
+		var realMin = messageArr[3];
+		var realClose = messageArr[4];
+		var realVolume = messageArr[5];
+		var cross = messageArr[0];
+		var dateTime = messageArr[6];
 
 		if (runningProviderRealTimeObjs[platform] == null || runningProviderRealTimeObjs[platform] == undefined) {
 			console.log("Unable to find platform " + platform);
 			return null;
 		}
-
-		var cross = messageArr[0];
+		
 		if (runningProviderRealTimeObjs[platform][cross] == null || runningProviderRealTimeObjs[platform][cross] == undefined) {
 			console.log("Unable to find cross " + cross + " in platform " + platform);
 			return null;
@@ -117,11 +114,9 @@ var QuotesModule = (function(){
 				runningProviderRealTimeObjs[platform][cross][timeFrame]['open'] = realOpen;
 			}
 			runningProviderRealTimeObjs[platform][cross][timeFrame]['close'] = realClose;
+			runningProviderRealTimeObjs[platform][cross][timeFrame]['dateTime'] = dateTime;
 			if (timeFrame == 'm1') {
 				runningProviderRealTimeObjs[platform][cross][timeFrame]['volume'] = parseInt(realVolume);
-			}
-			else {
-
 			}
 							
 			if (cross == 'EURUSD' && timeFrame == 'm1') {
@@ -144,8 +139,9 @@ var QuotesModule = (function(){
 		var min = runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][cross][timeFrame]['min'];
 		var close = runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][cross][timeFrame]['close'] ;
 		var volume = runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][cross][timeFrame]['volume'];  //needed only for m1
-		var currentdate = new Date(); 
-		var datetime = currentdate.getDate()+"/"+(currentdate.getMonth()+1)+"/"+currentdate.getFullYear()+" "+currentdate.getHours()+":"+currentdate.getMinutes(); 
+		//var currentdate = new Date(); 
+		//var datetime = currentdate.getDate()+"/"+(currentdate.getMonth()+1)+"/"+currentdate.getFullYear()+" "+currentdate.getHours()+":"+currentdate.getMinutes(); 
+		var datetime = runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][cross][timeFrame]['dateTime']; 
 
 		if (timeFrame != 'm1') {
 
@@ -504,56 +500,62 @@ self.addEventListener('message',  function(event){
 			console.log("setting: ",setting);
 		    var history_quote_arr = CSVToArray(event.data.d[j].history_quotes,';');
 		    console.log("history_quote_arr: ",history_quote_arr);
-		    for(var i=0; i<=history_quote_arr.length-1; i++){
+		    for(var i=1; i<=history_quote_arr.length; i++){
 
-		    	var tmpQuote = history_quote_arr[i].toString().split(',');
-		    	var date = tmpQuote[0];
-		    	var time = tmpQuote[1];
+		    	var tmpQuote = history_quote_arr[i-1].toString().split(',');
+		    	var dateTime = tmpQuote[0]+" "+tmpQuote[1];
 		    	var open = tmpQuote[2];
 		    	var high = tmpQuote[3];
 		    	var low = tmpQuote[4];
 		    	var close = tmpQuote[5];
 		    	var volume = tmpQuote[6];
 
-		    	var messageArr = [event.data.d[j].cross,open,high,low,close,volume];
-
+		    	var messageArr = [event.data.d[j].cross,open,high,low,close,volume,dateTime];
+		    	console.log("messageArr: ",messageArr);
 				var result = QuotesModule.updateRealTimeQuotesObj(searchObjRealTimeQuote,messageArr);
 
 				var timeFrameToUpdate = 'm1';   //m1,m5,m15,m30,h1,h4,d1,w1
 				var new_timeFrameQuotesObj = QuotesModule.updateTimeFrameQuotesObj(timeFrameToUpdate,runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty],runningProviderRealTimeObjs[tmpRealTimeQuoteProperty],tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty);
 				runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty] = new_timeFrameQuotesObj;
 
-				if ( count == 5) {
+				if ( (i%5) == 0 ) {
 					timeFrameToUpdate = 'm5';   //m1,m5,m15,m30,h1,h4,d1,w1
 					new_timeFrameQuotesObj = QuotesModule.updateTimeFrameQuotesObj(timeFrameToUpdate,runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty],runningProviderRealTimeObjs[tmpRealTimeQuoteProperty],tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty);
 					runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty] = new_timeFrameQuotesObj;
-				}else if ( count == 15) {
+				};
+				if ( (i%15) == 0 ) {
 					timeFrameToUpdate = 'm15';   //m1,m5,m15,m30,h1,h4,d1,w1
 					new_timeFrameQuotesObj = QuotesModule.updateTimeFrameQuotesObj(timeFrameToUpdate,runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty],runningProviderRealTimeObjs[tmpRealTimeQuoteProperty],tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty);
 					runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty] = new_timeFrameQuotesObj;
-				}else if ( count == 30) {
+				};
+				if ( (i%30) == 0 ) {
 					timeFrameToUpdate = 'm30';   //m1,m5,m15,m30,h1,h4,d1,w1
 					var new_timeFrameQuotesObj = QuotesModule.updateTimeFrameQuotesObj(timeFrameToUpdate,runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty],runningProviderRealTimeObjs[tmpRealTimeQuoteProperty],tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty);
 					runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty] = new_timeFrameQuotesObj;
-				}else if ( count == 60) { 
+				};
+				if ( (i%60) == 0) { 
 					timeFrameToUpdate = 'h1';   //m1,m5,m15,m30,h1,h4,d1,w1
 					var new_timeFrameQuotesObj = QuotesModule.updateTimeFrameQuotesObj(timeFrameToUpdate,runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty],runningProviderRealTimeObjs[tmpRealTimeQuoteProperty],tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty);
 					runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty] = new_timeFrameQuotesObj;
-				}else if ( count == 240) {
+				};
+				if ( (i%240) == 0 ) {
 					timeFrameToUpdate = 'h4';   //m1,m5,m15,m30,h1,h4,d1,w1
 					var new_timeFrameQuotesObj = QuotesModule.updateTimeFrameQuotesObj(timeFrameToUpdate,runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty],runningProviderRealTimeObjs[tmpRealTimeQuoteProperty],tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty);
 					runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty] = new_timeFrameQuotesObj;
-				}else if ( count == 1440) {
+				};
+				if ( (i%1440) == 0 ) {
 					timeFrameToUpdate = 'd1';   //m1,m5,m15,m30,h1,h4,d1,w1
 					var new_timeFrameQuotesObj = QuotesModule.updateTimeFrameQuotesObj(timeFrameToUpdate,runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty],runningProviderRealTimeObjs[tmpRealTimeQuoteProperty],tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty);
 					runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty] = new_timeFrameQuotesObj;
-				}else if ( count == 7200) {
+				};
+				if ( (i%7200) == 0 ) {
 					timeFrameToUpdate = 'w1';   //m1,m5,m15,m30,h1,h4,d1,w1
 					var new_timeFrameQuotesObj = QuotesModule.updateTimeFrameQuotesObj(timeFrameToUpdate,runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty],runningProviderRealTimeObjs[tmpRealTimeQuoteProperty],tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty);
 					runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty] = new_timeFrameQuotesObj;
 				};
 			}
 		}
+		console.log('runningProviderTimeFrameObjs["TIMEFRAMEQUOTE$BACKTEST$BACKTEST"]: ',runningProviderTimeFrameObjs );
 	}else if (event.data.type == 'messageFromSignalProvider') {
 
 		console.log('Message from signal provider: ' + event.data.d);
