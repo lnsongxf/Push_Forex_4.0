@@ -112,8 +112,16 @@ void processInput(string msg)
       {
          Print("Access to history failed with error (",GetLastError(),")");
       }
-      string buffer = IntegerToString(id) + "=SINGLE=" + nextOrderToString();
-      send(topic, buffer);
+      else if {
+        if (OrderCloseTime() <= 0) {
+          Print("Operation " + IntegerToString(ticket) + " is not closed yet");
+        }
+      }
+      else 
+      {
+        string buffer = IntegerToString(id) + "=SINGLE=" + nextOrderToString();
+        send(topic, buffer);
+      }
    }
    else {
    	Print("Invalid command " + msg);
