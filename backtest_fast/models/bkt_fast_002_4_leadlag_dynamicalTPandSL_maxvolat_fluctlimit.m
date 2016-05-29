@@ -97,12 +97,12 @@ classdef bkt_fast_002_4_leadlag_dynamicalTPandSL_maxvolat_fluctlimit < handle
                             %                               display(['Pminute =', num2str(Pminute(j))]);
                             
                             %%%%%%%%%%% dynamicalTPandSLManager
-                            %
-                            %                               dynamicParameters {1} = 1;
-                            %                               dynamicParameters {2} = 2;
-                            %                               [TakeProfitPrice,StopLossPrice,TakeP,StopL,~] = closingAfterReachedTP(Pbuy,Pminute(j),segnoOperazione,TakeP,StopL, 0, dynamicParameters);
-                            %                               display(['TP =', num2str(TakeP),' SL =', num2str(StopL)]);
-                            %                               display(['StopLossPrice =', num2str(StopLossPrice)]);
+                            
+                            dynamicParameters {1} = 1.18;
+                            %dynamicParameters {2} = 2;
+                            [TakeProfitPrice,StopLossPrice,TakeP,StopL,~] = closingAfterReachedTP(Pbuy,Pminute(j),segnoOperazione,TakeP,StopL, 0, dynamicParameters);
+                            display(['TP =', num2str(TakeP),' SL =', num2str(StopL)]);
+                            display(['StopLossPrice =', num2str(StopLossPrice)]);
                             
                             %%%%%%%%%%%%%%%%%%%%%%%%%%
                             

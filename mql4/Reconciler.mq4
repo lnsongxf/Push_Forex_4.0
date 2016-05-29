@@ -96,7 +96,7 @@ void processInput(string msg)
             send(topic, buffer);
             
             j = 0;
-            buffer = "";
+            buffer = IntegerToString(id) + "=FULL=";
             
          }
          if (j != 0 && i < hstTotal - 1) 
@@ -141,7 +141,7 @@ string nextOrderToString()
    OrderOpenPrice(),",",
    OrderClosePrice(),",",
    OrderProfit(),",",
-   OrderType(),",",
+   IntegerToString(OrderType()*2-1),",",
    "1,", //real
    TimeToStringNS(OrderOpenTime()),",",
    TimeToStringNS(OrderCloseTime()),",",

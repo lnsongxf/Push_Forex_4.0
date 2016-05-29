@@ -1,0 +1,17 @@
+{
+  "name": "4castersApp",
+  "description": "4casters App",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "crypto": "",
+    "fs": "",
+    "jsftp":"",
+    "ftp":"",
+    "tcp-port-used":"",
+    "mv": "",
+    "request": "",
+    "node-gyp": "*",
+    "zmq": "*"
+  }
+}
