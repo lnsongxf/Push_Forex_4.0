@@ -149,7 +149,7 @@ string nextOrderToString()
    OrderOpenPrice(),",",
    OrderClosePrice(),",",
    OrderProfit(),",",
-   IntegerToString(OrderType()*2-1),",",
+   IntegerToString(-1*(OrderType()*2-1)),",",
    "1,", //real
    TimeToStringNS(OrderOpenTime()),",",
    TimeToStringNS(OrderCloseTime()),",",
@@ -192,12 +192,14 @@ int sleepXIndicators(int milli_seconds)
 
  string TimeToStringNS(datetime when){
   string withSep = TimeToStr(when),              // "yyyy.mm.dd hh:mi"
-         withOut = StringSubstr(withSep,  5, 2)  // yyyy
+         withOut = StringSubstr(withSep,  5, 2)  // mm
 				 + "/"
-                 + StringSubstr(withSep,  0, 4)  // mm
+                 + StringSubstr(withSep,  8, 2)  // dd
                  + "/"
-                 + StringSubstr(withSep,  8, 5)  // dd hh
+                 + StringSubstr(withSep,  0, 4)  // yyyy
+                 + " "
+                 + StringSubstr(withSep,  11, 2)  // hh
                  + ":"
                  + StringSubstr(withSep, 14, 3); // mi
-  return(withOut);                               // "yyyymmdd hhmi"
+  return(withOut);                               // "mmddyyyy hhmi"
 }
