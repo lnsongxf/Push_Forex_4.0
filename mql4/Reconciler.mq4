@@ -124,7 +124,7 @@ void processInput(string msg)
       }
    }
    else {
-   	Print("Invalid command " + msg);
+    Print("Invalid command " + msg);
    }
    
 }
@@ -193,7 +193,7 @@ int sleepXIndicators(int milli_seconds)
  string TimeToStringNS(datetime when){
   string withSep = TimeToStr(when),              // "yyyy.mm.dd hh:mi"
          withOut = StringSubstr(withSep,  5, 2)  // mm
-				 + "/"
+         + "/"
                  + StringSubstr(withSep,  8, 2)  // dd
                  + "/"
                  + StringSubstr(withSep,  0, 4)  // yyyy
