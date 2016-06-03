@@ -56,7 +56,7 @@ classdef bktOffline_02 < handle
             %
             % EXAMPLE of use:
             % -------------------------------------------------------------
-            % clear all; bkt_Algo_002=bktOffline
+            % clear all; bkt_Algo_002=bktOffline_02
             % bkt_Algo_002=bkt_Algo_002.spin('parameters_Offline_Algo_002.txt')
             %
             % NOTE

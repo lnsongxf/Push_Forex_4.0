@@ -19,8 +19,8 @@ function [HistData_1min,HistData_freq]=fromMT4HystToBktHistorical(actTimeScale,n
 
 tic
 
-filename = 'AUDCAD';
-filedir = 'C:\Users\alericci\Google Drive\FOREX 4.0\Forex 4.0\historical_data\';
+filename = '04272016_06032016_EURUSD_1m_MT4';
+filedir = 'C:\Users\alericci\Desktop\Forex 4.0 noShared\performance comparison\';
 Fullname  = strcat(filedir, filename,'.csv');
 factor = 10000;
 
@@ -36,12 +36,12 @@ date=strcat(date1,{' '},date2);
 dateNum=datenum(date, 'yyyy.mm.dd HH:MM');
 l=length(dateNum);
 
-HistData_1min(:,1) = hystorical{1,3}(:).*factor;        % opening price
-HistData_1min(:,2) = hystorical{1,4}(:).*factor;        % max price
-HistData_1min(:,3) = hystorical{1,5}(:).*factor;        % min price
-HistData_1min(:,4) = hystorical{1,6}(:).*factor;        % closure
-HistData_1min(:,5) = hystorical{1,7}(:);                % volume
-HistData_1min(:,6) = dateNum;                              % opening date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
+HistData_1min(:,1) = floor(hystorical{1,3}(:).*factor);        % opening price
+HistData_1min(:,2) = floor(hystorical{1,4}(:).*factor);        % max price
+HistData_1min(:,3) = floor(hystorical{1,5}(:).*factor);        % min price
+HistData_1min(:,4) = floor(hystorical{1,6}(:).*factor);        % closure
+HistData_1min(:,5) = hystorical{1,7}(:);                       % volume
+HistData_1min(:,6) = dateNum;                                  % opening date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
 
 expert=expert.readData(HistData_1min);
 expert=expert.rescaleData(HistData_1min,actTimeScale,newTimeScale);

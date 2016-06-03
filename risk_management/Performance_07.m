@@ -177,7 +177,7 @@ classdef Performance_07 < handle
         
         %% Function to calculate all the performance parameters
         
-        function obj=calcComparedPerformance(obj,nameAlgo_,origin1_,origin2_,cross_,freq_,transCost1_,transCost2_,inputResultsMatrix1_,inputResultsMatrix2_,plotPerformance)
+        function obj=calcComparedPerformance(obj,nameAlgo_,origin1_,origin2_,cross_,freq_,transCost1_,transCost2_,initialStack_,leverage_,inputResultsMatrix1_,inputResultsMatrix2_,plotPerformance)
             
             %
             % DESCRIPTION:
@@ -188,7 +188,7 @@ classdef Performance_07 < handle
             % -------------------------------------------------------------
             % a) dowload the historical data corresponding to the traded
             % period in "demo" from MT4 (check the first data received by
-            % the Algo reading the logs)
+            % the Algo reading the logs and consider nData before that)
             % b) adjust the historical data using the function fromMT4HystToBktHistorical
             % c) calculate the "bkt" results using bktOffline_02, they will
             % be saved in inputResultsMatrix1_
@@ -217,11 +217,10 @@ classdef Performance_07 < handle
             % -------------------------------------------------------------
             % After having created the object with the name: 'objname'
             % objname=Performance_07;
-            % Performance_07=Performance_07.calcComparedPerformance('real_17','bktWeb','demo','EURUSD',5,1,0,outputBktWeb,outputDemo);
+            % objname=objname.calcComparedPerformance('real_17','bktWeb','demo','EURUSD',30,1,0,10000,10,bkt_Algo_002.outputBktOffline,outputWP,1);
             %
             
-            
-            
+       
             if strcmp(origin1_,'bktWeb')
                 obj.inputResultsMatrix=inputResultsMatrix1_;
                 c=1;
@@ -240,13 +239,17 @@ classdef Performance_07 < handle
             colour='r';
             
             obj.nameAlgo=nameAlgo_;
+            obj.initialStack = initialStack_;
+            obj.leverage     = leverage_;
             obj.origin=origin1_;
             obj.cross=cross_;
             obj.freq=freq_;
             obj.transCost=transCost1_;
             obj=obj.SharpeRatio(colour,plotPerformance);
             obj=obj.RicciRatio;
-            obj=obj.DrawDown;
+            [obj.drawDown_pips,obj.maxDD_pips,obj.minDD_pips,obj.aveDD_pips,obj.drawDownDuration_nOper,obj.maxDDD_nOper,obj.minDDD_nOper,obj.aveDDD_nOper]=obj.DrawDown(obj.netReturns_pips);
+            [obj.dailyDrawDown_perc,obj.dailyMaxDD_perc,obj.dailyMinDD_perc,obj.dailyAveDD_perc,obj.drawDownDuration_days,obj.maxDDD_days,obj.minDDD_days,obj.aveDDD_days]=obj.DrawDown(obj.dailyNetReturns_perc);
+            [obj.drawDown_perc,obj.maxDD_perc,obj.minDD_perc,obj.aveDD_perc,~,~,~,~]=obj.DrawDown(obj.netReturns_perc);
             
             [name]=dateNameCreator(obj.period);
             name2=strcat(name,'_',origin1_,'.mat');
@@ -289,7 +292,9 @@ classdef Performance_07 < handle
                 obj.transCost=transCost2_;
                 obj=obj.SharpeRatio(colour,plotPerformance);
                 obj=obj.RicciRatio;
-                obj=obj.DrawDown;
+                [obj.drawDown_pips,obj.maxDD_pips,obj.minDD_pips,obj.aveDD_pips,obj.drawDownDuration_nOper,obj.maxDDD_nOper,obj.minDDD_nOper,obj.aveDDD_nOper]=obj.DrawDown(obj.netReturns_pips);
+                [obj.dailyDrawDown_perc,obj.dailyMaxDD_perc,obj.dailyMinDD_perc,obj.dailyAveDD_perc,obj.drawDownDuration_days,obj.maxDDD_days,obj.minDDD_days,obj.aveDDD_days]=obj.DrawDown(obj.dailyNetReturns_perc);
+                [obj.drawDown_perc,obj.maxDD_perc,obj.minDD_perc,obj.aveDD_perc,~,~,~,~]=obj.DrawDown(obj.netReturns_perc);
                 
                 [name]=dateNameCreator(obj.period);
                 name2=strcat(name,'_',origin2_,'.mat');
