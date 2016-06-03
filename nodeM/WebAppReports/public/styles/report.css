@@ -1,0 +1,224 @@
+body{
+  height: 100vh;
+  background-color: #373739;
+}
+
+.button_default{
+  background-color: #272628!important;
+  border-radius: 0px !important;
+  border: 0px !important;
+  color: #fff !important;
+  outline: 0px !important;
+}
+
+.card {
+  position: relative;
+  float: left;
+  margin-right: 10px;
+  width: 150px;
+  height: 220px;
+  border-radius: 10px;
+  background: #fff;
+  -webkit-box-shadow: 3px 3px 7px rgba(0,0,0,0.3);
+  box-shadow: 3px 3px 7px rgba(0,0,0,0.3);
+  margin-left: -160px;
+  -webkit-transition: all 1s ease-in-out;
+  -moz-transition: all 1s ease-in-out;
+  -o-transition: all 1s ease-in-out;
+  transition: all 1s ease-in-out;
+}
+
+.showAll{
+	margin-left: -80px;
+	-webkit-transition: all 1s ease-in-out;
+	-moz-transition: all 1s ease-in-out;
+	-o-transition: all 1s ease-in-out;
+	transition: all 1s ease-in-out;
+}
+
+.card p {
+  text-align: center;
+  font: 100px/220px Georgia, Times New Roman, serif;
+}
+
+.suitdiamonds:before, .suitdiamonds:after {
+  content: "♦";
+  color: #ff0000;
+}
+ 
+.suithearts:before, .suithearts:after {
+  content: "♥";
+  color: #ff0000;
+}
+ 
+.suitclubs:before, .suitclubs:after {
+  content: "♣";
+  color: #000;
+}
+ 
+.suitspades:before, .suitspades:after {
+  content: "♠";
+  color: #000;
+}
+
+
+div[class*='suit']:before {
+  position: absolute;
+  font-size: 35px;
+  left: 5px;
+  top: 5px;
+}
+
+div[class*='suit']:after {
+  position: absolute;
+  font-size: 35px;
+  right: 5px;
+  bottom: 5px;
+}
+
+div[class*='suit']:before {
+  position: absolute;
+  font-size: 35px;
+  left: 5px;
+  top: 5px;
+}
+ 
+div[class*='suit']:after {
+  position: absolute;
+  font-size: 35px;
+  right: 5px;
+  bottom: 5px;
+}
+
+/* For modern browsers */
+.hand:before,
+.hand:after {
+    content:"";
+    display:table;
+}
+ 
+.hand:after {
+    clear:both;
+}
+
+.hand {
+	/* For IE 6/7 (trigger hasLayout) */
+    zoom:1;
+    margin: 50px 0px 50px 180px;
+}
+
+.card:hover {
+  cursor: pointer;
+}
+
+.mainFunction{
+  margin-top: 15px;
+  margin-left: 15px;
+}
+
+
+
+#chart_operations .c3-legend-item text{
+  fill: #fff !important;
+  font-family: 'Circular Stf Book';
+}
+#chart_operations .c3-chart-arcs-title{
+  fill: #fff !important;
+  font-family: 'Circular Stf Book';
+}
+
+#chart_operations .tick{
+  fill: #fff !important;
+  font-size: 14px;
+}
+#chart_operations .c3-chart-line .c3-lines path{
+  stroke-width: 2px;
+}
+#chart_operations .c3-axis .tick line{
+  stroke: #fff !important;
+}
+#chart_operations .c3-axis path{
+  stroke: #fff !important;
+}
+
+
+
+#chart_operations .c3-axis text {
+  fill: #fff !important;
+  font-family: 'Circular Stf Book';
+}
+#chart_operations .c3-circle {
+  /*fill: #fff !important;
+  opacity: 1 !important;*/
+  r: 3;
+  /*stroke: #23b7e5 !important;
+  stroke-width: 2px !important;*/
+}
+#chart_operations .c3-axis-y{
+  /*display: none;*/
+}
+#chart_operations .c3-tooltip th{
+  background-color: #696969 !important; 
+  color: #fff !important;
+}
+#chart_operations .c3-tooltip td{
+  background-color: #424345 !important;
+   color: #fff !important;
+}
+
+.csv_generator_button:hover{
+  color:#fff;
+  text-decoration: underline;
+}
+
+.csv_generator_button:focus{
+  color:#fff;
+  text-decoration: none;
+}
+
+.csv_generator_button{
+  height: 32px;
+  top: 105px;
+  right: 20px;
+  z-index: 10;
+  width: 143px;
+  color: #fff;
+  background-color: #272628!important;
+  text-align: center;
+  line-height: 32px;
+  position: absolute;
+}
+
+.button_server{
+  float: left;
+  width: 100px;
+  height: 30px;
+  margin-right: 2px;
+  font-weight: 200;
+  line-height: 18px;
+  color: #fff!important;
+  background-color: #6f6f6f!important;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.server_button_active{
+  float: left;
+  width: 100px;
+  height: 30px;
+  font-weight: 200;
+  line-height: 18px;
+  color: #000!important;
+  background-color: #21eded!important;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.button_server:focus{
+  outline: none !important;
+}
+.button_server:hover{
+  outline: none !important;
+}
