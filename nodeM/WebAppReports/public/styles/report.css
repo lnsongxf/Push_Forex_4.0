@@ -221,6 +221,13 @@ div[class*='suit']:after {
   position: absolute;
 }
 
+@media only screen and (max-width: 375px){
+  .button_func{
+    margin-top: 5px;
+    width: 100% !important;
+  }
+}
+
 .button_server{
   float: left;
   width: 100px;
@@ -233,6 +240,12 @@ div[class*='suit']:after {
   border: 0;
   border-radius: 0;
   box-shadow: none;
+}
+
+@media only screen and (max-width: 375px){
+  .button_server{
+    width: 100% !important;
+  }
 }
 
 .server_button_active{
