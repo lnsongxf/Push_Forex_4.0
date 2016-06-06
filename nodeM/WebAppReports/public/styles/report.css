@@ -190,6 +190,13 @@ div[class*='suit']:after {
 #chart_operations .c3-axis-y{
   /*display: none;*/
 }
+
+@media only screen and (max-width: 375px){
+  #chart_operations .c3-axis-x{
+    display: none;
+  }
+}
+
 #chart_operations .c3-tooltip th{
   background-color: #696969 !important; 
   color: #fff !important;
