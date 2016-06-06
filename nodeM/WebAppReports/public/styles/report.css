@@ -1,5 +1,6 @@
 body{
   width: 100%;
+
   position: relative;
   background-color: #373739;
 }
@@ -210,7 +211,6 @@ div[class*='suit']:after {
 
 .csv_generator_button{
   height: 32px;
-  top: 105px;
   right: 20px;
   z-index: 10;
   width: 143px;

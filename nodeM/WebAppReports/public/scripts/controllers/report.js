@@ -66,7 +66,7 @@ angular.module('webApp')
         link.textContent = "Download CSV";
         link.setAttribute("href", encodedUri);
         link.setAttribute("download", "my_data.csv");
-        document.getElementById("viewWebApp").appendChild(link);
+        document.getElementById("download_csv").appendChild(link);
 
       }
 
