@@ -192,7 +192,7 @@ classdef Performance_07 < handle
             % b) adjust the historical data using the function fromMT4HystToBktHistorical
             % c) calculate the "bkt" results using bktOffline_02, they will
             % be saved in inputResultsMatrix1_
-            % c) dowload "demo" results and save them into inputResultsMatrix2_
+            % c) dowload "demo" results and run fromWebPageToMatrix and then save them into inputResultsMatrix2_
             %
             % INPUT parameters:
             % -------------------------------------------------------------

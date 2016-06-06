@@ -23,10 +23,10 @@
 nameAlgo = 'Algo_011_stocOsc_AUDCAD'
 Cross = 'AUDCAD'
 nData_ = 100
-histName = 'AUDCAD.csv'  % 'AUDCAD_short2.csv'
+histName = 'C:\Users\alericci\Desktop\Forex 4.0 noShared\performance comparison\05112016_06022016_AUDCAD_1m_MT4_bkt.csv'   %'AUDCAD.csv'  % 'AUDCAD_short2.csv'
 actTimeScale = 1
 newTimeScale = 30
-transCost = 1
+transCost = 4
 initialStack = 10000
 Leverage = 10
 plotPerformance = 1
