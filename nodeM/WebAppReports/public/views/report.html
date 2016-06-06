@@ -1,4 +1,4 @@
-<div style="heigth:100%;width:100%;position;relative">
+<div class="row" style="padding:0px 15px 0px 15px">
 	<div class="col-xs-12 col-sm-12	col-md-12 col-lg-12" style="color:#fff">{{msg}}</div>
 
 	<div class="row">
@@ -14,24 +14,18 @@
 	</div>
 
 
-	<div class="row">
-		<div class="col-xs-12 col-sm-12	col-md-1 col-lg-1" style="margin-top:15px">
+	<div class="row" style="margin-top:15px">
+		<div class="col-xs-12 col-sm-12	col-md-1 col-lg-1">
 			<span style="color: #fff;padding-left: 15px;line-height: 30px;">Chart:</span>
 		</div>
-		<div class="col-xs-12 col-sm-12	col-md-11 col-lg-11" style="margin-top:15px">
-			
-			<button type="button" class="btn btn-default button_default" ng-click="showComulativeProfitChart()">Comulative Profit Chart</button>
-		  	<button type="button" class="btn btn-default button_default" ng-click="showProfitChart()">Profit Chart</button>
+		<div class="col-xs-12 col-sm-12	col-md-11 col-lg-11" >
+			<div class="funcButtons" class="col-xs-12 col-sm-12	col-md-11 col-lg-11">
+				<button type="button" class="btn btn-default button_default button_func" ng-click="showComulativeProfitChart()">Comulative Profit Chart</button>
+			  	<button type="button" class="btn btn-default button_default button_func func_button_active" ng-click="showProfitChart()">Profit Chart</button>
+			</div>
 		</div>
 	</div>
-	<!--<div class="col-xs-12 col-sm-12	col-md-2 col-lg-2 mainFunction">
-		<div class="input-group">
-	      <span class="input-group-btn">
-	        <button class="btn btn-default" type="button" ng-click="comulative()">Comulative Profit:</button>
-	      </span>
-	      <input type="text" class="form-control" ng-model="algoId" placeholder="select algo id..">
-	    </div>
-	</div>-->
+	
 
 
 	<div class="row">
@@ -39,8 +33,66 @@
 	</div>
 
 	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="color:#fff;margin-top:15px">{{chart_title}}</div>
-
-	
 	<div id="chart_operations" class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="height:300px;margin-top:15px"></div>
+
+
+	<div class="row" style="margin-top:15px">
+
+		<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+			<div class="input-group">
+				<span class="input-group-addon" id="basic-addon1">Magic</span>
+				<input type="text" class="form-control" placeholder="Magic" ng-model="magic" aria-describedby="basic-addon1">
+			</div>
+		</div>
+
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-top:15px;height: 500px;">
+	        <table class="table table-striped">
+	            <thead style="color: #fff;background-color: transparent;">
+	                <tr> 
+						<th>Close Value</th> 
+						<th>Close Date</th> 
+						<th>Cross</th> 
+						<th>High</th> 
+						<th>Low</th> 
+						<th>Magic</th> 
+						<th>Operation Id</th> 
+						<th>Operation type</th> 
+						<th>Open Value</th>
+						<th>Open Date</th>
+						<th>Profit</th>
+					</tr> 
+	            </thead>
+	            <tbody>
+	                <tr ng-repeat="data in pagedItems">
+	                    <td>{{data.close}}</td> 
+						<td>{{data['closeDate'] | date:'medium'}}</td>
+						<td>{{data.cross}}</td> 
+						<td>{{data.high}}</td> 
+						<td>{{data.low}}</td> 
+						<td>{{data.magic}}</td> 
+						<td>{{data.opId}}</td> 
+						<td>{{data.opType}}</td> 
+						<td>{{data.open}}</td>
+						<td>{{data['openDate'] | date:'medium'}}</td>
+						<td>{{data.profit}}</td>
+	                </tr>
+	            </tbody>            
+		    </table>
+
+		    
+
+		    <ul class="pagination">
+	            <li class="ng-scope"><a ng-click="selectItemsPerPage(10)" class="ng-binding">10</a></li>
+	            <li class="ng-scope"><a ng-click="selectItemsPerPage(20)" class="ng-binding">20</a></li>
+	            <li class="ng-scope"><a ng-click="selectItemsPerPage(30)" class="ng-binding">30</a></li>
+	        </ul>
+
+	        <uib-pagination ng-model="currentPage" total-items="totalItems" items-per-page='itemsPerPage' direction-links='false' num-pages='numPages'></uib-pagination>
+	        <ul class="pagination">
+	            <li class="ng-scope"><a ng-click="setPage(-1)" class="ng-binding">last page</a></li>
+	        </ul>
+		</div>
+	</div>
+
 </div>
 	

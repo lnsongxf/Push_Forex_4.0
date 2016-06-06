@@ -12,7 +12,8 @@
     "angular-route": "1.4.5",
     "jquery":"",
     "d3":"",
-    "c3":""
+    "c3":"",
+    "angular-bootstrap":""
   },
   "devDependencies": {
     "jquery":"",

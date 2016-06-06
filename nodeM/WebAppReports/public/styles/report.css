@@ -1,6 +1,38 @@
 body{
-  height: 100vh;
+  width: 100%;
+  position: relative;
   background-color: #373739;
+}
+
+.row{
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+.pagination > .active > a, .pagination > .active > span, .pagination > .active > a:hover, .pagination > .active > span:hover, .pagination > .active > a:focus, .pagination > .active > span:focus{
+  background-color: #21eded;
+  border-color: #21eded;
+  color: #000;
+}
+.pagination > li:first-child > a{
+  border-radius:0px;
+}
+.pagination > li:last-child > a{
+  border-radius:0px;
+}
+.pagination > li > a{
+  color: #000;
+}
+
+.input-group-addon:first-child{
+  border-radius: 0px;
+  background-color: #272628!important;
+  color: #fff;
+  border: 1px solid #272628;
+}
+
+.input-group .form-control:last-child{
+  border-radius: 0px;
 }
 
 .button_default{
@@ -221,4 +253,19 @@ div[class*='suit']:after {
 }
 .button_server:hover{
   outline: none !important;
+}
+
+.func_button_active{
+  color: #000!important;
+  background-color: #21eded!important;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: #272628;
+    color: #fff;
+}
+
+.table-striped > tbody > tr:nth-of-type(even) {
+  background-color: #313032;
+  color: #fff;
 }

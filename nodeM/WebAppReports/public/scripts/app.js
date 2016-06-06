@@ -8,7 +8,8 @@ var app = angular
     'ngResource',
     'ngRoute',
     'ngSanitize',
-    'ngTouch'
+    'ngTouch',
+    'ui.bootstrap'
 ]);
 
 
@@ -51,9 +52,9 @@ app.factory('Help', function() {
           if (_searchStringInArray('Rollover',strMatchedValueArr) != -1) {
             //console.log("dd0: ",strMatchedValueArr);
             arrData.push( {
-              openDate: strMatchedValueArr[6],
+              openDate: Date.parse(strMatchedValueArr[6]),
               open: parseFloat(strMatchedValueArr[1]),
-              closeDate: strMatchedValueArr[7],
+              closeDate: Date.parse(strMatchedValueArr[7]),
               close: parseFloat(strMatchedValueArr[2]),
               profit: parseInt(strMatchedValueArr[3]),
               opType: parseInt(strMatchedValueArr[4]),
