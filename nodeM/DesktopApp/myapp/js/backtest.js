@@ -23,6 +23,7 @@ var QuotesModule = (function(){
 		if (quotes_list == null || quotes_list == undefined || providerName == null || providerName == undefined) {
 			console.log('quotes_list %s or providerName '+quotes_list,providerName+' null or not defined into _createTimeFrameQuotesObj');
 			return null;
+			
 		};
 		var _quotesObj = new _timeFrameQuotes(providerName);
 
