@@ -191,6 +191,22 @@ div[class*='suit']:after {
   /*display: none;*/
 }
 
+.navbar-toggle {
+  border-radius: 0px !important;
+}
+.navbar-header > .collapsed{
+  background-color: transparent !important;
+}
+.navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus{
+  background-color: #21eded;
+}
+.navbar-default .navbar-toggle{
+  border-color: transparent;
+}
+.navbar-default .navbar-toggle .icon-bar{
+  background-color: #fff;
+}
+
 @media only screen and (max-width: 1024px){
   #chart_operations .c3-axis-x{
     display: none;
