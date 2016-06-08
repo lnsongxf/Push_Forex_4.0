@@ -81,29 +81,31 @@ app.factory('Help', function() {
     return match;
   };
 
-  var _sort = function(arr,sortProperties) {
+  var _sort = function(arr,sortProperties,direction) {
     if( arr.length > 1 ){
       var result = [],tmpVal;
-      arr.sort(_orderByProperty(sortProperties)).forEach(function(el){
+      arr.sort(_orderByProperty(sortProperties,direction)).forEach(function(el){
         if(el[sortProperties[0]]==tmpVal){
-          result[result.length-1].push(el); 
+          console.log("result: ",result);
+          if (Array.isArray(result[result.length-1])) {result[result.length-1].push(el)}else{result.push(el); }
         }else{
-          tmpVal=el[sortProperties[0]];result.push([el])
+          tmpVal=el[sortProperties[0]];
+          if (sortProperties.length > 1) {result.push([el]);}else{result.push(el)}
         }
       });
-      console.log("arr: ",arr);
       return result; 
     }else{
       return arr;
     }
   }; 
 
-  var _orderByProperty = function(arr) {
+  var _orderByProperty = function(arr,direction) {
     var args = Array.prototype.slice.call(arr, 1);
     return function (a, b) {
-      var equality = b[arr[0]] - a[arr[0]];
+      var equality;
+      if (direction == true) { equality = a[arr[0]] - b[arr[0]] }else{ equality = b[arr[0]] - a[arr[0]] };
       if (equality === 0 && arr.length > 1) {
-        var res = _orderByProperty(args)(a, b);
+        var res = _orderByProperty(args,direction)(a, b);
         return res;
       }
       return equality;
@@ -112,7 +114,7 @@ app.factory('Help', function() {
 
   return {  
     csvToArr: function(csv,strDelimiter) { return _csvToArr(csv,strDelimiter) },  
-    sort: function(arr,sortProperties) { return _sort(arr,sortProperties) }
+    sort: function(arr,sortProperties,direction) { return _sort(arr,sortProperties,direction) }
   };
 
 });

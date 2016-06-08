@@ -25,6 +25,35 @@ body{
   color: #000;
 }
 
+.headerTable{
+  color: #fff;
+  font-weight: 600;
+}
+
+.headerTable:hover{
+  color: #fff!important;
+  font-weight: 600;
+}
+
+
+.arrowUp {
+  display: inline-block;
+  width: 0; 
+  height: 0; 
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid #fff;
+}
+
+.arrowDown {
+  display: inline-block;
+  width: 0; 
+  height: 0; 
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid #fff;
+}
+
 .input-group-addon:first-child{
   border-radius: 0px;
   background-color: #272628!important;

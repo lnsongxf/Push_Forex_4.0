@@ -31,8 +31,8 @@ angular.module('webApp')
 
       $scope.createCSV = function(){
 
-        $scope.arrOpSortForCsv = Help.sort($scope.arrOp,['magic','closeDate']);
-        console.log("$scope.arrOpSortForCsv: ",$scope.arrOpSortForCsv);
+        $scope.arrOpSortForCsv = $scope.arrOp;
+        $scope.arrOpSortForCsv = Help.sort($scope.arrOpSortForCsv,['magic','closeDate'],'true');
         
         var csvContent = "data:text/csv;charset=utf-8,";
         $scope.arrOpSortForCsv.forEach(function(elFirst,i){
@@ -80,7 +80,6 @@ angular.module('webApp')
         console.log("data: ",data);
         // CSV PARSER
         $scope.arrOp = Help.csvToArr(data.data.data,"↵");
-        $scope.tableArrOpSort = $scope.arrOp;
         $scope.createCSV();
         $scope.showTable();
         $scope.showProfitChart();
@@ -100,7 +99,8 @@ angular.module('webApp')
 
       $scope.showProfitChart = function(){
         //SORT by: openDate,open,closeDate,close,profit,opType,cross,high,low,magic,opId
-        $scope.arrOpSort = Help.sort($scope.arrOp,['magic','closeDate']);
+        $scope.arrOpSort = $scope.arrOp;
+        $scope.arrOpSort = Help.sort($scope.arrOpSort,['magic','closeDate'],'true');
 
         var xs = {};
         var columns = [];
@@ -152,12 +152,11 @@ angular.module('webApp')
 
 
       $scope.showComulativeProfitChart = function(){
-        console.log("innn");
-        $scope.arrOpSort = Help.sort($scope.arrOp,['magic','closeDate']);
+        $scope.arrOpSort = $scope.arrOp;
+        $scope.arrOpSort = Help.sort($scope.arrOpSort,['magic','closeDate'],'true');
 
         var xs = {};
         var columns = [];
-        console.log("arrOpSort1: ",$scope.arrOpSort);
         $scope.arrOpSort.forEach(function(elFirst,index){
           xs[elFirst[0]['magic'].toString()] = 'x'+index;
           columns.push(['x'+index]);
@@ -209,54 +208,67 @@ angular.module('webApp')
 
       $scope.showTable = function(){
 
-      $scope.$watch('magic',function(){
-        console.log("$scope.magic: "+$scope.magic);
-        if ($scope.magic == null || $scope.magic == undefined || $scope.magic == "") {
-            $scope.tableArrOpSort = $scope.arrOp;
-            $scope.totalItems = $scope.tableArrOpSort.length;
-            $scope.updateItems();
-        }else{
-          $scope.tableArrOpSort = $scope.arrOp.filter(function(value){
-            if (value.magic == $scope.magic) {
-              return true;
+        $scope.$watch('magic',function(newValue, oldValue){
+          if (newValue !== oldValue) {
+            console.log("in");
+            if ($scope.magic == null || $scope.magic == undefined || $scope.magic == "") {
+                $scope.tableArrOpSort = $scope.arrOp;
+                $scope.totalItems = $scope.tableArrOpSort.length;
+                $scope.updateItems();
             }else{
-              return false;
+              $scope.tableArrOpSort = $scope.arrOp.filter(function(value){
+                if (value.magic == $scope.magic) {
+                  return true;
+                }else{
+                  return false;
+                }
+              });
+              $scope.totalItems = $scope.tableArrOpSort.length;
+              $scope.updateItems(); 
             }
-          });
-          $scope.totalItems = $scope.tableArrOpSort.length;
-          $scope.updateItems(); 
-        }
-      });
+          }
+        });
 
-      $scope.updateItems = function() {
-        $scope.pagedItems = $scope.tableArrOpSort.slice($scope.itemsPerPage * ($scope.currentPage - 1), $scope.itemsPerPage * $scope.currentPage);
-      };
-
-      $scope.currentPage = 1;
-      $scope.totalItems = $scope.tableArrOpSort.length;
-      $scope.itemsPerPage = 10;
-      //$scope.numPages = 0;
-      $scope.hello = 'Today Report';
-
-      $scope.selectItemsPerPage = function(itemNo) {
-          $scope.itemsPerPage = itemNo;
+        $scope.sortTable = function(sortField,sortFlag,flagName){
+          $scope[$scope.prevClass]=undefined;
+          $scope[flagName]=sortFlag;
+          $scope.prevClass=flagName
+          console.log("$scope[flagName]: ",$scope[flagName]);
+          $scope.tableArrOpSort = Help.sort($scope.tableArrOpSort,[sortField],sortFlag);
           $scope.updateItems();
-      };
+        };
 
-      $scope.setPage = function(pageNo) {
-          $scope.currentPage = (pageNo === -1) ? $scope.numPages : pageNo;
-          $scope.updateItems();
-      };
+        $scope.updateItems = function() {
+          console.log("in2");
+          $scope.pagedItems = $scope.tableArrOpSort.slice($scope.itemsPerPage * ($scope.currentPage - 1), $scope.itemsPerPage * $scope.currentPage);
+          console.log("$scope.pagedItems: ",$scope.pagedItems);
+        };
 
-      $scope.$watch('currentPage', function() {
-          $scope.updateItems();
-      });
+        $scope.selectItemsPerPage = function(itemNo) {
+            $scope.itemsPerPage = itemNo;
+            $scope.updateItems();
+        };
 
-        //$scope.myData = reportingModel.today;
+        $scope.setPage = function(pageNo) {
+            $scope.currentPage = (pageNo === -1) ? $scope.numPages : pageNo;
+            $scope.updateItems();
+        };
+
+        $scope.$watch('currentPage', function() {
+            $scope.updateItems();
+        });
+
+        $scope.tableArrOpSort = $scope.arrOp;
+        $scope.tableArrOpSort = Help.sort($scope.tableArrOpSort,['closeDate'],'true');
+        console.log("$scope.tableArrOpSort: ",$scope.tableArrOpSort);
+        $scope.currentPage = 1;
+        $scope.totalItems = $scope.tableArrOpSort.length;
+        $scope.itemsPerPage = 10;
+        $scope.numPages = 0;
 
       }
 
-      $scope.pagedItems = [];
+      
 
 
 
