@@ -105,6 +105,7 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
 
                   // SEND INITIAL HISTORY QUOTE TO THE WORKER
                   console.log("sending data to worker");
+                  
                   setTimeout(function(){
                     current_worker.worker.postMessage({'d':crosses_data,'type':'initialHistoryQuotes'});  
                   },1000);
