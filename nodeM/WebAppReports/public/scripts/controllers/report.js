@@ -229,6 +229,8 @@ angular.module('webApp')
           }
         });
 
+        $scope['sortFlagCloseDate']=false;
+        $scope.prevClass='sortFlagCloseDate';
         $scope.sortTable = function(sortField,sortFlag,flagName){
           $scope[$scope.prevClass]=undefined;
           $scope[flagName]=sortFlag;
