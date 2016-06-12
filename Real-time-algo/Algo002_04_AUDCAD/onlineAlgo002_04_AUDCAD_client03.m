@@ -257,7 +257,7 @@ elseif listener3
                         trialClose=trialClose+1;
                         [topicPub,messagePub,startingOperation] = onlineClose(ms.lastCloseValue,operLots,operCloseSlippage,ms.openTicket,algoTopicPub,algoMagic,indexClose);
                         
-                        LogObj.trace('problems',num2str(cell2mat(strcat('Matlab trial #',{' '},num2str(trialClose),{' '},' to close the operation:', {' '},num2str(ticms.openTicketket)))) );
+                        LogObj.trace('problems',num2str(cell2mat(strcat('Matlab trial #',{' '},num2str(trialClose),{' '},' to close the operation:', {' '},num2str(ms.openTicket)))) );
                         LogObj.trace('machine status',ms.machineStatus);
                         
                     else
