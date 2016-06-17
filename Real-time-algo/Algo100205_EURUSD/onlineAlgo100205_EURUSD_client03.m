@@ -1,4 +1,4 @@
-function [topicPub,messagePub] = onlineAlgo004_client03(topicSub,messageSub,password)
+function [topicPub,messagePub] = onlineAlgo100205_EURUSD_client03(topicSub,messageSub,password)
 
 
 % DESCRIPTION:
@@ -56,9 +56,9 @@ persistent logFolderName
 persistent timeSeriesProperties
 
 
-nameAlgo          = 'Algo004_EURUSD';
-algoTopicPub      = 'OPERATIONS@ACTIVTRADES@EURUSD@1004';
-algoMagic         = 1004;
+nameAlgo          = 'Algo100205_EURUSD';
+algoTopicPub      = 'OPERATIONS@ACTIVTRADES@EURUSD@100205';
+algoMagic         = 100205;
 nData             = 100;
 operLots          = 1;
 operOpenSlippage  = 1.5;
@@ -68,7 +68,7 @@ tCloseRequest     = 90;
 
 listener1 = strcmp(topicSub,'TIMEFRAMEQUOTE@MT4@ACTIVTRADES@EURUSD@m30@v100');
 listener2 = strcmp(topicSub,'TIMEFRAMEQUOTE@MT4@ACTIVTRADES@EURUSD@m1@v1');
-listener3 = strcmp(topicSub,'STATUS@EURUSD@1004');
+listener3 = strcmp(topicSub,'STATUS@EURUSD@100205');
 
 topicPub   = '';
 messagePub = '';
@@ -121,6 +121,8 @@ end
 
 if listener1 && ( strcmp(ms.machineStatus,'closed') || strcmp(ms.machineStatus,'open') ) %new 30minutes data array
     
+%     time30 = tic;        % used for measuring the time spent for parsing
+    
     LogObj.info('MATLAB info','new data array at 30min received');
     myData = strsplit(messageSub, ';');
     newTimeScalePoint = 1;
@@ -134,6 +136,9 @@ if listener1 && ( strcmp(ms.machineStatus,'closed') || strcmp(ms.machineStatus,'
     end
     
     % matrix(:,end)=matrix(:,end-1); % copio l'ultima mezz ora cm se fosse il dato al minuto
+    
+%     time30close = toc(time30);
+%     display (time30close);
     
 elseif listener2 && ( strcmp(ms.machineStatus,'closed') || strcmp(ms.machineStatus,'open') ) %new 1minute data point
     
@@ -432,10 +437,10 @@ else
     newTimeScalePointEnd = 0;
 end
 
-if ( ( strcmp(ms.machineStatus,'closed') || strcmp(ms.machineStatus,'open') ) && ms.statusNotification == 0 )
+if ( ( strcmp(ms.machineStatus,'closed') || strcmp(ms.machineStatus,'open') ) && (ms.statusNotification == 0) )
     t=now;
     timeMin=t*60*24;
-    [oper,openValue, closeValue, stopLoss, takeProfit, minReturn] = Algo_004_statTrend(matrix,newTimeScalePoint,newTimeScalePointEnd,openValueReal,timeSeriesProperties,timeMin);
+    [oper,openValue, closeValue, stopLoss, takeProfit, minReturn] = Algo_100205_leadlag_EURUSD(matrix,newTimeScalePoint,newTimeScalePointEnd,openValueReal,timeSeriesProperties,timeMin);
     
     %     newState{1} = oper;
     %     newState{2} = openValue;
