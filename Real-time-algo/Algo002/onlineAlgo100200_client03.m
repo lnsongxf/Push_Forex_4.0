@@ -56,9 +56,9 @@ persistent logFolderName
 persistent timeSeriesProperties
 
 
-nameAlgo          = 'Algo002_04_AUDCAD';
-algoTopicPub      = 'OPERATIONS@ACTIVTRADES@AUDCAD@1204';
-algoMagic         = 1204;
+nameAlgo          = 'Algo100200_EURUSD';
+algoTopicPub      = 'OPERATIONS@ACTIVTRADES@EURUSD@100200';
+algoMagic         = 100200;
 nData             = 100;
 operLots          = 1;
 operOpenSlippage  = 1.5;
@@ -66,9 +66,9 @@ operCloseSlippage = 0.2;
 tOpenRequest      = 90;
 tCloseRequest     = 90;
 
-listener1 = strcmp(topicSub,'TIMEFRAMEQUOTE@MT4@ACTIVTRADES@AUDCAD@m30@v100');
-listener2 = strcmp(topicSub,'TIMEFRAMEQUOTE@MT4@ACTIVTRADES@AUDCAD@m1@v1');
-listener3 = strcmp(topicSub,'STATUS@AUDCAD@1204');
+listener1 = strcmp(topicSub,'TIMEFRAMEQUOTE@MT4@ACTIVTRADES@EURUSD@m30@v100');
+listener2 = strcmp(topicSub,'TIMEFRAMEQUOTE@MT4@ACTIVTRADES@EURUSD@m1@v1');
+listener3 = strcmp(topicSub,'STATUS@EURUSD@100200');
 
 topicPub   = '';
 messagePub = '';
@@ -440,7 +440,7 @@ end
 if ( ( strcmp(ms.machineStatus,'closed') || strcmp(ms.machineStatus,'open') ) && (ms.statusNotification == 0) )
     t=now;
     timeMin=t*60*24;
-    [oper,openValue, closeValue, stopLoss, takeProfit, minReturn] = Algo_002_04_leadlag_AUDCAD(matrix,newTimeScalePoint,newTimeScalePointEnd,openValueReal,timeSeriesProperties,timeMin);
+    [oper,openValue, closeValue, stopLoss, takeProfit, minReturn] = Algo100200_leadlag(matrix,newTimeScalePoint,newTimeScalePointEnd,openValueReal,timeSeriesProperties,timeMin);
     
     %     newState{1} = oper;
     %     newState{2} = openValue;
