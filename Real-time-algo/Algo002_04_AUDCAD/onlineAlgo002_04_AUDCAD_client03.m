@@ -440,7 +440,7 @@ end
 if ( ( strcmp(ms.machineStatus,'closed') || strcmp(ms.machineStatus,'open') ) && (ms.statusNotification == 0) )
     t=now;
     timeMin=t*60*24;
-    [oper,openValue, closeValue, stopLoss, takeProfit, minReturn] = Algo_002_04_leadlag_AUDCAD(matrix,newTimeScalePoint,newTimeScalePointEnd,openValueReal,timeSeriesProperties,timeMin);
+    [oper,openValue, closeValue, stopLoss, takeProfit, minReturn] = Algo100204_leadlag_AUDCAD(matrix,newTimeScalePoint,newTimeScalePointEnd,openValueReal,timeSeriesProperties,timeMin);
     
     %     newState{1} = oper;
     %     newState{2} = openValue;

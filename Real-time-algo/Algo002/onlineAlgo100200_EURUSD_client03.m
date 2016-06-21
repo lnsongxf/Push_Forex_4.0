@@ -1,4 +1,4 @@
-function [topicPub,messagePub] = onlineAlgo100200_client03(topicSub,messageSub,password)
+function [topicPub,messagePub] = onlineAlgo100200_EURUSD_client03(topicSub,messageSub,password)
 
 
 % DESCRIPTION:
@@ -440,7 +440,7 @@ end
 if ( ( strcmp(ms.machineStatus,'closed') || strcmp(ms.machineStatus,'open') ) && (ms.statusNotification == 0) )
     t=now;
     timeMin=t*60*24;
-    [oper,openValue, closeValue, stopLoss, takeProfit, minReturn] = Algo100200_leadlag(matrix,newTimeScalePoint,newTimeScalePointEnd,openValueReal,timeSeriesProperties,timeMin);
+    [oper,openValue, closeValue, stopLoss, takeProfit, minReturn] = Algo100200_leadlag_EURUSD(matrix,newTimeScalePoint,newTimeScalePointEnd,openValueReal,timeSeriesProperties,timeMin);
     
     %     newState{1} = oper;
     %     newState{2} = openValue;

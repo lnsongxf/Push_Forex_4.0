@@ -1,4 +1,4 @@
-function [oper, openValue, closeValue, stopLoss, noLoose, minReturn] = Algo100200_leadlag(matrix,newTimeScalePoint,newTimeScalePointEnd,openValueReal,timeSeriesProperties,indexHisData)
+function [oper, openValue, closeValue, stopLoss, noLoose, minReturn] = Algo100200_leadlag_EURUSD(matrix,newTimeScalePoint,newTimeScalePointEnd,openValueReal,timeSeriesProperties,indexHisData)
 
 
 %

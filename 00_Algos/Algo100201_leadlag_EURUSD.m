@@ -1,4 +1,4 @@
-function [oper, openValue, closeValue, stopLoss, noLoose, minReturn] = Algo_002_04_leadlag_AUDCAD(matrix,newTimeScalePoint,newTimeScalePointEnd,openValueReal,timeSeriesProperties,indexHisData)
+function [oper, openValue, closeValue, stopLoss, noLoose, minReturn] = Algo100201_leadlag_EURUSD(matrix,newTimeScalePoint,newTimeScalePointEnd,openValueReal,timeSeriesProperties,indexHisData)
 
 
 %
@@ -73,14 +73,14 @@ if(isempty(countCycle) || countCycle == 0)
     countCycle = 1;
     operationState = OperationState;
     params = Parameters;
-    map('Algo_002_04') = RealAlgo(operationState,params);
+    map('Algo_002_Ale') = RealAlgo(operationState,params);
     oper = 0;
     return;
 end
 
 
-ra = map('Algo_002_04');
-remove(map,'Algo_002_04');
+ra = map('Algo_002_Ale');
+remove(map,'Algo_002_Ale');
 
 params = ra.p;
 operationState = ra.os;
@@ -120,7 +120,7 @@ if newTimeScalePoint
     
     % 01c
     % -------- coreState filter -------------------- %
-    cState.core_Algo_002_leadlag(chiusure(1:end-1),params,30,28,4,7,50);
+    cState.core_Algo_002_leadlag(chiusure(1:end-1),params,42,8,4,7,1000);
     
 end
 
@@ -158,8 +158,8 @@ else
             closingTime = params.get('closeTime_');
             operationState.latency = closingTime - openingTime;
             
-            dynamicParameters {1} = 0;
-            [params,TakeProfitPrice,StopLossPrice,dynamicOn] = dynamicalTPandSLManager(operationState, chiusure, params, @closingDirectTakeProfitManager, dynamicParameters);
+            dynamicParameters {1} = 1.8;  %closingForApproaching
+            [params,TakeProfitPrice,StopLossPrice,dynamicOn] = dynamicalTPandSLManager(operationState, chiusure, params, @closingForApproaching, dynamicParameters);
             if dynamicOn  == 1
                 params.set('openTime__',indexHisData);
             end
@@ -205,7 +205,7 @@ end
 oper = operationState.actualOperation;
 
 real_Algo = RealAlgo(operationState,params);
-map('Algo_002_04')     = real_Algo;
+map('Algo_002_Ale')     = real_Algo;
 
 openValue = params.get('openValue_');
 closeValue= params.get('closeValue');
