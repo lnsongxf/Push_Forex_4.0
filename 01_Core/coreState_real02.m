@@ -228,12 +228,12 @@ classdef coreState_real02 < handle
             %NOTE: algoritmo di test per il bkt rispetto al demo
             %LOGICA: Se ho 2 candelotti dello dello stesso segno apro, e
             %vado in quella direzione
-
+            
             candelotto1=sign(closure(end)-closure(end-1));
             candelotto2=sign(closure(end-1)-closure(end-2));
             c0=abs(candelotto1);
-
-            if (c0>0) && (candelotto1 == candelotto2) 
+            
+            if (c0>0) && (candelotto1 == candelotto2)
                 obj.state=1;
                 obj.suggestedDirection=candelotto1;
                 obj.suggestedTP = 4;
@@ -259,7 +259,7 @@ classdef coreState_real02 < handle
             % non uso i dati al minuto per le valutazioni dello
             % state
             closePrice=closure;
-
+            
             a = (1/windowSize1)*ones(1,windowSize1);
             smoothClose1 = filter(a,1,closePrice);
             
@@ -319,7 +319,7 @@ classdef coreState_real02 < handle
             entry_conditionLong  = params.get('entry_conditionLong');
             entry_conditionShort = params.get('entry_conditionShort');
             
-            % entry long           
+            % entry long
             if (actualPrice < setupBarMin) && (setupBarDirection < - dimension)
                 newSL = abs(actualPrice - setupBarClose);
                 oldSL = params.get('stopLoss__');
@@ -334,8 +334,8 @@ classdef coreState_real02 < handle
                 obj.state=1;
                 obj.suggestedDirection = - sign(setupBarDirection);
                 obj.suggestedSL = params.get('stopLoss__');
-                obj.suggestedTP = dimension/10;                    
-            end          
+                obj.suggestedTP = dimension/10;
+            end
             
             % entry short
             if (actualPrice > setupBarMax) && (setupBarDirection > dimension)
@@ -355,7 +355,7 @@ classdef coreState_real02 < handle
                 obj.suggestedTP = dimension/10;
             end
             
-       
+            
         end
         
         
@@ -411,7 +411,7 @@ classdef coreState_real02 < handle
             inversion=oldSign*newSign;
             newState=sign(newGradient1*newGradient2);
             oldState=sign(oldGradient1*oldGradient2);
-%             trend=newState+oldState;
+            %             trend=newState+oldState;
             trendDirection=sign(newGradient2);
             
             Hurst         = timeSeriesProperties.HurstSmooth(end);
@@ -443,7 +443,7 @@ classdef coreState_real02 < handle
             
         end
         
-              
+        
         
         function obj = core_Algo_011_stocOsc(obj, low, high, closure, params,Kperiods, Dperiods)
             
@@ -481,11 +481,113 @@ classdef coreState_real02 < handle
             
         end
         
-        
-        
+        function obj = core_Algo_016_doubleRepo(obj, low, high, closure, lastPriceMinute, params,windowSize, shift)
+            
+            closePrice=closure;
+            minTrendLength = 8; %this is a parameter that can be modified
+            
+            a = (1/windowSize)*ones(1,windowSize);
+            lead = filter(a,1,closePrice);
+            
+            shiftedlead = [ nan(shift,1); lead(1:end-shift) ];
+            
+            s = sign( closure((end-minTrendLength):end) - shiftedlead((end-minTrendLength):end) );
+            
+            
+            obj.state=0;
+            
+            timeAfterTrend=params.get('timeAfterTrend');
+            trendLenght = params.get('trendLength');
+            strend = params.get('previous_signal');
+            StartingTrendPrice = params.set('StartingTrendPrice');
+            trigger1 = params.get('trigger1'); % first penetration
+            trigger2 = params.get('trigger2'); % exit penetration
+            
+            if ( trigger1~=0 && timeAfterTrend>15 ) % if too long has passed after the first penetration, reset
+                params.set('trigger1',0);
+                params.set('trigger2',0);
+                params.set('timeAferTrend',0);
+            end
+            
+            if (trigger1 == 0)
+                
+                % check if a trend is present for at least 'minTrendLength' periods
+                if ( s(end) == s(end-1) )
+                    
+                    params.set('previous_signal',s(end));
+                    trendLenght = trendLenght + 1;
+                    params.set('trendLength',trendLength);
+                    
+                    if (trendLenght == 1) % record the price when the trend starts
+                        params.set('StartingTrendPrice',closure(end-1));
+                    end
+                    
+                else % if the trend is finished, check how long was it and how big (in pips)
+                    
+                    if (trendLenght >= 8 && abs(closure(end-1)-StaringTrendPrice)> 50 )
+                        
+                        params.set('trigger1',1); % first penetration present
+                        params.set('timeAfterTrend',1);
+                        
+                    else % trend not long enough
+                        
+                        params.set('trendLength',0);
+                        params.set('trigger1',0);
+                        params.set('timeAfterTrend',0);
+                        
+                    end
+                    
+                end
+                
+                
+            else % if trigger1 is on
+                
+                timeAfterTrend = timeAfterTrend + 1;
+                params.set('timeAfterTrend',timeAfterTrend);
+                
+                if (s(end) == strend)
+                    
+                    params.set('trigger2',1); % exit penetration
+                    
+                end
+                
+                
+                
+                if trigger2
+                    
+                    if (s(end) == -strend) % second penetration!!
+                        
+                        if ( (closure(end) - StaringTrendPrice)*strend < 10 ) % if the current price is too close to the price at the start of the trend, don't open
+                            
+                            params.set('trigger1',0);
+                            params.set('trigger2',0);
+                            params.set('trendLength',0);
+                            params.set('timeAfterTrend',0);
+                            
+                        else % if the trend is consistent, open
+                            
+                            obj.state = 1;
+                            obj.suggestedDirection = -strend;
+                            
+                            if strend == 1
+                                volatility = lastPriceMinute - min(low(end-timeAfterTrend:end)) ;
+                            else
+                                volatility = max(high(end-timeAfterTrend:end)) - lastPriceMinute ;
+                            end
+                            
+                            obj.suggestedTP = max(min(volatility,50),5);
+                            obj.suggestedSL = max(min(volatility,50),5);
+                            
+                        end
+                        
+                        
+                    end
+                    
+                end
+                
+            end
+            
+        end
         
     end
     
-end
-
-

@@ -12,6 +12,11 @@ classdef Parameters < handle
         smoothVal1;
         smoothVal2;
         previous_signal;
+        trigger1;
+        trigger2;
+        trendLength;
+        StartingTrendPrice;
+        timeAfterTrend;
         entry_conditionLong;
         entry_conditionShort;
         endOfcandelStick;
@@ -185,6 +190,16 @@ classdef Parameters < handle
             obj.set('smoothVal2',-1);
             obj.map('previous_signal') =parameter;
             obj.set('previous_signal',0);
+            obj.map('trigger1') =parameter;
+            obj.set('trigger1',0);
+            obj.map('trigger2') =parameter;
+            obj.set('trigger2',0);
+            obj.map('trendLength') =parameter;
+            obj.set('trendLength',0);
+            obj.map('StartingTrendPrice') =parameter;
+            obj.set('StartingTrendPrice',0);
+            obj.map('timeAferTrend') =parameter;
+            obj.set('timeAferTrend',0);
             obj.map('entry_conditionLong') =parameter;
             obj.set('entry_conditionLong',0);
             obj.map('entry_conditionShort') =parameter;
