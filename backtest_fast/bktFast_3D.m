@@ -293,10 +293,11 @@ classdef bktFast_3D < handle
             [hisData, newHisData] = load_historical(histName, actTimeScale, newTimeScale);
             
             % check that M or N are no array
-            if (size(M,2)>1 || size(N,2)>1 )
+            if (size(M,2)>1 || size(N,2)>1 || size(Z,2)>1)
                 
                 M=M(end);
                 N=N(end);
+                Z=Z(end);
                 
             end
             
@@ -304,7 +305,7 @@ classdef bktFast_3D < handle
             %% perform try
             
             obj.bktfastTry = feval(algo);
-            obj.bktfastTry = obj.bktfastTry.spin(hisData(:,4), newHisData, actTimeScale, newTimeScale, N, M, transCost, pips_TP, pips_SL, stdev_TP, stdev_SL, 0);
+            obj.bktfastTry = obj.bktfastTry.spin(hisData(:,4), newHisData, actTimeScale, newTimeScale, N, M, transCost, pips_TP, pips_SL, stdev_TP, stdev_SL, Z);
             
             p = Performance_06;
             obj.performanceTry = p.calcSinglePerformance(nameAlgo,'bktWeb',histName,Cross,newTimeScale,transCost,10000,10,obj.bktfastTry.outputbkt,1);
@@ -315,6 +316,8 @@ classdef bktFast_3D < handle
                 figure
                 plot(cumsum(obj.bktfastTry.outputbkt(:,4) - transCost))
                 title(['Result, Final R over maxDD = ',num2str( risultato) ])
+                Legend=strcat( num2str(N),'-',num2str(M),'-',num2str(Z) );
+                legend(Legend);
                 
                 % it is not possible to use this as long as there is
                 % hurst etc to calculate...
