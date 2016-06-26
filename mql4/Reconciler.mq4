@@ -21,8 +21,8 @@ int MAX_NUM_OF_TRADES_PER_MESSAGE = 25;
 //+------------------------------------------------------------------+
 int OnInit()
   {
-   listener = conn_and_sub("tcp://192.168.11.3:51127", "RECONCILER@ACTIVTRADES@" + Symbol());
-   speaker = connect("tcp://192.168.11.3:51125");
+   listener = conn_and_sub("tcp://localhost:51127", "RECONCILER@ACTIVTRADES@" + Symbol());
+   speaker = connect("tcp://localhost:51125");
    Print("Connecting: " + listener);
    MathSrand(GetTickCount());
    return(INIT_SUCCEEDED);
@@ -71,11 +71,11 @@ int OnCalculate(const int rates_total,
 void processInput(string msg)
 {
    int id = MathRand()%1024;
+   string topic = "HISTORY@ACTIVTRADES@EURUSD";
    if (StringCompare("FULL", msg) == 0)
    {
       
       string buffer = IntegerToString(id) + "=FULL=";
-      string topic = "HISTORY@ACTIVTRADES@EURUSD";
       // retrieving info from trade history
       int i,j=0,hstTotal=OrdersHistoryTotal();
       for(i=0;i<hstTotal;i++)
@@ -97,6 +97,40 @@ void processInput(string msg)
             
             j = 0;
             buffer = IntegerToString(id) + "=FULL=";
+            
+         }
+         if (j != 0 && i < hstTotal - 1) 
+         {
+            buffer += "|";
+         }
+      }
+      send(topic, buffer);
+   }
+   else if (StringCompare("OPEN", msg) == 0)
+   {
+      
+      string buffer = IntegerToString(id) + "=OPEN=";
+      // retrieving info from trade history
+      int i,j=0,hstTotal=OrdersTotal();
+      for(i=0;i<hstTotal;i++)
+      {
+         //---- check selection result
+         if(OrderSelect(i,SELECT_BY_POS,MODE_HISTORY)==false)
+         {
+            Print("Access to history failed with error (",GetLastError(),")");
+            break;
+         }
+         // some work with order
+         buffer += nextOrderToString();
+         j = j + 1;
+         if (j >= MAX_NUM_OF_TRADES_PER_MESSAGE && i != hstTotal - 1) {
+            buffer += "|";
+            buffer += "more";
+            
+            send(topic, buffer);
+            
+            j = 0;
+            buffer = IntegerToString(id) + "=OPEN=";
             
          }
          if (j != 0 && i < hstTotal - 1) 
