@@ -146,10 +146,8 @@ void processInput(string msg)
       {
          Print("Access to history failed with error (",GetLastError(),")");
       }
-      else if {
-        if (OrderCloseTime() <= 0) {
+      else if (OrderCloseTime() <= 0) {
           Print("Operation " + IntegerToString(ticket) + " is not closed yet");
-        }
       }
       else 
       {
