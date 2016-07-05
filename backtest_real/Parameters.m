@@ -198,8 +198,8 @@ classdef Parameters < handle
             obj.set('trendLength',0);
             obj.map('StartingTrendPrice') =parameter;
             obj.set('StartingTrendPrice',0);
-            obj.map('timeAferTrend') =parameter;
-            obj.set('timeAferTrend',0);
+            obj.map('timeAfterTrend') =parameter;
+            obj.set('timeAfterTrend',0);
             obj.map('entry_conditionLong') =parameter;
             obj.set('entry_conditionLong',0);
             obj.map('entry_conditionShort') =parameter;

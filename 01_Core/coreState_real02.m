@@ -497,16 +497,21 @@ classdef coreState_real02 < handle
             obj.state=0;
             
             timeAfterTrend=params.get('timeAfterTrend');
-            trendLenght = params.get('trendLength');
+            trendLength = params.get('trendLength');
             strend = params.get('previous_signal');
-            StartingTrendPrice = params.set('StartingTrendPrice');
+            StartingTrendPrice = params.get('StartingTrendPrice');
             trigger1 = params.get('trigger1'); % first penetration
             trigger2 = params.get('trigger2'); % exit penetration
             
             if ( trigger1~=0 && timeAfterTrend>15 ) % if too long has passed after the first penetration, reset
+                trigger1 = 0;
+                trigger2 = 0;
+                timeAfterTrend = 0;
+                trendLength = 0;                
                 params.set('trigger1',0);
                 params.set('trigger2',0);
-                params.set('timeAferTrend',0);
+                params.set('timeAfterTrend',0);
+                params.set('trendLength',0);
             end
             
             if (trigger1 == 0)
@@ -515,19 +520,19 @@ classdef coreState_real02 < handle
                 if ( s(end) == s(end-1) )
                     
                     params.set('previous_signal',s(end));
-                    trendLenght = trendLenght + 1;
+                    trendLength = trendLength + 1;
                     params.set('trendLength',trendLength);
                     
-                    if (trendLenght == 1) % record the price when the trend starts
-                        params.set('StartingTrendPrice',closure(end-1));
+                    if (trendLength == 1) % record the price when the trend starts
+                        params.set('StartingTrendPrice',closure(end-2));
                     end
                     
                 else % if the trend is finished, check how long was it and how big (in pips)
                     
-                    if (trendLenght >= 8 && abs(closure(end-1)-StaringTrendPrice)> 50 )
+                    if (trendLength >= minTrendLength && abs(closure(end-2)-StartingTrendPrice)> 50 )
                         
                         params.set('trigger1',1); % first penetration present
-                        params.set('timeAfterTrend',1);
+                        %params.set('timeAfterTrend',1);
                         
                     else % trend not long enough
                         
@@ -557,7 +562,7 @@ classdef coreState_real02 < handle
                     
                     if (s(end) == -strend) % second penetration!!
                         
-                        if ( (closure(end) - StaringTrendPrice)*strend < 10 ) % if the current price is too close to the price at the start of the trend, don't open
+                        if ( (closure(end) - StartingTrendPrice)*strend < 10 ) % if the current price is too close to the price at the start of the trend, don't open
                             
                             params.set('trigger1',0);
                             params.set('trigger2',0);
@@ -591,3 +596,4 @@ classdef coreState_real02 < handle
         
     end
     
+end

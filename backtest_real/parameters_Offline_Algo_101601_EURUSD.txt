@@ -1,0 +1,33 @@
+            % INPUT parameters:
+            % -------------------------------------------------------------
+            % nameAlgo:                 nome esatto dell'algoritmo che usi
+            % Cross:                    ad es 'EURUSD'
+            % nData_:                    numero di dati in input di storico per ciclo
+            % histName:                 nome dello storico, es: 'nome_storico.csv'
+            % actTimeScale:             scala temporale dello storico in input
+            % newTimeScale:             scala temporale su cui vuoi lavorare (in minuti)
+            % transCost:                costo dello spread in pips, ad es: 1
+            % initialStack:             capitale iniziale, ad es: 10000
+            % Leverage:                 la leva che usi, es: 10
+            % plotPerformance:          1 se vuoi plottare le perfomance
+            % plotPerDistribution:      1-microanalisi 2-macroanalisi 3-pattern ritorni
+            %                           4-plot operazioni su storico 5-plotta tutto
+            %
+            % EXAMPLE of use:
+            % -------------------------------------------------------------
+            % clear all; bkt_Algo_016=bktOffline
+            % bkt_Algo_016=bkt_Algo_016.spin('parameters_Offline_Algo_101601_EURUSD.txt')
+
+
+
+nameAlgo = 'Algo101601_doubleanal_EURUSD'
+Cross = 'EURUSD'
+nData_ = 100
+histName = 'EURUSD_smallsample2014_2015.csv' % 'EURUSD-04-2014-02-2016.csv' %  'AUDCAD.csv' %'AUDCAD_short2.csv'%'C:\Users\alericci\Desktop\Forex 4.0 noShared\EURUSD_2012_2015.csv'
+actTimeScale = 1
+newTimeScale = 30
+transCost = 1
+initialStack = 10000
+Leverage = 10
+plotPerformance = 1
+plotPerDistribution = 3 
