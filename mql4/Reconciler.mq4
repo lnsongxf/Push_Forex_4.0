@@ -115,7 +115,7 @@ void processInput(string msg)
       for(i=0;i<hstTotal;i++)
       {
          //---- check selection result
-         if(OrderSelect(i,SELECT_BY_POS,MODE_HISTORY)==false)
+         if(OrderSelect(i,SELECT_BY_POS,MODE_TRADES)==false)
          {
             Print("Access to history failed with error (",GetLastError(),")");
             break;
