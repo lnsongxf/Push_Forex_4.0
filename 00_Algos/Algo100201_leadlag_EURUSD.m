@@ -120,7 +120,7 @@ if newTimeScalePoint
     
     % 01c
     % -------- coreState filter -------------------- %
-    cState.core_Algo_002_leadlag(chiusure(1:end-1),params,42,8,4,7,1000);
+    cState.core_Algo_002_leadlag(chiusure(1:end-1),params,42,8,4,7,50);
     
 end
 
