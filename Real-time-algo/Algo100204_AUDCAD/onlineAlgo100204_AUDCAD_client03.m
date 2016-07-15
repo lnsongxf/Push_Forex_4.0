@@ -1,4 +1,4 @@
-function [topicPub,messagePub] = onlineAlgo002_04_AUDCAD_client03(topicSub,messageSub,password)
+function [topicPub,messagePub] = onlineAlgo100204_AUDCAD_client03(topicSub,messageSub,password)
 
 
 % DESCRIPTION:
@@ -56,9 +56,9 @@ persistent logFolderName
 persistent timeSeriesProperties
 
 
-nameAlgo          = 'Algo002_04_AUDCAD';
-algoTopicPub      = 'OPERATIONS@ACTIVTRADES@AUDCAD@1204';
-algoMagic         = 1204;
+nameAlgo          = 'Algo100204_AUDCAD';
+algoTopicPub      = 'OPERATIONS@ACTIVTRADES@AUDCAD@100204';
+algoMagic         = 100204;
 nData             = 100;
 operLots          = 1;
 operOpenSlippage  = 1.5;
@@ -68,7 +68,7 @@ tCloseRequest     = 90;
 
 listener1 = strcmp(topicSub,'TIMEFRAMEQUOTE@MT4@ACTIVTRADES@AUDCAD@m30@v100');
 listener2 = strcmp(topicSub,'TIMEFRAMEQUOTE@MT4@ACTIVTRADES@AUDCAD@m1@v1');
-listener3 = strcmp(topicSub,'STATUS@AUDCAD@1204');
+listener3 = strcmp(topicSub,'STATUS@AUDCAD@100204');
 
 topicPub   = '';
 messagePub = '';
@@ -441,7 +441,7 @@ if ( ( strcmp(ms.machineStatus,'closed') || strcmp(ms.machineStatus,'open') ) &&
     t=now;
     timeMin=t*60*24;
     [oper,openValue, closeValue, stopLoss, takeProfit, minReturn] = Algo100204_leadlag_AUDCAD(matrix,newTimeScalePoint,newTimeScalePointEnd,openValueReal,timeSeriesProperties,timeMin);
-    
+                                                                    
     %     newState{1} = oper;
     %     newState{2} = openValue;
     %     newState{3} = closeValue;

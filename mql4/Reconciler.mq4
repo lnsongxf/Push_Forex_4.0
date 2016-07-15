@@ -115,7 +115,7 @@ void processInput(string msg)
       for(i=0;i<hstTotal;i++)
       {
          //---- check selection result
-         if(OrderSelect(i,SELECT_BY_POS,MODE_HISTORY)==false)
+         if(OrderSelect(i,SELECT_BY_POS,MODE_TRADES)==false)
          {
             Print("Access to history failed with error (",GetLastError(),")");
             break;
@@ -146,10 +146,8 @@ void processInput(string msg)
       {
          Print("Access to history failed with error (",GetLastError(),")");
       }
-      else if {
-        if (OrderCloseTime() <= 0) {
+      else if (OrderCloseTime() <= 0) {
           Print("Operation " + IntegerToString(ticket) + " is not closed yet");
-        }
       }
       else 
       {
