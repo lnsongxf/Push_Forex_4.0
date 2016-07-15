@@ -23,9 +23,9 @@
 nameAlgo = 'Algo101601_doubleanal_EURUSD'
 Cross = 'EURUSD'
 nData_ = 100
-histName = 'EURUSD_smallsample2014_2015.csv' % 'EURUSD-04-2014-02-2016.csv' %  'AUDCAD.csv' %'AUDCAD_short2.csv'%'C:\Users\alericci\Desktop\Forex 4.0 noShared\EURUSD_2012_2015.csv'
+histName =  'EURUSD-04-2014-02-2016.csv' %  'EURUSD_smallsample2014_2015.csv' %   'AUDCAD.csv' %'AUDCAD_short2.csv'%'C:\Users\alericci\Desktop\Forex 4.0 noShared\EURUSD_2012_2015.csv'
 actTimeScale = 1
-newTimeScale = 30
+newTimeScale = 60
 transCost = 1
 initialStack = 10000
 Leverage = 10

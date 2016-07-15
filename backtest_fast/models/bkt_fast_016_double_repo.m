@@ -68,7 +68,7 @@ classdef bkt_fast_016_double_repo < handle
             s(P>=shiftedlead)=1;
             s(P<shiftedlead)=-1;
             
-            i = 200;%101; %this can be smaller (it's used to align the results to the bktoffline)
+            i = 101; % 200 %this can be smaller (it's used to align the results to the bktoffline)
             
             trendLenght = 0;
             trigger1 = 0; % first penetration

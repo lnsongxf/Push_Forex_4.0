@@ -492,6 +492,7 @@ classdef coreState_real02 < handle
             shiftedlead = [ nan(shift,1); lead(1:end-shift) ];
             
             s = sign( closure((end-minTrendLength):end) - shiftedlead((end-minTrendLength):end) );
+            s(s==0)=1;
             
             
             obj.state=0;
@@ -524,12 +525,12 @@ classdef coreState_real02 < handle
                     params.set('trendLength',trendLength);
                     
                     if (trendLength == 1) % record the price when the trend starts
-                        params.set('StartingTrendPrice',closure(end-2));
+                        params.set('StartingTrendPrice',closure(end-1));
                     end
                     
                 else % if the trend is finished, check how long was it and how big (in pips)
                     
-                    if (trendLength >= minTrendLength && abs(closure(end-2)-StartingTrendPrice)> 50 )
+                    if (trendLength >= minTrendLength && abs(closure(end-1)-StartingTrendPrice)> 50 )
                         
                         params.set('trigger1',1); % first penetration present
                         %params.set('timeAfterTrend',1);
@@ -574,7 +575,7 @@ classdef coreState_real02 < handle
                             obj.state = 1;
                             obj.suggestedDirection = -strend;
                             
-                            if strend == 1
+                            if obj.suggestedDirection == 1
                                 volatility = lastPriceMinute - min(low(end-timeAfterTrend:end)) ;
                             else
                                 volatility = max(high(end-timeAfterTrend:end)) - lastPriceMinute ;
@@ -582,6 +583,11 @@ classdef coreState_real02 < handle
                             
                             obj.suggestedTP = max(min(volatility,50),5);
                             obj.suggestedSL = max(min(volatility,50),5);
+                            
+                            params.set('trigger1',0);
+                            params.set('trigger2',0);
+                            params.set('trendLength',0);
+                            params.set('timeAfterTrend',0);
                             
                         end
                         
