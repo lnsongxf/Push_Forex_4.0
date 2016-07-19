@@ -22,11 +22,11 @@
 
             
 nameAlgo = 'bkt_fast_016_double_repo' 
-N =   7 % [4 8 14] % 2:50 % 2:10
-M =   4 % [8 8 8] % 1:8 % 1:8 
+N = 21 % [ 21 22 23 24 25 28 29 45 46] % 2:50 % 7 % [4 8 14] %  2:10
+M =  8 % [ 8 7 8 7 5 4 8 5 4] % 1:8 % 4 % [8 8 8] %  1:8 
 N_greater_than_M = 0              
-Cross = 'EURGBP'            
-histName =    'EURUSD-04-2014-02-2016.csv' % 'EURUSD_smallsample2014_2015.csv' %'EURGBP.csv'  %  'AUDCAD.csv'   %    
+Cross = 'EURUSD'            
+histName =   'EURUSD-04-2014-02-2016.csv' % 'EURUSD_smallsample2014_2015.csv' %  'EURGBP.csv'  %  'AUDCAD.csv'   %    
 actTimeScale = 1             		
 newTimeScale = 60             		
 transCost = 1

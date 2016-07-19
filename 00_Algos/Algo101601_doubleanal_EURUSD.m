@@ -99,7 +99,7 @@ end
 
 
 % controlla se ho dei nuovi dati sulla newTimeScale
-if newTimeScalePoint
+if (newTimeScalePoint && abs(operationState.actualOperation) == 0)
     
     % 01a
     % -------- stationarity Test ------------------- %
@@ -120,8 +120,8 @@ if newTimeScalePoint
     
     % 01c
     % -------- coreState filter -------------------- %
-    cState.core_Algo_016_doubleRepo(lows(1:end-1),highs(1:end-1),chiusure(1:end-1),chiusure(end),params,7,4);
-
+    cState.core_Algo_016_doubleRepo(lows(1:end-1),highs(1:end-1),chiusure(1:end-1),chiusure(end),params,21,8,indexHisData/60);
+    
 end
 
 state = cState.state;

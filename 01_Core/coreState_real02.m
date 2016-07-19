@@ -481,13 +481,14 @@ classdef coreState_real02 < handle
             
         end
         
-        function obj = core_Algo_016_doubleRepo(obj, low, high, closure, lastPriceMinute, params,windowSize, shift)
+        function obj = core_Algo_016_doubleRepo(obj, low, high, closure, lastPriceMinute, params,windowSize, shift, i)
             
-            closePrice=closure;
+            
+            
             minTrendLength = 8; %this is a parameter that can be modified
             
             a = (1/windowSize)*ones(1,windowSize);
-            lead = filter(a,1,closePrice);
+            lead = filter(a,1,closure);
             
             shiftedlead = [ nan(shift,1); lead(1:end-shift) ];
             
@@ -504,15 +505,18 @@ classdef coreState_real02 < handle
             trigger1 = params.get('trigger1'); % first penetration
             trigger2 = params.get('trigger2'); % exit penetration
             
-            if ( trigger1~=0 && timeAfterTrend>15 ) % if too long has passed after the first penetration, reset
+            % nota: timeAfterTrend dev'esser un periodo in meno del bkt
+            % fast xe e' calcolato diversamente (nel fast ho l'indice i che si aggiorna prima)
+            if ( trigger1~=0 && (timeAfterTrend>15) ) % if too long has passed after the first penetration, reset
                 trigger1 = 0;
                 trigger2 = 0;
                 timeAfterTrend = 0;
-                trendLength = 0;                
+                trendLength = 0;
                 params.set('trigger1',0);
                 params.set('trigger2',0);
                 params.set('timeAfterTrend',0);
                 params.set('trendLength',0);
+                display(['passato troppo dalla 1a penetrazione i=' num2str(i)]);
             end
             
             if (trigger1 == 0)
@@ -525,7 +529,9 @@ classdef coreState_real02 < handle
                     params.set('trendLength',trendLength);
                     
                     if (trendLength == 1) % record the price when the trend starts
-                        params.set('StartingTrendPrice',closure(end-1));
+                        StartingTrendPrice=closure(end-1);
+                        params.set('StartingTrendPrice',StartingTrendPrice);
+                        display(['starTrendPrice=' num2str(StartingTrendPrice),', i=', num2str(i)]);
                     end
                     
                 else % if the trend is finished, check how long was it and how big (in pips)
@@ -533,9 +539,17 @@ classdef coreState_real02 < handle
                     if (trendLength >= minTrendLength && abs(closure(end-1)-StartingTrendPrice)> 50 )
                         
                         params.set('trigger1',1); % first penetration present
-                        %params.set('timeAfterTrend',1);
+                        params.set('timeAfterTrend',1);
+                        display(['1a penetrazione i=' num2str(i)]);
                         
-                    else % trend not long enough
+                    elseif (trendLength >= minTrendLength && abs(closure(end-1)-StartingTrendPrice)<= 50 )
+                        
+                        display(['1a penetrazione non riuscita xe deltaP=', num2str(abs(closure(end-1)-StartingTrendPrice)) ,'<=50 i=' num2str(i)]);
+                        params.set('trendLength',0);
+                        params.set('trigger1',0);
+                        params.set('timeAfterTrend',0);
+                        
+                    else % trend not long enough or delta P too small
                         
                         params.set('trendLength',0);
                         params.set('trigger1',0);
@@ -554,7 +568,7 @@ classdef coreState_real02 < handle
                 if (s(end) == strend)
                     
                     params.set('trigger2',1); % exit penetration
-                    
+                    display(['trigger2 a i=' num2str(i)]);
                 end
                 
                 
@@ -569,6 +583,7 @@ classdef coreState_real02 < handle
                             params.set('trigger2',0);
                             params.set('trendLength',0);
                             params.set('timeAfterTrend',0);
+                            display(['2a penetrazione non riuscita xe prezzo troppo vicino a start trend, i=' num2str(i)]);
                             
                         else % if the trend is consistent, open
                             
@@ -576,10 +591,17 @@ classdef coreState_real02 < handle
                             obj.suggestedDirection = -strend;
                             
                             if obj.suggestedDirection == 1
-                                volatility = lastPriceMinute - min(low(end-timeAfterTrend:end)) ;
+                                volatility = lastPriceMinute - min(low(end-timeAfterTrend+1:end)) ;
                             else
-                                volatility = max(high(end-timeAfterTrend:end)) - lastPriceMinute ;
+                                volatility = max(high(end-timeAfterTrend+1:end)) - lastPriceMinute ;
                             end
+                            
+                            display(['volatilityUP=' num2str(lastPriceMinute - min(low(end-timeAfterTrend:end)))]);
+                            display(['volatilityDW=' num2str(max(high(end-timeAfterTrend:end)) - lastPriceMinute)]);
+                            display(['volatilityUP1=' num2str(lastPriceMinute - min(low(end-timeAfterTrend+1:end)))]);
+                            display(['volatilityDW1=' num2str(max(high(end-timeAfterTrend+1:end)) - lastPriceMinute)]);
+                            display(['volatilityUPm1=' num2str(lastPriceMinute - min(low(end-timeAfterTrend-1:end)))]);
+                            display(['volatilityDWm1=' num2str(max(high(end-timeAfterTrend-1:end)) - lastPriceMinute)]);
                             
                             obj.suggestedTP = max(min(volatility,50),5);
                             obj.suggestedSL = max(min(volatility,50),5);
