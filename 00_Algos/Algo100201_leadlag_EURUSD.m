@@ -100,7 +100,7 @@ end
 
 % controlla se ho dei nuovi dati sulla newTimeScale
 if newTimeScalePoint
-    
+
     % 01a
     % -------- stationarity Test ------------------- %
     %st.stationarityTests(chiusure(1:end-1),30,0);

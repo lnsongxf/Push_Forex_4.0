@@ -99,7 +99,7 @@ end
 
 
 % controlla se ho dei nuovi dati sulla newTimeScale
-if (newTimeScalePoint && abs(operationState.actualOperation) == 0)
+if (newTimeScalePoint && abs(operationState.actualOperation) == 0)         % !!! ATTENTION !!! This line is different for this Algo, We get in the core loop only when the operation is closed (no update of suggested TP and SL) 
     
     % 01a
     % -------- stationarity Test ------------------- %
