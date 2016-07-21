@@ -138,10 +138,9 @@ classdef Performance_07 < handle
             % EXAMPLE of use:
             % -------------------------------------------------------------
             % After having created the object with the name: 'objname'
-            % objname=Performance_05;
-            % objname=objname.calcSinglePerformance('real_17','bktWeb','EURUSD',30,1,1000,10,outputBktWeb,1);
+            % p = Performance_07;
+            % p = p.calcSinglePerformance(nameAlgo,'bktWeb',histName,Cross,newTimeScale,transCost,initialStack,Leverage,obj.outputBktOffline,plotPerformance);
             %
-            
             
             if strcmp(origin_,'bktWeb')
                 obj.inputResultsMatrix=inputResultsMatrix_;
@@ -191,7 +190,7 @@ classdef Performance_07 < handle
             % the Algo reading the logs and consider nData before that)
             % b) adjust the historical data using the function fromMT4HystToBktHistorical
             % c) calculate the "bkt" results using bktOffline_02, they will
-            % be saved in inputResultsMatrix1_
+            % be saved in inputResultsMatrix1_  (bkt_Algo_002.outputBktOffline)
             % c) dowload "demo" results and run fromWebPageToMatrix and then save them into inputResultsMatrix2_
             %
             % INPUT parameters:
@@ -217,7 +216,7 @@ classdef Performance_07 < handle
             % -------------------------------------------------------------
             % After having created the object with the name: 'objname'
             % objname=Performance_07;
-            % objname=objname.calcComparedPerformance('real_17','bktWeb','demo','EURUSD',30,1,0,10000,10,bkt_Algo_002.outputBktOffline,outputWP,1);
+            % objname=objname.calcComparedPerformance('real_17','bktWeb','demo','EURUSD',30,1,0,10000,10,inputResultsMatrix1_,inputResultsMatrix2_,1);
             %
             
        
