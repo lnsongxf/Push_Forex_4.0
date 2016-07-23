@@ -1,4 +1,4 @@
-function [outputWP]=fromWebPageToMatrix(AlgoMagicNumber,newTimeScale)
+function [outputWP]=fromWebPageToMatrix(AlgoMagicNumber,newTimeScale, Fullname)
 
 %%% ATTENTION:
 % the input Demo .csv is in a standard format
@@ -8,9 +8,7 @@ function [outputWP]=fromWebPageToMatrix(AlgoMagicNumber,newTimeScale)
 % newTimeScale is the working time frame of the Algo (ex: 30 mins)
 %
 
-filename = 'op03062016';
-filedir = 'C:\Users\alericci\Desktop\Forex 4.0 noShared\performance comparison\';
-Fullname  = strcat(filedir, filename,'.csv');
+%Fullname  = strcat(filedir, filename,'.csv');
 
 fid1 = fopen(Fullname, 'r');
 D = textscan(fid1,'%f%f%f%f%f%f%s%s%f%f%f%s%f%f%f%f%s%f%f', 'Delimiter', ',', 'HeaderLines', 0);

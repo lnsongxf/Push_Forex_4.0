@@ -107,6 +107,13 @@ classdef Performance_07 < handle
     
     methods
         
+        %% Store the properties of this class to a comma separated file
+        function obj = serialize(obj, fileName)
+            fd = fopen(fileName, 'wt');
+            fprintf(fd, '%s\n', obj.nameAlgo);
+            fclose(fd);
+        end
+
         %% Function to calculate all the performance parameters of a single result matrix
         
         function obj=calcSinglePerformance(obj,nameAlgo_,origin_,histName_,cross_,freq_,transCost_,initialStack_,leverage_,inputResultsMatrix_,plotPerformance)
@@ -799,9 +806,7 @@ classdef Performance_07 < handle
             aveDDD=mean(drawDownDuration);
             
         end
-        
-        
-        
+
     end
     
     
