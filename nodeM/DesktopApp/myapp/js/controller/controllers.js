@@ -37,9 +37,113 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
         password: "abc123"
     };
 
+
+    $scope.cross_list = [
+      'AUDNZD',
+      'AUDCAD',
+      'AUDCHF',
+      'AUDJPY',
+      'AUDUSD',
+      'CADJPY',
+      'CADCHF',
+      'CHFJPY',
+      'EURUSD',
+      'EURGBP',
+      'EURAUD',
+      'EURCHF',
+      'EURJPY',
+      'EURNZD',
+      'EURCAD',
+      'GBPUSD',
+      'GBPCHF',
+      'GBPJPY',
+      'GBPAUD',
+      'GBPCAD',
+      'NZDJPY',
+      'NZDUSD',
+      'USDCHF',
+      'USDCAD',
+      'USDJPY'
+    ]
+
+
+    Array.prototype.pushUnique = function (item){
+        if(this.indexOf(item) == -1) {
+        //if(jQuery.inArray(item, this) == -1) {
+            this.push(item);
+            return true;
+        }
+        return false;
+    };
+
+
+    window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
+    window.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || window.msIDBTransaction;
+    window.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange || window.msIDBKeyRange
+    if (!window.indexedDB) {
+       console.log("Your browser doesn't support a stable version of IndexedDB.")
+    }
+
+    $scope.createDb = function(){
+      $scope.db = '';
+      $scope.request = window.indexedDB.open("forecDatabase", 1);
+      $scope.request.onerror = function(event) {
+        console.log("error: ");
+      };
+      $scope.request.onsuccess = function(event) {
+        $scope.db = $scope.request.result;
+        console.log("success: "+ $scope.db);
+      };
+      $scope.request.onupgradeneeded = function(event) {
+        console.log("db onupgradeneeded");
+        $scope.db = event.target.result;
+
+        $scope.cross_list.forEach(function(data,index){
+
+          console.log("data: ",data);
+          var propCSV = data+'_csv';
+          var objectStoreCSV = $scope.db.createObjectStore(propCSV, { autoIncrement : true });
+          objectStoreCSV.createIndex("csv", "csv", { unique: false });
+          objectStoreCSV.createIndex("source", "source", { unique: false });
+          objectStoreCSV.createIndex("platform", "platform", { unique: false });
+          objectStoreCSV.createIndex("from", "from", { unique: false });
+          objectStoreCSV.createIndex("to", "to", { unique: false });
+          objectStoreCSV.createIndex("converted", "converted", { unique: false });
+
+          var propQuote = data+'_m1';
+          var objectStoreQuotes = $scope.db.createObjectStore(propQuote, { autoIncrement : true });
+
+          objectStoreQuotes.createIndex("source", "source", { unique: false });
+          objectStoreQuotes.createIndex("platform", "platform", { unique: false });
+          objectStoreQuotes.createIndex("date", "date", { unique: false });
+          objectStoreQuotes.createIndex("time", "time", { unique: false });
+          objectStoreQuotes.createIndex("open", "open", { unique: false });
+          objectStoreQuotes.createIndex("high", "high", { unique: false });
+          objectStoreQuotes.createIndex("low", "low", { unique: false });
+          objectStoreQuotes.createIndex("close", "close", { unique: false });
+          objectStoreQuotes.createIndex("volume", "volume", { unique: false });
+         
+        
+        });
+      }
+    }
+
+    
+    var DBDeleteRequest = window.indexedDB.deleteDatabase("forecDatabase");
+    DBDeleteRequest.onerror = function(event) {
+      console.log("Error deleting database.");
+    };
+    DBDeleteRequest.onsuccess = function(event) {
+      console.log("Database deleted successfully");
+      console.log(request.result); // should be null
+      $scope.createDb();
+    };
+
+
+
     $scope.activeWorker = [];
 
-    $scope.startBacktest = function(cross_list,from,to){
+    $scope.startBacktest = function(cross_list,from,to,platform,source){
 
       var domain = "C:/4CastersApp/";
       if(!fs.existsSync(domain+"historyQuotes/")){
@@ -107,26 +211,44 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
                   console.log("sending data to worker");
                   
                   setTimeout(function(){
-                    current_worker.worker.postMessage({'d':crosses_data,'type':'initialHistoryQuotes'});  
+                    current_worker.worker.postMessage({'platform':platform,'brokerName':source,'type':'initialAlgoSetting'}); 
                   },1000);
+
+                  setTimeout(function(){
+                    current_worker.worker.postMessage({'d':crosses_data,'type':'initialHistoryQuotes'});  
+                  },5000);
                   
                   current_worker.sockSub.subscribe('NEWTOPICFROMSIGNALPROVIDER');
                   // LISTEN ALL MESSAGES FROM SIGNAL PROVIDER AND REDIRECT ALL THE MESSAGE TO WORKER
                   current_worker.sockSub.on('message', function() {
-                    current_worker.worker.postMessage({'d': arguments,'type':'messageFromSignalProvider'});
+
+                    var data = [];//messageSub.toString().split(" ");
+                    Array.prototype.slice.call(arguments).forEach(function(arg) {
+                        data.push(arg.toString());
+                    });
+
+                    console.log("message from signal provider: ",data);
+                    current_worker.worker.postMessage({'d': data,'type':'messageFromSignalProvider'});
                   });
 
                   // LISTEN ALL MESSAGE FROM THE WORKER AND SEND ALL THE MESSAGE TO SIGNALPROVIDER 
                   current_worker.worker.addEventListener('message',  function(event){
                     if ( event.data.type == 'sendQuoteToSignalProvider' ) {
+                      console.log("sendQuoteToSignalProvider: ",event.data.d);
                       current_worker.sockPub.send(event.data.d);
                     }else if (event.data.type == 'sendStatusToSignalProvider') {
+                      console.log("sendStatusToSignalProvider...",event.data.d);
                       current_worker.sockPub.send(event.data.d);
                     }else if (event.data.type == 'subscribe') {
                       current_worker.sockSub.subscribe(event.data.d);
                     }else if (event.data.type == 'unsubscribe') {
                       current_worker.sockSub.unsubscribe(event.data.d);
-                    }
+                    }else if (event.data.type == 'backtestFinished') {
+                      console.log('backtestFinished: ',event.data.d);
+                      // finish backtest
+                      //send message to close matlab socket 
+                      current_worker.sockPub.send(['SYSTEMSTATUS','BACKTESTFINISHED']);
+                    };
                   });
 
                   // PUSH THE WORKER IN THE ACTIVE WORKERS ARRAY
@@ -134,13 +256,6 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
                 }else{
                     //document.getElementById("result").innerHTML = "Sorry! No Web Worker support.";
                 }
-
-
-
-
-
-
-
 
 
 
@@ -163,42 +278,268 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
 
       //for(var i=0; i<=cross_list.length-1; i++){
       var callback_number = 0;
-      var get_quotes = function(cross,length,from,to){ 
+      var crossArr = [];
 
-        //CHECK IN DATABASE IF WE ALREADY HAVE THIS CROSS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      var updateResults = function(platform,source,cross,timeFrame,from,to,dataLenght){
+        callback_number++;
+        crosses_data.push({platform:platform,source:source,cross:cross,timeFrame:timeFrame,from:from,to:to,dataLenght:length});
+        console.log("02: ",crosses_data[callback_number-1]);
+        if( callback_number == cross_list.length){
+          console.log(" create worker");
+          $scope.c.end();
+          create_worker();
+        }else if ( callback_number < cross_list.length ) {
+          console.log("continue to download");
+          get_quotes(platform,source,cross_list[callback_number].cross,cross_list[callback_number].dataLenght,from,to);            
+        };
+      }
 
-        //EX: 'history_backtest/EURGBP_2016-01-21_2016-05-17.csv'
-        var quotes_query = 'Algos/history_backtest/'+cross+'_'+from+'_'+to+'.csv';
-        var store_history_in_memory = ""; // Will store the contents of the file 
-        $scope.c.on('ready', function() {
-          $scope.c.get(quotes_query, function(err, stream) {
-            if (err){ console.log("error ftp: ",err ) }
-            stream.once('close', function() { 
-              console.log("store_history_in_memory: ",store_history_in_memory);  
-              callback_number++;
-              crosses_data.push({cross:cross,history_quotes:store_history_in_memory,from:from,to:to,dataLenght:length});
-              console.log("02: ",crosses_data[callback_number-1]);
-              if( callback_number == cross_list.length){
-                console.log("03 create worker");
-                $scope.c.end();
-                create_worker();
-              }else if ( callback_number < cross_list.length ) {
-                console.log("continue to download");
-                get_quotes(cross_list[callback_number].cross,cross_list[callback_number].dataLenght,from,to);            
-              };
-            });
-            stream.on('data', function(chunk) {
-              store_history_in_memory+=chunk.toString();
-            });
-            //stream.pipe(fs.createWriteStream('foo.local-copy.txt'));
-          });
-        });
+      var get_quotes = function(platform,source,cross,length,timeFrame,asked_history_from,asked_history_to){ 
+
+        var isCrossArrUpdated = crossArr.pushUnique(cross);
+
+        if (isCrossArrUpdated == true) {
+
+          setTimeout(function(){
+            //CHECK IN DATABASE IF WE ALREADY HAVE THIS CROSS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            var download_history = '';
+            var key0 = cross+'_csv';
+
+            var transaction = $scope.db.transaction([key0]);
+            var objectStore = transaction.objectStore(key0);
+            var request = objectStore.openCursor();
+
+            var foundRecord = 0;
+            var createNewRecord = 0;
+            var download_from = '';
+            var download_to = '';
+            var new_local_history_from = '';
+            var new_local_history_to = '';
+
+            request.onsuccess = function(event) {
+              console.log("event: ",event);
+              console.log("event.target.result.value length: ",event.target.result);
+
+
+              var cursor = event.target.result;
+              if (cursor) {
+                console.log("matchArrValues: ",request1.result.value);
+
+                if (request.result.value.source == source && request.result.value.platform == platform ) {
+                  foundRecord = 1;
+
+
+
+                  console.log("event.target.result.value.length > 0");
+                  //check if date range is included in the old history
+
+                  if ( new Date(event.target.result.value.from) <= new Date(asked_history_from) && new Date(event.target.result.value.to) >= new Date(asked_history_to)  ) {
+                    console.log("download_history = 0");
+                    download_history = 0;
+                    new_local_history_from = event.target.result.value.from;
+                    new_local_history_to = event.target.result.value.to;
+                  }else{
+
+                    if ( new Date(event.target.result.value.from) > new Date(asked_history_from) && new Date(event.target.result.value.from) >= new Date(asked_history_to)) {
+                      //START from END event.target.result.value.from
+                      download_from = asked_history_from;
+                      var tmpDate = new Date(event.target.result.value.from);
+                      tmpDate.setDate(tmpDate.getDate() - 1);
+                      download_to = tmpDate.getFullYear()+'.'+(tmpDate.getMonth()+1)+'.'+tmpDate.getDate();
+                      new_local_history_from = asked_history_from;
+                      new_local_history_to = event.target.result.value.to;
+                    }else if ( new Date(event.target.result.value.from) > new Date(asked_history_from) && new Date(event.target.result.value.from) < new Date(asked_history_to) && new Date(event.target.result.value.to) >= new Date(asked_history_to)) {
+                      //START from END event.target.result.value.from
+                      download_from = asked_history_from;
+                      var tmpDate = new Date(event.target.result.value.from);
+                      tmpDate.setDate(tmpDate.getDate() - 1);
+                      download_to = tmpDate.getFullYear()+'.'+(tmpDate.getMonth()+1)+'.'+tmpDate.getDate();
+                      new_local_history_from = asked_history_from;
+                      new_local_history_to = event.target.result.value.to;
+                    }else if ( new Date(event.target.result.value.from) < new Date(asked_history_from) && new Date(event.target.result.value.to) >= new Date(asked_history_from) && new Date(event.target.result.value.to) < new Date(asked_history_to)) {
+                      //START event.target.result.value.to END to
+                      var tmpDate = new Date(event.target.result.value.to);
+                      tmpDate.setDate(tmpDate.getDate() + 1);
+                      download_from = tmpDate.getFullYear()+'.'+(tmpDate.getMonth()+1)+'.'+tmpDate.getDate();
+                      download_to = asked_history_to;
+                      new_local_history_from = event.target.result.value.from;
+                      new_local_history_to = asked_history_to;
+                    }else if ( new Date(event.target.result.value.to) < new Date(asked_history_to) && new Date(event.target.result.value.to) <= new Date(asked_history_from)) {
+                      //START event.target.result.value.to END to
+                      var tmpDate = new Date(event.target.result.value.to);
+                      tmpDate.setDate(tmpDate.getDate() + 1);
+                      download_from = tmpDate.getFullYear()+'.'+(tmpDate.getMonth()+1)+'.'+tmpDate.getDate();
+                      download_to = asked_history_to;
+                      new_local_history_from = event.target.result.value.from;
+                      new_local_history_to = asked_history_to;
+                    };
+
+                    console.log("download_history = 1");
+                    console.log("download_from: ",download_from);
+                    console.log("download_to: ",download_to);
+                    download_history = 1; 
+                  }
+
+
+                }else{
+                  console.log("no right platform and source");
+                  cursor.continue();
+                }
+
+              }else{
+
+                console.log("end cursor");
+                if (foundRecord == 0) {
+                  console.log("event.target.result.value.length = 0 ");
+                  download_history = 1;
+                  createNewRecord = 1;
+                  download_from = asked_history_from;
+                  download_to = asked_history_to;
+                  new_local_history_from = asked_history_from;
+                  new_local_history_to = asked_history_to;
+                };
+
+
+
+                if (download_history == 1) {
+                  console.log("download history = 1");
+                  //EX: 'history_backtest/EURGBP_2016-01-21_2016-05-17.csv'
+                  var startAsk = download_from.split(' ')[0]+'_'+download_from.split(' ')[1].split(':')[0]+'-'+download_from.split(' ')[1].split(':')[1];
+                  var stopAsk = download_to.split(' ')[0]+'_'+download_to.split(' ')[1].split(':')[0]+'-'+download_to.split(' ')[1].split(':')[1];
+                  
+                  var quotes_query = 'Algos/history_backtest/'+cross+'_'+startAsk+'_'+stopAsk+'.csv';
+                  console.log("get quote.."+quotes_query);
+                  var store_history_in_memory = ""; // Will store the contents of the file 
+                  $scope.c.connect(connectionProperties);
+                  $scope.c.on('ready', function() {
+                    console.log("ftp ready");
+                    $scope.c.get(quotes_query, function(err, stream) {
+                      if (err){ 
+                        console.log("error ftp: ",err ); 
+                      }
+                      stream.once('close', function() { 
+                        console.log("store_history_in_memory! "); 
+
+
+                        if (createNewRecord == 1) {
+
+                          console.log("create new Record = 1");
+
+                          var propCSV = cross+'_csv';
+                          var objectStore = $scope.db.transaction([propCSV], "readwrite").objectStore(propCSV);
+                          var row = {source:source,platform:platform,from:new_local_history_from, to:new_local_history_to,csv:store_history_in_memory, converted:0 };
+                          store_history_in_memory = null;
+                          var request = objectStore.add(  row  );
+
+                          request.onsuccess = function(event) {
+                            console.log("created csv row in db");
+                            row = null;
+                            updateResults(platform,source,cross,timeFrame,asked_history_from,asked_history_to,length);
+                          };
+                          request.onerror = function(event) {
+                            console.log("Error to create csv row in DB");
+                          };
+
+
+                        }else if (createNewRecord == 0) {
+
+                          console.log("create new Record = 0");
+
+                          var propCSV = cross+'_csv';
+                          var objectStore = $scope.db.transaction([propCSV], "readwrite").objectStore(propCSV);
+                          var request = objectStore.openCursor();
+                          request.onsuccess = function(event) {
+
+
+                            if (cursor) {
+                              console.log("matchArrValues: ",request.result.value);
+
+                              if (request.result.value.source == source && request.result.value.platform == platform ) {
+
+                                resultDb = cursor.value;
+                                console.log("event: ",event);
+                                var cursor = event.target.result;
+
+                                resultDb.csv = store_history_in_memory;
+                                resultDb.converted = 0;
+                                resultDb.from = new_local_history_from;
+                                resultDb.to = new_local_history_to;
+                                var requestUpdate = cursor.update(resultDb);
+
+                                requestUpdate.onerror = function(event) {
+                                  console.log("Error to update csv row on DB");
+                                  store_history_in_memory = null;
+                                  resultDb = null;
+                                };
+                                requestUpdate.onsuccess = function(event) {
+                                  console.log("Updated csv row on DB");
+                                  resultDb = null;
+                                  store_history_in_memory = null;
+                                };
+                              }else{
+                                console.log("no right platform and source");
+                                cursor.continue();
+                              }
+
+                            }else{
+                              console.log("cursor closed");
+                              updateResults(platform,source,cross,timeFrame,asked_history_from,asked_history_to,length);
+                            }
+                          };
+                        }
+
+                        /*var objectStore = transaction.objectStore(key1);
+                        var row = {source:source,platform:platform,from:new_local_history_from, to:new_local_history_to, timeFrameObj:'',csv:store_history_in_memory, converted:0 };
+
+                        store_history_in_memory = null;
+                        var request = objectStore.add(  row  );
+
+                        request.onsuccess = function(event) {
+                          console.log("data uploaded in db");
+                          row = null;
+                          updateResults(platform,source,cross,timeFrame,asked_history_from,asked_history_to,length);
+                        };*/
+
+
+                      });
+                      stream.on('data', function(chunk) {
+                        console.log("data :",chunk.toString());
+                        store_history_in_memory+=chunk.toString();
+                      });
+                      //stream.pipe(fs.createWriteStream('foo.local-copy.txt'));
+                    });
+                  });
+                }else{
+                  console.log("download history = 0");
+                  updateResults(platform,source,cross,timeFrame,asked_history_from,asked_history_to,length);
+                }
+
+
+
+
+
+
+
+
+              }
+             
+            };
+          },3000);
+
+        }else{
+          console.log("isCrossArrUpdated = false. This CROSS is already been processed");
+          updateResults(platform,source,cross,timeFrame,asked_history_from,asked_history_to,length);
+        }
+
+
+
+
       };
-      $scope.c.connect(connectionProperties);
-      get_quotes(cross_list[0].cross,cross_list[0].dataLenght,from,to);      
+      
+      get_quotes(platform,source,cross_list[0].cross,cross_list[0].dataLenght,cross_list[0].timeFrame,from,to);      
     }
 
-    $scope.startBacktest([{'cross':'EURGBP','dataLenght':'v5'}],'2016-01-21','2016-05-17');
+    $scope.startBacktest([{'cross':'EURGBP','timeFrame':'m1','dataLenght':'v5'}],'2016-01-21 13:47','2016-05-17 14:04','MT4','ACTIVETRADES');
 
     //////////////////////////////Config panel//////////////////
     $scope.openPanel = false;
@@ -246,36 +587,6 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
       '100'
     ];
 
-    
-
-    $scope.cross_list = [
-      'AUDNZD',
-      'AUDCAD',
-      'AUDCHF',
-      'AUDJPY',
-      'AUDUSD',
-      'CADJPY',
-      'CADCHF',
-      'CHFJPY',
-      'EURUSD',
-      'EURGBP',
-      'EURAUD',
-      'EURCHF',
-      'EURJPY',
-      'EURNZD',
-      'EURCAD',
-      'GBPUSD',
-      'GBPCHF',
-      'GBPJPY',
-      'GBPAUD',
-      'GBPCAD',
-      'NZDJPY',
-      'NZDUSD',
-      'USDCHF',
-      'USDCAD',
-      'USDJPY',
-      'USDCHF'
-    ]
 
     
     $scope.updateDb = function(search,query,callback){  
@@ -528,24 +839,24 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
     
 
     var reader;
-  	
+    
 
-  	$scope.copyFile = function(source, target, name, cb) {
+    $scope.copyFile = function(source, target, name, cb) {
      
-    	var cbCalled = false;
+      var cbCalled = false;
 
-      	var total=fs.statSync(source).size;
-      	console.log("size data 1: "+total);
-      	var rd = fs.createReadStream(source);
-      	rd.on("error", function(err) {
-        	console.log("error0: ",err);
-        	done(err,name);
-      	});
-      	var wr = fs.createWriteStream(target);
-      	wr.on("error", function(err) {
-        	console.log("error1: "+err);
-        	done(err,name);
-      	});
+        var total=fs.statSync(source).size;
+        console.log("size data 1: "+total);
+        var rd = fs.createReadStream(source);
+        rd.on("error", function(err) {
+          console.log("error0: ",err);
+          done(err,name);
+        });
+        var wr = fs.createWriteStream(target);
+        wr.on("error", function(err) {
+          console.log("error1: "+err);
+          done(err,name);
+        });
         wr.on("close", function(ex) {
           console.log('close write file 1: ',name);
           done('200',name);
@@ -554,32 +865,32 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
           console.log('pipe 1: ',name);
           //done('200',name);
         });
-      	rd.pipe(wr);
-      	var sent=0;
+        rd.pipe(wr);
+        var sent=0;
         $('#new_algo_cont').slideDown("fast");
-      	$('#progress_bar').fadeTo(0,1);
-      	rd.on('data',function(data){
-        	sent += data.length;
+        $('#progress_bar').fadeTo(0,1);
+        rd.on('data',function(data){
+          sent += data.length;
           if (sent == total) {
             console.log("finish");
             wr.close(function () {
               console.log('closing write file 1: ',name);
             });
           };
-        	$('#progress_bar').find('.percent').width( Math.floor(sent / total * 100)+ '%' );
-        	$('#progress_bar').find('.percent').text(Math.floor(sent / total * 100) + '%');
-      	});
+          $('#progress_bar').find('.percent').width( Math.floor(sent / total * 100)+ '%' );
+          $('#progress_bar').find('.percent').text(Math.floor(sent / total * 100) + '%');
+        });
        
 
-      	function done(status,name) {
+        function done(status,name) {
           console.log('done write file: ',name);
           console.log('done write file: ',status);
           console.log('close write file: ',cbCalled);
-        	if (!cbCalled) {
-          		cb(status,name);
-          		cbCalled = true;
-        	}
-      	}
+          if (!cbCalled) {
+              cb(status,name);
+              cbCalled = true;
+          }
+        }
     }
 
     $scope.deletAllFilesInFolder = function(dirPath){
@@ -614,25 +925,25 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
       });*/
     }
 
-  	$scope.handleFileSelect = function(evt) {
-		  evt.stopPropagation();
-    	evt.preventDefault();
-    	$('#progress_bar').find('.percent').width( '0%' );
+    $scope.handleFileSelect = function(evt) {
+      evt.stopPropagation();
+      evt.preventDefault();
+      $('#progress_bar').find('.percent').width( '0%' );
       $('#progress_bar').find('.percent').text( '0%');
 
-    	var dt = evt.dataTransfer;
-    	var files = dt.files;
-    	console.log("files: ",files);
+      var dt = evt.dataTransfer;
+      var files = dt.files;
+      console.log("files: ",files);
 
-    	for (var i=0; i<files.length; i++) {
-      	var file = files[i];
-      	console.log("file.path: "+file.path);
+      for (var i=0; i<files.length; i++) {
+        var file = files[i];
+        console.log("file.path: "+file.path);
         console.log("file.name: "+file.name);
-      	if(!fs.existsSync($scope.domain)){
-          	fs.mkdir($scope.domain, 0766, function(err){
-             		if(err){console.log("ERROR! Can't make the directory: "+err)}
-          	});  
-      	}
+        if(!fs.existsSync($scope.domain)){
+            fs.mkdir($scope.domain, 0766, function(err){
+                if(err){console.log("ERROR! Can't make the directory: "+err)}
+            });  
+        }
         if(!fs.existsSync($scope.domain+"tempFile")){
           fs.mkdir($scope.domain+"tempFile", 0766, function(err){
             if(err){console.log("ERROR! Can't make the directory: "+err)}
@@ -657,8 +968,8 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
             } 
           });
         }
-    	} 
-  	}
+      } 
+    }
 
     $scope.dataServers = [
       {

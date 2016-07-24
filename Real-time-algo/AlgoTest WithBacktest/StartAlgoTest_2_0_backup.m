@@ -1,10 +1,6 @@
 function StartAlgoTest_2_0(varargin)
 
-
-
-ListS = {{}};
 password = 'pushit2015';
-init = 1;
 %(nargin > 2)
 %    error('StartAlgo only accepts IP and password as parameters input');
 %end
@@ -23,9 +19,12 @@ zmq.core.connect(socket, address);
 %SET PUBLISHER SOCKET
 portPub = str2num(varargin{3});
 addressPub = sprintf(add, portPub);
-zmq.core.connect(socket_pub, addressPub);
+zmq.core.connect(socket_pub, 'tcp://127.0.0.1:53662');
+display('in0');
 
-pause(5);
+zmq.core.send(socket_pub, uint8('NEWTOPICFROMSIGNALPROVIDER'), 'ZMQ_SNDMORE')
+zmq.core.send(socket_pub, uint8('111111111111111111111111111111111111111'))
+display('in1');
 % SETTING TOPICS PUB AND SUB
 % EX: OPERATIONS@ACTIVTRADES@AUDCAD@9999  -->  PUB TOPIC
 % EX: TIMEFRAMEQUOTE@MT4@ACTIVTRADES@EURUSD@m1@v1  -->  SUB TOPIC
@@ -40,24 +39,23 @@ for k = 1:nVarargs
     messageBody = varargin{k};
     zmq.core.send(socket_pub, uint8(newTopicPub), 'ZMQ_SNDMORE');
     zmq.core.send(socket_pub, uint8(messageBody));
-  elseif ( strcmp(C{1},'SKIP')==1 )
-    %display(strcat('setting topic pub: ', varargin{k}));
-    messageBody = varargin{k};
-    zmq.core.send(socket_pub, uint8(newTopicPub), 'ZMQ_SNDMORE');
-    zmq.core.send(socket_pub, uint8(messageBody));
   elseif ( strcmp(C{1},'TIMEFRAMEQUOTE')==1 )
       %display(strcat('setting topic sub: ', varargin{k}));
-      ListS{1}{end+1} = varargin{k};
       zmq.core.setsockopt(socket, 'ZMQ_SUBSCRIBE', varargin{k});
   elseif ( strcmp(C{1},'STATUS')==1 )
       %display(strcat('setting topic pub & sub: ', varargin{k}));
       messageBody = varargin{k};
       zmq.core.send(socket_pub, uint8(newTopicPub), 'ZMQ_SNDMORE');
       zmq.core.send(socket_pub, uint8(messageBody));
-      ListS{1}{end+1} = varargin{k};
       zmq.core.setsockopt(socket, 'ZMQ_SUBSCRIBE', varargin{k});
   end
 end
+
+
+zmq.core.disconnect(socket, address);
+zmq.core.close(socket);
+zmq.core.ctx_shutdown(context);
+zmq.core.ctx_term(context);
 
 while 1
     try
@@ -76,8 +74,8 @@ while 1
     if isMember == 1
         topicName = message;
         messageBody = char(zmq.core.recv(socket, 102400));
-        [topicPub, messagePub]=onlineAlgoTest_client_backtest(topicName,messageBody,init);
-        init = 0;
+        
+        [topicPub, messagePub]=onlineAlgoTest_client_backtest(topicName,messageBody,password);
         if (~isempty( messagePub) && strcmp(messagePub,'') ==0)
             display(strcat('Topic: ', topicPub));
             display(strcat('Message: ', messagePub));
@@ -94,8 +92,4 @@ zmq.core.disconnect(socket, address);
 zmq.core.close(socket);
 zmq.core.ctx_shutdown(context);
 zmq.core.ctx_term(context);
-zmq.core.disconnect(socket_pub, address);
-zmq.core.close(socket_pub);
-zmq.core.ctx_shutdown(contextPub);
-zmq.core.ctx_term(contextPub);
 end

@@ -1,5 +1,50 @@
 console.log("started worker");
 
+var db;
+
+
+Array.prototype.appendArr = function (other_array,source,platform) {
+    /* you should include a test to check whether other_array really is an array */
+    other_array.forEach(function(v) {
+    	var tmpQuote = v.toString().split(',');
+    	var date = tmpQuote[0];
+    	var time = tmpQuote[1];
+    	var dateTime = tmpQuote[0]+" "+tmpQuote[1];
+    	var open = tmpQuote[2];
+    	var high = tmpQuote[3];
+    	var low = tmpQuote[4];
+    	var close = tmpQuote[5];
+    	var volume = tmpQuote[6];
+    	var row = {source:source, platform:platform, date:date, time:time, open:open, high:high, low:low, close:close, volume:volume};
+    	this.push(row)
+    }, this);    
+}
+Array.prototype.prependArr = function (other_array,source,platform) {
+    /* you should include a test to check whether other_array really is an array */
+    other_array.forEach(function(v) {
+    	var tmpQuote = v.toString().split(',');
+    	var date = tmpQuote[0];
+    	var time = tmpQuote[1];
+    	var dateTime = tmpQuote[0]+" "+tmpQuote[1];
+    	var open = tmpQuote[2];
+    	var high = tmpQuote[3];
+    	var low = tmpQuote[4];
+    	var close = tmpQuote[5];
+    	var volume = tmpQuote[6];
+    	var row = {source:source, platform:platform, date:date, time:time, open:open, high:high, low:low, close:close, volume:volume};
+    	this.unshift(row);
+    }, this);    
+}
+
+Array.prototype.pushUnique = function (item){
+    if(this.indexOf(item) == -1) {
+    //if(jQuery.inArray(item, this) == -1) {
+        this.push(item);
+        return true;
+    }
+    return false;
+};
+
 if (!Array.prototype.last){
     Array.prototype.last = function(){
         return this[this.length - 1];
@@ -38,7 +83,7 @@ var QuotesModule = (function(){
 		        }
 		    }
 		}
-		console.log("created new TimeFrameQuotesObj: "+JSON.stringify(_quotesObj)+ " providerName: "+providerName);  
+		console.log("created new TimeFrameQuotesObj: providerName: "+providerName);  
 		return _quotesObj
 	};
 
@@ -197,7 +242,7 @@ var QuotesModule = (function(){
 				}
 			}else{
 				if (cross == 'EURUSD') {
-					console.log('Error on timeframe '+timeFrame+', cross '+ cross+' tmpArrPreviousTimeFrameQuotesV10 :'+JSON.stringify(tmpArrPreviousTimeFrameQuotesV10) );
+					//console.log('Error on timeframe '+timeFrame+', cross '+ cross+' tmpArrPreviousTimeFrameQuotesV10 :'+JSON.stringify(tmpArrPreviousTimeFrameQuotesV10) );
 				}
 			}
 
@@ -208,8 +253,8 @@ var QuotesModule = (function(){
 
 		if (timeFrame == 'm1' || timeFrame == 'm30' || timeFrame == 'm15'){ 
 			if( cross == 'EURUSD' ) {
-				console.log('Creating new quote - Cross:'+cross+' timeframe:'+timeFrame+' newQuote:'+newQuote);
-				console.log('Resetting values for cross '+cross+' timeframe '+timeFrame+' : '+JSON.stringify(runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][cross][timeFrame]) );
+				//console.log('Creating new quote - Cross:'+cross+' timeframe:'+timeFrame+' newQuote:'+newQuote);
+				//console.log('Resetting values for cross '+cross+' timeframe '+timeFrame+' : '+JSON.stringify(runningProviderRealTimeObjs[tmpRealTimeQuoteProperty][cross][timeFrame]) );
 			}
 		};
 
@@ -268,15 +313,15 @@ var QuotesModule = (function(){
 		  				if (realTimeQuotesObj.hasOwnProperty(key1)) {
 		  					if (key0 == key1 && key0 != "provider" && key0 != "description") {
 
-		  						console.log("TIMEFRAME TO UPDATE: "+timeFrame);
+		  						//console.log("TIMEFRAME TO UPDATE: "+timeFrame);
 								
 	  							//AND WE CLEAN THE REAL TIME ARRAY OBJ. THIS RRAY STORE THE LAST REALTIME VALUES INTO ON1 MINUTE
 			  						var newQuote = _createNewQuote(tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty,key0,timeFrame);
 
 			  						var tmpNewQuote = newQuote.split(',');
 			  						if ( tmpNewQuote[0] != null && tmpNewQuote[1] != null && tmpNewQuote[2] != null && tmpNewQuote[3] != null && tmpNewQuote[0] != 'null' && tmpNewQuote[1] != 'null' && tmpNewQuote[2] != 'null' && tmpNewQuote[3] != 'null') {
-				  						for (var j = 0; j <= timeFrameQuotesObj[key1][index][timeFrame].length - 1; j++) {
-				  							tempObj = timeFrameQuotesObj[key1][index][timeFrame][j];
+				  						//for (var j = 0; j <= timeFrameQuotesObj[key1][index][timeFrame].length - 1; j++) {
+				  							tempObj = timeFrameQuotesObj[key1][index][timeFrame][0];
 
 					  						if (tempObj[Object.keys(tempObj)[0]].length < Object.keys(tempObj)[0].split("v")[1] ){
 		
@@ -319,7 +364,7 @@ var QuotesModule = (function(){
 		
 				  								if (realTimeQuotesObj[key0] != "" && realTimeQuotesObj[key0] != null && realTimeQuotesObj[key0] != undefined) {
 		
-					  								tempObj[Object.keys(tempObj)[0]].shift();
+					  								//tempObj[Object.keys(tempObj)[0]].shift();
 					  								
 					  								tempObj[Object.keys(tempObj)[0]].push(newQuote);
 
@@ -346,8 +391,8 @@ var QuotesModule = (function(){
 													//};
 					  							}
 					  						}
-					  						timeFrameQuotesObj[key1][index][timeFrame][j] = tempObj;
-				  						}
+					  						timeFrameQuotesObj[key1][index][timeFrame][0] = tempObj;
+				  						//}
 				  					}
 			  					
 		  						//uncomment this file if you want to check how are stored the quotes values
@@ -396,19 +441,7 @@ var configQuotesList = {
 }
 
 
-var runningProviderTimeFrameObjs = {};
-var runningProviderRealTimeObjs = {};
 
-var newObjTimeFrameQuote = "TIMEFRAMEQUOTE$BACKTEST$BACKTEST";
-var newObjRealTimeQuote = "REALTIMEQUOTE$BACKTEST$BACKTEST";
-var newValuePropertyTimeFrameQuote = "TIMEFRAMEQUOTE@BACKTEST@BACKTEST";
-var newValuePropertyRealTimeQuote = "REALTIMEQUOTE@BACKTEST@BACKTEST";  
-runningProviderTimeFrameObjs[newObjTimeFrameQuote] = QuotesModule.createTimeFrameQuotesObj(configQuotesList,newValuePropertyTimeFrameQuote);
-runningProviderRealTimeObjs[newObjRealTimeQuote] = QuotesModule.createRealTimeQuotesObj(configQuotesList,newValuePropertyRealTimeQuote);
-
-var tmpTimeFrameQuoteProperty = "TIMEFRAMEQUOTE$BACKTEST$BACKTEST";
-var tmpRealTimeQuoteProperty = "REALTIMEQUOTE$BACKTEST$BACKTEST";
-var searchObjRealTimeQuote = "REALTIMEQUOTE$BACKTEST$BACKTEST";
 
 /*   EURGBP_2016-01-21_2016-05-17
 52.33.13.29   trader abc123
@@ -481,82 +514,341 @@ var CSVToArray = function( strData, strDelimiter ){
     return( arrData );
 }
 
+var startToSendQuote = true;
+var newObjTimeFrameQuote = "";
+var newObjRealTimeQuote = "";
+var newValuePropertyTimeFrameQuote = "";
+var newValuePropertyRealTimeQuote = ""; 
+var tmpTimeFrameQuoteProperty = "";
+var tmpRealTimeQuoteProperty = "";
+var searchObjRealTimeQuote = ""; 
 
+var runningProviderTimeFrameObjs = {};
+var runningProviderRealTimeObjs = {};
 
-var tmpTimeFrameQuoteProperty = "TIMEFRAMEQUOTE$BACKTEST$BACKTEST";
+var platform = "";
+var brokerName = "";
 //EX Setting: {cross:'EURUSD','dataLenght':'v1'},{cross:'EURGBP','dataLenght':'v10'}
 var setting = [];
 var indexQuote = 1;
+
+
+var updateTimeFrameObjLocal = function(messageArr,i){
+
+	var result = QuotesModule.updateRealTimeQuotesObj(searchObjRealTimeQuote,messageArr);
+
+	var timeFrameToUpdate = 'm1';   //m1,m5,m15,m30,h1,h4,d1,w1
+	var new_timeFrameQuotesObj = QuotesModule.updateTimeFrameQuotesObj(timeFrameToUpdate,runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty],runningProviderRealTimeObjs[tmpRealTimeQuoteProperty],tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty);
+	runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty] = new_timeFrameQuotesObj;
+
+	if ( (i%5) == 0 ) {
+		timeFrameToUpdate = 'm5';   //m1,m5,m15,m30,h1,h4,d1,w1
+		new_timeFrameQuotesObj = QuotesModule.updateTimeFrameQuotesObj(timeFrameToUpdate,runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty],runningProviderRealTimeObjs[tmpRealTimeQuoteProperty],tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty);
+		runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty] = new_timeFrameQuotesObj;
+	};
+	if ( (i%15) == 0 ) {
+		timeFrameToUpdate = 'm15';   //m1,m5,m15,m30,h1,h4,d1,w1
+		new_timeFrameQuotesObj = QuotesModule.updateTimeFrameQuotesObj(timeFrameToUpdate,runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty],runningProviderRealTimeObjs[tmpRealTimeQuoteProperty],tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty);
+		runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty] = new_timeFrameQuotesObj;
+	};
+	if ( (i%30) == 0 ) {
+		timeFrameToUpdate = 'm30';   //m1,m5,m15,m30,h1,h4,d1,w1
+		var new_timeFrameQuotesObj = QuotesModule.updateTimeFrameQuotesObj(timeFrameToUpdate,runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty],runningProviderRealTimeObjs[tmpRealTimeQuoteProperty],tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty);
+		runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty] = new_timeFrameQuotesObj;
+	};
+	if ( (i%60) == 0) { 
+		timeFrameToUpdate = 'h1';   //m1,m5,m15,m30,h1,h4,d1,w1
+		var new_timeFrameQuotesObj = QuotesModule.updateTimeFrameQuotesObj(timeFrameToUpdate,runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty],runningProviderRealTimeObjs[tmpRealTimeQuoteProperty],tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty);
+		runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty] = new_timeFrameQuotesObj;
+	};
+	if ( (i%240) == 0 ) {
+		timeFrameToUpdate = 'h4';   //m1,m5,m15,m30,h1,h4,d1,w1
+		var new_timeFrameQuotesObj = QuotesModule.updateTimeFrameQuotesObj(timeFrameToUpdate,runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty],runningProviderRealTimeObjs[tmpRealTimeQuoteProperty],tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty);
+		runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty] = new_timeFrameQuotesObj;
+	};
+	if ( (i%1440) == 0 ) {
+		timeFrameToUpdate = 'd1';   //m1,m5,m15,m30,h1,h4,d1,w1
+		var new_timeFrameQuotesObj = QuotesModule.updateTimeFrameQuotesObj(timeFrameToUpdate,runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty],runningProviderRealTimeObjs[tmpRealTimeQuoteProperty],tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty);
+		runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty] = new_timeFrameQuotesObj;
+	};
+	if ( (i%7200) == 0 ) {
+		timeFrameToUpdate = 'w1';   //m1,m5,m15,m30,h1,h4,d1,w1
+		var new_timeFrameQuotesObj = QuotesModule.updateTimeFrameQuotesObj(timeFrameToUpdate,runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty],runningProviderRealTimeObjs[tmpRealTimeQuoteProperty],tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty);
+		runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty] = new_timeFrameQuotesObj;
+	};
+	return true;
+}
+
+
+
+
+var searchHistoryQuoteInDb = function(platform,source,cross,from,to){
+
+	var iteration = 0;
+	var messageArr = [];
+	var fromNumber = new Date(from);
+	var toNumber = new Date(to);
+	var currentDate = '';
+	var messageArr = [];
+	var propQuote = cross+'_m1';
+	var transaction = db.transaction([propQuote], "readonly");
+	var objectStore = transaction.objectStore(propQuote);
+	var request = objectStore.openCursor();
+	 
+	request.onsuccess = function(e) {
+	    var cursor = e.target.result;
+	    if(cursor) {
+	    	console.log("e.target.result: ",e.target.result);
+	        console.log("Key", cursor.key);
+	        console.dir("Data", cursor.value);
+
+	        //var row = {source:source, platform:platform, date:date, time:time, open:open, high:high, low:low, close:close, volume:volume};
+
+	        currentDate = new Date(cursor.value.date+' '+cursor.value.time);
+	        if ( cursor.value.source == source && cursor.value.platform == platform && currentDate >= fromNumber && currentDate <= toNumber ) {
+	        	iteration++;
+	        	dateTime = cursor.value.date+' '+cursor.value.time;
+	        	messageArr = [cross,cursor.value.open,cursor.value.high,cursor.value.low,cursor.value.close,cursor.value.volume,dateTime];
+	        	var res = updateTimeFrameObjLocal(messageArr,iteration);
+	        	
+	        }
+	        cursor.continue();
+
+	        
+	    }else{
+			console.log("end cursor");
+		}
+	}
+}
+
+
+var sortArr = function(cardsArr) {
+    //Sorted cards are sorted by suit: Clubs, Spades, Hearts, Diamonds; then by value: Ace is high.
+    if( cardsArr.length > 1 ){
+      return cardsArr.sort(_orderByProperty('date', 'time'));
+    }else{
+      return cardsArr;
+    }
+  }; 
+
+var orderByProperty = function(prop) {
+	var args = Array.prototype.slice.call(arguments, 1);
+	return function (a, b) {
+	  var equality = b[prop] - a[prop];
+	  if (equality === 0 && arguments.length > 1) {
+	    return _orderByProperty.apply(null, args)(a, b);
+	  }
+	  return equality;
+	};
+};
+
+
 
 self.addEventListener('message',  function(event){
 	console.log("message: ",event);
 	//EX: {cross:cross_list[i].cross,history_quotes:store_history_in_memory,from:from,to:to,dataLenght:cross_list[i].dataLenght}
 
-	if (event.data.type == 'initialHistoryQuotes') {
-		console.log("initialHistoryQuotes");
-		for(var j=0; j<=event.data.d.length-1; j++){
-			//console.log("event.data.d[j].cross: ",event.data.d[j].cross);
-			//console.log("dataLenght: ",event.data.d[j].dataLenght);
-			setting.push( {'cross':event.data.d[j].cross,'dataLenght':event.data.d[j].dataLenght} );
-			console.log("setting: ",setting);
-		    var history_quote_arr = CSVToArray(event.data.d[j].history_quotes,';');
-		    console.log("history_quote_arr: ",history_quote_arr);
-		    for(var i=1; i<=history_quote_arr.length; i++){
+	if (event.data.type == 'initialAlgoSetting') {
 
-		    	var tmpQuote = history_quote_arr[i-1].toString().split(',');
-		    	var dateTime = tmpQuote[0]+" "+tmpQuote[1];
-		    	var open = tmpQuote[2];
-		    	var high = tmpQuote[3];
-		    	var low = tmpQuote[4];
-		    	var close = tmpQuote[5];
-		    	var volume = tmpQuote[6];
+		platform = event.data.platform;
+		brokerName = event.data.brokerName;
 
-		    	var messageArr = [event.data.d[j].cross,open,high,low,close,volume,dateTime];
-		    	console.log("messageArr: ",messageArr);
-				var result = QuotesModule.updateRealTimeQuotesObj(searchObjRealTimeQuote,messageArr);
+		newObjTimeFrameQuote = "TIMEFRAMEQUOTE$"+platform+"$"+brokerName;
+		newObjRealTimeQuote = "REALTIMEQUOTE$"+platform+"$"+brokerName;
+		newValuePropertyTimeFrameQuote = "TIMEFRAMEQUOTE@"+platform+"@"+brokerName;
+		newValuePropertyRealTimeQuote = "REALTIMEQUOTE@"+platform+"@"+brokerName;  
+		runningProviderTimeFrameObjs[newObjTimeFrameQuote] = QuotesModule.createTimeFrameQuotesObj(configQuotesList,newValuePropertyTimeFrameQuote);
+		runningProviderRealTimeObjs[newObjRealTimeQuote] = QuotesModule.createRealTimeQuotesObj(configQuotesList,newValuePropertyRealTimeQuote);
+		tmpTimeFrameQuoteProperty = "TIMEFRAMEQUOTE$"+platform+"$"+brokerName;
+		tmpRealTimeQuoteProperty = "REALTIMEQUOTE$"+platform+"$"+brokerName;
+		searchObjRealTimeQuote = "REALTIMEQUOTE$"+platform+"$"+brokerName;
 
-				var timeFrameToUpdate = 'm1';   //m1,m5,m15,m30,h1,h4,d1,w1
-				var new_timeFrameQuotesObj = QuotesModule.updateTimeFrameQuotesObj(timeFrameToUpdate,runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty],runningProviderRealTimeObjs[tmpRealTimeQuoteProperty],tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty);
-				runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty] = new_timeFrameQuotesObj;
+	}else if (event.data.type == 'initialHistoryQuotes') {
 
-				if ( (i%5) == 0 ) {
-					timeFrameToUpdate = 'm5';   //m1,m5,m15,m30,h1,h4,d1,w1
-					new_timeFrameQuotesObj = QuotesModule.updateTimeFrameQuotesObj(timeFrameToUpdate,runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty],runningProviderRealTimeObjs[tmpRealTimeQuoteProperty],tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty);
-					runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty] = new_timeFrameQuotesObj;
-				};
-				if ( (i%15) == 0 ) {
-					timeFrameToUpdate = 'm15';   //m1,m5,m15,m30,h1,h4,d1,w1
-					new_timeFrameQuotesObj = QuotesModule.updateTimeFrameQuotesObj(timeFrameToUpdate,runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty],runningProviderRealTimeObjs[tmpRealTimeQuoteProperty],tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty);
-					runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty] = new_timeFrameQuotesObj;
-				};
-				if ( (i%30) == 0 ) {
-					timeFrameToUpdate = 'm30';   //m1,m5,m15,m30,h1,h4,d1,w1
-					var new_timeFrameQuotesObj = QuotesModule.updateTimeFrameQuotesObj(timeFrameToUpdate,runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty],runningProviderRealTimeObjs[tmpRealTimeQuoteProperty],tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty);
-					runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty] = new_timeFrameQuotesObj;
-				};
-				if ( (i%60) == 0) { 
-					timeFrameToUpdate = 'h1';   //m1,m5,m15,m30,h1,h4,d1,w1
-					var new_timeFrameQuotesObj = QuotesModule.updateTimeFrameQuotesObj(timeFrameToUpdate,runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty],runningProviderRealTimeObjs[tmpRealTimeQuoteProperty],tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty);
-					runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty] = new_timeFrameQuotesObj;
-				};
-				if ( (i%240) == 0 ) {
-					timeFrameToUpdate = 'h4';   //m1,m5,m15,m30,h1,h4,d1,w1
-					var new_timeFrameQuotesObj = QuotesModule.updateTimeFrameQuotesObj(timeFrameToUpdate,runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty],runningProviderRealTimeObjs[tmpRealTimeQuoteProperty],tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty);
-					runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty] = new_timeFrameQuotesObj;
-				};
-				if ( (i%1440) == 0 ) {
-					timeFrameToUpdate = 'd1';   //m1,m5,m15,m30,h1,h4,d1,w1
-					var new_timeFrameQuotesObj = QuotesModule.updateTimeFrameQuotesObj(timeFrameToUpdate,runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty],runningProviderRealTimeObjs[tmpRealTimeQuoteProperty],tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty);
-					runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty] = new_timeFrameQuotesObj;
-				};
-				if ( (i%7200) == 0 ) {
-					timeFrameToUpdate = 'w1';   //m1,m5,m15,m30,h1,h4,d1,w1
-					var new_timeFrameQuotesObj = QuotesModule.updateTimeFrameQuotesObj(timeFrameToUpdate,runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty],runningProviderRealTimeObjs[tmpRealTimeQuoteProperty],tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty);
-					runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty] = new_timeFrameQuotesObj;
-				};
-			}
+
+		var uploadDB = function(newHistoryArr,platform,source,cross,from,to){
+			var propQuote = cross+'_m1';
+			var objectStore = db.transaction([propQuote], "readwrite").objectStore(propQuote);
+            
+            console.log("newHistoryArr.length: ",newHistoryArr.length);
+            var rowUploaded = 0;
+            for(var i=1; i<=newHistoryArr.length; i++){
+
+            	
+                var request = objectStore.add(  newHistoryArr[i]  );
+                request.onsuccess = function(event) {
+                	rowUploaded++;
+                	console.log("data uploaded in db");
+                	if ( rowUploaded == newHistoryArr.length ) {
+                		console.log("finished to upload data in db");
+                		searchHistoryQuoteInDb(platform,source,cross,from,to);
+                	}
+                }
+	            
+            }
 		}
-		console.log('runningProviderTimeFrameObjs["TIMEFRAMEQUOTE$BACKTEST$BACKTEST"]: ',runningProviderTimeFrameObjs );
+
+
+
+		var createTimeFrameFx = function(platform,source,cross,from,to){
+
+			var matchArrValues = [];
+			var history_quote_arr = '';
+			var crossName = '';
+			var converted = '';
+
+			var propCSV = cross+'_csv';
+			var objectStore = db.transaction([propCSV], "readwrite").objectStore(propCSV);
+			var request = objectStore.openCursor();
+			request.onsuccess = function(event) {
+
+				console.log("event: ",event);
+				var cursor = event.target.result;
+
+				if (cursor) {
+					console.log("matchArrValues: ",request.result.value);
+					console.log("source: "+source);
+					console.log("platform: "+platform);
+					console.log("sourcedb: "+request.result.value.source);
+					console.log("platformdb: "+request.result.value.platform);
+					if (request.result.value.source == source && request.result.value.platform == platform ) {
+
+		  				console.log("source name is " , event.target.source.name);
+		  				console.log("platform name is " , event.target.result.value.platform);
+					
+						crossName = event.target.source.name.split("_")[0];
+
+						source = event.target.result.value.source;
+						platform = event.target.result.value.platform;
+						from = event.target.result.value.from;
+						to = event.target.result.value.to
+
+						if ( event.target.result.value.converted == 0) {
+
+							//PARSE CSV AND CREATE TIMEFRAME BJ 
+							history_quote_arr = CSVToArray(event.target.result.value.csv,';');
+
+		            		var propCSV = cross+'_m1';
+		            		var transaction = db.transaction([propCSV],"readwrite");
+							var store = transaction.objectStore(propCSV);
+							var index = store;//.index('source','platform');
+							// Select only those records where prop1=value1 and prop2=value2
+							console.log("source: ",source);
+							console.log("platform: ",platform);
+							var request1 = index.openCursor();
+		            		
+		            		var direction = '';
+		        			request1.onsuccess = function(event) {
+		        				console.log("event: ",event.target);
+		        				//console.log("request1.result: ",request1.result);
+		        				var cursor = event.target.result;
+		        				if (cursor) {
+		        					console.log("matchArrValues: ",request1.result.value);
+
+		        					if (request1.result.value.source == source && request1.result.value.platform == platform ) {
+		        						//order here before push in array
+		        						matchArrValues.push(request1.result.value);	
+		        					};
+		        					
+							    	request1.delete(cursor.primaryKey);
+							    	cursor.continue();
+							    }else{
+							    	console.log("end cursor, finished to get data from db");
+							    	console.log("matchArrValues: ",matchArrValues);
+
+							    	if (matchArrValues.length > 0) {
+
+										var startDateHistory = history_quote_arr[0].toString().split(',')[0];
+								    	var startTimeHistory = history_quote_arr[0].toString().split(',')[1];
+								    	var endDateHistory = history_quote_arr[history_quote_arr.length-1].toString().split(',')[0];
+								    	var endTimeHistory = history_quote_arr[history_quote_arr.length-1].toString().split(',')[1];
+								    	var newEndDateTimeHistory = endDateHistory+' '+endTimeHistory;
+								    	var newStartDateTimeHistory = startDateHistory+' '+startTimeHistory;
+								    	
+										var data1 = matchArrValues[0].date+' '+matchArrValues[0].time;
+										////////chnage  with new Date
+										if ( new Date(data1) > new Date(newEndDateTimeHistory) ) {
+											direction = 'prepend';
+										}else if ( new Date(data1) < new Date(newStartDateTimeHistory) ) {
+											direction = 'append';
+										};
+										
+										if (direction == 'append') {
+											////////////////////////////////////////////////////
+											matchArrValues.appendArr(history_quote_arr,source,platform);
+											uploadDB(matchArrValues,platform,source,cross,from,to);
+											matchArrValues = null;
+											history_quote_arr = null;
+											//append data
+										}else{
+											///////////////////////////////////////////////////
+											matchArrValues.prependArr(history_quote_arr,source,platform);
+											uploadDB(matchArrValues,platform,source,cross,from,to);
+											matchArrValues = null;
+											history_quote_arr = null;
+											//prepend
+										}
+									}else{
+										matchArrValues.appendArr(history_quote_arr,source,platform);
+										uploadDB(matchArrValues,platform,source,cross,from,to);
+										matchArrValues = null;
+										history_quote_arr = null;
+									}
+									
+							    }
+							}
+
+						}else{
+							searchHistoryQuoteInDb(platform,source,cross,from,to);
+							//GET FROM DB THE ARRAY QUOTES 'FROM' AND 'TO'
+						}
+					}else{
+						console.log("no right platform and source");
+						cursor.continue();
+					}
+				}else{
+					console.log("end cursor");
+				}
+			};
+		}
+
+
+		//var objectStore = db.createObjectStore('EURUSD_11_01_2015_30_3_2016', {keyPath: "id"});
+        //console.log("objectStore: ",objectStore);
+
+
+        var req = indexedDB.open('forecDatabase', 1);
+
+		req.onsuccess = function (e) {
+			db = req.result;
+			console.log('successfully opened db');
+
+
+			console.log("initialHistoryQuotes");
+			for(var j=0; j<=event.data.d.length-1; j++){
+				//console.log("event.data.d[j].cross: ",event.data.d[j].cross);
+				//console.log("dataLenght: ",event.data.d[j].dataLenght);
+				setting.push( {'platform':event.data.d[j].platform,'source':event.data.d[j].source,'cross':event.data.d[j].cross,'timeFrame':event.data.d[j].timeFrame,'from':event.data.from,'to':event.data.to,'dataLenght':event.data.d[j].dataLenght} );
+				console.log("setting: ",setting);
+				console.log("event.data.d[j] plAT: "+event.data.d[j].platform );
+				console.log("event.data.d[j] source: "+event.data.d[j].source );
+				createTimeFrameFx(event.data.d[j].platform,event.data.d[j].source,event.data.d[j].cross,event.data.from,event.data.to);
+			}
+		  	//self.postMessage('successfully opened db');    
+		};
+		req.onerror = function(e) {
+			console.log('error opened db');
+		  	//self.postMessage('error');    
+		}
+		req.onupgradeneeded = function(event) {
+		    console.log("db onupgradeneeded");
+		    db = event.target.result;   
+		}
+
+
+
+		
+		console.log('runningProviderTimeFrameObjs["TIMEFRAMEQUOTE$platform$broker"]: ',runningProviderTimeFrameObjs );
 	}else if (event.data.type == 'messageFromSignalProvider') {
 
 		console.log('Message from signal provider: ' + event.data.d);
@@ -571,6 +863,15 @@ self.addEventListener('message',  function(event){
 	  	switch (topic) {
 	  		case "NEWTOPICFROMSIGNALPROVIDER":
 
+	  			if (startToSendQuote == true) {
+	  				console.log("START TO SEND QUOTES TO CLIENT..");
+	  				startToSendQuote = false;
+	  				setTimeout(function(){
+	  					console.log("START TO SEND QUOTES TO CLIENT....");
+	  					sendNewDataToSignalProvider(1);	
+	  				},8000);
+	  			};
+
 	  			var newTopic = message.split('@');
 	  			if (newTopic[0] == 'OPERATIONS') {
 	  				//EX: OPERATIONS@ACTIVTRADES@EURUSD
@@ -580,9 +881,18 @@ self.addEventListener('message',  function(event){
 	  				//EX: STATUS@EURUSD@111		
 	  				self.postMessage({'d':message,'type':'subscribe'});
 					//sockSubFromSignalProvider.subscribe(message);
+	  			}else if (newTopic[0] == 'SKIP') {
+	  				//SKIP@ACTIVTRADES@EURUSD@1002
+	  				self.postMessage({'d':message,'type':'subscribe'});
 	  			}else{
-	  				console.log("error message: ",newTopic[0])
+	  				console.log("error message: ",newTopic)
 	  			}
+
+	  			console.log("START TO SEND QUOTES TO CLIENT");
+
+	  			
+	  			
+
 				break;
 
 			case "DELETETOPICQUOTES":
@@ -614,13 +924,13 @@ self.addEventListener('message',  function(event){
 	  					console.log("in open operation");
 	  					//open    price=11295,lots=1,slippage=1.5,sl=1220,tp=1220,magic=1002,op=-1
 
-	  					var price_rv = operation[0].split('=')[1];
-		  				var lots_rv = operation[1].split('=')[1];
-		  				var slippage_rv = operation[2].split('=')[1];
-		  				var sl_rv = operation[3].split('=')[1];
-		  				var tp_rv = operation[4].split('=')[1];
+	  					var price_rv = parseFloat(operation[0].split('=')[1]);
+		  				var lots_rv = parseFloat(operation[1].split('=')[1]);
+		  				var slippage_rv = parseFloat(operation[2].split('=')[1]);
+		  				var sl_rv = parseFloat(operation[3].split('=')[1]);
+		  				var tp_rv = parseFloat(operation[4].split('=')[1]);
 		  				var magic_rv = operation[5].split('=')[1];
-		  				var op_rv = operation[6].split('=')[1];
+		  				var op_rv = parseFloat(operation[6].split('=')[1]);
 
 						var op_id = operation_unique_id;  //generate unique id
 						operation_unique_id++;
@@ -632,11 +942,13 @@ self.addEventListener('message',  function(event){
 						var status_mess = "1,open,"+price+","+op_id;
 						var status_topic = "STATUS@"+cross+"@"+magic;
 						
-						var topic = "STATUS@"+cross+"@"+magic;
-						var mesage = "1,open,"+price+","+op_id;
+						var topicToSend = "STATUS@"+cross+"@"+magic;
+						var messageToSend = "1,open,"+price+","+op_id;
 
 						//1,open,11295,103510387 on topic: STATUS@EURUSD@1002
-						self.postMessage({'d':[topic, message],'type':'sendStatusToSignalProvider'});
+						console.log("sendStatusToSignalProvider topic: ",topicToSend);
+						console.log("sendStatusToSignalProvider message: ",messageToSend);
+						self.postMessage({'d':[topicToSend, messageToSend],'type':'sendStatusToSignalProvider'});
 						//sockPub.send([topic, message]);
 
 
@@ -644,65 +956,90 @@ self.addEventListener('message',  function(event){
 						console.log("in close operation");
 						//close   price=11279,lots=1,slippage=0.2,ticket=103510387,op=0
 
-						var price_rv = operation[0].split('=')[1];
-		  				var lots_rv = operation[1].split('=')[1];
-		  				var slippage_rv = operation[2].split('=')[1];
+						var price_rv = parseFloat(operation[0].split('=')[1]);
+		  				var lots_rv = parseFloat(operation[1].split('=')[1]);
+		  				var slippage_rv = parseFloat(operation[2].split('=')[1]);
 		  				var ticket_rv = operation[3].split('=')[1];
-		  				var op_rv = operation[4].split('=')[1];
+		  				var op_rv = parseFloat(operation[4].split('=')[1]);
 
 						var price = price_rv;
 						var ticket = ticket_rv;
 						for(var i=0; i<=operations.length-1; i++){
 							if (operations[i].id == ticket) {
 
-								var operation_result = ((price - operations[i].open) * operations[i].op) / 10;
-								var last_operation = tot_backtest_all_operations[tot_backtest_all_operations.length-1];
+								console.log('OPERATION operations[i].open: ',operations[i].open);
+								console.log('OPERATION price: ',price);
+								console.log('OPERATION  operations[i].op: ',operations[i].op);
 
-								tot_backtest_comulative.push( tot_backtest_comulative[tot_backtest_comulative.length-1] + operation_result );  //IF WE HAVE 5 NUMBERS, IN ORDER TO CALCULATE THE TOTAL OF PIPS WE HAVE DELETE FOR 10 
+								var operation_result1 = ((operations[i].open - price) * operations[i].op) / 10;
+								console.log('OPERATION operation_result1: ',operation_result1);
+								var operation_result2 = operation_result1.toFixed(5) * operations[i].op;
+								console.log('OPERATION operation_result2: ',operation_result2);
+								var operation_result3 = operation_result2 / 10; //IF WE HAVE 5 NUMBERS, IN ORDER TO CALCULATE THE TOTAL OF PIPS WE HAVE Divide FOR 10
+								var operation_result = parseFloat((operation_result3 * 1000000));
+								operation_result = operation_result.toFixed(0);
+								console.log('OPERATION result: ',operation_result);
+								var last_operation = parseFloat(tot_backtest_all_operations[tot_backtest_all_operations.length-1]);
+								console.log('OPERATION last_operation: ',last_operation);
+								if ( tot_backtest_comulative.length > 0) {
+									tot_backtest_comulative.push( parseFloat(tot_backtest_comulative[tot_backtest_comulative.length-1]) + parseFloat(operation_result) );  //IF WE HAVE 5 NUMBERS, IN ORDER TO CALCULATE THE TOTAL OF PIPS WE HAVE Divide FOR 10 
+								}else{
+									tot_backtest_comulative.push( parseFloat(operation_result) );
+								}
+								console.log('OPERATION tot_backtest_comulative: ',tot_backtest_comulative);
 								tot_backtest_all_operations.push( operation_result );
 
 								// TOTAL PROFIT
 								total_profit = tot_backtest_comulative[tot_backtest_comulative.length-1];
 
 								// AVERAGE PIPS TRADE
-								average_pips_trade = tot_backtest_comulative[tot_backtest_comulative.length-1] / tot_backtest_comulative[tot_backtest_comulative.length];
-
+								average_pips_trade = (parseFloat(tot_backtest_comulative[tot_backtest_comulative.length-1]) / tot_backtest_comulative.length).toFixed(0);
+								console.log('OPERATION average_pips_trade: ',average_pips_trade);
 								// PROFIT&LOSS_PIPS   and   PROFIT&LOSS_TRADES   and   CONSECUTIVE_PROFIT&LOSS_TRADES  and  BEST&WORST_TRADE
-								if (operation_result > 0) {
+								if (parseFloat(operation_result) > 0) {
 									profit_trades++;
-									profit = profit + operation_result;
-									if (last_operation > 0) {
+									console.log('OPERATION profit_trades: ',profit_trades);
+									profit = parseFloat(profit) + parseFloat(operation_result);
+									console.log('OPERATION profit: ',profit);
+									if (parseFloat(last_operation) > 0 || last_operation == undefined) {
 										consecutive_profit_trades_arr.push(1);
-									}else if (last_operation < 0) {
+									}else if (parseFloat(last_operation) < 0 || last_operation == undefined) {
 										if (consecutive_profit_trades < consecutive_profit_trades_arr.length) {
 											consecutive_profit_trades = consecutive_profit_trades_arr.length;
 										}
 										consecutive_profit_trades_arr.push(1);
 									};
-									if (best_trade != null) {
-										if (best_trade < operation_result) {
-											best_trade = operation_result;
+									console.log("OPERATION  operation_result: ", operation_result);
+									console.log("OPERATION  best trade: ", best_trade);
+									if ( best_trade != null && best_trade != 'null') {
+										console.log("OPERATION  best trade != null ");
+										if (parseFloat(best_trade) < parseFloat(operation_result)) {
+											best_trade = parseFloat(operation_result);
+											console.log("OPERATION  best trade: ", best_trade);
 										};
 									}else{
-										best_trade = operation_result;
+										best_trade = parseFloat(operation_result);
+										console.log("OPERATION  best trade: ", best_trade);
 									}
-								}else if (operation_result <= 0) {
+								}else if (parseFloat(operation_result) <= 0) {
 									loss_trades++;
-									loss = loss + operation_result;
-									if (last_operation < 0) {
+									console.log('OPERATION loss_trades: ',loss_trades);
+									loss = parseFloat(loss) + parseFloat(operation_result);
+									console.log('OPERATION loss: ',loss);
+									if (parseFloat(last_operation) < 0 || last_operation == undefined) {
 										consecutive_loss_trades_arr.push(1);
-									}else if (last_operation > 0) {
-										if (consecutive_loss_trades < consecutive_loss_trades_arr.length) {
+									}else if (parseFloat(last_operation) > 0) {
+										if (parseFloat(consecutive_loss_trades) < consecutive_loss_trades_arr.length) {
 											consecutive_loss_trades = consecutive_loss_trades_arr.length;
 										}
 										consecutive_loss_trades_arr.push(1);
 									};
-									if (worst_trade != null) {
-										if (worst_trade > operation_result) {
-											worst_trade = operation_result;
+									if ( worst_trade != null && worst_trade != 'null') {
+										if (parseFloat(worst_trade) > parseFloat(operation_result)) {
+											worst_trade = parseFloat(operation_result);
 										};
 									}else{
-										worst_trade = operation_result;
+										worst_trade = parseFloat(operation_result);
 									}
 
 								};
@@ -710,30 +1047,48 @@ self.addEventListener('message',  function(event){
 								// LONG(BUY) AND SHORT(SELL)
 								if (operations[i].op == '1') {
 									long_trades++;
+									console.log('OPERATION long_trades: ',long_trades);
 								}else if (operations[i].op == '-1') {
 									short_trades++;
+									console.log('OPERATION short_trades: ',short_trades);
 								};
 
 								// MAX DRAWDOWN 
-								if ( max_drawdown_arr[max_drawdown_arr.length-1] != undefined && max_drawdown_arr[max_drawdown_arr.length-1] != null ){
-									var first_max_drawdown_arr_value = max_drawdown_arr[0];
-									
-									var current_max_drawdown_arr_value = tot_backtest_comulative[tot_backtest_comulative.length-1];
-									if ( first_max_drawdown_arr_value >= current_max_drawdown_arr_value) {
-										max_drawdown_arr.push( current_max_drawdown_arr_value );
-									}else if (first_max_drawdown_arr_value < current_max_drawdown_arr_value) {
-										var new_drawdown = ( (max_drawdown_arr.min() - max_drawdown_arr[0])/max_drawdown_arr[0] )*100;
-										if (new_drawdown > max_drawdown) {
-											max_drawdown = ( (max_drawdown_arr.min() - max_drawdown_arr[0])/max_drawdown_arr[0] )*100;
-										};
-										max_drawdown_arr = [];
-									};
-								}else{
-									max_drawdown_arr.push( tot_backtest_comulative[tot_backtest_comulative.length-1] );
+								if ( max_drawdown_arr[max_drawdown_arr.length-1] == undefined && max_drawdown_arr[max_drawdown_arr.length-1] == null ){
+									max_drawdown_arr.push( 0 );
 								}
+									
+								console.log("OPERATION max_drawdown_arr[0]: ",max_drawdown_arr[0]);
+								var first_max_drawdown_arr_value = parseFloat(max_drawdown_arr[0]);
+								
+								console.log("OPERATION tot_backtest_comulative[tot_backtest_comulative.length-1]: ",tot_backtest_comulative[tot_backtest_comulative.length-1]);
+								var current_max_drawdown_arr_value = parseFloat(tot_backtest_comulative[tot_backtest_comulative.length-1]);
+								
+								console.log("OPERATION first_max_drawdown_arr_value: ",first_max_drawdown_arr_value);
+								console.log("OPERATION current_max_drawdown_arr_value: ",current_max_drawdown_arr_value);
+
+								if ( parseFloat(first_max_drawdown_arr_value) >= parseFloat(current_max_drawdown_arr_value)) {
+									max_drawdown_arr.push( current_max_drawdown_arr_value );
+									console.log("max_drawdown_arr: ",max_drawdown_arr);
+									var new_drawdown = parseFloat(max_drawdown_arr.min()) - parseFloat(max_drawdown_arr[0]) ;
+
+									//var new_drawdown_percent = new_drawdown / parseFloat(max_drawdown_arr[0]) * 100;
+
+									console.log("OPERATION max drawdown: ",max_drawdown);
+									console.log("OPERATION new drawdown: ",new_drawdown);
+									if ( parseFloat(new_drawdown) < parseFloat(max_drawdown) ) {
+										console.log("OPERATION new drawdown: ",new_drawdown);
+										max_drawdown = new_drawdown;
+										max_drawdown_from_zero = parseFloat(max_drawdown_arr.min());
+									}
+
+								}else if ( parseFloat(first_max_drawdown_arr_value) < parseFloat(current_max_drawdown_arr_value) ) {
+									max_drawdown_arr = [ parseFloat(tot_backtest_comulative[tot_backtest_comulative.length-1]) ];
+								};
+								
 
 								operations[i].close = price;
-								var status_mess = "1,close,"+price+","+operations[i].id;
+								var status_message = "1,close,"+price+","+operations[i].id;
 								var status_topic = "STATUS@"+cross+"@"+operations[i].magic;
 								
 								//1,close,11280,103510387 on topic: STATUS@EURUSD@1002
@@ -743,9 +1098,10 @@ self.addEventListener('message',  function(event){
 						}
 						
 					};
-					sendNewDataToSignalProvider(indexQuote);
+					//sendNewDataToSignalProvider(indexQuote);
 				}else if (topicType[0] == 'SKIP') {
 					//EX: SKIP@ACTIVTRADES@EURUSD@1002
+					console.log("SKIP message: ",topicType[0] );
 					sendNewDataToSignalProvider(indexQuote);
 				}
 				break;
@@ -765,139 +1121,254 @@ self.addEventListener('message',  function(event){
 var getIndexValuesNumberToSend = function(type){
 	switch (type){
 		case 'v1':
-    		index = 0;
+    		index = 1;
     		break;
 		case 'v5':
-			index = 1;
+			index = 6;
 			break;
 		case 'v10':
-			index = 2;
+			index = 11;
 			break;
 		case 'v20':
-			index = 3;
+			index = 21;
 			break;
 		case 'v40':
-			index = 4;
+			index = 41;
 			break;
 		case 'v100':
-			index = 5;
+			index = 101;
 			break;
 	}
 	return index;	
 }
 
 // indexQuote start with 1
-var sendNewDataToSignalProvider = function(indexQuote){
+var countFinishBackTest = [];
+var sendNewDataToSignalProvider = function(indexQuoteInt){
+	console.log("indexQuoteInt: "+indexQuoteInt);
 	//EX Setting: {cross:'EURUSD','dataLenght':'v1'},{cross:'EURGBP','dataLenght':'v10'}
+	var checkM1 = (indexQuoteInt/1).toString().split('.')[1];
+	var checkM5 = (indexQuoteInt/5).toString().split('.')[1];
+	var checkM15 = (indexQuoteInt/15).toString().split('.')[1];
+	var checkM30 = (indexQuoteInt/30).toString().split('.')[1];
+	var checkH1 = (indexQuoteInt/60).toString().split('.')[1];
+	var checkH4 = (indexQuoteInt/240).toString().split('.')[1];
+	var checkD1 = (indexQuoteInt/1440).toString().split('.')[1];
+	var checkW1 = (indexQuoteInt/7200).toString().split('.')[1];
+
+	indexQuote++;
+
+	console.log("checkM1: "+ checkM1 );
+	//{'cross':event.data.d[j].cross,'dataLenght':event.data.d[j].dataLenght}
+
+	timeFrameArr = [];
 	for(var i=0; i<=setting.length-1; i++){
-		switch (indexQuote){
-			case ( (indexQuote/1).toString().split('.')[1] == undefined ):
-	    		var timeFrame = 'm1';
-	    		var indexTimeFrame = 0;
-	    		var indexDataLenght = getIndexValuesNumberToSend( setting[i].dataLenght )
-	    		var quote = runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty][ setting[i].cross ][indexTimeFrame][timeFrame][indexDataLenght][setting[i].dataLenght];
-				if (quote != null && quote != undefined) {
-					//"TIMEFRAMEQUOTE@MT4@ACTIVTRADES   +     @EURUSD     +     @m1     +    @v1 
-					//"TIMEFRAMEQUOTE@BACKTEST@BACKTEST
-					var topicToSignalProvider = "TIMEFRAMEQUOTE@BACKTEST@BACKTEST@"+setting[i].cross+"@"+timeFrame+"@"+setting[i].dataLenght;
-					self.postMessage({'d':[topicToSignalProvider, quote.join(";")],'type':'sendQuoteToSignalProvider'});
-					//sockPub.send([topicToSignalProvider, quote.join(";")]);
+		timeFrameArr.pushUnique(setting[i].cross);
+		switch (undefined){
+			case checkM1:
+				var stringKey = setting[i].cross+setting[i].timeFrame+setting[i].dataLenght;
+				if ( countFinishBackTest.indexOf(stringKey) == -1) {
+					if (setting[i].timeFrame == 'm1') {
+						console.log("checkM1..: "+ checkM1 );
+			    		var timeFrame = 'm1';
+			    		var indexTimeFrame = 0;
+			    		var indexDataLenght = getIndexValuesNumberToSend( setting[i].dataLenght );
+			    		console.log("indexDataLenght: ",indexDataLenght);
+			    		var quote = runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty][ setting[i].cross ][indexTimeFrame][timeFrame][0]['v1'].slice(0,  indexDataLenght);
+						if (quote != null && quote != undefined && quote.length >= indexDataLenght) {
+							//"TIMEFRAMEQUOTE@MT4@ACTIVTRADES   +     @EURUSD     +     @m1     +    @v1 
+							//"TIMEFRAMEQUOTE@BACKTEST@BACKTEST
+							var topicToSignalProvider = "TIMEFRAMEQUOTE@"+platform+"@"+brokerName+"@"+setting[i].cross+"@"+timeFrame+"@"+setting[i].dataLenght;
+							console.log("topicToSignalProvider: ",topicToSignalProvider);
+							console.log("quotesToSignalProvider: ",quote.join(";") );
+							self.postMessage({'d':[topicToSignalProvider, quote.join(";")],'type':'sendQuoteToSignalProvider'});
+							//sockPub.send([topicToSignalProvider, quote.join(";")]);
+						}else{
+							countFinishBackTest.push(setting[i].cross+setting[i].timeFrame+setting[i].dataLenght);
+						}
+					}
 				}
-	    		break;
-			case ( (indexQuote/5).toString().split('.')[1] == undefined ):
-				var timeFrame = 'm5';
-				var indexTimeFrame = 1;
-	    		var indexDataLenght = getIndexValuesNumberToSend( setting[i].dataLenght )
-	    		var quote = runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty][ setting[i].cross ][indexTimeFrame][timeFrame][indexDataLenght][setting[i].dataLenght];
-				if (quote != null && quote != undefined) {
-					//"TIMEFRAMEQUOTE@MT4@ACTIVTRADES   +     @EURUSD     +     @m1     +    @v1 
-					//"TIMEFRAMEQUOTE@BACKTEST@BACKTEST
-					var topicToSignalProvider = "TIMEFRAMEQUOTE@BACKTEST@BACKTEST@"+setting[i].cross+"@"+timeFrame+"@"+setting[i].dataLenght;
-					self.postMessage({'d':[topicToSignalProvider, quote.join(";")],'type':'sendQuoteToSignalProvider'});
-					//sockPub.send([topicToSignalProvider, quote.join(";")]);
+	    		
+			case checkM5:
+				var stringKey = setting[i].cross+setting[i].timeFrame+setting[i].dataLenght;
+				if ( countFinishBackTest.indexOf(stringKey) == -1) {
+					if (setting[i].timeFrame == 'm5') {
+						var timeFrame = 'm5';
+						var indexTimeFrame = 1;
+			    		var indexDataLenght = getIndexValuesNumberToSend( setting[i].dataLenght )
+			    		var quote = runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty][ setting[i].cross ][indexTimeFrame][timeFrame][0]['v1'].slice(0,  indexDataLenght);
+						if (quote != null && quote != undefined && quote.length >= indexDataLenght) {
+							//"TIMEFRAMEQUOTE@MT4@ACTIVTRADES   +     @EURUSD     +     @m1     +    @v1 
+							//"TIMEFRAMEQUOTE@BACKTEST@BACKTEST
+							var topicToSignalProvider = "TIMEFRAMEQUOTE@"+platform+"@"+brokerName+"@"+setting[i].cross+"@"+timeFrame+"@"+setting[i].dataLenght;
+							self.postMessage({'d':[topicToSignalProvider, quote.join(";")],'type':'sendQuoteToSignalProvider'});
+							//sockPub.send([topicToSignalProvider, quote.join(";")]);
+						}else{
+							countFinishBackTest.push(setting[i].cross+setting[i].timeFrame+setting[i].dataLenght);
+						}
+					}
 				}
-				break;
-			case ( (indexQuote/15).toString().split('.')[1] == undefined ):
-				var timeFrame = 'm15';
-				var indexTimeFrame = 2;
-	    		var indexDataLenght = getIndexValuesNumberToSend( setting[i].dataLenght )
-	    		var quote = runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty][ setting[i].cross ][indexTimeFrame][timeFrame][indexDataLenght][setting[i].dataLenght];
-				if (quote != null && quote != undefined) {
-					//"TIMEFRAMEQUOTE@MT4@ACTIVTRADES   +     @EURUSD     +     @m1     +    @v1 
-					//"TIMEFRAMEQUOTE@BACKTEST@BACKTEST
-					var topicToSignalProvider = "TIMEFRAMEQUOTE@BACKTEST@BACKTEST@"+setting[i].cross+"@"+timeFrame+"@"+setting[i].dataLenght;
-					self.postMessage({'d':[topicToSignalProvider, quote.join(";")],'type':'sendQuoteToSignalProvider'});
-					//sockPub.send([topicToSignalProvider, quote.join(";")]);
+				
+			case checkM15:
+				var stringKey = setting[i].cross+setting[i].timeFrame+setting[i].dataLenght;
+				if ( countFinishBackTest.indexOf(stringKey) == -1) {
+					if (setting[i].timeFrame == 'm15') {
+						var timeFrame = 'm15';
+						var indexTimeFrame = 2;
+			    		var indexDataLenght = getIndexValuesNumberToSend( setting[i].dataLenght )
+			    		var quote = runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty][ setting[i].cross ][indexTimeFrame][timeFrame][0]['v1'].slice(0,  indexDataLenght);
+						if (quote != null && quote != undefined && quote.length >= indexDataLenght) {
+							//"TIMEFRAMEQUOTE@MT4@ACTIVTRADES   +     @EURUSD     +     @m1     +    @v1 
+							//"TIMEFRAMEQUOTE@BACKTEST@BACKTEST
+							var topicToSignalProvider = "TIMEFRAMEQUOTE@"+platform+"@"+brokerName+"@"+setting[i].cross+"@"+timeFrame+"@"+setting[i].dataLenght;
+							self.postMessage({'d':[topicToSignalProvider, quote.join(";")],'type':'sendQuoteToSignalProvider'});
+							//sockPub.send([topicToSignalProvider, quote.join(";")]);
+						}else{
+							countFinishBackTest.push(setting[i].cross+setting[i].timeFrame+setting[i].dataLenght);
+						}
+					}
 				}
-				break;
-			case ( (indexQuote/30).toString().split('.')[1] == undefined ):
-				var timeFrame = 'm30';
-				var indexTimeFrame = 3;
-	    		var indexDataLenght = getIndexValuesNumberToSend( setting[i].dataLenght )
-	    		var quote = runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty][ setting[i].cross ][indexTimeFrame][timeFrame][indexDataLenght][setting[i].dataLenght];
-				if (quote != null && quote != undefined) {
-					//"TIMEFRAMEQUOTE@MT4@ACTIVTRADES   +     @EURUSD     +     @m1     +    @v1 
-					//"TIMEFRAMEQUOTE@BACKTEST@BACKTEST
-					var topicToSignalProvider = "TIMEFRAMEQUOTE@BACKTEST@BACKTEST@"+setting[i].cross+"@"+timeFrame+"@"+setting[i].dataLenght;
-					self.postMessage({'d':[topicToSignalProvider, quote.join(";")],'type':'sendQuoteToSignalProvider'});
-					//sockPub.send([topicToSignalProvider, quote.join(";")]);
+				
+			case checkM30:
+				var stringKey = setting[i].cross+setting[i].timeFrame+setting[i].dataLenght;
+				if ( countFinishBackTest.indexOf(stringKey) == -1) {
+					if (setting[i].timeFrame == 'm30') {
+						var timeFrame = 'm30';
+						var indexTimeFrame = 3;
+			    		var indexDataLenght = getIndexValuesNumberToSend( setting[i].dataLenght )
+			    		var quote = runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty][ setting[i].cross ][indexTimeFrame][timeFrame][0]['v1'].slice(0,  indexDataLenght);
+						if (quote != null && quote != undefined && quote.length >= indexDataLenght) {
+							//"TIMEFRAMEQUOTE@MT4@ACTIVTRADES   +     @EURUSD     +     @m1     +    @v1 
+							//"TIMEFRAMEQUOTE@BACKTEST@BACKTEST
+							var topicToSignalProvider = "TIMEFRAMEQUOTE@"+platform+"@"+brokerName+"@"+setting[i].cross+"@"+timeFrame+"@"+setting[i].dataLenght;
+							self.postMessage({'d':[topicToSignalProvider, quote.join(";")],'type':'sendQuoteToSignalProvider'});
+							//sockPub.send([topicToSignalProvider, quote.join(";")]);
+						}else{
+							countFinishBackTest.push(setting[i].cross+setting[i].timeFrame+setting[i].dataLenght);
+						}
+					}
 				}
-				break;
-			case ( (indexQuote/60).toString().split('.')[1] == undefined ):
-				var timeFrame = 'h1';
-				var indexTimeFrame = 4;
-	    		var indexDataLenght = getIndexValuesNumberToSend( setting[i].dataLenght )
-	    		var quote = runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty][ setting[i].cross ][indexTimeFrame][timeFrame][indexDataLenght][setting[i].dataLenght];
-				if (quote != null && quote != undefined) {
-					//"TIMEFRAMEQUOTE@MT4@ACTIVTRADES   +     @EURUSD     +     @m1     +    @v1 
-					//"TIMEFRAMEQUOTE@BACKTEST@BACKTEST
-					var topicToSignalProvider = "TIMEFRAMEQUOTE@BACKTEST@BACKTEST@"+setting[i].cross+"@"+timeFrame+"@"+setting[i].dataLenght;
-					self.postMessage({'d':[topicToSignalProvider, quote.join(";")],'type':'sendQuoteToSignalProvider'});
-					//sockPub.send([topicToSignalProvider, quote.join(";")]);
+				
+			case checkH1:
+				var stringKey = setting[i].cross+setting[i].timeFrame+setting[i].dataLenght;
+				if ( countFinishBackTest.indexOf(stringKey) == -1) {
+					if (setting[i].timeFrame == 'h1') {
+						var timeFrame = 'h1';
+						var indexTimeFrame = 4;
+			    		var indexDataLenght = getIndexValuesNumberToSend( setting[i].dataLenght )
+			    		var quote = runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty][ setting[i].cross ][indexTimeFrame][timeFrame][0]['v1'].slice(0,  indexDataLenght);
+						if (quote != null && quote != undefined && quote.length >= indexDataLenght) {
+							//"TIMEFRAMEQUOTE@MT4@ACTIVTRADES   +     @EURUSD     +     @m1     +    @v1 
+							//"TIMEFRAMEQUOTE@BACKTEST@BACKTEST
+							var topicToSignalProvider = "TIMEFRAMEQUOTE@"+platform+"@"+brokerName+"@"+setting[i].cross+"@"+timeFrame+"@"+setting[i].dataLenght;
+							self.postMessage({'d':[topicToSignalProvider, quote.join(";")],'type':'sendQuoteToSignalProvider'});
+							//sockPub.send([topicToSignalProvider, quote.join(";")]);
+						}else{
+							countFinishBackTest.push(setting[i].cross+setting[i].timeFrame+setting[i].dataLenght);
+						}
+					}
 				}
-				break;
-			case ( (indexQuote/240).toString().split('.')[1] == undefined ):
-				var timeFrame = 'h4';
-				var indexTimeFrame = 5;
-	    		var indexDataLenght = getIndexValuesNumberToSend( setting[i].dataLenght )
-	    		var quote = runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty][ setting[i].cross ][indexTimeFrame][timeFrame][indexDataLenght][setting[i].dataLenght];
-				if (quote != null && quote != undefined) {
-					//"TIMEFRAMEQUOTE@MT4@ACTIVTRADES   +     @EURUSD     +     @m1     +    @v1 
-					//"TIMEFRAMEQUOTE@BACKTEST@BACKTEST
-					var topicToSignalProvider = "TIMEFRAMEQUOTE@BACKTEST@BACKTEST@"+setting[i].cross+"@"+timeFrame+"@"+setting[i].dataLenght;
-					self.postMessage({'d':[topicToSignalProvider, quote.join(";")],'type':'sendQuoteToSignalProvider'});
-					//sockPub.send([topicToSignalProvider, quote.join(";")]);
+				
+			case checkH4:
+				var stringKey = setting[i].cross+setting[i].timeFrame+setting[i].dataLenght;
+				if ( countFinishBackTest.indexOf(stringKey) == -1) {
+					if (setting[i].timeFrame == 'h4') {
+						var timeFrame = 'h4';
+						var indexTimeFrame = 5;
+			    		var indexDataLenght = getIndexValuesNumberToSend( setting[i].dataLenght )
+			    		var quote = runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty][ setting[i].cross ][indexTimeFrame][timeFrame][0]['v1'].slice(0,  indexDataLenght);
+						if (quote != null && quote != undefined && quote.length >= indexDataLenght) {
+							//"TIMEFRAMEQUOTE@MT4@ACTIVTRADES   +     @EURUSD     +     @m1     +    @v1 
+							//"TIMEFRAMEQUOTE@BACKTEST@BACKTEST
+							var topicToSignalProvider = "TIMEFRAMEQUOTE@"+platform+"@"+brokerName+"@"+setting[i].cross+"@"+timeFrame+"@"+setting[i].dataLenght;
+							self.postMessage({'d':[topicToSignalProvider, quote.join(";")],'type':'sendQuoteToSignalProvider'});
+							//sockPub.send([topicToSignalProvider, quote.join(";")]);
+						}else{
+							countFinishBackTest.push(setting[i].cross+setting[i].timeFrame+setting[i].dataLenght);
+						}
+					}
 				}
-				break;
-			case ( (indexQuote/1440).toString().split('.')[1] == undefined ):
-				var timeFrame = 'd1';
-				var indexTimeFrame = 6;
-	    		var indexDataLenght = getIndexValuesNumberToSend( setting[i].dataLenght )
-	    		var quote = runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty][ setting[i].cross ][indexTimeFrame][timeFrame][indexDataLenght][setting[i].dataLenght];
-				if (quote != null && quote != undefined) {
-					//"TIMEFRAMEQUOTE@MT4@ACTIVTRADES   +     @EURUSD     +     @m1     +    @v1 
-					//"TIMEFRAMEQUOTE@BACKTEST@BACKTEST
-					var topicToSignalProvider = "TIMEFRAMEQUOTE@BACKTEST@BACKTEST@"+setting[i].cross+"@"+timeFrame+"@"+setting[i].dataLenght;
-					self.postMessage({'d':[topicToSignalProvider, quote.join(";")],'type':'sendQuoteToSignalProvider'});
-					//sockPub.send([topicToSignalProvider, quote.join(";")]);
+				
+			case checkD1:
+				var stringKey = setting[i].cross+setting[i].timeFrame+setting[i].dataLenght;
+				if ( countFinishBackTest.indexOf(stringKey) == -1) {
+					if (setting[i].timeFrame == 'd1') {
+						var timeFrame = 'd1';
+						var indexTimeFrame = 6;
+			    		var indexDataLenght = getIndexValuesNumberToSend( setting[i].dataLenght )
+			    		var quote = runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty][ setting[i].cross ][indexTimeFrame][timeFrame][0]['v1'].slice(0,  indexDataLenght);
+						if (quote != null && quote != undefined) {
+							//"TIMEFRAMEQUOTE@MT4@ACTIVTRADES   +     @EURUSD     +     @m1     +    @v1 
+							//"TIMEFRAMEQUOTE@BACKTEST@BACKTEST
+							var topicToSignalProvider = "TIMEFRAMEQUOTE@"+platform+"@"+brokerName+"@"+setting[i].cross+"@"+timeFrame+"@"+setting[i].dataLenght;
+							self.postMessage({'d':[topicToSignalProvider, quote.join(";")],'type':'sendQuoteToSignalProvider'});
+							//sockPub.send([topicToSignalProvider, quote.join(";")]);
+						}else{
+							countFinishBackTest.push(setting[i].cross+setting[i].timeFrame+setting[i].dataLenght);
+						}
+					}
 				}
-				break;
-			case ( (indexQuote/7200).toString().split('.')[1] == undefined ):
-				var timeFrame = 'w1';
-				var indexTimeFrame = 7;
-	    		var indexDataLenght = getIndexValuesNumberToSend( setting[i].dataLenght )
-	    		var quote = runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty][ setting[i].cross ][indexTimeFrame][timeFrame][indexDataLenght][setting[i].dataLenght];
-				if (quote != null && quote != undefined) {
-					//"TIMEFRAMEQUOTE@MT4@ACTIVTRADES   +     @EURUSD     +     @m1     +    @v1 
-					//"TIMEFRAMEQUOTE@BACKTEST@BACKTEST
-					var topicToSignalProvider = "TIMEFRAMEQUOTE@BACKTEST@BACKTEST@"+setting[i].cross+"@"+timeFrame+"@"+setting[i].dataLenght;
-					self.postMessage({'d':[topicToSignalProvider, quote.join(";")],'type':'sendQuoteToSignalProvider'});
-					//sockPub.send([topicToSignalProvider, quote.join(";")]);
+				
+			case checkW1:
+				var stringKey = setting[i].cross+setting[i].timeFrame+setting[i].dataLenght;
+				if ( countFinishBackTest.indexOf(stringKey) == -1) {
+					if (setting[i].timeFrame == 'w1') {
+						var timeFrame = 'w1';
+						var indexTimeFrame = 7;
+			    		var indexDataLenght = getIndexValuesNumberToSend( setting[i].dataLenght )
+			    		var quote = runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty][ setting[i].cross ][indexTimeFrame][timeFrame][0]['v1'].slice(0,  indexDataLenght);
+						if (quote != null && quote != undefined) {
+							//"TIMEFRAMEQUOTE@MT4@ACTIVTRADES   +     @EURUSD     +     @m1     +    @v1 
+							//"TIMEFRAMEQUOTE@BACKTEST@BACKTEST
+							var topicToSignalProvider = "TIMEFRAMEQUOTE@"+platform+"@"+brokerName+"@"+setting[i].cross+"@"+timeFrame+"@"+setting[i].dataLenght;
+							self.postMessage({'d':[topicToSignalProvider, quote.join(";")],'type':'sendQuoteToSignalProvider'});
+							//sockPub.send([topicToSignalProvider, quote.join(";")]);
+						}else{
+							countFinishBackTest.push(setting[i].cross+setting[i].timeFrame+setting[i].dataLenght);
+						}
+					}
 				}
-				break;
-		};
-		indexQuote++;	
+				
+		};	
+	};
+	if( countFinishBackTest.length == setting.length){
+		self.postMessage(
+			{'d': 
+				{
+					'operations':operations, 
+					'tot_backtest_comulative': tot_backtest_comulative,
+					'tot_backtest_all_operations' : tot_backtest_all_operations,
+					'profit' : profit,
+					'loss' : loss,
+					'profit_trades' : profit_trades,
+					'loss_trades' : loss_trades,
+					'total_profit' : total_profit,
+					'average_pips_trade' : average_pips_trade,
+					'consecutive_profit_trades_arr': consecutive_profit_trades_arr,
+					'consecutive_loss_trades_arr' : consecutive_loss_trades_arr,
+					'consecutive_profit_trades' : consecutive_profit_trades,
+					'consecutive_loss_trades' : consecutive_loss_trades,
+					'worst_trade': worst_trade,
+					'best_trade' : best_trade,
+					'long_trades' : long_trades,
+					'short_trades' : short_trades,
+					'max_drawdown_arr' : max_drawdown_arr,
+					'max_drawdown' : max_drawdown,
+					'max_drawdown_from_zero' : max_drawdown_from_zero,
+					'min_drawdown' : min_drawdown,
+					'operation_unique_id' : operation_unique_id 
+				},
+			'type':'backtestFinished'
+			}
+		);
 	}
+	timeFrameArr.forEach(function(el,indexArr){
+		var cross = el;
+		var timeFrame = ['m1','m5','m15','m30','h1','h4','d1','w1'];
+	    timeFrame.forEach(function(el,ind){
+	    	runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty][ cross ][ ind ][ el ][0]['v1'].splice(0, 1);
+	    });
+	});
 }
 
 
@@ -913,7 +1384,7 @@ var sendNewDataToSignalProvider = function(indexQuote){
 //Topic: STATUS@EURUSD@1002message: "1,open,11403,105634693\n"
 
 var operations = [];
-var tot_backtest_comulative = [0];
+var tot_backtest_comulative = [];
 var tot_backtest_all_operations = [];
 var profit = 0;
 var loss = 0;
@@ -931,12 +1402,13 @@ var long_trades = 0;
 var short_trades = 0;
 var max_drawdown_arr = [];
 var max_drawdown = 0;
+var max_drawdown_from_zero = 0;
 var min_drawdown = 0;
 var operation_unique_id = 1;
 
 
 
-sendNewDataToSignalProvider(indexQuote);
+
 
 
 
