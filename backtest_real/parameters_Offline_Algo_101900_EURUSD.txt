@@ -15,17 +15,17 @@
             %
             % EXAMPLE of use:
             % -------------------------------------------------------------
-            % clear all; bkt_Algo_002=bktOffline
-            % bkt_Algo_002=bkt_Algo_002.spin('parameters_Offline_Algo_002.txt')
+            % clear all; bkt_Algo_101900=bktOffline
+            % bkt_Algo_101900=bkt_Algo_101900.spin('parameters_Offline_Algo_101900_EURUSD.txt')
 
 
 
-nameAlgo = 'Algo_000_test'
-Cross = 'AUDCAD'
+nameAlgo = 'Algo101900_residual_EURUSD'
+Cross = 'EURUSD'
 nData_ = 100
-histName = 'AUDCAD_short2.csv' %'AUDCAD.csv' %'C:\Users\alericci\Desktop\Forex 4.0 noShared\EURUSD_2012_2015.csv'
+histName = 'C:\Users\alericci\Desktop\Forex 4.0 nonShared\historical\EURUSD-04-2014-02-2016.csv'  %'C:\Users\alericci\Desktop\Forex 4.0 noShared\EURUSD-04-2014-02-2016.csv' %'EURUSD-04-2014-02-2016.csv'  %'EURUSD_smallsample2014_2015.csv' %'C:\Users\alericci\Desktop\Forex 4.0 noShared\EURUSD-04-2014-02-2016.csv'  
 actTimeScale = 1
-newTimeScale = 5
+newTimeScale = 240
 transCost = 1
 initialStack = 10000
 Leverage = 10

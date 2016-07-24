@@ -622,6 +622,40 @@ classdef coreState_real02 < handle
             
         end
         
+        
+                %%
+        
+        function obj = core_Algo_019_residual (obj,closure,TimeSeriesExpert,fluctLimit,wTP,maxSL)
+            
+            %NOTE:
+            %LOGICA: fa una linear regression sui dati di input (tranne l'ultimo) e calcola la deviazione standard dei residui rispetto al fit
+            % se la distanza dell'ultimo punto e' fuori 3 deviazioni standard riconosce un segnale di trend
+            %            
+            % non uso i dati al minuto per le valutazioni dello state
+
+            closePrice=closure;
+            n = length (closePrice);
+            
+            [~,type,rate,q0,res]=TimeSeriesExpert.linearRegression(closePrice(1:end-1));
+            
+            devRes     = std(res);
+            difference = ( n*type*rate+q0 ) - ( closePrice(end) );
+            newSign    = sign (difference);
+            distance   = abs(difference);
+            
+            if distance > 5*devRes && distance > fluctLimit
+                obj.state=1;
+                obj.suggestedDirection = - newSign;
+                volatility = min(floor(wTP*distance),maxSL);
+                obj.suggestedTP = volatility;
+                obj.suggestedSL = volatility;
+            else
+                obj.state=0;
+            end
+            
+            
+        end
+        
     end
     
 end
