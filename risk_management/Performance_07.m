@@ -47,7 +47,7 @@ classdef Performance_07 < handle
         dailyAveNetReturns;
         ferialNetReturns;
         ferialAveNetReturns;
-         
+        
         dailyNetReturns_Euro;
         dailyAveNetReturnsEuro;
         ferialNetReturnsEuro;
@@ -57,7 +57,7 @@ classdef Performance_07 < handle
         dailyAveNetReturnsEuroPerc;
         ferialNetReturnsEuroPerc;
         ferialAveNetReturnsEuroPerc;
-
+        
         
         ferialDaysOperation
         daysOperation;
@@ -96,7 +96,7 @@ classdef Performance_07 < handle
         drawDownDuration_nOper;
         maxDDD_nOper;
         minDDD_nOper;
-        aveDDD_nOper;       
+        aveDDD_nOper;
         drawDownDuration_days;
         maxDDD_days;
         minDDD_days;
@@ -110,10 +110,77 @@ classdef Performance_07 < handle
         %% Store the properties of this class to a comma separated file
         function obj = serialize(obj, fileName)
             fd = fopen(fileName, 'wt');
-            fprintf(fd, '%s\n', obj.nameAlgo);
-            fclose(fd);
+            try
+                fprintf(fd, 'nameAlgo, %s\n', obj.nameAlgo);
+                fprintf(fd, 'origin, %s\n', obj.origin);
+                fprintf(fd, 'histName, %s\n', obj.histName);
+                %fprintf(fd, 'period, %s\n', obj.period);
+                fprintf(fd, 'cross, %s\n', obj.cross);
+                fprintf(fd, 'freq, %s\n', obj.freq);
+                fprintf(fd, 'transCost, %s\n', obj.transCost);
+                fprintf(fd, 'initialStack, %s\n', obj.initialStack);
+                fprintf(fd, 'leverage, %s\n', obj.leverage);
+                fprintf(fd, 'inputResultsMatrix, %s\n', obj.inputResultsMatrix);
+                fprintf(fd, 'marginePerTrade, %s\n', obj.marginePerTrade);
+                fprintf(fd, 'SR, %s\n', obj.SR);
+                fprintf(fd, 'netReturns_pips, %s\n', obj.netReturns_pips);
+                fprintf(fd, 'netReturns_Euro, %s\n', obj.netReturns_Euro);
+                fprintf(fd, 'netReturns_perc, %s\n', obj.netReturns_perc);
+                fprintf(fd, 'pipsEarned, %s\n', obj.pipsEarned);
+                fprintf(fd, 'EuroEarned, %s\n', obj.EuroEarned);
+                fprintf(fd, 'percEarned, %s\n', obj.percEarned);
+                fprintf(fd, 'dailyNetReturns_pips, %s\n', obj.dailyNetReturns_pips);
+                fprintf(fd, 'dailyAveNetReturns, %s\n', obj.dailyAveNetReturns);
+                fprintf(fd, 'ferialNetReturns, %s\n', obj.ferialNetReturns);
+                fprintf(fd, 'ferialAveNetReturns, %s\n', obj.ferialAveNetReturns);
+                fprintf(fd, 'dailyNetReturns_Euro, %s\n', obj.dailyNetReturns_Euro);
+                fprintf(fd, 'dailyAveNetReturnsEuro, %s\n', obj.dailyAveNetReturnsEuro);
+                fprintf(fd, 'ferialNetReturnsEuro, %s\n', obj.ferialNetReturnsEuro);
+                fprintf(fd, 'ferialAveNetReturnsEuro, %s\n', obj.ferialAveNetReturnsEuro);
+                fprintf(fd, 'dailyNetReturns_perc, %s\n', obj.dailyNetReturns_perc);
+                fprintf(fd, 'dailyAveNetReturnsEuroPerc, %s\n', obj.dailyAveNetReturnsEuroPerc);
+                fprintf(fd, 'ferialNetReturnsEuroPerc, %s\n', obj.ferialNetReturnsEuroPerc);
+                fprintf(fd, 'ferialAveNetReturnsEuroPerc, %s\n', obj.ferialAveNetReturnsEuroPerc);
+                fprintf(fd, 'ferialDaysOperation, %s\n', obj.ferialDaysOperation);
+                fprintf(fd, 'daysOperation, %s\n', obj.daysOperation);
+                fprintf(fd, 'numOperations, %s\n', obj.numOperations);
+                fprintf(fd, 'minLatency, %s\n', obj.minLatency);
+                fprintf(fd, 'maxLatency, %s\n', obj.maxLatency);
+                fprintf(fd, 'aveLatency, %s\n', obj.aveLatency);
+                fprintf(fd, 'singleOperMinReturn, %s\n', obj.singleOperMinReturn);
+                fprintf(fd, 'minSingleOperMinReturn, %s\n', obj.minSingleOperMinReturn);
+                fprintf(fd, 'maxSingleOperMinReturn, %s\n', obj.maxSingleOperMinReturn);
+                fprintf(fd, 'aveSingleOperMinReturn, %s\n', obj.aveSingleOperMinReturn);
+                fprintf(fd, 'RR, %s\n', obj.RR);
+                fprintf(fd, 'percExRetPos, %s\n', obj.percExRetPos);
+                fprintf(fd, 'percExRetNeg, %s\n', obj.percExRetNeg);
+                fprintf(fd, 'percWeExRetPos, %s\n', obj.percWeExRetPos);
+                fprintf(fd, 'percWeExRetNeg, %s\n', obj.percWeExRetNeg);
+                fprintf(fd, 'drawDown_pips, %s\n', obj.drawDown_pips);
+                fprintf(fd, 'maxDD_pips, %s\n', obj.maxDD_pips);
+                fprintf(fd, 'minDD_pips, %s\n', obj.minDD_pips);
+                fprintf(fd, 'aveDD_pips, %s\n', obj.aveDD_pips);
+                fprintf(fd, 'drawDown_perc, %s\n', obj.drawDown_perc);
+                fprintf(fd, 'maxDD_perc, %s\n', obj.maxDD_perc);
+                fprintf(fd, 'minDD_perc, %s\n', obj.minDD_perc);
+                fprintf(fd, 'aveDD_perc, %s\n', obj.aveDD_perc);
+                fprintf(fd, 'dailyDrawDown_perc, %s\n', obj.dailyDrawDown_perc);
+                fprintf(fd, 'dailyMaxDD_perc, %s\n', obj.dailyMaxDD_perc);
+                fprintf(fd, 'dailyMaxDD_perc, %s\n', obj.dailyMinDD_perc);
+                fprintf(fd, 'dailyAveDD_perc, %s\n', obj.dailyAveDD_perc);
+                fprintf(fd, 'drawDownDuration_nOper, %s\n', obj.drawDownDuration_nOper);
+                fprintf(fd, 'maxDDD_nOper, %s\n', obj.maxDDD_nOper);
+                fprintf(fd, 'minDDD_nOper, %s\n', obj.minDDD_nOper);
+                fprintf(fd, 'aveDDD_nOper, %s\n', obj.aveDDD_nOper);
+                fprintf(fd, 'drawDownDuration_days, %s\n', obj.drawDownDuration_days);
+                fprintf(fd, 'maxDDD_days, %s\n', obj.maxDDD_days);
+                fprintf(fd, 'minDDD_days, %s\n', obj.minDDD_days);
+                fprintf(fd, 'aveDDD_days, %s\n', obj.aveDDD_days);
+            catch
+                fclose(fd);
+            end
         end
-
+        
         %% Function to calculate all the performance parameters of a single result matrix
         
         function obj=calcSinglePerformance(obj,nameAlgo_,origin_,histName_,cross_,freq_,transCost_,initialStack_,leverage_,inputResultsMatrix_,plotPerformance)
@@ -226,7 +293,7 @@ classdef Performance_07 < handle
             % objname=objname.calcComparedPerformance('real_17','bktWeb','demo','EURUSD',30,1,0,10000,10,inputResultsMatrix1_,inputResultsMatrix2_,1);
             %
             
-       
+            
             if strcmp(origin1_,'bktWeb')
                 obj.inputResultsMatrix=inputResultsMatrix1_;
                 c=1;
@@ -612,19 +679,19 @@ classdef Performance_07 < handle
                 linkaxes(subl,'x');
                 linkaxes(subl(1:2),'y');
                 linkaxes(subl(3:4),'y');
-
-%                 % frequency histogram of latency, ratio between won and lost operations
-%                 [latplus,~]=hist( Latency( find(returns>0) ), xlatn );
-%                 [latlost,~]=hist( Latency( find(returns<0) ), xlatn );
-%                 figure
-%                 bar( xlatn , (latplus./latlost) );
-%                 title('frequency histogram of latency, ratio won/lost operations')
-%                 
-%                 % frequency histogram of minimum returns
-%                 [n,xout]=hist(minReturns,10);
-%                 figure
-%                 bar(xout,n/sum(n));
-%                 title('frequency histogram of min returns')
+                
+                %                 % frequency histogram of latency, ratio between won and lost operations
+                %                 [latplus,~]=hist( Latency( find(returns>0) ), xlatn );
+                %                 [latlost,~]=hist( Latency( find(returns<0) ), xlatn );
+                %                 figure
+                %                 bar( xlatn , (latplus./latlost) );
+                %                 title('frequency histogram of latency, ratio won/lost operations')
+                %
+                %                 % frequency histogram of minimum returns
+                %                 [n,xout]=hist(minReturns,10);
+                %                 figure
+                %                 bar(xout,n/sum(n));
+                %                 title('frequency histogram of min returns')
                 
                 % frequency histogram of minimum returns, won operations
                 [nplus,xoutplus]=hist( minReturns(find(returns>0)) );
@@ -762,7 +829,7 @@ classdef Performance_07 < handle
             pp=zeros(size(PL));
             d=zeros(size(PL));
             dd=zeros(size(PL));
-                        
+            
             for t=2:length(PL);
                 highWatermark(t)=max(highWatermark(t-1),PL(t));
                 %drawDown(t)=(1+highWatermark(t))/(1+PL(t))-1;
@@ -797,16 +864,16 @@ classdef Performance_07 < handle
                 end
             end
             [~,~,drawDownDuration] = find(pp);
-
+            
             maxDD=-max(drawDown);
             minDD=-min(drawDown);
-            aveDD=-mean(drawDown);            
+            aveDD=-mean(drawDown);
             maxDDD=max(drawDownDuration);
             minDDD=min(drawDownDuration);
             aveDDD=mean(drawDownDuration);
             
         end
-
+        
     end
     
     
