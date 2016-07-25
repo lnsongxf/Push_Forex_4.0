@@ -15,15 +15,19 @@ var app = angular
 
 app.factory('AjaxService', ['$http', function($http) {
 
-  var _getCSV = function() {
-    //var url = "http://52.88.34.166:9091/history/csv";
-
+  var _getHistoryCSV = function() {
     var url = "/proxy";
-    return $http.post(url, {urlData: "http://52.88.34.166:9091/history/csv", param: {}, method: "GET"})
+    return $http.post(url, {urlData: "/history/csv", param: {}, method: "GET"})
+  }; 
+
+  var _getOpenCSV = function() {
+    var url = "/proxy";
+    return $http.post(url, {urlData: "/open/csv", param: {}, method: "GET"})
   }; 
 
   return {    
-    getCSV: function() { return _getCSV() }
+    getHistoryCSV: function() { return _getHistoryCSV() },
+    getOpenCSV: function() { return _getOpenCSV() }
   };
 
 }]);
@@ -73,6 +77,47 @@ app.factory('Help', function() {
     return arrData;
   };
 
+
+  var _csvToArrOpenPosition = function(strData,strDelimiter){
+    strDelimiter = (strDelimiter || ",");
+    var objPattern = new RegExp(
+        ( "(\\" + strDelimiter + "|\\r?\\n|\\r|^)" + "(?:\"([^\"]*(?:\"\"[^\"]*)*)\"|" + "([^\"\\" + strDelimiter + "\\r\\n]*))" ),"gi");
+    var arrData = [];
+    var arrMatches = null;
+    while (arrMatches = objPattern.exec( strData )){
+        var strMatchedDelimiter = arrMatches[ 1 ];
+        if ( strMatchedDelimiter.length && (strMatchedDelimiter != strDelimiter) ){
+            //arrData.push( {date:'',open:'',high:'',low:'',close:'',volume:'',magic:'',profit:''} );
+        }
+        if (arrMatches[ 2 ]){ var strMatchedValue = arrMatches[ 2 ].replace( new RegExp( "\"\"", "g" ), "\"" );
+        }else{ var strMatchedValue = arrMatches[ 3 ]; }
+        var strMatchedValueArr = strMatchedValue.split(",");
+        
+        if (strMatchedValueArr.length > 1) {
+          if (_searchStringInArray('Rollover',strMatchedValueArr) != -1) {
+            console.log("dd0: ",strMatchedValueArr);
+            arrData.push( {
+              opType: parseInt(strMatchedValueArr[4]),
+              openDate: Date.parse(strMatchedValueArr[6]),
+              open: parseFloat(strMatchedValueArr[1]),
+              currentPrice: parseFloat(strMatchedValueArr[2]),
+              stopLoss:parseFloat(strMatchedValueArr[12]),
+              takeProfit:parseFloat(strMatchedValueArr[13]),
+              opId: parseInt(strMatchedValueArr[18]),
+              cross: strMatchedValueArr[11],
+              magic: parseInt(strMatchedValueArr[17]),
+              opId:parseFloat(strMatchedValueArr[18])
+            } );
+          }else{
+            //console.log("dd: ",strMatchedValueArr);
+          }
+        }
+        //arrData[ arrData.length - 1 ].push( strMatchedValue );
+    }
+    return arrData;
+  };
+
+
   var _searchStringInArray = function(str, strArray) {
     var match=0; 
     for (var j=0; j<strArray.length; j++) {
@@ -114,7 +159,8 @@ app.factory('Help', function() {
 
   return {  
     csvToArr: function(csv,strDelimiter) { return _csvToArr(csv,strDelimiter) },  
-    sort: function(arr,sortProperties,direction) { return _sort(arr,sortProperties,direction) }
+    sort: function(arr,sortProperties,direction) { return _sort(arr,sortProperties,direction) },
+    csvToArrOpenPosition: function(csv,strDelimiter) {return _csvToArrOpenPosition(csv,strDelimiter) }
   };
 
 });
