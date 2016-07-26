@@ -23,9 +23,9 @@
 nameAlgo = 'Algo101900_residual_EURUSD'
 Cross = 'EURUSD'
 nData_ = 100
-histName = 'C:\Users\alericci\Desktop\Forex 4.0 nonShared\historical\EURUSD-04-2014-02-2016.csv'  %'C:\Users\alericci\Desktop\Forex 4.0 noShared\EURUSD-04-2014-02-2016.csv' %'EURUSD-04-2014-02-2016.csv'  %'EURUSD_smallsample2014_2015.csv' %'C:\Users\alericci\Desktop\Forex 4.0 noShared\EURUSD-04-2014-02-2016.csv'  
+histName = 'C:\Users\alericci\Desktop\Forex 4.0 noShared\EURUSD-04-2014-02-2016.csv'   %'C:\Users\alericci\Desktop\Forex 4.0 nonShared\historical\EURUSD-04-2014-02-2016.csv'  %'EURUSD-04-2014-02-2016.csv'  %'EURUSD_smallsample2014_2015.csv' %'C:\Users\alericci\Desktop\Forex 4.0 noShared\EURUSD-04-2014-02-2016.csv'  
 actTimeScale = 1
-newTimeScale = 240
+newTimeScale = 5
 transCost = 1
 initialStack = 10000
 Leverage = 10
