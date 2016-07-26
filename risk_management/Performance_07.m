@@ -117,65 +117,126 @@ classdef Performance_07 < handle
                 %fprintf(fd, 'period, %s\n', obj.period);
                 fprintf(fd, 'cross, %s\n', obj.cross);
                 fprintf(fd, 'freq, %s\n', obj.freq);
-                fprintf(fd, 'transCost, %s\n', obj.transCost);
-                fprintf(fd, 'initialStack, %n\n', obj.initialStack);
-                fprintf(fd, 'leverage, %n\n', obj.leverage);
+                fprintf(fd, 'transCost, %7.2f\n', obj.transCost);
+                fprintf(fd, 'initialStack, %d \n', obj.initialStack);
+                fprintf(fd, 'leverage, %d \n', obj.leverage);
                 %(fd, 'inputResultsMatrix, %s\n', obj.inputResultsMatrix);
-                fprintf(fd, 'marginePerTrade, %s\n', obj.marginePerTrade);
-                fprintf(fd, 'SR, %s\n', obj.SR);
-                fprintf(fd, 'netReturns_pips, %s\n', obj.netReturns_pips);
-                fprintf(fd, 'netReturns_Euro, %s\n', obj.netReturns_Euro);
-                fprintf(fd, 'netReturns_perc, %s\n', obj.netReturns_perc);
-                fprintf(fd, 'pipsEarned, %s\n', obj.pipsEarned);
-                fprintf(fd, 'EuroEarned, %s\n', obj.EuroEarned);
-                fprintf(fd, 'percEarned, %s\n', obj.percEarned);
-                fprintf(fd, 'dailyNetReturns_pips, %s\n', obj.dailyNetReturns_pips);
-                fprintf(fd, 'dailyAveNetReturns, %s\n', obj.dailyAveNetReturns);
-                fprintf(fd, 'ferialNetReturns, %s\n', obj.ferialNetReturns);
-                fprintf(fd, 'ferialAveNetReturns, %s\n', obj.ferialAveNetReturns);
-                fprintf(fd, 'dailyNetReturns_Euro, %s\n', obj.dailyNetReturns_Euro);
-                fprintf(fd, 'dailyAveNetReturnsEuro, %s\n', obj.dailyAveNetReturnsEuro);
-                fprintf(fd, 'ferialNetReturnsEuro, %s\n', obj.ferialNetReturnsEuro);
-                fprintf(fd, 'ferialAveNetReturnsEuro, %s\n', obj.ferialAveNetReturnsEuro);
-                fprintf(fd, 'dailyNetReturns_perc, %s\n', obj.dailyNetReturns_perc);
-                fprintf(fd, 'dailyAveNetReturnsEuroPerc, %s\n', obj.dailyAveNetReturnsEuroPerc);
-                fprintf(fd, 'ferialNetReturnsEuroPerc, %s\n', obj.ferialNetReturnsEuroPerc);
-                fprintf(fd, 'ferialAveNetReturnsEuroPerc, %s\n', obj.ferialAveNetReturnsEuroPerc);
-                fprintf(fd, 'ferialDaysOperation, %n\n', obj.ferialDaysOperation);
-                fprintf(fd, 'daysOperation, %n\n', obj.daysOperation);
-                fprintf(fd, 'numOperations, %n\n', obj.numOperations);
-                fprintf(fd, 'minLatency, %s\n', obj.minLatency);
-                fprintf(fd, 'maxLatency, %s\n', obj.maxLatency);
-                fprintf(fd, 'aveLatency, %s\n', obj.aveLatency);
-                %(fd, 'singleOperMinReturn, %s\n', obj.singleOperMinReturn);
-                fprintf(fd, 'minSingleOperMinReturn, %s\n', obj.minSingleOperMinReturn);
-                fprintf(fd, 'maxSingleOperMinReturn, %s\n', obj.maxSingleOperMinReturn);
-                fprintf(fd, 'aveSingleOperMinReturn, %s\n', obj.aveSingleOperMinReturn);
-                fprintf(fd, 'RR, %s\n', obj.RR);
-                fprintf(fd, 'percExRetPos, %n\n', obj.percExRetPos);
-                fprintf(fd, 'percExRetNeg, %n\n', obj.percExRetNeg);
-                fprintf(fd, 'percWeExRetPos, %s\n', obj.percWeExRetPos);
-                fprintf(fd, 'percWeExRetNeg, %s\n', obj.percWeExRetNeg);
-                fprintf(fd, 'drawDown_pips, %s\n', obj.drawDown_pips);
-                fprintf(fd, 'maxDD_pips, %s\n', obj.maxDD_pips);
-                fprintf(fd, 'minDD_pips, %s\n', obj.minDD_pips);
-                fprintf(fd, 'aveDD_pips, %s\n', obj.aveDD_pips);
-                fprintf(fd, 'drawDown_perc, %s\n', obj.drawDown_perc);
-                fprintf(fd, 'maxDD_perc, %s\n', obj.maxDD_perc);
-                fprintf(fd, 'minDD_perc, %s\n', obj.minDD_perc);
-                fprintf(fd, 'aveDD_perc, %s\n', obj.aveDD_perc);
-                fprintf(fd, 'dailyDrawDown_perc, %s\n', obj.dailyDrawDown_perc);
-                fprintf(fd, 'dailyMaxDD_perc, %s\n', obj.dailyMaxDD_perc);
-                fprintf(fd, 'dailyMaxDD_perc, %s\n', obj.dailyMinDD_perc);
-                fprintf(fd, 'dailyAveDD_perc, %s\n', obj.dailyAveDD_perc);
-                fprintf(fd, 'drawDownDuration_nOper, %n\n', obj.drawDownDuration_nOper);
-                fprintf(fd, 'maxDDD_nOper, %n\n', obj.maxDDD_nOper);
-                fprintf(fd, 'minDDD_nOper, %n\n', obj.minDDD_nOper);
-                fprintf(fd, 'aveDDD_nOper, %n\n', obj.aveDDD_nOper);
-                fprintf(fd, 'drawDownDuration_days, %n\n', obj.drawDownDuration_days);
-                fprintf(fd, 'maxDDD_days, %n\n', obj.maxDDD_days);
-                fprintf(fd, 'minDDD_days, %n\n', obj.minDDD_days);
-                fprintf(fd, 'aveDDD_days, %n\n', obj.aveDDD_days);
+                fprintf(fd, '\n');
+                fprintf(fd, 'marginePerTrade, ');
+                fprintf(fd, '%7.2f', obj.marginePerTrade');
+                fprintf(fd, '\n');
+
+                fprintf(fd, 'SR, %7.2f\n', obj.SR);
+
+                fprintf(fd, '\n');
+                fprintf(fd, 'netReturns_pips, ');
+                fprintf(fd, '%7.2f', obj.netReturns_pips');
+                fprintf(fd, '\n');
+
+                fprintf(fd, '\n');
+                fprintf(fd, 'netReturns_Euro, ');
+                fprintf(fd, '%7.2f', obj.netReturns_Euro');
+                fprintf(fd, '\n');
+                
+                fprintf(fd, '\n');
+                fprintf(fd, 'netReturns_perc, ');
+                fprintf(fd, '%7.2f', obj.netReturns_perc');
+                fprintf(fd, '\n');
+                
+                fprintf(fd, 'pipsEarned, %7.2f\n', obj.pipsEarned);
+                fprintf(fd, 'EuroEarned, %7.2f\n', obj.EuroEarned);
+                fprintf(fd, 'percEarned, %7.2f\n', obj.percEarned);
+                
+                fprintf(fd, '\n');
+                fprintf(fd, 'dailyNetReturns_pips, ');
+                fprintf(fd, '%7.2f', obj.dailyNetReturns_pips');
+                fprintf(fd, '\n');
+                
+                fprintf(fd, 'dailyAveNetReturns, %7.2f\n', obj.dailyAveNetReturns);
+
+                fprintf(fd, '\n');
+                fprintf(fd, 'ferialNetReturns, ');
+                fprintf(fd, '%7.2f', obj.ferialNetReturns');
+                fprintf(fd, '\n');
+
+                fprintf(fd, 'ferialAveNetReturns, %7.2f\n', obj.ferialAveNetReturns);
+
+                fprintf(fd, '\n');
+                fprintf(fd, 'dailyNetReturns_Euro, ');
+                fprintf(fd, '%7.2f', obj.dailyNetReturns_Euro');
+                fprintf(fd, '\n');
+
+                fprintf(fd, 'dailyAveNetReturnsEuro, %7.2f\n', obj.dailyAveNetReturnsEuro);
+
+                fprintf(fd, '\n');
+                fprintf(fd, 'ferialNetReturnsEuro, ');
+                fprintf(fd, '%7.2f', obj.ferialNetReturnsEuro');
+                fprintf(fd, '\n');
+                
+                fprintf(fd, 'ferialAveNetReturnsEuro, %7.2f\n', obj.ferialAveNetReturnsEuro);
+                
+                fprintf(fd, '\n');
+                fprintf(fd, 'dailyNetReturns_perc, ');
+                fprintf(fd, '%7.2f', obj.dailyNetReturns_perc');
+                fprintf(fd, '\n');                
+
+                fprintf(fd, 'dailyAveNetReturnsEuroPerc, %7.2f\n', obj.dailyAveNetReturnsEuroPerc);
+
+                fprintf(fd, '\n');
+                fprintf(fd, 'ferialNetReturnsEuroPerc, ');
+                fprintf(fd, '%7.2f', obj.ferialNetReturnsEuroPerc');
+                fprintf(fd, '\n');
+
+                fprintf(fd, 'ferialAveNetReturnsEuroPerc, %7.2f\n', obj.ferialAveNetReturnsEuroPerc);
+                fprintf(fd, 'ferialDaysOperation, %d\n', obj.ferialDaysOperation);
+                fprintf(fd, 'daysOperation, %d\n', obj.daysOperation);
+                fprintf(fd, 'numOperations, %d\n', obj.numOperations);
+                fprintf(fd, 'minLatency, %7.2f\n', obj.minLatency);
+                fprintf(fd, 'maxLatency, %7.2f\n', obj.maxLatency);
+                fprintf(fd, 'aveLatency, %7.2f\n', obj.aveLatency);
+                %(fd, 'singleOperMinReturn, %7.2f\n', obj.singleOperMinReturn);
+                fprintf(fd, 'minSingleOperMinReturn, %7.2f\n', obj.minSingleOperMinReturn);
+                fprintf(fd, 'maxSingleOperMinReturn, %7.2f\n', obj.maxSingleOperMinReturn);
+                fprintf(fd, 'aveSingleOperMinReturn, %7.2f\n', obj.aveSingleOperMinReturn);
+                fprintf(fd, 'RR, %7.2f\n', obj.RR);
+                fprintf(fd, 'percExRetPos, %7.2f\n', obj.percExRetPos);
+                fprintf(fd, 'percExRetNeg, %7.2f\n', obj.percExRetNeg);
+                fprintf(fd, 'percWeExRetPos, %7.2f\n', obj.percWeExRetPos);
+                fprintf(fd, 'percWeExRetNeg, %7.2f\n', obj.percWeExRetNeg);
+                
+                fprintf(fd, '\n');
+                fprintf(fd, 'drawDown_pips, ');
+                fprintf(fd, '%7.2f', obj.drawDown_pips');
+                fprintf(fd, '\n');                
+                fprintf(fd, 'maxDD_pips, %7.2f\n', obj.maxDD_pips);
+                fprintf(fd, 'minDD_pips, %7.2f\n', obj.minDD_pips);
+                fprintf(fd, 'aveDD_pips, %7.2f\n', obj.aveDD_pips);
+
+                fprintf(fd, '\n');
+                fprintf(fd, 'drawDown_perc, ');
+                fprintf(fd, '%7.2f', obj.drawDown_perc');
+                fprintf(fd, '\n');                
+                fprintf(fd, 'maxDD_perc, %7.2f\n', obj.maxDD_perc);
+                fprintf(fd, 'minDD_perc, %7.2f\n', obj.minDD_perc);
+                fprintf(fd, 'aveDD_perc, %7.2f\n', obj.aveDD_perc);
+
+                fprintf(fd, '\n');
+                fprintf(fd, 'dailyDrawDown_perc, ');
+                fprintf(fd, '%7.2f', obj.dailyDrawDown_perc');
+                fprintf(fd, '\n');                   
+
+                fprintf(fd, 'dailyMaxDD_perc, %7.2f\n', obj.dailyMaxDD_perc);
+                fprintf(fd, 'dailyMinDD_perc, %7.2f\n', obj.dailyMinDD_perc);
+                fprintf(fd, 'dailyAveDD_perc, %7.2f\n', obj.dailyAveDD_perc);
+                fprintf(fd, 'drawDownDuration_nOper, %d\n', obj.drawDownDuration_nOper);
+                fprintf(fd, 'maxDDD_nOper, %d\n', obj.maxDDD_nOper);
+                fprintf(fd, 'minDDD_nOper, %d\n', obj.minDDD_nOper);
+                fprintf(fd, 'aveDDD_nOper, %d\n', obj.aveDDD_nOper);
+                fprintf(fd, 'drawDownDuration_days, %d\n', obj.drawDownDuration_days);
+                fprintf(fd, 'maxDDD_days, %d\n', obj.maxDDD_days);
+                fprintf(fd, 'minDDD_days, %d\n', obj.minDDD_days);
+                fprintf(fd, 'aveDDD_days, %7.2f\n', obj.aveDDD_days);
+                fclose(fd);
             catch
                 fclose(fd);
             end

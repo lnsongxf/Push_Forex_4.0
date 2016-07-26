@@ -72,29 +72,51 @@ angular.module('webApp')
 
 
 
-
       $scope.tableArrOpSort = [];
-      AjaxService.getCSV()
-  		.success(function(data, status, headers) {            
-    		
+      AjaxService.getHistoryCSV()
+      .success(function(data, status, headers) {            
+        
         console.log("data: ",data);
         // CSV PARSER
         $scope.arrOp = Help.csvToArr(data.data.data,"↵");
         $scope.createCSV();
         $scope.showTable();
         $scope.showProfitChart();
+      })
+      .error(function(data, status, headers, config) {
+        console.log("data error: ",data);
+        console.log("data error: ",status);
+        console.log("data error: ",headers);
+      });
 
 
+
+      $scope.getOpenProfit = function(openPrice,currentPrice,opType){
+        if (opType == -1) {
+          return Math.round( ((openPrice - currentPrice)*100000) );   // *10000 beacuse we use 5 digits pips
+        }else{
+          return Math.round( ((currentPrice - openPrice)*100000) );   // *10000 beacuse we use 5 digits pips
+        }
+      }
+
+      $scope.tableArrOpOpenSort = [];
+      AjaxService.getOpenCSV()
+  		.success(function(data1, status, headers) {            
+    		
+        console.log("data1: ",data1);
+        // CSV PARSER
+        $scope.arrOpOpen = Help.csvToArrOpenPosition(data1.data.data,"↵");
+        console.log("arrOpOpen: ",$scope.arrOpOpen);
+        $scope.openOperations = $scope.arrOpOpen;
+        //$scope.createCSVOpen();
+        //$scope.showTableOpen();
+        //$scope.showProfitChartOpen();
     	})
     	.error(function(data, status, headers, config) {
     		console.log("data error: ",data);
         console.log("data error: ",status);
         console.log("data error: ",headers);
     	});
-
-
-     
-
 
 
       $scope.showProfitChart = function(){

@@ -27,7 +27,7 @@ module.exports = function (app) {
         console.log("in ajax call: ",req.headers);
 
         RestApiNodeToBE.proxy(req.body.urlData,req.body.method).then(function (dataInit){
-            console.log("data Init: ",dataInit);
+            //console.log("data Init: ",dataInit);
             res.statusCode = 200;
             res.setHeader("Content-Type", "application/json");
             res.end(JSON.stringify({data:dataInit}));
@@ -45,7 +45,7 @@ module.exports = function (app) {
             var options = {
                 host: "52.88.34.166",
                 port: "9091",
-                path: "/history/csv",
+                path: urlData,
                 method: "GET"
             };
             http.request(options, function(res) {
