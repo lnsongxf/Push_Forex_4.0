@@ -1,4 +1,4 @@
-function [vEnd_f, yEnd_f, err] = fit1(n,x,y,fun,v)
+function [vEnd_f,err,yEnd_f,resids] = fit1(n,x,y,fun,v)
 
 %%
 % n numero di serie da fittare (nel caso i valori fossero allocarti in
@@ -43,8 +43,9 @@ yEnd_f(:,1)=yEnd;   %mettere al posto di 1 i se hai serie di FIT
 %%--------errors---------
 % npar=30;
 ci = nlparci(vEnd,resids,J);
-err=zeros(n,size(ci(1)));
-for r=1:size(ci(1))        %modificato
+c  = size(ci,2);
+err=zeros(n,c);
+for r=1:c        %modificato
     err(i,r)=(ci(r,2)-ci(r,1))/2;
 end;
 %%

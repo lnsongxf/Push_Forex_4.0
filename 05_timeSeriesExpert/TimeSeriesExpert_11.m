@@ -351,7 +351,7 @@ classdef TimeSeriesExpert_11 < handle
                 i=i+1;
                 x1=((t01):s:i*s)';
                 ct1=c(t01:1:i);
-                [vEnd_f1, yEnd_f1, err1] = fit1(n,x1,ct1,fun,inFit1);
+                [vEnd_f1,err1,yEnd_f1,~] = fit1(n,x1,ct1,fun,inFit1);
                 if x1(end)-x1(1)<5
                     err1=1;
                 end
@@ -601,7 +601,7 @@ classdef TimeSeriesExpert_11 < handle
 
         %%
         
-        function [obj,type,rate,q0,res] = linearRegression(obj,closure)
+        function [obj,type,rate,q0,errors,yEnd_f,resids,inFitLast] = linearRegression(obj,closure,inFit1)
             
             %
             % DESCRIPTION:
@@ -626,23 +626,16 @@ classdef TimeSeriesExpert_11 < handle
             % [objname,type,rate,q0,res]=objname.linearRegression(closurePrices);
             %
             
-            global inFit1
-            
-            if(isempty(inFit1))
-                inFit1=[13000 0];
-            end
-            
             n=1;
             x1=(1:length(closure))';
             
-            [vEnd_f1,~, err1] = fit1(n,x1,closure,@linear1,inFit1);
-            
-            
-            res=err1;
-            q0=vEnd_f1(1,2);
-            rate=abs(vEnd_f1(1,1));
+            [vEnd_f1,err1,yEnd_f,resids] = fit1(n,x1,closure,@linear1,inFit1);
+       
             type=sign(vEnd_f1(1,1));
-            inFit1=[type.*rate,vEnd_f1(1,2)];
+            rate=abs(vEnd_f1(1,1));
+            q0=vEnd_f1(1,2);
+            errors=err1;
+            inFitLast=[type.*rate,vEnd_f1(1,2)];
             
             
         end

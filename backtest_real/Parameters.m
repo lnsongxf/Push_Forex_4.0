@@ -12,6 +12,7 @@ classdef Parameters < handle
         smoothVal1;
         smoothVal2;
         previous_signal;
+        inFit;
         trigger1;
         trigger2;
         trendLength;
@@ -190,6 +191,8 @@ classdef Parameters < handle
             obj.set('smoothVal2',-1);
             obj.map('previous_signal') =parameter;
             obj.set('previous_signal',0);
+            obj.map('inFit') =parameter;
+            obj.set('inFit',0);
             obj.map('trigger1') =parameter;
             obj.set('trigger1',0);
             obj.map('trigger2') =parameter;

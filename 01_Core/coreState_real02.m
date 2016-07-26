@@ -625,7 +625,7 @@ classdef coreState_real02 < handle
         
                 %%
         
-        function obj = core_Algo_019_residual (obj,closure,TimeSeriesExpert,fluctLimit,wTP,maxSL)
+        function obj = core_Algo_019_residual (obj,closure,TimeSeriesExpert,params,nDev,limitRate,fluctLimit,wTP,maxSL)
             
             %NOTE:
             %LOGICA: fa una linear regression sui dati di input (tranne l'ultimo) e calcola la deviazione standard dei residui rispetto al fit
@@ -633,20 +633,32 @@ classdef coreState_real02 < handle
             %            
             % non uso i dati al minuto per le valutazioni dello state
 
-            closePrice=closure;
-            n = length (closePrice);
+            closePrice = closure;
+            n          = length (closePrice);
+            inFit1     = params.get('inFit');
             
-            [~,type,rate,q0,res]=TimeSeriesExpert.linearRegression(closePrice(1:end-1));
+            if inFit1 == 0
+               inFit1=[0 13000];
+            end
             
-            devRes     = std(res);
-            difference = ( n*type*rate+q0 ) - ( closePrice(end) );
-            newSign    = sign (difference);
-            distance   = abs(difference);
+            [~,type,rate,q0,~,~,resids,inFitLast] = TimeSeriesExpert.linearRegression(closePrice(1:end-1),inFit1);
             
-            if distance > 5*devRes && distance > fluctLimit
+            devRes      = std(resids);
+            trendPrice  = n*type*rate+q0;
+            actualPrice = closePrice(end);
+            difference  = ( actualPrice ) - ( trendPrice );
+            newSign     = sign (difference);
+            distance    = abs(difference);
+            
+            params.set('inFit',inFitLast);
+            
+            flatTrand = limitRate-abs(rate);
+            
+            if distance > nDev*devRes && distance > fluctLimit && flatTrand > 0
                 obj.state=1;
                 obj.suggestedDirection = - newSign;
                 volatility = min(floor(wTP*distance),maxSL);
+                volatility = max(volatility,3);
                 obj.suggestedTP = volatility;
                 obj.suggestedSL = volatility;
             else

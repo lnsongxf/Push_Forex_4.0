@@ -100,7 +100,7 @@ end
 
 
 % controlla se ho dei nuovi dati sulla newTimeScale
-if newTimeScalePoint
+if ( newTimeScalePoint && (abs(operationState.actualOperation) == 0) )         % !!! ATTENTION !!! This line is different for this Algo, We get in the core loop only when the operation is closed (no update of suggested TP and SL) 
     
     % 01a
     % -------- stationarity Test ------------------- %
@@ -121,7 +121,7 @@ if newTimeScalePoint
     
     % 01c
     % -------- coreState filter -------------------- %
-    cState.core_Algo_019_residual(chiusure(1:end-1),TimeSeriesExpert,4,1,1000);
+    cState.core_Algo_019_residual(chiusure(1:end-1),TimeSeriesExpert,params,4,0.1,4,0.3,50);
     
 end
 
