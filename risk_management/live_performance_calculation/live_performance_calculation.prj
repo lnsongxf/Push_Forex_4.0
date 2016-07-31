@@ -1,0 +1,1472 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<deployment-project plugin="plugin.deploytool" plugin-version="1.0">
+  <configuration target="target.standalone.win" target-name="Windows Standalone Application" name="live_performance_calculation" location="C:\Users\alericci\Desktop\Forex 4.0\Risk_management" file="C:\Users\alericci\Desktop\Forex 4.0\Risk_management\live_performance_calculation.prj" build-checksum="3701801432">
+    <param.project.name>C:\Users\alericci\Desktop\Forex 4.0\Risk_management\live_performance_calculation.prj</param.project.name>
+    <param.target.type>Windows Standalone Application</param.target.type>
+    <param.appname>live_performance_calculation</param.appname>
+    <param.intermediate>${PROJECT_ROOT}\live_performance_calculation\src</param.intermediate>
+    <param.output>${PROJECT_ROOT}\live_performance_calculation\distrib</param.output>
+    <param.embed.ctf>true</param.embed.ctf>
+    <param.tbx_on_path>
+      <item>all</item>
+    </param.tbx_on_path>
+    <param.warnings>
+      <warning.fullpath>on</warning.fullpath>
+      <warning.duplicate>on</warning.duplicate>
+      <warning.option.ignored>on</warning.option.ignored>
+      <warning.libname>on</warning.libname>
+      <warning.demo>on</warning.demo>
+    </param.warnings>
+    <param.version>1.0</param.version>
+    <param.user.only.registration>false</param.user.only.registration>
+    <param.c.cpp.options.file />
+    <param.include.dirs />
+    <param.lib.dirs />
+    <param.lib.files />
+    <param.defines />
+    <param.undefines />
+    <param.debug>false</param.debug>
+    <param.share.mcr>false</param.share.mcr>
+    <param.disable.jvm>false</param.disable.jvm>
+    <param.disable.display>false</param.disable.display>
+    <param.create.log>false</param.create.log>
+    <param.log.file />
+    <param.user.defined.mcr.options />
+    <unset>
+      <param.project.name />
+      <param.target.type />
+      <param.appname />
+      <param.intermediate />
+      <param.output />
+      <param.embed.ctf />
+      <param.tbx_on_path />
+      <param.warnings />
+      <param.version />
+      <param.user.only.registration />
+      <param.c.cpp.options.file />
+      <param.include.dirs />
+      <param.lib.dirs />
+      <param.lib.files />
+      <param.defines />
+      <param.undefines />
+      <param.debug />
+      <param.share.mcr />
+      <param.disable.jvm />
+      <param.disable.display />
+      <param.create.log />
+      <param.log.file />
+      <param.user.defined.mcr.options />
+    </unset>
+    <fileset.main>
+      <file>${PROJECT_ROOT}\live_performance_calculation.m</file>
+    </fileset.main>
+    <fileset.resources />
+    <fileset.package />
+    <build-deliverables>
+      <file name="live_performance_calculation.exe" location="${PROJECT_ROOT}\live_performance_calculation\distrib" optional="false">C:\Users\alericci\Desktop\Forex 4.0\Risk_management\live_performance_calculation\distrib\live_performance_calculation.exe</file>
+      <file name="readme.txt" location="${PROJECT_ROOT}\live_performance_calculation\distrib" optional="true">C:\Users\alericci\Desktop\Forex 4.0\Risk_management\live_performance_calculation\distrib\readme.txt</file>
+    </build-deliverables>
+    <workflow />
+    <matlab>
+      <root>C:\Program Files\MATLAB\R2012a</root>
+      <path>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\branches</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\hooks</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\info</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\logs</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\logs\refs</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\logs\refs\heads</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\logs\refs\remotes</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\logs\refs\remotes\origin</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\00</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\01</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\02</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\03</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\04</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\05</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\06</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\07</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\08</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\09</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\0a</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\0b</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\0c</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\0d</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\0e</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\0f</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\10</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\11</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\12</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\13</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\14</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\15</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\16</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\17</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\18</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\19</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\1a</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\1b</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\1c</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\1d</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\1e</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\1f</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\20</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\21</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\22</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\23</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\24</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\25</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\26</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\27</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\28</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\29</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\2a</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\2b</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\2c</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\2d</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\2e</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\2f</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\30</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\31</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\32</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\33</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\34</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\35</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\36</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\37</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\38</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\39</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\3a</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\3b</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\3c</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\3d</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\3e</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\3f</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\40</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\41</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\42</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\43</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\44</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\45</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\46</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\47</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\48</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\49</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\4a</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\4b</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\4c</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\4d</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\4e</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\4f</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\50</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\51</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\52</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\53</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\54</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\55</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\56</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\57</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\58</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\59</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\5a</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\5b</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\5c</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\5d</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\5e</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\5f</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\60</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\61</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\62</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\63</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\64</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\65</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\66</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\67</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\68</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\69</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\6a</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\6b</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\6c</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\6d</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\6e</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\6f</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\70</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\71</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\72</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\73</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\74</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\75</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\76</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\77</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\78</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\79</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\7a</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\7b</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\7c</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\7d</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\7e</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\7f</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\80</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\81</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\82</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\83</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\84</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\85</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\86</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\87</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\88</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\89</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\8a</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\8b</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\8c</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\8d</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\8e</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\8f</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\90</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\91</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\92</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\93</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\94</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\95</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\96</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\97</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\98</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\99</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\9a</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\9b</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\9c</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\9d</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\9e</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\9f</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\a0</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\a1</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\a2</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\a3</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\a4</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\a5</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\a6</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\a7</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\a8</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\a9</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\aa</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\ab</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\ac</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\ad</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\ae</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\af</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\b0</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\b1</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\b2</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\b3</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\b4</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\b5</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\b6</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\b7</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\b8</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\b9</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\ba</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\bb</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\bc</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\bd</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\be</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\bf</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\c0</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\c1</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\c2</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\c3</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\c4</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\c5</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\c6</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\c7</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\c8</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\c9</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\ca</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\cb</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\cc</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\cd</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\ce</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\cf</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\d0</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\d1</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\d2</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\d3</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\d4</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\d5</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\d6</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\d7</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\d8</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\d9</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\da</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\db</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\dc</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\dd</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\de</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\df</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\e0</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\e1</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\e2</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\e3</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\e4</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\e5</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\e6</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\e7</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\e8</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\e9</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\ea</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\eb</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\ec</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\ed</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\ee</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\ef</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\f0</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\f1</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\f2</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\f3</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\f4</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\f5</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\f6</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\f7</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\f8</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\f9</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\fa</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\fb</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\fc</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\fd</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\fe</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\ff</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\info</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\objects\pack</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\refs</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\refs\heads</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\refs\remotes</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\refs\remotes\origin</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\.git\refs\tags</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\00_Algos</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\01_Core</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\01_Core\Anderson-Darling</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\02_closingManager</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\03_decisionMaker</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\03_decisionMaker\additional functions</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\04_filtri denoise</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\04_filtri denoise\Fourier</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\04_filtri denoise\Wavelet</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\05_timeSeriesExpert</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\06_indicators</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\06_indicators\more</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\API</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\Real-time-algo</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\Real-time-algo\Algo002</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\Real-time-algo\Algo002\Algo_002_leadlag</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\Real-time-algo\Algo002\Algo_002_leadlag\files_002</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\Real-time-algo\Algo003</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\Real-time-algo\Algo004</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\Real-time-algo\Algo004\Algo004_statTrend</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\Real-time-algo\Algo004\Algo004_statTrend\distrib</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\Real-time-algo\Algo011_AUDCAD</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\Real-time-algo\Algo011_EURUSD</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\Real-time-algo\Algo100201_EURUSD</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\Real-time-algo\Algo100204_AUDCAD</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\Real-time-algo\Algo100205_EURUSD</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\Real-time-algo\AlgoLore</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\Real-time-algo\AlgoTest</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\Real-time-algo\AlgoTest WithBacktest</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\Risk_management</directory>
+        <directory>${PROJECT_ROOT}\fitting</directory>
+        <directory>${PROJECT_ROOT}\fitting\alpha-stable distribution</directory>
+        <directory>${PROJECT_ROOT}\fitting\alpha-stable distribution\STBL_CODE</directory>
+        <directory>${PROJECT_ROOT}\fitting\cuveFits</directory>
+        <directory>${PROJECT_ROOT}\statistics</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\backtest_classic</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\backtest_fast</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\backtest_fast\html</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\backtest_fast\models</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\backtest_fast\models\algos_as_online</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\backtest_fast\optimize_with_hurst</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\backtest_fast\tools</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\backtest_real</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\backtest_real\Algos testing</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\mql4</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\DesktopApp</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\DesktopApp\myapp</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\DesktopApp\myapp\css</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\DesktopApp\myapp\fonts</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\DesktopApp\myapp\img</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\DesktopApp\myapp\img\algos</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\DesktopApp\myapp\js</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\DesktopApp\myapp\js\controller</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\DesktopApp\myapp\js\lib</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\DesktopApp\myapp\js\router</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\DesktopApp\myapp\tmpl</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\DesktopApp\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\DesktopApp\nwjs-sdk-v0.14.5-win-x64</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\DesktopApp\server_app</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\DesktopApp\server_app\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\DesktopApp\server_app_2</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\DesktopApp\server_app_2\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\MatlabZeroMQ</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\MatlabZeroMQ\matlab-zmq</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\MatlabZeroMQ\matlab-zmq\examples</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\MatlabZeroMQ\matlab-zmq\examples\AlgoAle</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\MatlabZeroMQ\matlab-zmq\examples\MockAlgo</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\MatlabZeroMQ\matlab-zmq\lib</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\MatlabZeroMQ\matlab-zmq\src</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\MatlabZeroMQ\matlab-zmq\src\core</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\MatlabZeroMQ\matlab-zmq\src\util</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\MatlabZeroMQ\matlab-zmq\tests</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\MatlabZeroMQ\matlab-zmq\tests\fixtures</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\MatlabZeroMQ\matlab-zmq\tests\support</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\app</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\bower_components</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\bower_components\angular</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\bower_components\angular-animate</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\bower_components\angular-bootstrap</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\bower_components\angular-cookies</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\bower_components\angular-resource</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\bower_components\angular-route</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\bower_components\angular-sanitize</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\bower_components\angular-touch</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\bower_components\bootstrap-sass-official</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\bower_components\bootstrap-sass-official\assets</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\bower_components\bootstrap-sass-official\assets\fonts</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\bower_components\bootstrap-sass-official\assets\fonts\bootstrap</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\bower_components\bootstrap-sass-official\assets\javascripts</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\bower_components\bootstrap-sass-official\assets\javascripts\bootstrap</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\bower_components\bootstrap-sass-official\assets\stylesheets</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\bower_components\bootstrap-sass-official\assets\stylesheets\bootstrap</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\bower_components\bootstrap-sass-official\assets\stylesheets\bootstrap\mixins</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\bower_components\c3</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\bower_components\c3\extensions</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\bower_components\c3\extensions\chart-bubble</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\bower_components\c3\extensions\exporter</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\bower_components\c3\extensions\js</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\bower_components\d3</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\bower_components\jquery</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\bower_components\jquery\dist</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\bower_components\jquery\external</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\bower_components\jquery\external\sizzle</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\bower_components\jquery\external\sizzle\dist</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\bower_components\jquery\src</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\bower_components\jquery\src\ajax</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\bower_components\jquery\src\ajax\var</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\bower_components\jquery\src\attributes</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\bower_components\jquery\src\core</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\bower_components\jquery\src\core\var</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\bower_components\jquery\src\css</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\bower_components\jquery\src\css\var</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\bower_components\jquery\src\data</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\bower_components\jquery\src\data\var</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\bower_components\jquery\src\effects</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\bower_components\jquery\src\event</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\bower_components\jquery\src\exports</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\bower_components\jquery\src\manipulation</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\bower_components\jquery\src\manipulation\var</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\bower_components\jquery\src\queue</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\bower_components\jquery\src\traversing</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\bower_components\jquery\src\traversing\var</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\bower_components\jquery\src\var</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\libs</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\libs\bower_components</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\libs\bower_components\angular</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\libs\bower_components\angular-animate</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\libs\bower_components\angular-bootstrap</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\libs\bower_components\angular-cookies</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\libs\bower_components\angular-resource</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\libs\bower_components\angular-route</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\libs\bower_components\angular-sanitize</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\libs\bower_components\angular-touch</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\libs\bower_components\bootstrap-sass-official</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\libs\bower_components\bootstrap-sass-official\assets</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\libs\bower_components\bootstrap-sass-official\assets\fonts</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\libs\bower_components\bootstrap-sass-official\assets\fonts\bootstrap</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\libs\bower_components\bootstrap-sass-official\assets\javascripts</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\libs\bower_components\bootstrap-sass-official\assets\javascripts\bootstrap</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\libs\bower_components\bootstrap-sass-official\assets\stylesheets</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\libs\bower_components\bootstrap-sass-official\assets\stylesheets\bootstrap</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\libs\bower_components\bootstrap-sass-official\assets\stylesheets\bootstrap\mixins</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\libs\bower_components\c3</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\libs\bower_components\c3\extensions</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\libs\bower_components\c3\extensions\chart-bubble</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\libs\bower_components\c3\extensions\exporter</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\libs\bower_components\c3\extensions\js</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\libs\bower_components\d3</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\libs\bower_components\jquery</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\libs\bower_components\jquery\dist</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\libs\bower_components\jquery\external</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\libs\bower_components\jquery\external\sizzle</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\libs\bower_components\jquery\external\sizzle\dist</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\libs\bower_components\jquery\src</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\libs\bower_components\jquery\src\ajax</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\libs\bower_components\jquery\src\ajax\var</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\libs\bower_components\jquery\src\attributes</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\libs\bower_components\jquery\src\core</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\libs\bower_components\jquery\src\core\var</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\libs\bower_components\jquery\src\css</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\libs\bower_components\jquery\src\css\var</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\libs\bower_components\jquery\src\data</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\libs\bower_components\jquery\src\data\var</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\libs\bower_components\jquery\src\effects</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\libs\bower_components\jquery\src\event</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\libs\bower_components\jquery\src\exports</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\libs\bower_components\jquery\src\manipulation</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\libs\bower_components\jquery\src\manipulation\var</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\libs\bower_components\jquery\src\queue</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\libs\bower_components\jquery\src\traversing</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\libs\bower_components\jquery\src\traversing\var</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\libs\bower_components\jquery\src\var</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\scripts</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\scripts\controllers</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\styles</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\WebAppReports\public\views</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\bunyan</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\bunyan\docs</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\bunyan\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\bunyan\node_modules\dtrace-provider</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\bunyan\node_modules\dtrace-provider\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\bunyan\node_modules\dtrace-provider\node_modules\nan</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\bunyan\node_modules\mv</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\bunyan\node_modules\mv\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\bunyan\node_modules\mv\node_modules\mkdirp</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\bunyan\node_modules\mv\node_modules\mkdirp\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\bunyan\node_modules\mv\node_modules\mkdirp\node_modules\minimist</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\bunyan\node_modules\mv\node_modules\ncp</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\bunyan\node_modules\mv\node_modules\ncp\test</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\bunyan\node_modules\mv\node_modules\ncp\test\modified-files</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\bunyan\node_modules\mv\node_modules\ncp\test\regular-fixtures</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\bunyan\node_modules\mv\node_modules\ncp\test\regular-fixtures\src</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\bunyan\node_modules\mv\node_modules\ncp\test\symlink-fixtures</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\bunyan\node_modules\mv\node_modules\ncp\test\symlink-fixtures\src</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\bunyan\node_modules\mv\node_modules\rimraf</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\bunyan\node_modules\mv\node_modules\rimraf\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\bunyan\node_modules\mv\node_modules\rimraf\node_modules\glob</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\bunyan\node_modules\mv\node_modules\rimraf\node_modules\glob\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\bunyan\node_modules\mv\node_modules\rimraf\node_modules\glob\node_modules\inflight</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\bunyan\node_modules\mv\node_modules\rimraf\node_modules\glob\node_modules\inflight\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\bunyan\node_modules\mv\node_modules\rimraf\node_modules\glob\node_modules\inflight\node_modules\wrappy</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\bunyan\node_modules\mv\node_modules\rimraf\node_modules\glob\node_modules\minimatch</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\bunyan\node_modules\mv\node_modules\rimraf\node_modules\glob\node_modules\minimatch\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\bunyan\node_modules\mv\node_modules\rimraf\node_modules\glob\node_modules\minimatch\node_modules\brace-expansion</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\bunyan\node_modules\mv\node_modules\rimraf\node_modules\glob\node_modules\minimatch\node_modules\brace-expansion\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\bunyan\node_modules\mv\node_modules\rimraf\node_modules\glob\node_modules\minimatch\node_modules\brace-expansion\node_modules\balanced-match</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\bunyan\node_modules\mv\node_modules\rimraf\node_modules\glob\node_modules\minimatch\node_modules\brace-expansion\node_modules\concat-map</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\bunyan\node_modules\mv\node_modules\rimraf\node_modules\glob\node_modules\once</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\bunyan\node_modules\mv\node_modules\rimraf\node_modules\glob\node_modules\once\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\bunyan\node_modules\mv\node_modules\rimraf\node_modules\glob\node_modules\once\node_modules\wrappy</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\bunyan\node_modules\mv\test</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\bunyan\node_modules\mv\test\a-folder</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\gyp</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\gyp\buildbot</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\gyp\data</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\gyp\pylib</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\gyp\pylib\gyp</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\gyp\tools</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\gyp\tools\Xcode</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\gyp\tools\emacs</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\fstream</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\fstream\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\glob</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\glob\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\glob\node_modules\inflight</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\glob\node_modules\inflight\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\glob\node_modules\inflight\node_modules\wrappy</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\glob\node_modules\minimatch</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\glob\node_modules\minimatch\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\glob\node_modules\minimatch\node_modules\brace-expansion</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\glob\node_modules\minimatch\node_modules\brace-expansion\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\glob\node_modules\minimatch\node_modules\brace-expansion\node_modules\balanced-match</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\glob\node_modules\minimatch\node_modules\brace-expansion\node_modules\concat-map</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\glob\node_modules\once</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\glob\node_modules\once\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\glob\node_modules\once\node_modules\wrappy</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\graceful-fs</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\minimatch</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\minimatch\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\minimatch\node_modules\lru-cache</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\minimatch\node_modules\sigmund</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\mkdirp</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\mkdirp\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\mkdirp\node_modules\minimist</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\nopt</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\nopt\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\npmlog</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\npmlog\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\npmlog\node_modules\ansi</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\npmlog\node_modules\ansi\examples</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\npmlog\node_modules\are-we-there-yet</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\npmlog\node_modules\are-we-there-yet\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\npmlog\node_modules\are-we-there-yet\node_modules\delegates</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\npmlog\node_modules\are-we-there-yet\node_modules\readable-stream</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\npmlog\node_modules\are-we-there-yet\node_modules\readable-stream\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\npmlog\node_modules\are-we-there-yet\node_modules\readable-stream\node_modules\core-util-is</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\npmlog\node_modules\are-we-there-yet\node_modules\readable-stream\node_modules\isarray</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\npmlog\node_modules\gauge</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\npmlog\node_modules\gauge\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\npmlog\node_modules\gauge\node_modules\has-unicode</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\npmlog\node_modules\gauge\node_modules\lodash.pad</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\npmlog\node_modules\gauge\node_modules\lodash.pad\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\npmlog\node_modules\gauge\node_modules\lodash.pad\node_modules\lodash._createpadding</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\npmlog\node_modules\gauge\node_modules\lodash.pad\node_modules\lodash._createpadding\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\npmlog\node_modules\gauge\node_modules\lodash.padleft</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\npmlog\node_modules\gauge\node_modules\lodash.padleft\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\npmlog\node_modules\gauge\node_modules\lodash.padleft\node_modules\lodash._createpadding</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\npmlog\node_modules\gauge\node_modules\lodash.padleft\node_modules\lodash._createpadding\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\npmlog\node_modules\gauge\node_modules\lodash.padright</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\npmlog\node_modules\gauge\node_modules\lodash.padright\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\npmlog\node_modules\gauge\node_modules\lodash.padright\node_modules\lodash._createpadding</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\npmlog\node_modules\gauge\node_modules\lodash.padright\node_modules\lodash._createpadding\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\osenv</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\osenv\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\path-array</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\path-array\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\path-array\node_modules\array-index</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\path-array\node_modules\array-index\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\path-array\node_modules\array-index\node_modules\debug</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\path-array\node_modules\array-index\node_modules\debug\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\bl</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\bl\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\bl\node_modules\readable-stream</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\bl\node_modules\readable-stream\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\bl\node_modules\readable-stream\node_modules\core-util-is</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\bl\node_modules\readable-stream\node_modules\isarray</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\combined-stream</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\combined-stream\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\combined-stream\node_modules\delayed-stream</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\form-data</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\form-data\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\form-data\node_modules\async</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\form-data\node_modules\mime-types</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\form-data\node_modules\mime-types\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\har-validator</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\har-validator\lib</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\har-validator\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\har-validator\node_modules\bluebird</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\har-validator\node_modules\bluebird\js</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\har-validator\node_modules\chalk</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\har-validator\node_modules\chalk\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\har-validator\node_modules\chalk\node_modules\has-ansi</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\har-validator\node_modules\chalk\node_modules\has-ansi\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\har-validator\node_modules\chalk\node_modules\strip-ansi</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\har-validator\node_modules\chalk\node_modules\strip-ansi\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\har-validator\node_modules\commander</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\har-validator\node_modules\commander\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\har-validator\node_modules\is-my-json-valid</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\har-validator\node_modules\is-my-json-valid\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\har-validator\node_modules\is-my-json-valid\node_modules\generate-object-property</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\har-validator\node_modules\is-my-json-valid\node_modules\generate-object-property\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\har-validator\node_modules\is-my-json-valid\test</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\hawk</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\hawk\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\hawk\node_modules\boom</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\hawk\node_modules\cryptiles</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\hawk\node_modules\hoek</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\hawk\node_modules\hoek\test</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\hawk\node_modules\sntp</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\http-signature</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\http-signature\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\http-signature\node_modules\asn1</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\http-signature\node_modules\asn1\lib</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\http-signature\node_modules\asn1\tst</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\http-signature\node_modules\ctype</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\http-signature\node_modules\ctype\man</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\json-stringify-safe</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\mime-types</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\mime-types\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\node-uuid</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\qs</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\tough-cookie</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\tough-cookie\test</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\request\node_modules\tough-cookie\test\ietf_data</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\semver</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\tar</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\tar\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\tar\node_modules\block-stream</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\which</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\which\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\which\node_modules\is-absolute</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-gyp\node_modules\which\node_modules\is-absolute\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-schedule</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-schedule\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-schedule\node_modules\cron-parser</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\node-schedule\node_modules\cron-parser\.idea</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\zmq</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\zmq\build</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\zmq\build\Release</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\zmq\build\Release\obj</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\zmq\build\Release\obj\zmq</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\zmq\examples</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\zmq\node_modules</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\zmq\windows</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\node_modules\zmq\windows\lib</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\performances</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\performances\zeromq.node</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\performances\zeromq.node\examples</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\performances\zeromq.node\examples\devices</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\performances\zeromq.node\examples\workers</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\performances\zeromq.node\lib</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\performances\zeromq.node\perf</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\performances\zeromq.node\test</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\performances\zeromq.node\windows</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\performances\zeromq.node\windows\include</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\performances\zeromq.node\windows\lib</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\performances\zeromq.node\windows\lib\x64</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\performances\zeromq.node\windows\lib\x86</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\zeromq-2.1.11</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\zeromq-2.1.11\builds</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\zeromq-2.1.11\builds\msvc</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\zeromq-2.1.11\builds\msvc\.vs</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\zeromq-2.1.11\builds\msvc\.vs\msvc</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\zeromq-2.1.11\builds\msvc\c_local_lat</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\zeromq-2.1.11\builds\msvc\c_local_thr</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\zeromq-2.1.11\builds\msvc\c_remote_lat</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\zeromq-2.1.11\builds\msvc\c_remote_thr</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\zeromq-2.1.11\builds\msvc\inproc_lat</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\zeromq-2.1.11\builds\msvc\inproc_thr</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\zeromq-2.1.11\builds\msvc\libzmq</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\zeromq-2.1.11\builds\msvc\mql4zmq</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\nodeM\zeromq-2.1.11\foreign</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\spatial-econometrics</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\spatial-econometrics\Ucsd_garch</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\spatial-econometrics\Ucsd_garch\64-bit Binaries</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\spatial-econometrics\Ucsd_garch\BootStrap</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\spatial-econometrics\Ucsd_garch\Distributions</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\spatial-econometrics\Ucsd_garch\Garch</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\spatial-econometrics\Ucsd_garch\Kernel Estimation</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\spatial-econometrics\Ucsd_garch\MEX Source</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\spatial-econometrics\Ucsd_garch\MV Garch</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\spatial-econometrics\Ucsd_garch\MV Garch\Bekk</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\spatial-econometrics\Ucsd_garch\MV Garch\Correlation MVGarch</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\spatial-econometrics\Ucsd_garch\MV Garch\T Bekk</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\spatial-econometrics\Ucsd_garch\Post 7.1 32-bit Binaries</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\spatial-econometrics\Ucsd_garch\Pre 7.1 32-bit Binaries</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\spatial-econometrics\Ucsd_garch\Tests</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\spatial-econometrics\coint</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\spatial-econometrics\data</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\spatial-econometrics\diagn</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\spatial-econometrics\distrib</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\spatial-econometrics\gibbs</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\spatial-econometrics\graphs</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\spatial-econometrics\optimize</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\spatial-econometrics\regress</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\spatial-econometrics\spatial</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\spatial-econometrics\spatial\casetti_models</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\spatial-econometrics\spatial\far_models</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\spatial-econometrics\spatial\gmm_models</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\spatial-econometrics\spatial\gwr_models</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\spatial-econometrics\spatial\lndet_funcs</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\spatial-econometrics\spatial\mess_models</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\spatial-econometrics\spatial\panel</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\spatial-econometrics\spatial\sac_models</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\spatial-econometrics\spatial\sar_models</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\spatial-econometrics\spatial\sdm_models</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\spatial-econometrics\spatial\sem_models</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\spatial-econometrics\spatial\semip</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\spatial-econometrics\spatial\stats</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\spatial-econometrics\spatial\stats\FESPD_Est_Tests</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\spatial-econometrics\spatial\weights</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\spatial-econometrics\ts_aggregation</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\spatial-econometrics\util</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\spatial-econometrics\var_bvar</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\zeromq_dll</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\zeromq_dll\Release</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\zeromq_dll\zmq_sub_dll_0.0.3</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\zeromq_dll\zmq_sub_dll_0.0.3\zmq_sub_dll_0.0.3</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\zeromq_dll\zmq_sub_dll_0.0.3\zmq_sub_dll_0.0.3\.vs</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\zeromq_dll\zmq_sub_dll_0.0.3\zmq_sub_dll_0.0.3\.vs\zmq_sub_dll_0.0.3</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\zeromq_dll\zmq_sub_dll_0.0.3\zmq_sub_dll_0.0.3\.vs\zmq_sub_dll_0.0.3\v14</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\zeromq_dll\zmq_sub_dll_0.0.3\zmq_sub_dll_0.0.3\Debug</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\zeromq_dll\zmq_sub_dll_0.0.3\zmq_sub_dll_0.0.3\Release</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\zeromq_dll\zmq_sub_dll_0.0.3\zmq_sub_dll_0.0.3\ipch</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\zeromq_dll\zmq_sub_dll_0.0.3\zmq_sub_dll_0.0.3\ipch\ZMQ_SUB_DLL_0.0.3-8a8a624b</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\zeromq_dll\zmq_sub_dll_0.0.3\zmq_sub_dll_0.0.3\zmq_sub_dll_0.0.3</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\zeromq_dll\zmq_sub_dll_0.0.3\zmq_sub_dll_0.0.3\zmq_sub_dll_0.0.3\Debug</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\zeromq_dll\zmq_sub_dll_0.0.3\zmq_sub_dll_0.0.3\zmq_sub_dll_0.0.3\Debug\zmq_sub_.EE93FA6F.tlog</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\zeromq_dll\zmq_sub_dll_0.0.3\zmq_sub_dll_0.0.3\zmq_sub_dll_0.0.3\Release</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\zeromq_dll\zmq_sub_dll_0.0.3\zmq_sub_dll_0.0.3\zmq_sub_dll_0.0.3\Release\zmq_sub_.EE93FA6F.tlog</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\zeromq_dll\zmq_sub_dll_0.0.3\zmq_sub_dll_0.0.3\zmq_sub_dll_0.0.3\x64</directory>
+        <directory>C:\Users\alericci\Desktop\Forex 4.0\zeromq_dll\zmq_sub_dll_0.0.3\zmq_sub_dll_0.0.3\zmq_sub_dll_0.0.3\x64\Debug</directory>
+        <directory>C:\Users\alericci\Documents\MATLAB</directory>
+        <directory>${MATLAB_ROOT}\toolbox\hdlcoder\matlabhdlcoder\matlabhdlcoder</directory>
+        <directory>${MATLAB_ROOT}\toolbox\hdlcoder\matlabhdlcoder</directory>
+        <directory>${MATLAB_ROOT}\toolbox\matlabxl\matlabxl</directory>
+        <directory>${MATLAB_ROOT}\toolbox\matlabxl\matlabxldemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\matlab\demos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\matlab\graph2d</directory>
+        <directory>${MATLAB_ROOT}\toolbox\matlab\graph3d</directory>
+        <directory>${MATLAB_ROOT}\toolbox\matlab\graphics</directory>
+        <directory>${MATLAB_ROOT}\toolbox\matlab\plottools</directory>
+        <directory>${MATLAB_ROOT}\toolbox\matlab\scribe</directory>
+        <directory>${MATLAB_ROOT}\toolbox\matlab\specgraph</directory>
+        <directory>${MATLAB_ROOT}\toolbox\matlab\uitools</directory>
+        <directory>${MATLAB_ROOT}\toolbox\local</directory>
+        <directory>${MATLAB_ROOT}\toolbox\matlab\general</directory>
+        <directory>${MATLAB_ROOT}\toolbox\matlab\ops</directory>
+        <directory>${MATLAB_ROOT}\toolbox\matlab\lang</directory>
+        <directory>${MATLAB_ROOT}\toolbox\matlab\elmat</directory>
+        <directory>${MATLAB_ROOT}\toolbox\matlab\randfun</directory>
+        <directory>${MATLAB_ROOT}\toolbox\matlab\elfun</directory>
+        <directory>${MATLAB_ROOT}\toolbox\matlab\specfun</directory>
+        <directory>${MATLAB_ROOT}\toolbox\matlab\matfun</directory>
+        <directory>${MATLAB_ROOT}\toolbox\matlab\datafun</directory>
+        <directory>${MATLAB_ROOT}\toolbox\matlab\polyfun</directory>
+        <directory>${MATLAB_ROOT}\toolbox\matlab\funfun</directory>
+        <directory>${MATLAB_ROOT}\toolbox\matlab\sparfun</directory>
+        <directory>${MATLAB_ROOT}\toolbox\matlab\strfun</directory>
+        <directory>${MATLAB_ROOT}\toolbox\matlab\iofun</directory>
+        <directory>${MATLAB_ROOT}\toolbox\matlab\timefun</directory>
+        <directory>${MATLAB_ROOT}\toolbox\matlab\datatypes</directory>
+        <directory>${MATLAB_ROOT}\toolbox\matlab\verctrl</directory>
+        <directory>${MATLAB_ROOT}\toolbox\matlab\codetools</directory>
+        <directory>${MATLAB_ROOT}\toolbox\matlab\helptools</directory>
+        <directory>${MATLAB_ROOT}\toolbox\matlab\winfun</directory>
+        <directory>${MATLAB_ROOT}\toolbox\matlab\winfun\net</directory>
+        <directory>${MATLAB_ROOT}\toolbox\matlab\hds</directory>
+        <directory>${MATLAB_ROOT}\toolbox\matlab\guide</directory>
+        <directory>${MATLAB_ROOT}\toolbox\matlab\datamanager</directory>
+        <directory>${MATLAB_ROOT}\toolbox\matlab\optimfun</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rtw\targets\autosar\autosar\dataclasses</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rtw\targets\autosar\autosar</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rtw\accel</directory>
+        <directory>${MATLAB_ROOT}\toolbox\simulink\blocks\library</directory>
+        <directory>${MATLAB_ROOT}\toolbox\simulink\blocks\obsolete</directory>
+        <directory>${MATLAB_ROOT}\toolbox\simulink\simulink\dataclasses</directory>
+        <directory>${MATLAB_ROOT}\toolbox\simulink\simulink</directory>
+        <directory>${MATLAB_ROOT}\toolbox\simulink\simulink\slresolve</directory>
+        <directory>${MATLAB_ROOT}\toolbox\simulink\blocks</directory>
+        <directory>${MATLAB_ROOT}\toolbox\simulink\components</directory>
+        <directory>${MATLAB_ROOT}\toolbox\simulink\fixedandfloat</directory>
+        <directory>${MATLAB_ROOT}\toolbox\simulink\fixedandfloat\obsolete</directory>
+        <directory>${MATLAB_ROOT}\toolbox\simulink\dee</directory>
+        <directory>${MATLAB_ROOT}\toolbox\simulink\simulink\mplayio</directory>
+        <directory>${MATLAB_ROOT}\toolbox\simulink\simulink\dataobjectwizard</directory>
+        <directory>${MATLAB_ROOT}\toolbox\simulink\simdemos\dataclasses</directory>
+        <directory>${MATLAB_ROOT}\toolbox\simulink\simdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\simulink\simdemos\aerospace</directory>
+        <directory>${MATLAB_ROOT}\toolbox\simulink\simdemos\automotive</directory>
+        <directory>${MATLAB_ROOT}\toolbox\simulink\simdemos\industrial</directory>
+        <directory>${MATLAB_ROOT}\toolbox\simulink\simdemos\simfeatures</directory>
+        <directory>${MATLAB_ROOT}\toolbox\simulink\simdemos\simgeneral</directory>
+        <directory>${MATLAB_ROOT}\toolbox\simulink\simulink\modeladvisor</directory>
+        <directory>${MATLAB_ROOT}\toolbox\simulink\simulink\modeladvisor\fixpt</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\glue</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\glue\studio</directory>
+        <directory>${MATLAB_ROOT}\toolbox\stateflow\stateflow</directory>
+        <directory>${MATLAB_ROOT}\toolbox\stateflow\coder</directory>
+        <directory>${MATLAB_ROOT}\toolbox\stateflow\sfdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\aero\aero</directory>
+        <directory>${MATLAB_ROOT}\toolbox\aeroblks\aeroblks</directory>
+        <directory>${MATLAB_ROOT}\toolbox\aeroblks\aeroblksutilities</directory>
+        <directory>${MATLAB_ROOT}\toolbox\aeroblks\aerodemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\aeroblks\aerodemos\texture</directory>
+        <directory>${MATLAB_ROOT}\toolbox\aero\astdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\matlab\audiovideo</directory>
+        <directory>${MATLAB_ROOT}\toolbox\bioinfo\bioinfo</directory>
+        <directory>${MATLAB_ROOT}\toolbox\bioinfo\biolearning</directory>
+        <directory>${MATLAB_ROOT}\toolbox\bioinfo\microarray</directory>
+        <directory>${MATLAB_ROOT}\toolbox\bioinfo\mass_spec</directory>
+        <directory>${MATLAB_ROOT}\toolbox\bioinfo\proteins</directory>
+        <directory>${MATLAB_ROOT}\toolbox\bioinfo\biomatrices</directory>
+        <directory>${MATLAB_ROOT}\toolbox\bioinfo\graphtheory</directory>
+        <directory>${MATLAB_ROOT}\toolbox\bioinfo\biodemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\coder\matlabcoder</directory>
+        <directory>${MATLAB_ROOT}\toolbox\coder\codegendemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\coder\emlcodermex</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rtw\rtw</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rtw\targets\shared</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rtw\coder_foundation\tfl</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\simtargets</directory>
+        <directory>${MATLAB_ROOT}\toolbox\coder\coder</directory>
+        <directory>${MATLAB_ROOT}\toolbox\comm\comm</directory>
+        <directory>${MATLAB_ROOT}\toolbox\comm\commutilities\comminit</directory>
+        <directory>${MATLAB_ROOT}\toolbox\comm\commutilities\commmex</directory>
+        <directory>${MATLAB_ROOT}\toolbox\comm\commutilities</directory>
+        <directory>${MATLAB_ROOT}\toolbox\comm\commdeprecated</directory>
+        <directory>${MATLAB_ROOT}\toolbox\comm\commdemos</directory>
+        <directory>${MATLAB_ROOT}\help\toolbox\comm\examples</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\comparisons</directory>
+        <directory>${MATLAB_ROOT}\toolbox\compiler</directory>
+        <directory>${MATLAB_ROOT}\toolbox\compiler\compilerdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\control\control</directory>
+        <directory>${MATLAB_ROOT}\toolbox\control\ctrlguis</directory>
+        <directory>${MATLAB_ROOT}\toolbox\control\ctrlobsolete</directory>
+        <directory>${MATLAB_ROOT}\toolbox\control\ctrlutil</directory>
+        <directory>${MATLAB_ROOT}\toolbox\control\ctrldemos</directory>
+        <directory>${MATLAB_ROOT}\help\toolbox\control\examples</directory>
+        <directory>${MATLAB_ROOT}\toolbox\curvefit\curvefit</directory>
+        <directory>${MATLAB_ROOT}\toolbox\curvefit\splines</directory>
+        <directory>${MATLAB_ROOT}\toolbox\curvefit\cftoolgui</directory>
+        <directory>${MATLAB_ROOT}\toolbox\curvefit\sftoolgui</directory>
+        <directory>${MATLAB_ROOT}\toolbox\curvefit\curvefitdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\daq\daq</directory>
+        <directory>${MATLAB_ROOT}\toolbox\daq\daqguis</directory>
+        <directory>${MATLAB_ROOT}\toolbox\daq\daqdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\database\database</directory>
+        <directory>${MATLAB_ROOT}\toolbox\database\vqb</directory>
+        <directory>${MATLAB_ROOT}\toolbox\database\dbdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\datafeed\datafeed</directory>
+        <directory>${MATLAB_ROOT}\toolbox\datafeed\dfgui</directory>
+        <directory>${MATLAB_ROOT}\toolbox\distcomp</directory>
+        <directory>${MATLAB_ROOT}\toolbox\distcomp\distcomp</directory>
+        <directory>${MATLAB_ROOT}\toolbox\distcomp\user</directory>
+        <directory>${MATLAB_ROOT}\toolbox\distcomp\mpi</directory>
+        <directory>${MATLAB_ROOT}\toolbox\distcomp\parallel</directory>
+        <directory>${MATLAB_ROOT}\toolbox\distcomp\parallel\util</directory>
+        <directory>${MATLAB_ROOT}\toolbox\distcomp\lang</directory>
+        <directory>${MATLAB_ROOT}\toolbox\distcomp\cluster</directory>
+        <directory>${MATLAB_ROOT}\toolbox\distcomp\gpu</directory>
+        <directory>${MATLAB_ROOT}\toolbox\distcomp\pctdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\distcomp\worker</directory>
+        <directory>${MATLAB_ROOT}\toolbox\dotnetbuilder\dotnetbuilder</directory>
+        <directory>${MATLAB_ROOT}\toolbox\dotnetbuilder\dotnetbuilderdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\qualkits\do</directory>
+        <directory>${MATLAB_ROOT}\toolbox\dsp\dsp</directory>
+        <directory>${MATLAB_ROOT}\toolbox\dsp\dsputilities</directory>
+        <directory>${MATLAB_ROOT}\toolbox\dsp\dsputilities\dspinit</directory>
+        <directory>${MATLAB_ROOT}\toolbox\dsp\dsputilities\dspmex</directory>
+        <directory>${MATLAB_ROOT}\toolbox\dsp\dspdemos</directory>
+        <directory>${MATLAB_ROOT}\help\toolbox\dsp\examples</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\dsp\simulink\dsp</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rtw\targets\ecoder</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rtw\targets\ecoder\ecoderdemos\dataclasses</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rtw\targets\ecoder\ecoderdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rtw\targets\mpt</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rtw\targets\mpt\mpt</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rtw\targets\mpt\user_specific</directory>
+        <directory>${MATLAB_ROOT}\toolbox\embeddedcoder</directory>
+        <directory>${MATLAB_ROOT}\toolbox\econ\econ</directory>
+        <directory>${MATLAB_ROOT}\toolbox\econ\econdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\edalink\edalink</directory>
+        <directory>${MATLAB_ROOT}\toolbox\hdlverifier\hdlverifier</directory>
+        <directory>${MATLAB_ROOT}\toolbox\edalink\extensions\discovery\discovery</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\tlmgenerator\foundation</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\tlmgenerator\foundation\rtw</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\tlmgenerator\foundation\tlmgeneratordemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\edalink\foundation\hdllink</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rtw\targets\xpc\target\kernel\embedded</directory>
+        <directory>${MATLAB_ROOT}\toolbox\eml\eml</directory>
+        <directory>${MATLAB_ROOT}\toolbox\exlink</directory>
+        <directory>${MATLAB_ROOT}\toolbox\dsp\filterdesign</directory>
+        <directory>${MATLAB_ROOT}\toolbox\finance\finance</directory>
+        <directory>${MATLAB_ROOT}\toolbox\finance\calendar</directory>
+        <directory>${MATLAB_ROOT}\toolbox\finance\finsupport</directory>
+        <directory>${MATLAB_ROOT}\toolbox\finance\ftseries</directory>
+        <directory>${MATLAB_ROOT}\toolbox\finance\findemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\finderiv\finderiv</directory>
+        <directory>${MATLAB_ROOT}\toolbox\finderiv\finderivdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\finfixed\finfixed</directory>
+        <directory>${MATLAB_ROOT}\toolbox\finfixed\finfixdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\fixedpoint\fixedpointtool</directory>
+        <directory>${MATLAB_ROOT}\toolbox\fixedpoint\fidemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\fixedpoint\fixedpoint</directory>
+        <directory>${MATLAB_ROOT}\toolbox\fixpoint</directory>
+        <directory>${MATLAB_ROOT}\toolbox\fixpoint\fpca</directory>
+        <directory>${MATLAB_ROOT}\toolbox\sldv\sldv</directory>
+        <directory>${MATLAB_ROOT}\toolbox\simulink\fixedandfloat\fxpdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\fuzzy\fuzzy</directory>
+        <directory>${MATLAB_ROOT}\toolbox\fuzzy\fuzzyutil</directory>
+        <directory>${MATLAB_ROOT}\toolbox\fuzzy\fuzdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\geoweb\geoweb</directory>
+        <directory>${MATLAB_ROOT}\toolbox\globaloptim</directory>
+        <directory>${MATLAB_ROOT}\toolbox\globaloptim\globaloptim</directory>
+        <directory>${MATLAB_ROOT}\toolbox\globaloptim\globaloptimdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\hdlcoder\hdlcoder</directory>
+        <directory>${MATLAB_ROOT}\toolbox\hdlcoder\hdlcoder\hdlwa</directory>
+        <directory>${MATLAB_ROOT}\toolbox\hdlcoder\hdlcoderdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\hdlcoder\hdlcoderdemos\matlabhdlcoderdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\hdlcoder\hdlcommon</directory>
+        <directory>${MATLAB_ROOT}\toolbox\hdlfilter\hdlfilter</directory>
+        <directory>${MATLAB_ROOT}\toolbox\hdlfilter\hdlfiltdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\extensions\adivdsp</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\extensions\adivdsp\mdlinfo</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\extensions\adivdsp\tfl</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\extensions\adivdsp\vdspblks</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\extensions\adivdsp\rtw</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\extensions\eclipseide</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\extensions\eclipseide\mdlinfo</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\extensions\eclipseide\registry</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\extensions\eclipseide\tfl</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\extensions\ghsmulti</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\extensions\ghsmulti\mdlinfo</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\extensions\ghsmulti\multiblks</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\extensions\ghsmulti\tfl</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\extensions\ghsmulti\rtw</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\extensions\iarew</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\extensions\iarew\blks</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\extensions\iarew\mdlinfo</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\extensions\iarew\templates</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\extensions\ticcs</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\extensions\ticcs\ccsblks</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\extensions\ticcs\ccslinkblks</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\extensions\ticcs\ccslinkblks\rtdxsimblks</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\extensions\ticcs\lic</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\extensions\ticcs\mdlinfo</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\extensions\ticcs\tfl</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\extensions\ticcs\util</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\extensions\ticcs\rtw</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\extensions\ticcs\envchecker</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\extensions\wrworkbench</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\extensions\wrworkbench\mdlinfo</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\extensions\wrworkbench\registry</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\extensions\wrworkbench\wrworkbenchblks</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\foundation\pjtgenerator</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\foundation\pjtgenerator\rtw</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\foundation\pjtgenerator\tgtpref2</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\foundation\pjtgenerator\profiler</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\foundation\pjtgenerator\mdlinfo</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\foundation\pjtgenerator\blks</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\foundation\pjtgenerator\blks\masks</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\foundation\pjtgenerator\blks\tlc_c</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\foundation</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\foundation\autointerface</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\foundation\autointerface\ideregisterplugins</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\foundation\util</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\foundation\errorhandler</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\foundation\xmakefile</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\foundation\hookpoints</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\idelinkdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\extensions\adivdsp\vdspdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\extensions\eclipseide\eclipseidedemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\extensions\ghsmulti\multidemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\extensions\iarew\iarewdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\extensions\ticcs\ccsdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\idelink\extensions\ticcs\ccsdemos\util</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\etargets\etargets</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\etargets\etargets\demoutils</directory>
+        <directory>${MATLAB_ROOT}\toolbox\ident\ident</directory>
+        <directory>${MATLAB_ROOT}\toolbox\ident\nlident</directory>
+        <directory>${MATLAB_ROOT}\toolbox\ident\idobsolete</directory>
+        <directory>${MATLAB_ROOT}\toolbox\ident\idguis</directory>
+        <directory>${MATLAB_ROOT}\toolbox\ident\idutils</directory>
+        <directory>${MATLAB_ROOT}\toolbox\ident\idhelp</directory>
+        <directory>${MATLAB_ROOT}\toolbox\ident\iddemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\ident\iddemos\examples</directory>
+        <directory>${MATLAB_ROOT}\toolbox\qualkits\iec</directory>
+        <directory>${MATLAB_ROOT}\toolbox\images\colorspaces</directory>
+        <directory>${MATLAB_ROOT}\toolbox\images\images</directory>
+        <directory>${MATLAB_ROOT}\toolbox\images\imuitools</directory>
+        <directory>${MATLAB_ROOT}\toolbox\images\iptformats</directory>
+        <directory>${MATLAB_ROOT}\toolbox\images\iptutils</directory>
+        <directory>${MATLAB_ROOT}\toolbox\matlab\imagesci</directory>
+        <directory>${MATLAB_ROOT}\toolbox\images\imdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\imaq\imaq</directory>
+        <directory>${MATLAB_ROOT}\toolbox\imaq\imaqblks\imaqblks</directory>
+        <directory>${MATLAB_ROOT}\toolbox\imaq\imaqblks\imaqmasks</directory>
+        <directory>${MATLAB_ROOT}\toolbox\imaq\imaqblks\imaqmex</directory>
+        <directory>${MATLAB_ROOT}\toolbox\imaq\imaqdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\edalink\extensions\incisive\incisive</directory>
+        <directory>${MATLAB_ROOT}\toolbox\edalink\extensions\incisive\incisivedemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\instrument\instrument</directory>
+        <directory>${MATLAB_ROOT}\toolbox\instrument\instrumentblks\instrumentblks</directory>
+        <directory>${MATLAB_ROOT}\toolbox\instrument\instrumentblks\instrumentmex</directory>
+        <directory>${MATLAB_ROOT}\toolbox\instrument\instrumentblks\instrumentmasks</directory>
+        <directory>${MATLAB_ROOT}\toolbox\instrument\instrumentdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\instrument</directory>
+        <directory>${MATLAB_ROOT}\toolbox\javabuilder\javabuilder</directory>
+        <directory>${MATLAB_ROOT}\toolbox\javabuilder\javabuilderdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\sam\m3i</directory>
+        <directory>${MATLAB_ROOT}\toolbox\map\map</directory>
+        <directory>${MATLAB_ROOT}\toolbox\map\mapdisp</directory>
+        <directory>${MATLAB_ROOT}\toolbox\map\mapformats</directory>
+        <directory>${MATLAB_ROOT}\toolbox\map\mapproj</directory>
+        <directory>${MATLAB_ROOT}\toolbox\map\mapdata</directory>
+        <directory>${MATLAB_ROOT}\toolbox\map\mapdata\sdts</directory>
+        <directory>${MATLAB_ROOT}\toolbox\map\mapdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\mbc\mbc</directory>
+        <directory>${MATLAB_ROOT}\toolbox\mbc\mbcdata</directory>
+        <directory>${MATLAB_ROOT}\toolbox\mbc\mbcdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\mbc\mbcdesign</directory>
+        <directory>${MATLAB_ROOT}\toolbox\mbc\mbcexpr</directory>
+        <directory>${MATLAB_ROOT}\toolbox\mbc\mbcguitools</directory>
+        <directory>${MATLAB_ROOT}\toolbox\mbc\mbclayouts</directory>
+        <directory>${MATLAB_ROOT}\toolbox\mbc\mbcmodels</directory>
+        <directory>${MATLAB_ROOT}\toolbox\mbc\mbcsimulink</directory>
+        <directory>${MATLAB_ROOT}\toolbox\mbc\mbctools</directory>
+        <directory>${MATLAB_ROOT}\toolbox\mbc\mbcview</directory>
+        <directory>${MATLAB_ROOT}\toolbox\edalink\extensions\modelsim\modelsim</directory>
+        <directory>${MATLAB_ROOT}\toolbox\edalink\extensions\modelsim\modelsimdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\mpc\mpc</directory>
+        <directory>${MATLAB_ROOT}\toolbox\mpc\mpcdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\mpc\mpcguis</directory>
+        <directory>${MATLAB_ROOT}\toolbox\mpc\mpcobsolete</directory>
+        <directory>${MATLAB_ROOT}\toolbox\mpc\mpcutils</directory>
+        <directory>${MATLAB_ROOT}\toolbox\nnet</directory>
+        <directory>${MATLAB_ROOT}\toolbox\nnet\nncontrol</directory>
+        <directory>${MATLAB_ROOT}\toolbox\nnet\nndemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\nnet\nndemos\nndatasets</directory>
+        <directory>${MATLAB_ROOT}\toolbox\nnet\nnet</directory>
+        <directory>${MATLAB_ROOT}\toolbox\nnet\nnet\nnadapt</directory>
+        <directory>${MATLAB_ROOT}\toolbox\nnet\nnet\nndatafun</directory>
+        <directory>${MATLAB_ROOT}\toolbox\nnet\nnet\nnderivative</directory>
+        <directory>${MATLAB_ROOT}\toolbox\nnet\nnet\nndistance</directory>
+        <directory>${MATLAB_ROOT}\toolbox\nnet\nnet\nndivision</directory>
+        <directory>${MATLAB_ROOT}\toolbox\nnet\nnet\nninitlayer</directory>
+        <directory>${MATLAB_ROOT}\toolbox\nnet\nnet\nninitnetwork</directory>
+        <directory>${MATLAB_ROOT}\toolbox\nnet\nnet\nninitweight</directory>
+        <directory>${MATLAB_ROOT}\toolbox\nnet\nnet\nnlearn</directory>
+        <directory>${MATLAB_ROOT}\toolbox\nnet\nnet\nnnetfun</directory>
+        <directory>${MATLAB_ROOT}\toolbox\nnet\nnet\nnnetinput</directory>
+        <directory>${MATLAB_ROOT}\toolbox\nnet\nnet\nnnetwork</directory>
+        <directory>${MATLAB_ROOT}\toolbox\nnet\nnet\nnperformance</directory>
+        <directory>${MATLAB_ROOT}\toolbox\nnet\nnet\nnplot</directory>
+        <directory>${MATLAB_ROOT}\toolbox\nnet\nnet\nnprocess</directory>
+        <directory>${MATLAB_ROOT}\toolbox\nnet\nnet\nnsearch</directory>
+        <directory>${MATLAB_ROOT}\toolbox\nnet\nnet\nntopology</directory>
+        <directory>${MATLAB_ROOT}\toolbox\nnet\nnet\nntrain</directory>
+        <directory>${MATLAB_ROOT}\toolbox\nnet\nnet\nntransfer</directory>
+        <directory>${MATLAB_ROOT}\toolbox\nnet\nnet\nnweight</directory>
+        <directory>${MATLAB_ROOT}\toolbox\nnet\nnguis</directory>
+        <directory>${MATLAB_ROOT}\toolbox\nnet\nnobsolete</directory>
+        <directory>${MATLAB_ROOT}\toolbox\nnet\nnutils</directory>
+        <directory>${MATLAB_ROOT}\toolbox\opc\opc</directory>
+        <directory>${MATLAB_ROOT}\toolbox\opc\opcgui</directory>
+        <directory>${MATLAB_ROOT}\toolbox\opc\opcdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\opc\opcdemos\opcblksdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\opc\opcblks\opcblks</directory>
+        <directory>${MATLAB_ROOT}\toolbox\opc\opcblks\opcmasks</directory>
+        <directory>${MATLAB_ROOT}\toolbox\optim\optim</directory>
+        <directory>${MATLAB_ROOT}\toolbox\optim\optimdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\pde</directory>
+        <directory>${MATLAB_ROOT}\toolbox\pde\pdedemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\phased\phased</directory>
+        <directory>${MATLAB_ROOT}\toolbox\phased\phaseddemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\common\data\core\m</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\common\data\mli\m</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\common\foundation\mli\m</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\common\units\core\m</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\common\units\mli\m</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\drive\drive</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\drive\drivedemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\elec\elec</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\elec\elecdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\equation_language\equation_language</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\gl\core\m</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\gl\sli\m</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\gui\gfx\m</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\logging\base\m</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\logging\mli\m</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\mech\mech</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\mech\importer</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\mech\mechdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\network_engine\ne_support</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\network_engine\network_engine</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\ne_sli\ne_sli</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\pmir\pmir</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\pm_sli\pm_sli</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\pm_visimpl\pm_visimpl</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\powersys\powersys</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\powersys\dr\dr</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\powersys\drives\drives</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\powersys\facts\facts</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\powersys\dr\drdemo</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\powersys\drives\drivesdemo</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\powersys\facts\factsdemo</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\powersys\powerdemo</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\sdl\sdl</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\sdl\classic</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\sdl\sdldemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\sh\sh</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\sh\shdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\simscape\compiler\core\m</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\simscape\compiler\sli\m</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\simscape\simscapedemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\simscape\engine\core\m</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\simscape\engine\mli\m</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\simscape\engine\sli\m</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\simscape\foundation\simscape</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\simscape_language\simscape_language</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\simscape\library\m</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\simscape\simscape\m</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\simulation\base\m</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\sm\core\m</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\sm\smdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\sm\smdemos\images</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\sm\smdemos\wing_landing_gear</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\sm\smdemos\wing_landing_gear\images</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\sm\smdemos\cart_double_pendulum</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\sm\smdemos\cart_double_pendulum\images</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\sm\smdemos\stewart_platform</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\sm\smdemos\stewart_platform\images</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\sm\smdemos\double_crank_aiming</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\sm\smdemos\double_crank_aiming\images</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\sm\gui\m</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\sm\local\m</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\sm\sli\m</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\sm\sm\m</directory>
+        <directory>${MATLAB_ROOT}\toolbox\physmod\sm\ssci\m</directory>
+        <directory>${MATLAB_ROOT}\toolbox\plccoder\plccoder</directory>
+        <directory>${MATLAB_ROOT}\toolbox\plccoder\plccoderdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\qualkits\common</directory>
+        <directory>${MATLAB_ROOT}\toolbox\realtime</directory>
+        <directory>${MATLAB_ROOT}\toolbox\realtime\realtime</directory>
+        <directory>${MATLAB_ROOT}\toolbox\realtime\realtime\rtw</directory>
+        <directory>${MATLAB_ROOT}\toolbox\slvnv\reqmgt</directory>
+        <directory>${MATLAB_ROOT}\toolbox\slvnv\slvnv</directory>
+        <directory>${MATLAB_ROOT}\toolbox\slvnv\rmidemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rf\rf</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rf\rfdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rf\rftool</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rfblks\rfblks</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rfblks\rfblksmasks</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rfblks\rfblksmex</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rfblks\rfblksdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\robust\robust</directory>
+        <directory>${MATLAB_ROOT}\toolbox\robust\rctlmi</directory>
+        <directory>${MATLAB_ROOT}\toolbox\robust\rctutil</directory>
+        <directory>${MATLAB_ROOT}\toolbox\robust\rctdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\robust\rctobsolete\robust</directory>
+        <directory>${MATLAB_ROOT}\toolbox\robust\rctobsolete\lmi</directory>
+        <directory>${MATLAB_ROOT}\toolbox\robust\rctobsolete\mutools\commands</directory>
+        <directory>${MATLAB_ROOT}\toolbox\robust\rctobsolete\mutools\subs</directory>
+        <directory>${MATLAB_ROOT}\help\toolbox\robust\examples</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rptgen\rptgen</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rptgenext\rptgenext</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rptgenext\rptgenextdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rptgenext\rptgenextdemos\flutter_suppression</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rptgenext\slxmlcomp</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rptgen\rptgendemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rptgen\xmlcomp</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rtw\targets\asap2\asap2\dataclasses</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rtw\targets\asap2\asap2</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rtw\targets\asap2\asap2\user</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rtw\targets\common\can\blocks\dataclasses</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rtw\targets\common\can\blocks</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rtw\targets\common\can\blocks\tlc_c</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rtw\targets\common\tgtcommon</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rtw\targets\connectivity</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rtw\targets\pil</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rtw\rtw\cgv\api</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rtw\rtw\misra</directory>
+        <directory>${MATLAB_ROOT}\toolbox\simulinkcoder</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rtw\targets\rtwin\rtwin</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rtw\targets\rtwin\rtwindemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rtw\rtwdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rtw\rtwdemos\rsimdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\simulink\blocks\sb2sl</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\asynciolib</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\can</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\can\canblks</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\can\canmasks</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\can\canmex</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\cgir_fe</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\coder\coder</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\controllib\engine</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\controllib\engine\numerics</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\controllib\engine\options</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\controllib\engine\optim</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\controllib\general</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\controllib\graphics</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\controllib\graphics\utils</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\controllib\graphics\plotoptions</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\controllib\requirements</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\dastudio</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\dastudio\depviewer</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\dspblks\dspblks</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\dspblks\dspmex</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\dsp\vision\matlab\utilities</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\dsp\vision\simulink\utilities</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\dsp\vision\matlab\utilities\mex</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\dsp\vision\simulink\utilities\mex</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\dsp\vision\matlab\utilities\init</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\dsp\vision\matlab\vision</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\dsp\vision\simulink\vision</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\eda\edagraph</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\eda\fil</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\eda\fil\fildemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\eda\fpgaautomation</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\eda\fpgaautomation\obsolete</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\eda\hdlparser</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\filterdesignlib</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\hdlshared</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\imageslib</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\imaqlib</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\mapgeodesy</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\maputils</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\measure</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\optimlib</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\rptgen</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\sigbldr</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\siglib</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\slcontrollib</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\sldv</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\slvnv</directory>
+        <directory>${MATLAB_ROOT}\toolbox\slvnv\simcoverage</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\spcuilib</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\statslib</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\system\system</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\testconsole</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\testmeaslib\general</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\testmeaslib\graphics</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\testmeaslib\simulink</directory>
+        <directory>${MATLAB_ROOT}\toolbox\signal\signal</directory>
+        <directory>${MATLAB_ROOT}\toolbox\signal\sigtools</directory>
+        <directory>${MATLAB_ROOT}\toolbox\signal\sptoolgui</directory>
+        <directory>${MATLAB_ROOT}\toolbox\signal\sigdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\simbio\simbio</directory>
+        <directory>${MATLAB_ROOT}\toolbox\simbio\simbiodemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\simevents\simevents</directory>
+        <directory>${MATLAB_ROOT}\toolbox\simevents\simevents\icons</directory>
+        <directory>${MATLAB_ROOT}\toolbox\des\desblks</directory>
+        <directory>${MATLAB_ROOT}\toolbox\des\desmasks</directory>
+        <directory>${MATLAB_ROOT}\toolbox\des\desmex</directory>
+        <directory>${MATLAB_ROOT}\toolbox\des\desdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\simrf\simrf</directory>
+        <directory>${MATLAB_ROOT}\toolbox\simrf\simrfmasks</directory>
+        <directory>${MATLAB_ROOT}\help\toolbox\simrf\examples</directory>
+        <directory>${MATLAB_ROOT}\toolbox\simrf\simrfdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\shared\simulink</directory>
+        <directory>${MATLAB_ROOT}\toolbox\sl3d\sl3d</directory>
+        <directory>${MATLAB_ROOT}\toolbox\sl3d\sl3ddemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\slci\slci</directory>
+        <directory>${MATLAB_ROOT}\toolbox\slci\slcidemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\slcontrol\slcontrol</directory>
+        <directory>${MATLAB_ROOT}\toolbox\slcontrol\slctrlguis</directory>
+        <directory>${MATLAB_ROOT}\toolbox\slcontrol\slctrlutil</directory>
+        <directory>${MATLAB_ROOT}\toolbox\slcontrol\slctrlobsolete</directory>
+        <directory>${MATLAB_ROOT}\toolbox\slcontrol\slctrldemos</directory>
+        <directory>${MATLAB_ROOT}\help\toolbox\slcontrol\examples</directory>
+        <directory>${MATLAB_ROOT}\toolbox\sldo\sldo</directory>
+        <directory>${MATLAB_ROOT}\toolbox\sldo\sldoguis</directory>
+        <directory>${MATLAB_ROOT}\toolbox\sldo\sloptim\sloptim</directory>
+        <directory>${MATLAB_ROOT}\toolbox\sldo\sloptim\sloptguis</directory>
+        <directory>${MATLAB_ROOT}\toolbox\sldo\sloptim\sloptobsolete</directory>
+        <directory>${MATLAB_ROOT}\toolbox\sldo\slestim\slestguis</directory>
+        <directory>${MATLAB_ROOT}\toolbox\sldo\slestim\slestim</directory>
+        <directory>${MATLAB_ROOT}\toolbox\sldo\slestim\slestmex</directory>
+        <directory>${MATLAB_ROOT}\toolbox\sldo\slestim\slestutil</directory>
+        <directory>${MATLAB_ROOT}\toolbox\sldo\sldodemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\sldo\sldodemos\optim</directory>
+        <directory>${MATLAB_ROOT}\toolbox\sldo\sldodemos\estim</directory>
+        <directory>${MATLAB_ROOT}\toolbox\sldo\sldodemos\estim\docexamples\adaptive</directory>
+        <directory>${MATLAB_ROOT}\toolbox\sldo\sldodemos\estim\docexamples\lookuptable</directory>
+        <directory>${MATLAB_ROOT}\help\toolbox\sldo\examples</directory>
+        <directory>${MATLAB_ROOT}\toolbox\sldv\sldvdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\simulink\simulink\slproject</directory>
+        <directory>${MATLAB_ROOT}\toolbox\slvnv\slvnvdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\slvnv\simcovdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\slvnv\do178b</directory>
+        <directory>${MATLAB_ROOT}\toolbox\slvnv\iec61508</directory>
+        <directory>${MATLAB_ROOT}\toolbox\slvnv\styleguide</directory>
+        <directory>${MATLAB_ROOT}\toolbox\stats\stats</directory>
+        <directory>${MATLAB_ROOT}\toolbox\stats\classreg</directory>
+        <directory>${MATLAB_ROOT}\toolbox\stats\statsdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\stm\stm</directory>
+        <directory>${MATLAB_ROOT}\toolbox\stm\stmdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\symbolic\symbolic</directory>
+        <directory>${MATLAB_ROOT}\toolbox\symbolic\symbolicdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\systemtest\systemtest</directory>
+        <directory>${MATLAB_ROOT}\toolbox\systemtest\systemtest\removed</directory>
+        <directory>${MATLAB_ROOT}\toolbox\systemtest\systemtestdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\matlab\system</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\extensions\processor\blackfin</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\extensions\processor\blackfin\blks</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\extensions\processor\blackfin\blks\mex</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\extensions\processor\blackfin\blks\masks</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\extensions\processor\blackfin\blackfindemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\extensions\processor\intelhost\tfl</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rtw\targets\mpc555dk</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rtw\targets\mpc555dk\common\configuration</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rtw\targets\mpc555dk\mpc555dk</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rtw\targets\mpc555dk\pil</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rtw\targets\mpc555dk\rt\blockset\mfiles\dataclasses</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rtw\targets\mpc555dk\rt\blockset\mfiles</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rtw\targets\mpc555dk\rt\blockset</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\foundation</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\foundation\utils</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\foundation\utils\resource_config</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\foundation\blks</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\foundation\blks\mex</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\foundation\blks\masks</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\extensions\processor\shared</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\extensions\processor\shared\ti</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\extensions\processor\shared\ti\mdlinfo</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\extensions\processor\shared\ti\utils</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\extensions\processor\shared\ti\blks</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\extensions\processor\shared\ti\blks\mex</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\extensions\processor\shared\ti\blks\masks</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\targetdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\extensions\processor\tic2000</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\extensions\processor\tic2000\rtw</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\extensions\processor\tic2000\utils</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\extensions\processor\tic2000\blks</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\extensions\processor\tic2000\blks\mex</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\extensions\processor\tic2000\blks\masks</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\extensions\processor\tic2000\tic2000demos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\extensions\processor\tic5000</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\extensions\processor\tic5000\blks</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\extensions\processor\tic5000\blks\mex</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\extensions\processor\tic5000\blks\masks</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\extensions\processor\tic5000\tic5000demos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\extensions\processor\tic6000</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\extensions\processor\tic6000\rtw</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\extensions\processor\tic6000\tfl</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\extensions\processor\tic6000\utils</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\extensions\processor\tic6000\blks</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\extensions\processor\tic6000\blks\mex</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\extensions\processor\tic6000\blks\sysobj_mex</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\extensions\processor\tic6000\blks\masks</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\extensions\processor\tic6000\tic6000demos\dataclasses</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\extensions\processor\tic6000\tic6000demos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\extensions\operatingsystem\linux\blks</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\extensions\operatingsystem\linux\blks\masks</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\extensions\operatingsystem\linux\blks\mex</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\extensions\operatingsystem\linux\src</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\extensions\operatingsystem\vxworks\blks</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\extensions\operatingsystem\vxworks\blks\mex</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\extensions\operatingsystem\vxworks\blks\masks</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\extensions\operatingsystem\vxworks\src</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\extensions\operatingsystem\windows\blks</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\extensions\operatingsystem\windows\blks\masks</directory>
+        <directory>${MATLAB_ROOT}\toolbox\target\extensions\operatingsystem\windows\blks\mex</directory>
+        <directory>${MATLAB_ROOT}\toolbox\matlab\timeseries</directory>
+        <directory>${MATLAB_ROOT}\toolbox\vision\vision</directory>
+        <directory>${MATLAB_ROOT}\toolbox\vision\visionutilities</directory>
+        <directory>${MATLAB_ROOT}\toolbox\vision\visionutilities\visioninit</directory>
+        <directory>${MATLAB_ROOT}\toolbox\vision\visionutilities\visionmex</directory>
+        <directory>${MATLAB_ROOT}\toolbox\vision\visiondemos</directory>
+        <directory>${MATLAB_ROOT}\help\toolbox\vision\examples</directory>
+        <directory>${MATLAB_ROOT}\toolbox\vnt\vnt</directory>
+        <directory>${MATLAB_ROOT}\toolbox\vnt\vntguis</directory>
+        <directory>${MATLAB_ROOT}\toolbox\vnt\vntdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\vnt\vntblks\vntblks</directory>
+        <directory>${MATLAB_ROOT}\toolbox\vnt\vntblks\vntmasks</directory>
+        <directory>${MATLAB_ROOT}\toolbox\vnt\vntblks\vntmex</directory>
+        <directory>${MATLAB_ROOT}\toolbox\wavelet\wavelet</directory>
+        <directory>${MATLAB_ROOT}\toolbox\wavelet\wmultisig1d</directory>
+        <directory>${MATLAB_ROOT}\toolbox\wavelet\wavedemo</directory>
+        <directory>${MATLAB_ROOT}\toolbox\wavelet\compression</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rtw\targets\xpc\xpc</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rtw\targets\xpc\target\build\xpcblocks\thirdpartydrivers</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rtw\targets\xpc\target\build\xpcblocks</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rtw\targets\xpc\xpcdemos</directory>
+        <directory>${MATLAB_ROOT}\toolbox\rtw\targets\xpc\xpc\xpcmngr</directory>
+      </path>
+    </matlab>
+    <platform>
+      <unix>false</unix>
+      <mac>false</mac>
+      <windows>true</windows>
+      <win2k>false</win2k>
+      <winxp>false</winxp>
+      <vista>false</vista>
+      <linux>false</linux>
+      <solaris>false</solaris>
+      <osver>6.1</osver>
+      <os32>false</os32>
+      <os64>true</os64>
+      <arch>win64</arch>
+      <matlab>true</matlab>
+    </platform>
+  </configuration>
+</deployment-project>
+
