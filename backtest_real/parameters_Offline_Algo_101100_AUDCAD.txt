@@ -16,11 +16,11 @@
             % EXAMPLE of use:
             % -------------------------------------------------------------
             % clear all; bkt_Algo_011=bktOffline_02
-            % bkt_Algo_011=bkt_Algo_011.spin('parameters_Offline_Algo_011_AUDCAD.txt')
+            % bkt_Algo_011=bkt_Algo_011.spin('parameters_Offline_Algo_101100_AUDCAD.txt')
 
 
 
-nameAlgo = 'Algo_011_stocOsc_AUDCAD'
+nameAlgo = 'Algo101100_stocOsc_AUDCAD'
 Cross = 'AUDCAD'
 nData_ = 100
 histName = 'C:\Users\alericci\Desktop\Forex 4.0 noShared\performance comparison\05112016_06022016_AUDCAD_1m_MT4_bkt.csv'   %'AUDCAD.csv'  % 'AUDCAD_short2.csv'

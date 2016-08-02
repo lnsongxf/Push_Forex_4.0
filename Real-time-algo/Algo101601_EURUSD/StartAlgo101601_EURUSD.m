@@ -1,4 +1,4 @@
-function StartAlgo011_AUDCAD(IP,password)
+function StartAlgo101601_EURUSD(IP,password)
 
 if(nargin == 0)
     IP='52.33.13.29';
@@ -23,7 +23,7 @@ addressPub = sprintf(add, portPub);
 zmq.core.connect(socket_pub, addressPub);
 
 % SETTING TOPICS PUB
-fileIdPub = fopen('configPublishers011_AUDCAD.txt');
+fileIdPub = fopen('configPublishers101601_EURUSD.txt');
 ListP = textscan(fileIdPub,'%s');
 fclose(fileIdPub);
 [k,~] = size(ListP{1});
@@ -41,7 +41,7 @@ end
 % EX: TIMEFRAMEQUOTE@MT4@ACTIVTRADES@EURUSD@m1@v1
 % EX: MATLAB@111@EURUSD@STATUS
 
-fileIdSub = fopen('configListeners011_AUDCAD.txt');
+fileIdSub = fopen('configListeners101601_EURUSD.txt');
 ListS = textscan(fileIdSub,'%s');
 fclose(fileIdSub);
 [m,~] = size(ListS{1});
@@ -70,7 +70,7 @@ while 1
         topicName = message;
         messageBody = char(zmq.core.recv(socket, 102400));
         
-        [topicPub, messagePub]=onlineAlgo011_AUDCAD_client03(topicName,messageBody,password);
+        [topicPub, messagePub]=onlineAlgo101601_EURUSD_client03(topicName,messageBody,password);
         if (~isempty( messagePub) && strcmp(messagePub,'') ==0)
             display(strcat('Topic: ', topicPub));
             display(strcat('Message: ', messagePub));

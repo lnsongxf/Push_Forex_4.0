@@ -1,4 +1,4 @@
-function [oper, openValue, closeValue, stopLoss, takeProfit, minReturn] = Algo_011_stocOsc_AUDCAD(matrix,newTimeScalePoint,newTimeScalePointEnd,openValueReal,timeSeriesProperties,indexHisData)
+function [oper, openValue, closeValue, stopLoss, takeProfit, minReturn] = Algo101100_stocOsc_AUDCAD(matrix,newTimeScalePoint,newTimeScalePointEnd,openValueReal,timeSeriesProperties,indexHisData)
 
 %
 % DESCRIPTION:
@@ -72,14 +72,14 @@ if(isempty(countCycle) || countCycle == 0)
     countCycle = 1;
     operationState = OperationState;
     params = Parameters;
-    map('Algo_011_stocOsc_AUDCAD') = RealAlgo(operationState,params);
+    map('Algo101100') = RealAlgo(operationState,params);
     oper      = 0;
     return;
 end
 
 
-ra = map('Algo_011_stocOsc_AUDCAD');
-remove(map,'Algo_011_stocOsc_AUDCAD');
+ra = map('Algo101100');
+remove(map,'Algo101100');
 
 params = ra.p;
 operationState = ra.os;
@@ -130,7 +130,7 @@ if newTimeScalePoint
     
     % 01c
     % -------- coreState filter -------------------- %
-    cState.core_Algo_011_stocOsc( lows(1:end-1), highs(1:end-1), chiusure(1:end-1), params ,3,1);
+    cState.core_Algo_011_stocOsc( lows(1:end-1), highs(1:end-1), chiusure(1:end-1), params ,3,1,26,26);
     
 end
 state=cState.state;
@@ -216,7 +216,7 @@ end
 oper      = operationState.actualOperation;
 
 real_Algo = RealAlgo(operationState,params);
-map('Algo_011_stocOsc_AUDCAD') = real_Algo;
+map('Algo101100') = real_Algo;
 
 openValue   = params.get('openValue_');
 closeValue  = params.get('closeValue');

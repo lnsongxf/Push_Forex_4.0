@@ -445,7 +445,7 @@ classdef coreState_real02 < handle
         
         
         
-        function obj = core_Algo_011_stocOsc(obj, low, high, closure, params,Kperiods, Dperiods)
+        function obj = core_Algo_011_stocOsc(obj, low, high, closure, params,Kperiods, Dperiods,valueTP,valueSL)
             
             stosc = stochosc(high, low, closure,Kperiods,Dperiods); % 3,1 for AUDCAD
             FpK = stosc(:,1);
@@ -469,8 +469,8 @@ classdef coreState_real02 < handle
                     
                     obj.state=1;
                     obj.suggestedDirection=prev_signal;
-                    obj.suggestedTP=26;
-                    obj.suggestedSL=26;
+                    obj.suggestedTP=valueTP;
+                    obj.suggestedSL=valueSL;
                     
                 end
                 

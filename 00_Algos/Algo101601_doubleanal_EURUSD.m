@@ -73,14 +73,14 @@ if(isempty(countCycle) || countCycle == 0)
     countCycle = 1;
     operationState = OperationState;
     params = Parameters;
-    map('Algo_016_01') = RealAlgo(operationState,params);
+    map('Algo101601') = RealAlgo(operationState,params);
     oper = 0;
     return;
 end
 
 
-ra = map('Algo_016_01');
-remove(map,'Algo_016_01');
+ra = map('Algo101601');
+remove(map,'Algo101601');
 
 params = ra.p;
 operationState = ra.os;
@@ -205,7 +205,7 @@ end
 oper = operationState.actualOperation;
 
 real_Algo = RealAlgo(operationState,params);
-map('Algo_016_01')     = real_Algo;
+map('Algo101601')     = real_Algo;
 
 openValue = params.get('openValue_');
 closeValue= params.get('closeValue');
