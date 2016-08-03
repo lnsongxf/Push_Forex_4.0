@@ -23,6 +23,7 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
     var zmq = require('zmq');
     var fs = require("fs");
     var request = require('request');
+    $scope.sendRequest = request;
     var crypto = require('crypto');
     var mv = require('mv');
     require('nw.gui').Window.get().showDevTools();
@@ -282,11 +283,12 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
 
       var updateResults = function(platform,source,cross,timeFrame,from,to,dataLenght){
         callback_number++;
+        console.log("backtest from: "+from+" to: "+to);
         crosses_data.push({platform:platform,source:source,cross:cross,timeFrame:timeFrame,from:from,to:to,dataLenght:length});
         console.log("02: ",crosses_data[callback_number-1]);
         if( callback_number == cross_list.length){
           console.log(" create worker");
-          $scope.c.end();
+          //$scope.c.end();
           create_worker();
         }else if ( callback_number < cross_list.length ) {
           console.log("continue to download");
@@ -451,21 +453,95 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
 
 
                   var urlBeta = $scope.ipTempBetaServer+'/getHistoryQuote?historyName='+quotes_query_new;
-                  request(urlBeta, function (error, response, body) {
-                    console.log("error: ",error);
+                  $scope.sendRequest(urlBeta, function (error, response, body) {
+                    
                     if (!error && response.statusCode == 200) {
                       console.log("body: ",body);
                       console.log("response: ",response);
                       console.log("body.error: ",body.error);
+
+                      store_history_in_memory = body;
+                      body = null;
+
+                      if (createNewRecord == 1) {
+                        console.log("create new Record = 1");
+
+                        var propCSV = cross+'_csv';
+                        var objectStore = $scope.db.transaction([propCSV], "readwrite").objectStore(propCSV);
+                        var row = {source:source,platform:platform,from:new_local_history_from, to:new_local_history_to,csv:store_history_in_memory, converted:0 };
+                        store_history_in_memory = null;
+                        var request = objectStore.add(  row  );
+
+                        request.onsuccess = function(event) {
+                          console.log("created csv row in db");
+                          row = null;
+                          updateResults(platform,source,cross,timeFrame,asked_history_from,asked_history_to,length);
+                        };
+                        request.onerror = function(event) {
+                          console.log("Error to create csv row in DB");
+                        };
+
+
+                      }else if(createNewRecord == 0) {
+
+                        console.log("create new Record = 0");
+
+                        var propCSV = cross+'_csv';
+                        var objectStore = $scope.db.transaction([propCSV], "readwrite").objectStore(propCSV);
+                        var request = objectStore.openCursor();
+                        request.onsuccess = function(event) {
+
+                          var cursor = event.target.result;
+
+                          console.log("in cursor 0");
+                          if (cursor) {
+                            console.log("in cursor 1");
+                            console.log("matchArrValues: ",request.result.value);
+
+                            if (request.result.value.source == source && request.result.value.platform == platform ) {
+
+                              resultDb = cursor.value;
+                              console.log("event: ",event);
+                              var cursor = event.target.result;
+
+                              resultDb.csv = store_history_in_memory;
+                              resultDb.converted = 0;
+                              resultDb.from = new_local_history_from;
+                              resultDb.to = new_local_history_to;
+                              var requestUpdate = cursor.update(resultDb);
+
+                              requestUpdate.onerror = function(event) {
+                                console.log("Error to update csv row on DB");
+                                store_history_in_memory = null;
+                                resultDb = null;
+                                cursor.continue();
+                              };
+                              requestUpdate.onsuccess = function(event) {
+                                console.log("Updated csv row on DB");
+                                resultDb = null;
+                                store_history_in_memory = null;
+                                cursor.continue();
+                              };
+                            }else{
+                              console.log("no right platform and source");
+                              cursor.continue();
+                            }
+
+                          }else{
+                            console.log("cursor closed");
+                            updateResults(platform,source,cross,timeFrame,asked_history_from,asked_history_to,length);
+                          }
+                        };
+                      }
                     }else{
-                      console.log("error");
+                      console.log("error: ",error);
                     }
                   });
 
 
 
 
-                  $scope.c = null;
+                  /*$scope.c = null;
                   $scope.c = new Client();
                   $scope.c.connect(connectionProperties);
                   $scope.c.on('ready', function() {
@@ -479,92 +555,6 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
                         console.log("store_history_in_memory! "); 
                         $scope.c.end();
 
-
-                        if (createNewRecord == 1) {
-
-                          console.log("create new Record = 1");
-
-                          var propCSV = cross+'_csv';
-                          var objectStore = $scope.db.transaction([propCSV], "readwrite").objectStore(propCSV);
-                          var row = {source:source,platform:platform,from:new_local_history_from, to:new_local_history_to,csv:store_history_in_memory, converted:0 };
-                          store_history_in_memory = null;
-                          var request = objectStore.add(  row  );
-
-                          request.onsuccess = function(event) {
-                            console.log("created csv row in db");
-                            row = null;
-                            updateResults(platform,source,cross,timeFrame,asked_history_from,asked_history_to,length);
-                          };
-                          request.onerror = function(event) {
-                            console.log("Error to create csv row in DB");
-                          };
-
-
-                        }else if(createNewRecord == 0) {
-
-                          console.log("create new Record = 0");
-
-                          var propCSV = cross+'_csv';
-                          var objectStore = $scope.db.transaction([propCSV], "readwrite").objectStore(propCSV);
-                          var request = objectStore.openCursor();
-                          request.onsuccess = function(event) {
-
-                            var cursor = event.target.result;
-
-                            console.log("in cursor 0");
-                            if (cursor) {
-                              console.log("in cursor 1");
-                              console.log("matchArrValues: ",request.result.value);
-
-                              if (request.result.value.source == source && request.result.value.platform == platform ) {
-
-                                resultDb = cursor.value;
-                                console.log("event: ",event);
-                                var cursor = event.target.result;
-
-                                resultDb.csv = store_history_in_memory;
-                                resultDb.converted = 0;
-                                resultDb.from = new_local_history_from;
-                                resultDb.to = new_local_history_to;
-                                var requestUpdate = cursor.update(resultDb);
-
-                                requestUpdate.onerror = function(event) {
-                                  console.log("Error to update csv row on DB");
-                                  store_history_in_memory = null;
-                                  resultDb = null;
-                                  cursor.continue();
-                                };
-                                requestUpdate.onsuccess = function(event) {
-                                  console.log("Updated csv row on DB");
-                                  resultDb = null;
-                                  store_history_in_memory = null;
-                                  cursor.continue();
-                                };
-                              }else{
-                                console.log("no right platform and source");
-                                cursor.continue();
-                              }
-
-                            }else{
-                              console.log("cursor closed");
-                              updateResults(platform,source,cross,timeFrame,asked_history_from,asked_history_to,length);
-                            }
-                          };
-                        }
-
-                        /*var objectStore = transaction.objectStore(key1);
-                        var row = {source:source,platform:platform,from:new_local_history_from, to:new_local_history_to, timeFrameObj:'',csv:store_history_in_memory, converted:0 };
-
-                        store_history_in_memory = null;
-                        var request = objectStore.add(  row  );
-
-                        request.onsuccess = function(event) {
-                          console.log("data uploaded in db");
-                          row = null;
-                          updateResults(platform,source,cross,timeFrame,asked_history_from,asked_history_to,length);
-                        };*/
-
-
                       });
                       stream.on('data', function(chunk) {
                         console.log("data :",chunk.toString());
@@ -572,7 +562,10 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
                       });
                       //stream.pipe(fs.createWriteStream('foo.local-copy.txt'));
                     });
-                  });
+                  });*/
+
+
+
                 }else{
                   console.log("download history = 0...");
                   updateResults(platform,source,cross,timeFrame,asked_history_from,asked_history_to,length);
@@ -633,10 +626,10 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
       $scope.startBacktest([{'cross':'EURGBP','timeFrame':'m1','dataLenght':'v5'}],'2016-02-07 13:47','2016-02-15 14:04','MT4','ACTIVETRADES');
     },30000);*/
 
-    /*setTimeout(function(){
+    setTimeout(function(){
       console.log("second call");
       $scope.startBacktest([{'cross':'EURGBP','timeFrame':'m1','dataLenght':'v5'}],'2016-02-01 13:47','2016-02-15 14:04','MT4','ACTIVETRADES');
-    },30000);*/
+    },30000);
 
     //////////////////////////////Config panel//////////////////
     $scope.openPanel = false;

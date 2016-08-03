@@ -3,10 +3,10 @@ console.log("started worker");
 var db;
 
 
-Array.prototype.appendArr = function (old_array,other_array,source,platform) {
+var appendArr = function (old_array,other_array,source,platform) {
     /* you should include a test to check whether other_array really is an array */
     var newHistoryArr = [];
-    for(var i = old_array.length-1; i>=0; i--){
+    for(var i = 0; i <= old_array.length-1; i++){
     	newHistoryArr.push(old_array[i]);
     }
     for(var i=0; i<=other_array.length-1; i++){
@@ -42,7 +42,7 @@ var prependArr = function (old_array,other_array,source,platform) {
     	var row = {source:source, platform:platform, date:date, time:time, open:open, high:high, low:low, close:close, volume:volume};
     	newHistoryArr.push(row);
     }   
-    for(var i = old_array.length-1; i>=0; i--){
+    for(var i = 0; i<= old_array.length-1;  i++){
     	newHistoryArr.push(old_array[i]);
     }
     console.log("prepend: "+JSON.stringify(newHistoryArr) );
@@ -597,7 +597,7 @@ var updateTimeFrameObjLocal = function(messageArr,i){
 
 var searchHistoryQuoteInDb = function(platform,source,cross,fromBacktest,toBacktest){
 
-	console.log('platform,source,cross,from,to: '+platform+' '+source+' '+cross+''+fromBacktest+' '+fromBacktest);
+	console.log('platform,source,cross,from,to: '+platform+' '+source+' '+cross+''+fromBacktest+' '+toBacktest);
 
 	var iteration = 0;
 	var messageArr = [];
@@ -623,7 +623,7 @@ var searchHistoryQuoteInDb = function(platform,source,cross,fromBacktest,toBackt
 
 		        currentDate = new Date(request.result.value.date+' '+request.result.value.time);
 		        //console.log("currentDate: ",currentDate+" fromNumber: "+fromNumber+" "+" toNumber: "+toNumber);
-		        if ( request.result.value.source == source && request.result.value.platform == platform && currentDate >= fromNumber && currentDate <= toNumber ) {
+		        if ( (request.result.value.source == source) && (request.result.value.platform == platform) && (currentDate >= fromNumber) && (currentDate <= toNumber) ) {
 		        	console.log("request.result.value.date: "+request.result.value.date);
 		        	iteration++;
 		        	dateTime = request.result.value.date+' '+request.result.value.time;
