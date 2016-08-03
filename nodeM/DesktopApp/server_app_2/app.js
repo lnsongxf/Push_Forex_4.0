@@ -87,6 +87,25 @@ app.get('/', function (req, res) {
 
 
 
+app.get('/getHistoryQuote',function(req, res) {
+  console.log("req.query,historyName: "+req.query.historyName);
+  var request = 'C:/Algos/history_backtest/'+ req.query.historyName;
+  fs.readFile(request, function(error, content) {
+        if (error) {
+          res.writeHead(500);
+          res.end('Sorry, error to get history quotes: '+error.code+' ..\n');
+          res.end(); 
+        }
+        else {
+            res.writeHead(200, { 'Content-Type': 'text/csv' });
+            res.end(content, 'utf-8');
+        }
+    });
+});
+
+
+
+
 app.post('/updateSettingAlgo', function(req, res) {
   //console.log("req.body: ",req.body);
   console.log("req: ",req.query);

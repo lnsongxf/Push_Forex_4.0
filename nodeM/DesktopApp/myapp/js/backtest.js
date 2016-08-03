@@ -3,10 +3,14 @@ console.log("started worker");
 var db;
 
 
-Array.prototype.appendArr = function (other_array,source,platform) {
+Array.prototype.appendArr = function (old_array,other_array,source,platform) {
     /* you should include a test to check whether other_array really is an array */
-    other_array.forEach(function(v) {
-    	var tmpQuote = v.toString().split(',');
+    var newHistoryArr = [];
+    for(var i = old_array.length-1; i>=0; i--){
+    	newHistoryArr.push(old_array[i]);
+    }
+    for(var i=0; i<=other_array.length-1; i++){
+    	var tmpQuote = other_array[i].toString().split(',');
     	var date = tmpQuote[0];
     	var time = tmpQuote[1];
     	var dateTime = tmpQuote[0]+" "+tmpQuote[1];
@@ -16,13 +20,17 @@ Array.prototype.appendArr = function (other_array,source,platform) {
     	var close = tmpQuote[5];
     	var volume = tmpQuote[6];
     	var row = {source:source, platform:platform, date:date, time:time, open:open, high:high, low:low, close:close, volume:volume};
-    	this.push(row)
-    }, this);    
+    	newHistoryArr.push(row);
+    }   
+    console.log("append: "+JSON.stringify(newHistoryArr) );
+    return newHistoryArr;
 }
-Array.prototype.prependArr = function (other_array,source,platform) {
+var prependArr = function (old_array,other_array,source,platform) {
     /* you should include a test to check whether other_array really is an array */
-    other_array.forEach(function(v) {
-    	var tmpQuote = v.toString().split(',');
+    //for(var i=other_array.length-1;i>=0;i--){
+    var newHistoryArr = [];
+    for(var i=0; i<=other_array.length-1; i++){
+    	var tmpQuote = other_array[i].toString().split(',');
     	var date = tmpQuote[0];
     	var time = tmpQuote[1];
     	var dateTime = tmpQuote[0]+" "+tmpQuote[1];
@@ -32,8 +40,13 @@ Array.prototype.prependArr = function (other_array,source,platform) {
     	var close = tmpQuote[5];
     	var volume = tmpQuote[6];
     	var row = {source:source, platform:platform, date:date, time:time, open:open, high:high, low:low, close:close, volume:volume};
-    	this.unshift(row);
-    }, this);    
+    	newHistoryArr.push(row);
+    }   
+    for(var i = old_array.length-1; i>=0; i--){
+    	newHistoryArr.push(old_array[i]);
+    }
+    console.log("prepend: "+JSON.stringify(newHistoryArr) );
+    return newHistoryArr;
 }
 
 Array.prototype.pushUnique = function (item){
@@ -535,13 +548,16 @@ var indexQuote = 1;
 
 var updateTimeFrameObjLocal = function(messageArr,i){
 
+	//console.log("updateRealTimeQuotesObj messageArr: ",messageArr);
 	var result = QuotesModule.updateRealTimeQuotesObj(searchObjRealTimeQuote,messageArr);
 
 	var timeFrameToUpdate = 'm1';   //m1,m5,m15,m30,h1,h4,d1,w1
 	var new_timeFrameQuotesObj = QuotesModule.updateTimeFrameQuotesObj(timeFrameToUpdate,runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty],runningProviderRealTimeObjs[tmpRealTimeQuoteProperty],tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty);
 	runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty] = new_timeFrameQuotesObj;
 
+	//console.log("iteration: "+i);
 	if ( (i%5) == 0 ) {
+		//console.log("iteration in 5: "+i);
 		timeFrameToUpdate = 'm5';   //m1,m5,m15,m30,h1,h4,d1,w1
 		new_timeFrameQuotesObj = QuotesModule.updateTimeFrameQuotesObj(timeFrameToUpdate,runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty],runningProviderRealTimeObjs[tmpRealTimeQuoteProperty],tmpRealTimeQuoteProperty,tmpTimeFrameQuoteProperty);
 		runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty] = new_timeFrameQuotesObj;
@@ -579,15 +595,14 @@ var updateTimeFrameObjLocal = function(messageArr,i){
 	return true;
 }
 
+var searchHistoryQuoteInDb = function(platform,source,cross,fromBacktest,toBacktest){
 
-
-
-var searchHistoryQuoteInDb = function(platform,source,cross,from,to){
+	console.log('platform,source,cross,from,to: '+platform+' '+source+' '+cross+''+fromBacktest+' '+fromBacktest);
 
 	var iteration = 0;
 	var messageArr = [];
-	var fromNumber = new Date(from);
-	var toNumber = new Date(to);
+	var fromNumber = new Date(fromBacktest);
+	var toNumber = new Date(toBacktest);
 	var currentDate = '';
 	var messageArr = [];
 	var propQuote = cross+'_m1';
@@ -598,25 +613,29 @@ var searchHistoryQuoteInDb = function(platform,source,cross,from,to){
 	request.onsuccess = function(e) {
 	    var cursor = e.target.result;
 	    if(cursor) {
-	    	console.log("e.target.result: ",e.target.result);
-	        console.log("Key", cursor.key);
-	        console.dir("Data", cursor.value);
+	    	if (request.result.value != undefined) {
+		    	//console.log("e.target: ",e.target);
+		        //console.log("Key", cursor.key);
+		        //console.dir("Data", cursor.value);
+		        //console.log("request.result.value: ",request.result.value);
 
-	        //var row = {source:source, platform:platform, date:date, time:time, open:open, high:high, low:low, close:close, volume:volume};
+		        //var row = {source:source, platform:platform, date:date, time:time, open:open, high:high, low:low, close:close, volume:volume};
 
-	        currentDate = new Date(cursor.value.date+' '+cursor.value.time);
-	        if ( cursor.value.source == source && cursor.value.platform == platform && currentDate >= fromNumber && currentDate <= toNumber ) {
-	        	iteration++;
-	        	dateTime = cursor.value.date+' '+cursor.value.time;
-	        	messageArr = [cross,cursor.value.open,cursor.value.high,cursor.value.low,cursor.value.close,cursor.value.volume,dateTime];
-	        	var res = updateTimeFrameObjLocal(messageArr,iteration);
-	        	
-	        }
-	        cursor.continue();
-
-	        
+		        currentDate = new Date(request.result.value.date+' '+request.result.value.time);
+		        //console.log("currentDate: ",currentDate+" fromNumber: "+fromNumber+" "+" toNumber: "+toNumber);
+		        if ( request.result.value.source == source && request.result.value.platform == platform && currentDate >= fromNumber && currentDate <= toNumber ) {
+		        	console.log("request.result.value.date: "+request.result.value.date);
+		        	iteration++;
+		        	dateTime = request.result.value.date+' '+request.result.value.time;
+		        	messageArr = [cross,request.result.value.open,request.result.value.high,request.result.value.low,request.result.value.close,request.result.value.volume,dateTime];
+		        	var res = updateTimeFrameObjLocal(messageArr,iteration);
+		        	
+		        }
+			}
+			cursor.continue();
 	    }else{
 			console.log("end cursor");
+			console.log("runningProviderTimeFrameObjs: ",runningProviderTimeFrameObjs);
 		}
 	}
 }
@@ -666,31 +685,66 @@ self.addEventListener('message',  function(event){
 	}else if (event.data.type == 'initialHistoryQuotes') {
 
 
-		var uploadDB = function(newHistoryArr,platform,source,cross,from,to){
+		var uploadDB = function(newHistoryArr,platform,source,cross,from,to,fromBacktest,toBacktest){
+
+			console.log("newHistoryArr: ",newHistoryArr);
+
 			var propQuote = cross+'_m1';
 			var objectStore = db.transaction([propQuote], "readwrite").objectStore(propQuote);
             
             console.log("newHistoryArr.length: ",newHistoryArr.length);
             var rowUploaded = 0;
-            for(var i=1; i<=newHistoryArr.length; i++){
-
-            	
-                var request = objectStore.add(  newHistoryArr[i]  );
-                request.onsuccess = function(event) {
-                	rowUploaded++;
-                	console.log("data uploaded in db");
-                	if ( rowUploaded == newHistoryArr.length ) {
-                		console.log("finished to upload data in db");
-                		searchHistoryQuoteInDb(platform,source,cross,from,to);
-                	}
-                }
-	            
+            var rowIndexDb = 0;
+            
+            var addRowInDb = function(row){
+            	if ( row != undefined ) {
+            		console.log("newHistoryArr[i]: "+row.date);
+	                var request = objectStore.put(  row, rowIndexDb );
+	                
+	                request.onsuccess = function(event) {
+	                	rowUploaded++;
+	                	//console.log("data uploaded in db");
+	                	newHistoryArr.shift();
+	                	rowIndexDb++;
+	                	if ( newHistoryArr.length == 0 ) {
+	                		console.log("finished to upload data in db");
+	                		//console.log("newHistoryArr.length: ",newHistoryArr.length);
+	                		searchHistoryQuoteInDb(platform,source,cross,fromBacktest,toBacktest);
+	                	}else{
+	                		addRowInDb( newHistoryArr[0] );
+	                	}
+	                }
+	            }
             }
+
+            addRowInDb(newHistoryArr[0]);
+
+            /*for(var i=newHistoryArr.length-1 ;i>=0; i--){
+            //for(var i=0; i<=newHistoryArr.length-1; i++){
+            	//console.log("newHistoryArr[i].date: "+newHistoryArr[i].date);
+            	if ( newHistoryArr[i] != undefined ) {
+            		console.log("newHistoryArr[i]: "+newHistoryArr[i].date);
+	                var request = objectStore.put(  newHistoryArr[i], rowIndexDb );
+	                rowIndexDb++;
+	                request.onsuccess = function(event) {
+	                	rowUploaded++;
+	                	console.log("data uploaded in db");
+	                	if ( rowUploaded == newHistoryArr.length ) {
+	                		console.log("finished to upload data in db");
+	                		//console.log("newHistoryArr.length: ",newHistoryArr.length);
+	                		searchHistoryQuoteInDb(platform,source,cross,fromBacktest,toBacktest);
+	                	}
+	                }
+	            }
+            }*/
 		}
 
 
 
-		var createTimeFrameFx = function(platform,source,cross,from,to){
+		var createTimeFrameFx = function(platform,source,cross,fromBacktest,toBacktest){
+
+			console.log("fromBacktest : ",fromBacktest);
+			console.log("toBacktest : ",toBacktest);
 
 			var matchArrValues = [];
 			var history_quote_arr = '';
@@ -706,7 +760,7 @@ self.addEventListener('message',  function(event){
 				var cursor = event.target.result;
 
 				if (cursor) {
-					console.log("matchArrValues: ",request.result.value);
+					console.log("matchArrValues: "+JSON.stringify(request.result.value) );
 					console.log("source: "+source);
 					console.log("platform: "+platform);
 					console.log("sourcedb: "+request.result.value.source);
@@ -720,14 +774,45 @@ self.addEventListener('message',  function(event){
 
 						source = event.target.result.value.source;
 						platform = event.target.result.value.platform;
-						from = event.target.result.value.from;
-						to = event.target.result.value.to
+						var from = event.target.result.value.from;
+						var to = event.target.result.value.to
 
+						console.log("event.target.result.value.converted: ",event.target.result.value.converted);
 						if ( event.target.result.value.converted == 0) {
 
-							//PARSE CSV AND CREATE TIMEFRAME BJ 
-							history_quote_arr = CSVToArray(event.target.result.value.csv,';');
 
+
+
+							var propCSV = cross+'_csv';
+							var objectStoreUpdate = db.transaction([propCSV], "readwrite").objectStore(propCSV);
+							var requestUpdate = objectStore.openCursor();
+							requestUpdate.onsuccess = function(ev) {
+
+								console.log("ev: ",ev);
+								var cursorUpdate = ev.target.result;
+
+								if (cursorUpdate) {
+
+									resultDb = cursorUpdate.value;
+		                            var cursorUpdate2 = ev.target.result;
+
+		                            resultDb.csv = '';
+		                            resultDb.converted = 1;
+		                            resultDb.from = ev.target.result.value.from;
+		                            resultDb.to = ev.target.result.value.to;
+		                            var requestUpdate = cursorUpdate2.update(resultDb);
+
+		                            requestUpdate.onsuccess = function(ev) {
+		                                console.log("Updated converted value = 1 on DB");
+		                                resultDb = null;
+		                            }
+
+		                        }
+		                    }
+
+                            //PARSE CSV AND CREATE TIMEFRAME BJ 
+							history_quote_arr = CSVToArray(event.target.result.value.csv,';');
+							console.log("history_quote_arr 2: ",history_quote_arr);
 		            		var propCSV = cross+'_m1';
 		            		var transaction = db.transaction([propCSV],"readwrite");
 							var store = transaction.objectStore(propCSV);
@@ -739,21 +824,23 @@ self.addEventListener('message',  function(event){
 		            		
 		            		var direction = '';
 		        			request1.onsuccess = function(event) {
-		        				console.log("event: ",event.target);
+		        				//console.log("event: ",event.target);
 		        				//console.log("request1.result: ",request1.result);
-		        				var cursor = event.target.result;
-		        				if (cursor) {
-		        					console.log("matchArrValues: ",request1.result.value);
-
-		        					if (request1.result.value.source == source && request1.result.value.platform == platform ) {
-		        						//order here before push in array
-		        						matchArrValues.push(request1.result.value);	
-		        					};
-		        					
-							    	request1.delete(cursor.primaryKey);
-							    	cursor.continue();
+		        				var cursor1 = event.target.result;
+		        				if (cursor1) {
+		        					console.log("matchArrValues: "+request1.result.value.date);
+		        					if (request1.result.value != undefined) {
+			        					
+			        					//console.log("request1: ",request1);
+			        					if (request1.result.value.source == source && request1.result.value.platform == platform ) {
+			        						//order here before push in array
+			        						matchArrValues.push(request1.result.value);	
+			        					};
+			        				}
+							    	cursor1.delete();
+							    	cursor1.continue();
 							    }else{
-							    	console.log("end cursor, finished to get data from db");
+							    	console.log("end cursor1, finished to get data from db");
 							    	console.log("matchArrValues: ",matchArrValues);
 
 							    	if (matchArrValues.length > 0) {
@@ -775,31 +862,46 @@ self.addEventListener('message',  function(event){
 										
 										if (direction == 'append') {
 											////////////////////////////////////////////////////
-											matchArrValues.appendArr(history_quote_arr,source,platform);
-											uploadDB(matchArrValues,platform,source,cross,from,to);
+											console.log("matchArrValues append: "+JSON.stringify(matchArrValues) );
+											console.log("history_quote_arr append: "+JSON.stringify(history_quote_arr) );
+											var newHistoryArr = appendArr(matchArrValues,history_quote_arr,source,platform);
 											matchArrValues = null;
 											history_quote_arr = null;
+											uploadDB(newHistoryArr,platform,source,cross,from,to,fromBacktest,toBacktest);
+											newHistoryArr = null;
 											//append data
 										}else{
 											///////////////////////////////////////////////////
-											matchArrValues.prependArr(history_quote_arr,source,platform);
-											uploadDB(matchArrValues,platform,source,cross,from,to);
+											console.log("matchArrValues append: "+JSON.stringify(matchArrValues) );
+											console.log("history_quote_arr append: "+JSON.stringify(history_quote_arr) );
+											var newHistoryArr = prependArr(matchArrValues,history_quote_arr,source,platform);
 											matchArrValues = null;
 											history_quote_arr = null;
+											uploadDB(newHistoryArr,platform,source,cross,from,to,fromBacktest,toBacktest);
+											newHistoryArr = null;
 											//prepend
 										}
 									}else{
-										matchArrValues.appendArr(history_quote_arr,source,platform);
-										uploadDB(matchArrValues,platform,source,cross,from,to);
+										console.log("matchArrValues: "+JSON.stringify(matchArrValues) );
+										console.log("history_quote_arr: "+JSON.stringify(history_quote_arr) );
+
+										var newHistoryArr = appendArr(matchArrValues,history_quote_arr,source,platform);
+										//matchArrValues.appendArr(history_quote_arr,source,platform);
 										matchArrValues = null;
 										history_quote_arr = null;
+										uploadDB(newHistoryArr,platform,source,cross,from,to,fromBacktest,toBacktest);
+										newHistoryArr = null;
 									}
 									
 							    }
 							}
 
+
+                            
+
 						}else{
-							searchHistoryQuoteInDb(platform,source,cross,from,to);
+							console.log("search in db");
+							searchHistoryQuoteInDb(platform,source,cross,fromBacktest,toBacktest);
 							//GET FROM DB THE ARRAY QUOTES 'FROM' AND 'TO'
 						}
 					}else{
@@ -832,7 +934,8 @@ self.addEventListener('message',  function(event){
 				console.log("setting: ",setting);
 				console.log("event.data.d[j] plAT: "+event.data.d[j].platform );
 				console.log("event.data.d[j] source: "+event.data.d[j].source );
-				createTimeFrameFx(event.data.d[j].platform,event.data.d[j].source,event.data.d[j].cross,event.data.from,event.data.to);
+				console.log("event.data.from: ",event.data.d[j].from);
+				createTimeFrameFx(event.data.d[j].platform,event.data.d[j].source,event.data.d[j].cross,event.data.d[j].from,event.data.d[j].to);
 			}
 		  	//self.postMessage('successfully opened db');    
 		};
@@ -887,12 +990,7 @@ self.addEventListener('message',  function(event){
 	  			}else{
 	  				console.log("error message: ",newTopic)
 	  			}
-
 	  			console.log("START TO SEND QUOTES TO CLIENT");
-
-	  			
-	  			
-
 				break;
 
 			case "DELETETOPICQUOTES":

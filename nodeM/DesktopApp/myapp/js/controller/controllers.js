@@ -2,7 +2,7 @@
 
 movieStubApp.controller("homeCtrl", function ($scope, $location) {
     
-
+    $scope.ipTempBetaServer = 'http://52.33.13.29:3000';
     //$scope.headerSrc = "tmpl/header.html";
     //$scope.movies = movieStubFactory.query();
     $scope.ipServer = "http://127.0.0.1:3000";
@@ -29,7 +29,7 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
     var tcpPortUsed = require('tcp-port-used');
 
     var Client = require('ftp');
-    $scope.c = new Client();
+    
     var connectionProperties = {
         host: "52.33.13.29",
         user: "trader",
@@ -296,6 +296,7 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
 
       var get_quotes = function(platform,source,cross,length,timeFrame,asked_history_from,asked_history_to){ 
 
+        console.log("asked history to : ",asked_history_to);
         var isCrossArrUpdated = crossArr.pushUnique(cross);
 
         if (isCrossArrUpdated == true) {
@@ -310,7 +311,7 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
             var request = objectStore.openCursor();
 
             var foundRecord = 0;
-            var createNewRecord = 0;
+           
             var download_from = '';
             var download_to = '';
             var new_local_history_from = '';
@@ -323,7 +324,7 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
 
               var cursor = event.target.result;
               if (cursor) {
-                console.log("matchArrValues: ",request1.result.value);
+                console.log("matchArrValues: ",request.result.value);
 
                 if (request.result.value.source == source && request.result.value.platform == platform ) {
                   foundRecord = 1;
@@ -338,37 +339,62 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
                     download_history = 0;
                     new_local_history_from = event.target.result.value.from;
                     new_local_history_to = event.target.result.value.to;
+                    cursor.continue();
                   }else{
 
                     if ( new Date(event.target.result.value.from) > new Date(asked_history_from) && new Date(event.target.result.value.from) >= new Date(asked_history_to)) {
                       //START from END event.target.result.value.from
                       download_from = asked_history_from;
                       var tmpDate = new Date(event.target.result.value.from);
-                      tmpDate.setDate(tmpDate.getDate() - 1);
-                      download_to = tmpDate.getFullYear()+'.'+(tmpDate.getMonth()+1)+'.'+tmpDate.getDate();
+                      //tmpDate.setDate(tmpDate.getDate());
+                      tmpDate.setMinutes( tmpDate.getMinutes() - 1 );
+                      var month = ( ( tmpDate.getMonth()+1 ) <10?'0':'') + (tmpDate.getMonth()+1);
+                      var day = ( tmpDate.getDate() <10?'0':'') + tmpDate.getDate();
+                      var hour = ( tmpDate.getHours() <10?'0':'') + tmpDate.getHours();
+                      var minute = ( tmpDate.getMinutes() <10?'0':'') + tmpDate.getMinutes();
+
+                      download_to = tmpDate.getFullYear()+'-'+month+'-'+day+' '+hour+':'+minute;
                       new_local_history_from = asked_history_from;
                       new_local_history_to = event.target.result.value.to;
                     }else if ( new Date(event.target.result.value.from) > new Date(asked_history_from) && new Date(event.target.result.value.from) < new Date(asked_history_to) && new Date(event.target.result.value.to) >= new Date(asked_history_to)) {
                       //START from END event.target.result.value.from
                       download_from = asked_history_from;
                       var tmpDate = new Date(event.target.result.value.from);
-                      tmpDate.setDate(tmpDate.getDate() - 1);
-                      download_to = tmpDate.getFullYear()+'.'+(tmpDate.getMonth()+1)+'.'+tmpDate.getDate();
+                      //tmpDate.setDate(tmpDate.getDate() - 1);
+                      tmpDate.setMinutes( tmpDate.getMinutes() - 1 );
+                      var month = ( (tmpDate.getMonth()+1) <10?'0':'') + (tmpDate.getMonth()+1);
+                      var day = ( tmpDate.getDate() <10?'0':'') + tmpDate.getDate();
+                      var hour = ( tmpDate.getHours() <10?'0':'') + tmpDate.getHours();
+                      var minute = ( tmpDate.getMinutes() <10?'0':'') + tmpDate.getMinutes();
+
+                      download_to = tmpDate.getFullYear()+'-'+month+'-'+day+' '+hour+':'+minute;
                       new_local_history_from = asked_history_from;
                       new_local_history_to = event.target.result.value.to;
                     }else if ( new Date(event.target.result.value.from) < new Date(asked_history_from) && new Date(event.target.result.value.to) >= new Date(asked_history_from) && new Date(event.target.result.value.to) < new Date(asked_history_to)) {
                       //START event.target.result.value.to END to
                       var tmpDate = new Date(event.target.result.value.to);
-                      tmpDate.setDate(tmpDate.getDate() + 1);
-                      download_from = tmpDate.getFullYear()+'.'+(tmpDate.getMonth()+1)+'.'+tmpDate.getDate();
+                      //tmpDate.setDate(tmpDate.getDate() + 1);
+                      tmpDate.setMinutes( tmpDate.getMinutes() + 1 );
+                      var month = ( (tmpDate.getMonth()+1) <10?'0':'') + (tmpDate.getMonth()+1);
+                      var day = ( tmpDate.getDate() <10?'0':'') + tmpDate.getDate();
+                      var hour = ( tmpDate.getHours() <10?'0':'') + tmpDate.getHours();
+                      var minute = ( tmpDate.getMinutes() <10?'0':'') + tmpDate.getMinutes();
+
+                      download_from = tmpDate.getFullYear()+'-'+month+'-'+day+' '+hour+':'+minute;
                       download_to = asked_history_to;
                       new_local_history_from = event.target.result.value.from;
                       new_local_history_to = asked_history_to;
                     }else if ( new Date(event.target.result.value.to) < new Date(asked_history_to) && new Date(event.target.result.value.to) <= new Date(asked_history_from)) {
                       //START event.target.result.value.to END to
                       var tmpDate = new Date(event.target.result.value.to);
-                      tmpDate.setDate(tmpDate.getDate() + 1);
-                      download_from = tmpDate.getFullYear()+'.'+(tmpDate.getMonth()+1)+'.'+tmpDate.getDate();
+                      //tmpDate.setDate(tmpDate.getDate() + 1);
+                      tmpDate.setMinutes( tmpDate.getMinutes() + 1 );
+                      var month = ( (tmpDate.getMonth()+1) <10?'0':'') + (tmpDate.getMonth()+1);
+                      var day = ( tmpDate.getDate() <10?'0':'') + tmpDate.getDate();
+                      var hour = ( tmpDate.getHours() <10?'0':'') + tmpDate.getHours();
+                      var minute = ( tmpDate.getMinutes() <10?'0':'') + tmpDate.getMinutes();
+
+                      download_from = tmpDate.getFullYear()+'-'+month+'-'+day+' '+hour+':'+minute;
                       download_to = asked_history_to;
                       new_local_history_from = event.target.result.value.from;
                       new_local_history_to = asked_history_to;
@@ -378,6 +404,7 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
                     console.log("download_from: ",download_from);
                     console.log("download_to: ",download_to);
                     download_history = 1; 
+                    cursor.continue();
                   }
 
 
@@ -388,8 +415,13 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
 
               }else{
 
+                var createNewRecord = '';
+
                 console.log("end cursor");
+                console.log("foundRecord: ",foundRecord);
+
                 if (foundRecord == 0) {
+                  console.log("create new record = 1");
                   console.log("event.target.result.value.length = 0 ");
                   download_history = 1;
                   createNewRecord = 1;
@@ -397,19 +429,44 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
                   download_to = asked_history_to;
                   new_local_history_from = asked_history_from;
                   new_local_history_to = asked_history_to;
+                }else if ( foundRecord == 1 ) {
+                  console.log("create new record = 0");
+                  createNewRecord = 0;
                 };
-
 
 
                 if (download_history == 1) {
                   console.log("download history = 1");
+                  console.log("download_from: ",download_from);
+                  console.log("download_to: ",download_to);
                   //EX: 'history_backtest/EURGBP_2016-01-21_2016-05-17.csv'
                   var startAsk = download_from.split(' ')[0]+'_'+download_from.split(' ')[1].split(':')[0]+'-'+download_from.split(' ')[1].split(':')[1];
                   var stopAsk = download_to.split(' ')[0]+'_'+download_to.split(' ')[1].split(':')[0]+'-'+download_to.split(' ')[1].split(':')[1];
                   
                   var quotes_query = 'Algos/history_backtest/'+cross+'_'+startAsk+'_'+stopAsk+'.csv';
+                  var quotes_query_new = cross+'_'+startAsk+'_'+stopAsk+'.csv';
                   console.log("get quote.."+quotes_query);
                   var store_history_in_memory = ""; // Will store the contents of the file 
+                  //$scope.c.destroy();
+
+
+                  var urlBeta = $scope.ipTempBetaServer+'/getHistoryQuote?historyName='+quotes_query_new;
+                  request(urlBeta, function (error, response, body) {
+                    console.log("error: ",error);
+                    if (!error && response.statusCode == 200) {
+                      console.log("body: ",body);
+                      console.log("response: ",response);
+                      console.log("body.error: ",body.error);
+                    }else{
+                      console.log("error");
+                    }
+                  });
+
+
+
+
+                  $scope.c = null;
+                  $scope.c = new Client();
                   $scope.c.connect(connectionProperties);
                   $scope.c.on('ready', function() {
                     console.log("ftp ready");
@@ -418,7 +475,9 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
                         console.log("error ftp: ",err ); 
                       }
                       stream.once('close', function() { 
+
                         console.log("store_history_in_memory! "); 
+                        $scope.c.end();
 
 
                         if (createNewRecord == 1) {
@@ -441,7 +500,7 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
                           };
 
 
-                        }else if (createNewRecord == 0) {
+                        }else if(createNewRecord == 0) {
 
                           console.log("create new Record = 0");
 
@@ -450,8 +509,11 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
                           var request = objectStore.openCursor();
                           request.onsuccess = function(event) {
 
+                            var cursor = event.target.result;
 
+                            console.log("in cursor 0");
                             if (cursor) {
+                              console.log("in cursor 1");
                               console.log("matchArrValues: ",request.result.value);
 
                               if (request.result.value.source == source && request.result.value.platform == platform ) {
@@ -470,11 +532,13 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
                                   console.log("Error to update csv row on DB");
                                   store_history_in_memory = null;
                                   resultDb = null;
+                                  cursor.continue();
                                 };
                                 requestUpdate.onsuccess = function(event) {
                                   console.log("Updated csv row on DB");
                                   resultDb = null;
                                   store_history_in_memory = null;
+                                  cursor.continue();
                                 };
                               }else{
                                 console.log("no right platform and source");
@@ -510,7 +574,7 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
                     });
                   });
                 }else{
-                  console.log("download history = 0");
+                  console.log("download history = 0...");
                   updateResults(platform,source,cross,timeFrame,asked_history_from,asked_history_to,length);
                 }
 
@@ -536,10 +600,43 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
 
       };
       
+      console.log("from before: ",from);
+      console.log("to before: ",to);
       get_quotes(platform,source,cross_list[0].cross,cross_list[0].dataLenght,cross_list[0].timeFrame,from,to);      
     }
 
-    $scope.startBacktest([{'cross':'EURGBP','timeFrame':'m1','dataLenght':'v5'}],'2016-01-21 13:47','2016-05-17 14:04','MT4','ACTIVETRADES');
+    // START BACKTEST EURGBP
+    $scope.startBacktest([{'cross':'EURGBP','timeFrame':'m1','dataLenght':'v5'}],'2016-01-20 13:47','2016-02-05 14:04','MT4','ACTIVETRADES');
+
+    /*setTimeout(function(){
+      console.log("second call");
+      $scope.startBacktest([{'cross':'EURGBP','timeFrame':'m1','dataLenght':'v5'}],'2016-01-25 13:47','2016-02-02 14:04','MT4','ACTIVETRADES');
+    },30000);*/
+
+    /*setTimeout(function(){
+      console.log("second call");
+      $scope.startBacktest([{'cross':'EURGBP','timeFrame':'m1','dataLenght':'v5'}],'2016-01-10 13:47','2016-01-15 14:04','MT4','ACTIVETRADES');
+    },30000);*/
+
+    /*setTimeout(function(){
+      console.log("second call");
+      $scope.startBacktest([{'cross':'EURGBP','timeFrame':'m1','dataLenght':'v5'}],'2016-01-10 13:47','2016-01-23 14:04','MT4','ACTIVETRADES');
+    },30000);*/
+
+
+
+
+
+
+    /*setTimeout(function(){
+      console.log("second call");
+      $scope.startBacktest([{'cross':'EURGBP','timeFrame':'m1','dataLenght':'v5'}],'2016-02-07 13:47','2016-02-15 14:04','MT4','ACTIVETRADES');
+    },30000);*/
+
+    /*setTimeout(function(){
+      console.log("second call");
+      $scope.startBacktest([{'cross':'EURGBP','timeFrame':'m1','dataLenght':'v5'}],'2016-02-01 13:47','2016-02-15 14:04','MT4','ACTIVETRADES');
+    },30000);*/
 
     //////////////////////////////Config panel//////////////////
     $scope.openPanel = false;
