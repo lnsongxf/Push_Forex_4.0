@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
-  <configuration target="target.ezdeploy.standalone" target-name="MATLAB Compiler for Standalone Applications" name="live_performance_calculation" location="C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\risk_management" file="C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\risk_management\live_performance_calculation.prj" preferred-package-type="package.type.exe" build-checksum="591332056" preferred-package-location="C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\risk_management\live_performance_calculation\for_redistribution">
-    <param.appname>live_performance_calculation</param.appname>
-    <param.authnamewatermark>alessandro</param.authnamewatermark>
-    <param.email>4castersltd@gmail.com</param.email>
-    <param.company>4casters Ltd</param.company>
+  <configuration target="target.ezdeploy.standalone" target-name="MATLAB Compiler for Standalone Applications" name="live_performance_calculation_00" location="C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0" file="C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\live_performance_calculation_00.prj" preferred-package-type="package.type.exe" build-checksum="2982031262" preferred-package-location="C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\live_performance_calculation_00\for_redistribution">
+    <param.appname>live_performance_calculation_00</param.appname>
+    <param.authnamewatermark />
+    <param.email />
+    <param.company />
     <param.icon />
     <param.icons />
-    <param.summary />
-    <param.description>live_performance_calculation_00.exe</param.description>
+    <param.summary>live_performance_calculation_00.exe</param.summary>
+    <param.description />
     <param.screenshot />
     <param.version>1.0</param.version>
-    <param.namespace>live_performance_calculation</param.namespace>
+    <param.namespace>live_performance_calculation_00</param.namespace>
     <param.guid />
-    <param.installpath.string>\4casters Ltd\live_performance_calculation\</param.installpath.string>
+    <param.installpath.string>\live_performance_calculation_00\</param.installpath.string>
     <param.installpath.combo>option.installpath.programfiles</param.installpath.combo>
     <param.logo />
     <param.install.notes />
-    <param.intermediate>${PROJECT_ROOT}\live_performance_calculation\for_testing</param.intermediate>
-    <param.output>${PROJECT_ROOT}\live_performance_calculation\for_redistribution</param.output>
+    <param.intermediate>${PROJECT_ROOT}\live_performance_calculation_00\for_testing</param.intermediate>
+    <param.output>${PROJECT_ROOT}\live_performance_calculation_00\for_redistribution</param.output>
     <param.embed.ctf>true</param.embed.ctf>
     <param.target.type>subtarget.standalone</param.target.type>
     <param.classorg />
@@ -40,16 +40,19 @@
     <param.net.tsa.enable>false</param.net.tsa.enable>
     <param.net.tsa.assembly />
     <param.net.tsa.interface />
-    <param.net.tsa.namespace>live_performance_calculation</param.net.tsa.namespace>
+    <param.net.tsa.namespace>live_performance_calculation_00</param.net.tsa.namespace>
     <param.net.tsa.superclass />
     <param.net.tsa.metadata />
     <param.net.tsa.metadata.assembly>H:\My Documents</param.net.tsa.metadata.assembly>
     <param.create.log>false</param.create.log>
     <param.log.file />
     <unset>
+      <param.authnamewatermark />
+      <param.email />
+      <param.company />
       <param.icon />
       <param.icons />
-      <param.summary />
+      <param.description />
       <param.screenshot />
       <param.version />
       <param.namespace />
@@ -88,18 +91,18 @@
       <param.log.file />
     </unset>
     <fileset.main>
-      <file>${PROJECT_ROOT}\live_performance_calculation.m</file>
+      <file>${PROJECT_ROOT}\risk_management\live_performance_calculation_00.m</file>
     </fileset.main>
     <fileset.resources>
-      <file>${PROJECT_ROOT}\dateNameCreator.m</file>
-      <file>${PROJECT_ROOT}\dateZeroCalculator.m</file>
-      <file>${PROJECT_ROOT}\fromWebPageToMatrix.m</file>
-      <file>${PROJECT_ROOT}\Performance_07.m</file>
+      <file>${PROJECT_ROOT}\risk_management\dateNameCreator.m</file>
+      <file>${PROJECT_ROOT}\risk_management\dateZeroCalculator.m</file>
+      <file>${PROJECT_ROOT}\risk_management\fromWebPageToMatrix.m</file>
+      <file>${PROJECT_ROOT}\risk_management\Performance_07.m</file>
     </fileset.resources>
     <fileset.package />
     <build-deliverables>
-      <file name="live_performance_calculation.exe" location="${PROJECT_ROOT}\live_performance_calculation\for_testing" optional="false">C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\risk_management\live_performance_calculation\for_testing\live_performance_calculation.exe</file>
-      <file name="readme.txt" location="${PROJECT_ROOT}\live_performance_calculation\for_testing" optional="true">C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\risk_management\live_performance_calculation\for_testing\readme.txt</file>
+      <file name="readme.txt" location="${PROJECT_ROOT}\live_performance_calculation_00\for_testing" optional="true">C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\live_performance_calculation_00\for_testing\readme.txt</file>
+      <file name="live_performance_calculation_00.exe" location="${PROJECT_ROOT}\live_performance_calculation_00\for_testing" optional="false">C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\live_performance_calculation_00\for_testing\live_performance_calculation_00.exe</file>
     </build-deliverables>
     <workflow />
     <matlab>

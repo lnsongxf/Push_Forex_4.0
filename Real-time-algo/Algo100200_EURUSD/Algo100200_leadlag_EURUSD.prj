@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
-  <configuration target="target.ezdeploy.standalone" target-name="MATLAB Compiler for Standalone Applications" name="Algo100200_leadlag_EURUSD" location="C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\Real-time-algo\Algo100200_EURUSD" file="C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\Real-time-algo\Algo100200_EURUSD\Algo100200_leadlag_EURUSD.prj" preferred-package-type="package.type.exe" build-checksum="334388016" preferred-package-location="C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\Real-time-algo\Algo100200_EURUSD\Algo100200_leadlag_EURUSD\for_redistribution">
+  <configuration target="target.ezdeploy.standalone" target-name="MATLAB Compiler for Standalone Applications" name="Algo100200_leadlag_EURUSD" location="C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\Real-time-algo\Algo100200_EURUSD" file="C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\Real-time-algo\Algo100200_EURUSD\Algo100200_leadlag_EURUSD.prj" preferred-package-type="package.type.exe" build-checksum="2036502063" preferred-package-location="C:\Users\alericci\Desktop\Push_Forex_4.0\Push_Forex_4.0\Real-time-algo\Algo100200_EURUSD\Algo100200_leadlag_EURUSD\for_redistribution">
     <param.appname>Algo100200_leadlag_EURUSD</param.appname>
     <param.authnamewatermark>alessandro</param.authnamewatermark>
     <param.email>4castersltd@gmail.com</param.email>
