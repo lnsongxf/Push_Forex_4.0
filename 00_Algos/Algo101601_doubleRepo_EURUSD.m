@@ -1,4 +1,4 @@
-function [oper, openValue, closeValue, stopLoss, noLoose, minReturn] = Algo101601_doubleanal_EURUSD(matrix,newTimeScalePoint,newTimeScalePointEnd,openValueReal,timeSeriesProperties,indexHisData)
+function [oper, openValue, closeValue, stopLoss, noLoose, minReturn] = Algo101601_doubleRepo_EURUSD(matrix,newTimeScalePoint,newTimeScalePointEnd,openValueReal,timeSeriesProperties,indexHisData)
 
 
 %

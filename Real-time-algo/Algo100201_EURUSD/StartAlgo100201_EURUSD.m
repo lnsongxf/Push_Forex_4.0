@@ -23,7 +23,7 @@ addressPub = sprintf(add, portPub);
 zmq.core.connect(socket_pub, addressPub);
 
 % SETTING TOPICS PUB
-fileIdPub = fopen('configPublishers100205_EURUSD.txt');
+fileIdPub = fopen('configPublishers100201_EURUSD.txt');
 ListP = textscan(fileIdPub,'%s');
 fclose(fileIdPub);
 [k,~] = size(ListP{1});
@@ -41,7 +41,7 @@ end
 % EX: TIMEFRAMEQUOTE@MT4@ACTIVTRADES@EURUSD@m1@v1
 % EX: MATLAB@111@EURUSD@STATUS
 
-fileIdSub = fopen('configListeners100205_EURUSD.txt');
+fileIdSub = fopen('configListeners100201_EURUSD.txt');
 ListS = textscan(fileIdSub,'%s');
 fclose(fileIdSub);
 [m,~] = size(ListS{1});

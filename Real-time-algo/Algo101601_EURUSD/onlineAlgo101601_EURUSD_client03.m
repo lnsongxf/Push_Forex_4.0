@@ -440,7 +440,7 @@ end
 if ( ( strcmp(ms.machineStatus,'closed') || strcmp(ms.machineStatus,'open') ) && (ms.statusNotification == 0) )
     t=now;
     timeMin=t*60*24;
-    [oper,openValue, closeValue, stopLoss, takeProfit, minReturn] = Algo101601_doubleanal_EURUSD(matrix,newTimeScalePoint,newTimeScalePointEnd,openValueReal,timeSeriesProperties,timeMin);
+    [oper,openValue, closeValue, stopLoss, takeProfit, minReturn] = Algo101601_doubleRepo_EURUSD(matrix,newTimeScalePoint,newTimeScalePointEnd,openValueReal,timeSeriesProperties,timeMin);
                                                                  
     %     newState{1} = oper;
     %     newState{2} = openValue;
