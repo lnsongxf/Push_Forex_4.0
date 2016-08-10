@@ -1,5 +1,6 @@
 classdef bkt_fast_005_macd_dynamicalTPandSL < handle
     
+    % bktfast VERSION 3 (with arrayAperture and minimumReturns)
     
     properties
         
@@ -15,6 +16,8 @@ classdef bkt_fast_005_macd_dynamicalTPandSL < handle
         ClDates;
         indexClose;
         latency;
+        arrayAperture;
+        minimumReturns;
         
     end
     
@@ -34,21 +37,24 @@ classdef bkt_fast_005_macd_dynamicalTPandSL < handle
             P = matrixNewHisData(:,4);
             date = matrixNewHisData(:,6);
             
+            sizeStorico = size(matrixNewHisData,1);
             
-            pandl = zeros(size(P));
-            obj.trades = zeros(size(P));
-            obj.chei=zeros(size(P));
-            obj.openingPrices=zeros(size(P));
-            obj.closingPrices=zeros(size(P));
-            obj.direction=zeros(size(P));
-            obj.OpDates=zeros(size(P));
-            obj.ClDates=zeros(size(P));
-            obj.r =zeros(size(P));
-            obj.latency=zeros(size(P));
+            pandl = zeros(sizeStorico,1);
+            obj.trades = zeros(sizeStorico,1);
+            obj.chei=zeros(sizeStorico,1);
+            obj.openingPrices=zeros(sizeStorico,1);
+            obj.closingPrices=zeros(sizeStorico,1);
+            obj.direction=zeros(sizeStorico,1);
+            obj.OpDates=zeros(sizeStorico,1);
+            obj.ClDates=zeros(sizeStorico,1);
+            obj.r =zeros(sizeStorico,1);
+            obj.latency= zeros(sizeStorico,1);
+            obj.arrayAperture= zeros(sizeStorico,1);
+            obj.minimumReturns = zeros(sizeStorico,1);
             
             ntrades = 0;
             obj.indexClose = 0;
-            s = zeros(size(P));
+            s = zeros(sizeStorico,1);
             
             [macdvec, nineperma] = macd(P);
             s=macdvec-nineperma;
@@ -62,59 +68,38 @@ classdef bkt_fast_005_macd_dynamicalTPandSL < handle
             i = 101;
             
             
-            while i <= length(P)
+            while i < sizeStorico
                 
                 % se il segnale si inverte, compra (-1->+1 in long, se no in short)
                 if  ( abs( s(i) - s(i-1) ) == 2 )
                     
                     segnoOperazione = s(i);
                     ntrades = ntrades + 1;
+                    obj.arrayAperture(ntrades)=i;
                     [obj, Pbuy, devFluct2] = obj.apri(i, P, fluctuationslag, N, ntrades, segnoOperazione, date);
                     
-                    TakeP = floor(wTP*devFluct2);
-                    StopL = floor(wSL*devFluct2);
-
+                    TakeP = min(floor(wTP*devFluct2),50);
+                    StopL = min(floor(wSL*devFluct2),50);
+                    
                     TakeProfitPrice = Pbuy + segnoOperazione * TakeP;
                     StopLossPrice =  Pbuy - segnoOperazione * StopL;
                     
                     for j = newTimeScale*(i):length(Pminute)
                         
                         indice_I = floor(j/newTimeScale);
+                        %                               display(['Pminute =', num2str(Pminute(j))]);
                         
                         %%%%%%%%%%% dynamicalTPandSLManager
-                        
-                        if abs( (Pminute(j) - StopLossPrice) ) > abs(StopL)*1.1
-                            
-                            distance = floor(abs(Pminute(j) - StopLossPrice)/2);
-                            
-                            newStopL =  - segnoOperazione * ( (Pminute(j) - Pbuy) - segnoOperazione * distance );
-                            
-                            %display(strcat('dynamical SL, the new SL is',' ',num2str(newStopL)));
-                            
-                            StopLossPrice    = Pbuy - segnoOperazione * newStopL;
-                            
-                            StopL = newStopL;
-                            
-                        end
-                        
-                        % If the current price is above half TakeP, re-set the StopL and TakeP
-                        if ( (Pminute(j) - TakeProfitPrice) * segnoOperazione ) >= 0
-                            
-                            newTakeP = TakeP + 4 + abs(Pminute(j) - TakeProfitPrice);
-                            
-                            TakeProfitPrice = Pbuy + segnoOperazione * newTakeP;
-                            
-                            newStopL = - TakeP + 2;
-                            %display(strcat('dynamical TP = ',num2str(newTakeP),'/','dynamical SL = ',num2str(newStopL)));
-                            
-                            StopLossPrice    = Pbuy - segnoOperazione * newStopL;
-                            
-                            TakeP = newTakeP;
-                            StopL = newStopL;
-                            
-                        end
+                        %
+                        %                                     dynamicParameters {1} = 1;
+                        %                                     dynamicParameters {2} = 1;
+                        %
+                        %                                     [TakeProfitPrice,StopLossPrice,TakeP,StopL,~] = closingAfterReachedTP(Pbuy,Pminute(j),segnoOperazione,TakeP,StopL, 0, dynamicParameters);
+                        %                               display(['TP =', num2str(TakeP),' SL =', num2str(StopL)]);
+                        %                               display(['StopLossPrice =', num2str(StopLossPrice)]);
                         
                         %%%%%%%%%%%%%%%%%%%%%%%%%%
+                        
                         
                         condTP = ( sign( Pminute(j) - TakeProfitPrice ) * segnoOperazione );
                         condSL = ( sign( StopLossPrice - Pminute(j) ) ) * segnoOperazione;
@@ -124,11 +109,13 @@ classdef bkt_fast_005_macd_dynamicalTPandSL < handle
                             obj.r(indice_I) =  segnoOperazione*(Pminute(j) - Pbuy) - cost;
                             obj.closingPrices(ntrades) = Pminute(j);
                             obj.ClDates(ntrades) = date(indice_I); %controlla
+                            obj.minimumReturns(ntrades)=calculate_min_return(Pbuy, Pminute(newTimeScale*i:j), segnoOperazione);
                             %obj = obj.chiudi_per_TP(Pbuy, indice_I, segnoOperazione, devFluct2, wTP, cost, ntrades, date);
                             i = indice_I;
                             obj.chei(ntrades)=i;
                             obj.indexClose = obj.indexClose + 1;
                             obj.latency(ntrades)=j - newTimeScale*obj.indexOpen;
+                            %                                     display('operazione chiusa');
                             break
                             
                         end
@@ -164,7 +151,11 @@ classdef bkt_fast_005_macd_dynamicalTPandSL < handle
             obj.outputbkt(:,8) = obj.ClDates(1:obj.indexClose);                % closing date in day to convert use: d2=datestr(outputDemo(:,2), 'mm/dd/yyyy HH:MM')
             obj.outputbkt(:,9) = ones(obj.indexClose,1)*1;                 % lots setted for single operation
             obj.outputbkt(:,10) = obj.latency(1:obj.indexClose);        % number of minutes the operation was open
-            obj.outputbkt(:,11) = ones(obj.indexClose,1);         % to be done     % minimum return touched during dingle operation
+            obj.outputbkt(:,11) = obj.minimumReturns(1:obj.indexClose,1);      % minimum return touched during dingle operation
+            
+            obj.latency = obj.latency(1:obj.indexClose);
+            obj.arrayAperture = obj.arrayAperture(1:obj.indexClose);
+            
             
             % Plot a richiesta
             if plottami

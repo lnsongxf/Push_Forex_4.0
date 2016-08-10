@@ -1,0 +1,38 @@
+            % INPUT parameters:
+            % -------------------------------------------------------------
+            % nameAlgo:                 string containing the name of the algo (your MATLAB function)
+            % N:                        first optimization parameter (use array!!) -> lag,slowly varying
+            % M:                        second optimization parameter (use array or put = 1!!) -> lead,highly varying
+            % N_greater_than_M:         if = 1 then skip loops where n<=m (required in some algo with smoothing)
+            % Cross:                    e.g. 'EURUSD'
+            % histName:                 filename containing hist prices, e.g. : 'nome_storico.csv'
+            % actTimeScale:             timescale of the hist data, in minutes
+            % newTimeScale:             new timescale to work with (rescale)
+            % transCost:                spread in pips
+            % pips_TP:                  max TP
+            % pips_SL:                  max allowed SL
+            % stdev_TP:                 stdev(volatility) for calculating TP
+            % stdev_SL:                 stdev(volatility) for calculating SL
+            % WhatToPlot:               what do you want to plot:
+            %                              0: nothing
+            %                              1: returns of optimized algo(training and papertrading)
+            %                              2: + sweepPlot of training
+            %                              3: + performance
+            % -------------------------------------------------------------
+
+            
+nameAlgo = 'bkt_fast_005b_2_inverted_macd_dynamicalTPandSL_WinMorePips' % 'bkt_fast_005b_inverted_macd_dynamicalTPandSL'  %   'bkt_fast_005_macd_dynamicalTPandSL'  %  
+N =  20 % 1:20
+M =  6 % usato solo nel 005b_2
+N_greater_than_M = 0              
+Cross = 'EURUSD'            
+histName =    'EURUSD-04-2014-02-2016.csv' % 'EURUSD-01-2015-07-2016.csv' % 'EURGBP.csv'  %  'AUDCAD.csv'   %    
+actTimeScale = 1             		
+newTimeScale = 50 % [2 5 10 15 20 30 40 50 60]             		
+transCost = 1
+pips_TP = 10
+pips_SL = 10
+stdev_TP = 5
+stdev_SL = 5       		
+WhatToPlot = 2
+reverse_optimization = 0
