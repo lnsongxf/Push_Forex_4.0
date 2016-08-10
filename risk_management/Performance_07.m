@@ -747,18 +747,18 @@ classdef Performance_07 < handle
                 linkaxes(subl(1:2),'y');
                 linkaxes(subl(3:4),'y');
                 
-                %                 % frequency histogram of latency, ratio between won and lost operations
-                %                 [latplus,~]=hist( Latency( find(returns>0) ), xlatn );
-                %                 [latlost,~]=hist( Latency( find(returns<0) ), xlatn );
-                %                 figure
-                %                 bar( xlatn , (latplus./latlost) );
-                %                 title('frequency histogram of latency, ratio won/lost operations')
-                %
-                %                 % frequency histogram of minimum returns
-                %                 [n,xout]=hist(minReturns,10);
-                %                 figure
-                %                 bar(xout,n/sum(n));
-                %                 title('frequency histogram of min returns')
+                % frequency histogram of latency, ratio between won and lost operations
+                [latplus,~]=hist( Latency( find(returns>0) ), xlatn );
+                [latlost,~]=hist( Latency( find(returns<0) ), xlatn );
+                figure
+                bar( xlatn , (latplus./latlost) );
+                title('frequency histogram of latency, ratio won/lost operations')
+                
+                % frequency histogram of minimum returns
+                [n,xout]=hist(minReturns,10);
+                figure
+                bar(xout,n/sum(n));
+                title('frequency histogram of min returns')
                 
                 % frequency histogram of minimum returns, won operations
                 [nplus,xoutplus]=hist( minReturns(find(returns>0)) );

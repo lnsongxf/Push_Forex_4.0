@@ -166,7 +166,7 @@ else
                 params.set('openTime__',indexHisData);
             end
             
-            latencyTreshold = 1000000;    % latency treshold in minutes
+            latencyTreshold = 10000;    % latency treshold in minutes
             [operationState,~, params] = directTakeProfitManager (operationState, chiusure, params,TakeProfitPrice,StopLossPrice, latencyTreshold);
 
             
