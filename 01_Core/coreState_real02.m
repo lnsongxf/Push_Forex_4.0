@@ -443,6 +443,31 @@ classdef coreState_real02 < handle
             
         end
         
+        function obj = core_Algo_005b_inverted_macd(obj, closure, smooth)
+            
+            [macdvec, nineperma] = macd(closure); % macdvec e' il segnale del macd mentre nineperma e' la 0 line
+            b = (1/smooth)*ones(1,smooth);
+            lag = filter(b,1,closure);
+            fluctuationslag=abs(closure-lag);
+            devFluct2=std(fluctuationslag(smooth:end));
+            
+            s = sign(macdvec-nineperma);
+            
+            if ( abs( s(end) - s(end-1) ) == 2 )
+                
+                obj.state = 1;
+                obj.suggestedDirection = -s(end);
+                volatility = min(max(floor(5*devFluct2),50),200);
+                obj.suggestedTP = volatility;
+                obj.suggestedSL = volatility;
+                
+            else
+                obj.state = 0;
+            end
+            
+            
+            
+        end
         
         
         function obj = core_Algo_011_stocOsc(obj, low, high, closure, params,Kperiods, Dperiods,valueTP,valueSL)
@@ -623,22 +648,22 @@ classdef coreState_real02 < handle
         end
         
         
-                %%
+        %%
         
         function obj = core_Algo_019_residual (obj,closure,TimeSeriesExpert,params,nDev,limitRate,fluctLimit,wTP,maxSL)
             
             %NOTE:
             %LOGICA: fa una linear regression sui dati di input (tranne l'ultimo) e calcola la deviazione standard dei residui rispetto al fit
             % se la distanza dell'ultimo punto e' fuori 3 deviazioni standard riconosce un segnale di trend
-            %            
+            %
             % non uso i dati al minuto per le valutazioni dello state
-
+            
             closePrice = closure;
             n          = length (closePrice);
             inFit1     = params.get('inFit');
             
             if inFit1 == 0
-               inFit1=[0 13000];
+                inFit1=[0 13000];
             end
             
             [~,type,rate,q0,~,~,resids,inFitLast] = TimeSeriesExpert.linearRegression(closePrice(1:end-1),inFit1);
