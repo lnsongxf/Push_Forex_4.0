@@ -21,6 +21,8 @@ classdef PerformanceDistribution_05 < handle
         rowResnOp
         rowRespCl
         rowResnCl
+        win_operations
+        lost_operations
         microParamsPos
         microParamsNeg
         macroParamsPos
@@ -87,20 +89,20 @@ classdef PerformanceDistribution_05 < handle
             obj.HistDatafreq=HistData_freq_;
             
             
-            returns      = obj.inputResultsMatrix(:,4);
-            win_operations  = obj.inputResultsMatrix( (returns>0) , : );
-            lost_operations = obj.inputResultsMatrix( (returns<=0) , : );
+            returns         = obj.inputResultsMatrix(:,4);
+            obj.win_operations  = obj.inputResultsMatrix( (returns>0) , : );
+            obj.lost_operations = obj.inputResultsMatrix( (returns<=0) , : );
             
             obj.rowRespOp   = find(returns>0);
             obj.rowResnOp   = find(returns<=0);
             
             date_open       = obj.inputResultsMatrix(:,7);
-            date_open_win   = win_operations(:,7);
-            date_open_lost  = lost_operations(:,7);
+            date_open_win   = obj.win_operations(:,7);
+            date_open_lost  = obj.lost_operations(:,7);
             
             date_close      = obj.inputResultsMatrix(:,8);
-            date_close_win  = win_operations(:,8);
-            date_close_lost = lost_operations(:,8);
+            date_close_win  = obj.win_operations(:,8);
+            date_close_lost = obj.lost_operations(:,8);
             
             [~,obj.rowHistOp,~] = intersect(obj.HistData1min(:,6), date_open, 'stable');
             [~,obj.rowHistpOp,~] = intersect(obj.HistData1min(:,6), date_open_win, 'stable');
@@ -253,6 +255,7 @@ classdef PerformanceDistribution_05 < handle
             [hCDF]=CDF(hPDF);
             [~,indexMax,~]=find(hCDF>=limitPerc);
             xMax=xPDF(indexMax(1));
+            xMin=min(xPDF);
             
             subplot(3,2,1)
             [xPDFvol,hPDFvolp,hBinvolp]=PDF(obj.microParamsPos(:,5),0,xMax,n);
@@ -260,6 +263,7 @@ classdef PerformanceDistribution_05 < handle
             plot(xPDFvol,hPDFvolp,'-b')
             hold on
             plot(xPDFvol,hPDFvoln,'-r')
+            xlim([xMin xMax]);
             xlabel('volume');
             ylabel('PDF');
             
@@ -269,7 +273,7 @@ classdef PerformanceDistribution_05 < handle
             hold on
             volDiffperc=(hBinvolp.*100)./(hBinvolp+hBinvoln);
             plot(xPDFvol,volDiffperc,'-r')
-            axis([0 xMax 0 100]);
+            axis([xMin xMax 0 100]);
             xlabel('volume');
             ylabel('+operation/total (%)');
             
@@ -290,6 +294,7 @@ classdef PerformanceDistribution_05 < handle
             plot(xPDFvol,hPDFvolp,'-b')
             hold on
             plot(xPDFvol,hPDFvoln,'-r')
+            xlim([xMin xMax]);
             xlabel('stick dimension');
             ylabel('PDF');
             
@@ -319,6 +324,7 @@ classdef PerformanceDistribution_05 < handle
             plot(xPDFvol,hPDFvolp,'-b')
             hold on
             plot(xPDFvol,hPDFvoln,'-r')
+            xlim([xMin xMax]);
             xlabel('energy');
             ylabel('PDF');
             
@@ -328,7 +334,7 @@ classdef PerformanceDistribution_05 < handle
             hold on
             volDiffperc=(hBinvolp.*100)./(hBinvolp+hBinvoln);
             plot(xPDFvol,volDiffperc,'-r')
-            axis([0 xMax 0 100]);
+            axis([xMin xMax 0 100]);
             xlabel('energy');
             ylabel('+operation/total (%)');
             
@@ -349,9 +355,9 @@ classdef PerformanceDistribution_05 < handle
             
             
             figure
-            title('Analysis of macroscopic behaviour');
+            title('Analysis of operations Latency');
                         
-            % 4- LATENCY ANALYSIS: PDF as a function of operations latency
+            % 4- LATENCY ANALYSIS: PDF of operations latency
             
             % prebinning for finding the upper limit of "limitPerc" % of operations
             nPDF=n*5;
@@ -362,23 +368,81 @@ classdef PerformanceDistribution_05 < handle
             xMin=min(xPDF);
             
             % PDF of the operations latency
-            subplot(2,1,1)
+            subplot(2,2,1)
             [xPDFlat,hPDFlatp,hBinlatp]=PDF(latencyp,xMin,xMax,n);
             [~,hPDFlatn,hBinlatn]=PDF(latencyn,xMin,xMax,n);
             plot(xPDFlat,hPDFlatp,'-b')
             hold on
             plot(xPDFlat,hPDFlatn,'-r')
+            xlim([xMin xMax]);
             xlabel('latency (mins)');
+            ylabel('PDF');
+            
+            % plot the % of positive operations as a function of latency
+            subplot(2,2,2)
+            plot(xPDF,hCDF,'-k');
+            hold on
+            latDiffperc=(hBinlatp.*100)./(hBinlatp+hBinlatn);
+            plot(xPDFlat,latDiffperc,'-r')
+            axis([xMin xMax 0 100]);
+            xlabel('latency (mins)');
+            ylabel('+operation/total (%)');
+             
+             % PDF of the operations latency weighed with returns
+            subplot(2,2,3)
+            [xPDFlat,hPDFlatp,hBinlatp]=PDF(latencyp,xMin,xMax,n);
+            [~,hPDFlatn,hBinlatn]=PDF(latencyn,xMin,xMax,n);
+            plot(xPDFlat,hPDFlatp,'-b')
+            hold on
+            plot(xPDFlat,hPDFlatn,'-r')
+            xlim([xMin xMax]);
+            xlabel('latency (mins)');
+            ylabel('PDF');
+            
+            % plot the % of positive operations as a function of latency weighed with returns
+            subplot(2,2,3)
+            plot(xPDF,hCDF,'-k');
+            hold on
+            latDiffperc=(hBinlatp.*100)./(hBinlatp+hBinlatn);
+            plot(xPDFlat,latDiffperc,'-r')
+            axis([xMin xMax 0 100]);
+            xlabel('latency (mins)');
+            ylabel('+operation/total (%)');           
+            
+            
+            
+            figure
+            title('Analysis of operations Minimum Returns');
+                        
+            % 5- Min RETURNS ANALYSIS: PDF of operations Min Returns
+
+            % prebinning for finding the upper limit of "limitPerc" % of operations
+            nPDF=n*5;
+            [xPDF,hPDF,~]=PDF(minimumReturnsp,min(minimumReturnsp),max(minimumReturnsp),nPDF);
+            [hCDF]=CDF(hPDF);
+            [~,indexMax,~]=find(hCDF>=limitPerc);
+            xMax=xPDF(indexMax(1));
+            xMin=min(xPDF);
+            
+            % PDF of the operations latency
+            subplot(2,1,1)
+            [xPDFmret,hPDFmretp,hBinmretp]=PDF(minimumReturnsp,xMin,xMax,n);
+            [~,hPDFmretn,hBinmretn]=PDF(minimumReturnsn,xMin,xMax,n);
+            plot(xPDFmret,hPDFmretp,'-b')
+            hold on
+            plot(xPDFmret,hPDFmretn,'-r')
+            xlim([xMin xMax]);
+            xlabel('min return touched (pips)');
             ylabel('PDF');
             
             % plot the % of positive operations as a function of latency
             subplot(2,1,2)
             plot(xPDF,hCDF,'-k');
             hold on
-            latDiffperc=(hBinlatp.*100)./(hBinlatp+hBinlatn);
-            plot(xPDFlat,latDiffperc,'-r')
-            axis([0 xMax 0 100]);
-            xlabel('latency (mins)');
+            mretDiffperc=(hBinmretp.*100)./(hBinmretp+hBinmretn);
+            plot(xPDFmret,mretDiffperc,'-r')
+            axis([xMin xMax 0 100]);
+            xlabel('min return touched (pips)');
             ylabel('+operation/total (%)');
             
             

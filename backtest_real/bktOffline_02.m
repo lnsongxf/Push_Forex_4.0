@@ -245,7 +245,7 @@ classdef bktOffline_02 < handle
 
             p = Performance_07;
             obj.performance = p.calcSinglePerformance(nameAlgo,'bktWeb',histName,Cross,newTimeScale,transCost,initialStack,Leverage,obj.outputBktOffline,plotPerformance);
-            pD = PerformanceDistribution_04;
+            pD = PerformanceDistribution_05;
             obj.performanceDistribution = pD.calcPerformanceDistr(nameAlgo,'bktWeb',Cross,obj.nData,newTimeScale,transCost,obj.outputBktOffline,obj.timeSeriesPropertiesOffline,obj.starthisData,obj.newHisData,15,10,10,plotPerDistribution);
             
         end
