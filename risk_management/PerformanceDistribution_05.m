@@ -388,26 +388,33 @@ classdef PerformanceDistribution_05 < handle
             xlabel('latency (mins)');
             ylabel('+operation/total (%)');
              
-             % PDF of the operations latency weighed with returns
-            subplot(2,2,3)
-            [xPDFlat,hPDFlatp,hBinlatp]=PDF(latencyp,xMin,xMax,n);
-            [~,hPDFlatn,hBinlatn]=PDF(latencyn,xMin,xMax,n);
-            plot(xPDFlat,hPDFlatp,'-b')
-            hold on
-            plot(xPDFlat,hPDFlatn,'-r')
-            xlim([xMin xMax]);
-            xlabel('latency (mins)');
-            ylabel('PDF');
+            figure
+            returnsp = obj.win_operations (:,4);
+            xMinrp   = min(returnsp(:));
+            xMaxrp   = max(returnsp(:));
+            [xPDF,hPDF,hBin]=PDFcond(latencyp,xMin,xMax,n,returnsp,xMinrp,xMaxrp,2);
+            %plot(xPDF,hPDF,'-b'
             
-            % plot the % of positive operations as a function of latency weighed with returns
-            subplot(2,2,3)
-            plot(xPDF,hCDF,'-k');
-            hold on
-            latDiffperc=(hBinlatp.*100)./(hBinlatp+hBinlatn);
-            plot(xPDFlat,latDiffperc,'-r')
-            axis([xMin xMax 0 100]);
-            xlabel('latency (mins)');
-            ylabel('+operation/total (%)');           
+%             % PDF of the operations latency weighed with returns
+%             subplot(2,2,3)
+%             [xPDFlat,hPDFlatp,hBinlatp]=PDF(latencyp,xMin,xMax,n);
+%             [~,hPDFlatn,hBinlatn]=PDF(latencyn,xMin,xMax,n);
+%             plot(xPDFlat,hPDFlatp,'-b')
+%             hold on
+%             plot(xPDFlat,hPDFlatn,'-r')
+%             xlim([xMin xMax]);
+%             xlabel('latency (mins)');
+%             ylabel('PDF');
+%             
+%             % plot the % of positive operations as a function of latency weighed with returns
+%             subplot(2,2,4)
+%             plot(xPDF,hCDF,'-k');
+%             hold on
+%             latDiffperc=(hBinlatp.*100)./(hBinlatp+hBinlatn);
+%             plot(xPDFlat,latDiffperc,'-r')
+%             axis([xMin xMax 0 100]);
+%             xlabel('latency (mins)');
+%             ylabel('+operation/total (%)');           
             
             
             
