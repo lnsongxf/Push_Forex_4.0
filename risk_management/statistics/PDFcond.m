@@ -1,49 +1,34 @@
-function [xPDF,hPDF,hBin] =PDFcond(values1,valueMin1,valueMax1,n1,values2,valueMin2,valueMax2,n2)
+function [xPDF,hPDF1,hBin1,hBin1Intgral2,hPDF1Intgral2,indexBin] = PDFcond(values1,values2,n)
 
-% valueMax is the max value for the binning
-% valueMin is the min value for the binning
 % n number of points
 
-xPDF1=valueMin1:(valueMax1-valueMin1)/(n1-1):valueMax1;
-xPDF2=valueMin2:(valueMax2-valueMin2)/(n2-1):valueMax2;
+valueMax1 = max(values1(:));
+valueMin1 = min(values1(:));
 
-[N,C] = hist3([values1,values2],[xPDF,1]);
+xPDF = valueMin1:(valueMax1-valueMin1)/(n-1):valueMax1;
 
+l             = length(values1);
+indexBin      = zeros(l,1);
+hBin1         = zeros(n,1);
+hBin1Intgral2 = zeros(n,1);
 
+for i=1:n-1
+    
+    [index] = find(values1>=xPDF(i) & values1<xPDF(i+1));
+    
+    indexBin(index)  = i;
+    hBin1(i)         = length(index);
+    hBin1Intgral2(i) = sum(values2(index));
+    
+end
 
-% [xPDFlat,hPDFlatp,hBinlatp]=PDF(latencyp,xMin,xMax,n);
-% 
-% 
-% 
-% 
-% hBin=hist(values,xPDF);
-% 
-% area=trapz(xPDF,hBin);
-% hPDF=hBin./area;
+area=trapz(xPDF,hBin1);
+hPDF1=hBin1./area;
 
+area2=trapz(xPDF,hBin1Intgral2);
+hPDF1Intgral2=hBin1Intgral2./area2;
 
-
-
-
+display('test');
 
 end
 
-%
-% Just use the definition of conditional probability:
-% 
-%  [N,C] = hist3([x1,x2],[nbin1,nbin2]);
-%  P12 = N./repmat(sum(N,1),size(N,1),1); % Cond. prob. P(x1|x2)
-% 
-% where P12(i,j) is the conditional probability that x1 is in the i-th
-% x1-bin, given that x2 lies in the j-th x2-bin. (The above would produce a
-% column of NaNs in any case where no x1,x2 pair occurs for x2 in some
-% particular j-th x2-bin, corresponding to an indeterminacy in the
-% conditional probability.) C can be used to identify the centers of the
-% bin ranges.
-% 
-%   Of course this only gives you an estimate of the conditional
-% probabilities from your particular sample. In fact you can only obtain
-% the conditional probabilities for x1 and x2 lying in whatever bins are
-% used in 'hist3'.
-% 
-% Roger Stafford
