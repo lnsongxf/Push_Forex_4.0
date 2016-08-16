@@ -145,6 +145,8 @@ angular.module('webApp')
           var tot = parseInt(a) + parseInt(b); 
           return tot;
         });
+
+        $scope.arrPerformance.totalTrades = arrSpitted.length;
         var avg = sum / arrSpitted.length;
         console.log("sum: "+sum);
         console.log("avg: "+avg);
@@ -205,8 +207,8 @@ angular.module('webApp')
 
         if ( type == 'drawDownPips') {
           $scope.arrDrawDownOp = $scope.arrPerformance.drawDown_pips;
-        }else if( type == 'drawDown_perc' ){
-          $scope.arrDrawDownOp = $scope.arrPerformance.netReturns_Euro;
+        }else if( type == 'drawDownPercentage' ){
+          $scope.arrDrawDownOp = $scope.arrPerformance.drawDown_perc;
         }
 
         var columns = [];
