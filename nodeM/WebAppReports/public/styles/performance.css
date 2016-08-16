@@ -54,6 +54,24 @@
 }
 
 
+.label_avg > line{
+  stroke: #85fffe;
+}
+.label_avg > text{
+  fill: #85fffe;
+  font-size: 11px;
+}
+
+
+input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill {
+
+  background-color: #fff !important;
+}
+
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px white inset;
+}
+
 .off_pitch_page_hexagon {
     position: absolute;
     right: 80px;
