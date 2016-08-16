@@ -140,9 +140,9 @@ angular.module('webApp')
 
         console.log("arrSpitted: ",arrSpitted);
         var sum = arrSpitted.reduce(function(a, b) { 
-          console.log("parseInt(a): ",parseInt(a));
-          console.log("parseInt(b): ",parseInt(b));
-          var tot = parseInt(a) + parseInt(b); 
+          console.log("parseFloat(a): ",parseFloat(a));
+          console.log("parseFloat(b): ",parseFloat(b));
+          var tot = parseFloat(a) + parseFloat(b); 
           return tot;
         });
 
@@ -219,9 +219,9 @@ angular.module('webApp')
 
         console.log("arrSpitted: ",arrSpitted);
         var sum = arrSpitted.reduce(function(a, b) { 
-          console.log("parseInt(a): ",parseInt(a));
-          console.log("parseInt(b): ",parseInt(b));
-          var tot = parseInt(a) + parseInt(b); 
+          console.log("parseFloat(a): ",parseFloat(a));
+          console.log("parseFloat(b): ",parseFloat(b));
+          var tot = parseFloat(a) + parseFloat(b); 
           return tot;
         });
         var avg = sum / arrSpitted.length;
