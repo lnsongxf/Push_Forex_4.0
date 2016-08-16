@@ -13,12 +13,14 @@
     "jquery":"",
     "d3":"",
     "c3":"",
-    "angular-bootstrap":""
+    "angular-bootstrap":"",
+    "jquery-typeahead":""
   },
   "devDependencies": {
     "jquery":"",
     "d3":"",
-    "c3":""
+    "c3":"",
+    "jquery-typeahead":""
   },
   "appPath": ""
 }

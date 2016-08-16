@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('webApp')
-  .controller('reportCtrl', ['$scope', '$routeParams', 'Help', 'AjaxService', 
+  .controller('performanceCtrl', ['$scope', '$routeParams', 'Help', 'AjaxService', 
     function($scope,$routeParams, Help, AjaxService) {
       $scope.msg = 'Algo Report Page';
       $scope.arrOpSort = "";
@@ -73,6 +73,35 @@ angular.module('webApp')
 
 
 
+      $scope.loadPerformance = function(){
+
+        $scope.tableArrOpSort = [];
+        AjaxService.getPerformance($scope.magic)
+        .success(function(data, status, headers) {            
+          
+          console.log("data: ",data);
+          // CSV PARSER
+          $scope.arrPerformance = Help.csvToArrPerformance(data.data.data,"↵");
+
+          console.log("$scope.arrPerformance: ",$scope.arrPerformance);
+          $scope.profitChart('pips');
+          $scope.drawDownChart('drawDownPips');
+
+          //$scope.createCSV();
+          //$scope.showTable();
+          //$scope.showComulativeAllProfitChart();
+        })
+        .error(function(data, status, headers, config) {
+          console.log("data error: ",data);
+          console.log("data error: ",status);
+          console.log("data error: ",headers);
+        });
+
+      }
+
+
+
+      
 
 
 
@@ -84,36 +113,11 @@ angular.module('webApp')
         }
       }
 
-
-      console.log("inn-3");
-
-      $scope.tableArrOpSort = [];
-      
-      AjaxService.getHistoryCSV()
-      .success(function(data, status, headers) {            
-        
-        console.log("data: ",data);
-        // CSV PARSER
-        $scope.arrOp = Help.csvToArr(data.data.data,"↵");
-        $scope.createCSV();
-        $scope.showTable();
-        $scope.showComulativeAllProfitChart();
-      })
-      .error(function(data, status, headers, config) {
-        console.log("data error: ",data);
-        console.log("data error: ",status);
-        console.log("data error: ",headers);
-      });
-
-
-      console.log("inn-2");
-
-
       $scope.tableArrOpOpenSort = [];
       AjaxService.getOpenCSV()
   		.success(function(data1, status, headers) {            
-    		console.log("inn-4");
-        console.log("data2: ",data1);
+    		
+        console.log("data1: ",data1);
         // CSV PARSER
         $scope.arrOpOpen = Help.csvToArrOpenPosition(data1.data.data,"↵");
         console.log("arrOpOpen: ",$scope.arrOpOpen);
@@ -231,6 +235,118 @@ angular.module('webApp')
         });
 
       }
+
+
+      
+      $scope.profitChart = function(type,event){
+        if (event != undefined) {
+          event.stopPropagation();
+        };
+        $scope.typeProfitChart = type;
+
+        if ( type == 'pips') {
+          $scope.arrOpSort = $scope.arrPerformance.netReturns_pips;
+        }else if( type == 'currency' ){
+          $scope.arrOpSort = $scope.arrPerformance.netReturns_Euro;
+        }else if( type == 'percentage' ){
+          $scope.arrOpSort = $scope.arrPerformance.netReturns_perc;
+        }else if( type == 'dailyPips' ){
+          $scope.arrOpSort = $scope.arrPerformance.dailyNetReturns_pips;
+        }else if( type == 'dailyCurrency' ){
+          $scope.arrOpSort = $scope.arrPerformance.dailyNetReturns_Euro;
+        }else if( type == 'dailyPercentage' ){
+          $scope.arrOpSort = $scope.arrPerformance.dailyNetReturns_perc;
+        }
+
+        var columns = [];
+        columns[0] = type;
+        var arrSpitted = $scope.arrOpSort.split(' ');
+        arrSpitted.shift();
+        columns = columns.concat( arrSpitted );
+        console.log(columns);
+            
+        $scope.chart_title = "Profit";
+
+        $scope.chart = c3.generate({
+            padding: {
+                right: 50,
+                left: 50,
+                top:10
+            },
+            zoom: {
+              enabled: true
+            },
+            bindto: '#chart_profit',
+            data: {
+                columns: [columns]
+            },
+            axis: {
+              x: {
+                  tick: {
+                      culling: {
+                        max: 5
+                      }
+                  }
+              }
+            },
+            color: {
+              pattern: ['#6C6767','#B0BDBE','#F5FFFF','#A8A5A5']
+            }
+        });
+      }
+
+
+
+      $scope.drawDownChart = function(type,event){
+        if (event != undefined) {
+          event.stopPropagation();
+        };
+        $scope.typeDrawDownChart = type;
+
+        if ( type == 'drawDownPips') {
+          $scope.arrDrawDownOp = $scope.arrPerformance.drawDown_pips;
+        }else if( type == 'drawDown_perc' ){
+          $scope.arrDrawDownOp = $scope.arrPerformance.netReturns_Euro;
+        }
+
+        var columns = [];
+        columns[0] = type;
+        var arrSpitted = $scope.arrDrawDownOp.split(' ');
+        arrSpitted.shift();
+        columns = columns.concat( arrSpitted );
+        console.log(columns);
+            
+        $scope.chart_title = "DrawDown";
+
+        $scope.chart = c3.generate({
+            padding: {
+                right: 50,
+                left: 50,
+                top:10
+            },
+            zoom: {
+              enabled: true
+            },
+            bindto: '#chart_drawdown',
+            data: {
+                columns: [columns]
+            },
+            axis: {
+              x: {
+                  tick: {
+                      culling: {
+                        max: 5
+                      }
+                  }
+              }
+            },
+            color: {
+              pattern: ['#6C6767','#B0BDBE','#F5FFFF','#A8A5A5']
+            }
+        });
+      }
+
+
 
       $scope.comulative = true;
       $scope.typeChart = 'profit';

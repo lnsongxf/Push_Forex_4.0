@@ -48,6 +48,7 @@ module.exports = function (app) {
                 path: urlData,
                 method: "GET"
             };
+            console.log(options);
             http.request(options, function(res) {
                 console.log('STATUS 2: ' + res.statusCode);
                 console.log('HEADERS 2: ' + JSON.stringify(res.headers));

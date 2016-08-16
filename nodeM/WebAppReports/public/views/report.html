@@ -12,22 +12,7 @@
 		     </div>
 		 </div>
 	</div>
-
-
-	<div class="row" style="margin-top:15px">
-		<div class="col-xs-12 col-sm-1	col-md-1 col-lg-1">
-			<span style="color: #fff;padding-left: 15px;line-height: 30px;">Chart:</span>
-		</div>
-		<div class="col-xs-12 col-sm-11	col-md-11 col-lg-11" >
-			<div class="funcButtons" class="col-xs-12 col-sm-12	col-md-11 col-lg-11">
-				<button type="button" class="btn btn-default button_default button_func" ng-click="showComulativeProfitChart()">Comulative Profit Chart</button>
-			  	<button type="button" class="btn btn-default button_default button_func func_button_active" ng-click="showProfitChart()">Profit Chart</button>
-			</div>
-		</div>
-	</div>
 	
-
-
 	<div class="row">
 		<hr>
 	</div>
@@ -35,7 +20,23 @@
 		<div id="download_csv" style="position: absolute;top: 11px;right: 0px;"></div>
 	</div>
 
-	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="color:#fff;margin-top:15px">{{chart_title}}</div>
+	<div class="row" style="margin-top:15px">
+		<div class="col-xs-12 col-sm-1	col-md-1 col-lg-1">
+			<span style="color: #fff;padding-left: 15px;line-height: 30px;">Profit:</span>
+		</div>
+		<div class="col-xs-12 col-sm-11	col-md-11 col-lg-11">
+			<div class="funcButtons" class="col-xs-12 col-sm-12	col-md-11 col-lg-11">
+
+				<button type="button" class="btn btn-default button_default button_func" ng-class="{ 'func_button_active' : comulative }" ng-click="comulativeProfitChart('profit',$event)">Comulative</button>
+				<button type="button" class="btn btn-default button_default button_func" ng-class="{ 'func_button_active' : !comulative }" ng-click="comulativeProfitChart('trades',$event)">Trades</button>
+
+
+				<div type="button" class="btn btn-default button_default button_func" ng-class="{ 'func_button_active' : splitByAlgo }" ng-click="splitByAlgoFx($event)">Split by algorithm</div>
+			  	
+			</div>
+		</div>
+	</div>
+	<!--<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="color:#fff;margin-top:15px">{{chart_title}}</div>-->
 	<div id="chart_operations" class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="height:300px;margin-top:15px"></div>
 
 	<div class="row"><div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="color: #fff;margin-left: 7px;font-size: 16px;;margin-top:26px">Open Positions</div></div>

@@ -598,8 +598,41 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
       get_quotes(platform,source,cross_list[0].cross,cross_list[0].dataLenght,cross_list[0].timeFrame,from,to);      
     }
 
+
+
+    $scope.inputStartValue = null;
+    $scope.inputStopValue = null;
+
+    $scope.initBacktest = function(){
+      if ($scope.inputStartValue != null && $scope.inputStopValue != null) {
+
+
+        storedb('algos').find({"_id":$scope.dataCurrentAlgos["_id"]},function(err,result){
+          if(err == undefined || err == null || err == ""){ 
+            var serverName = 'integrationTest';
+            console.log("backtest result[0][serverName].param: ",result[0][serverName].param);
+            var paramsObj = result[0][serverName].param;
+            var paramArr = [];
+            paramsObj.forEach(function(val,index){
+              paramArr.push( {'cross':val.cross,'timeFrame':val.timeframe,'dataLenght':val.values} )
+            });
+            console.log("paramArr: ",paramArr);
+            console.log(" $scope.inputStartValue: "+ $scope.inputStartValue);
+            console.log(" $scope.inputStopValue: "+ $scope.inputStopValue);
+
+            //TO CHANGE WHEN THE HISTORY SERVICE IS READY  
+
+            paramArr = [{'cross':'EURGBP','timeFrame':'m1','dataLenght':'v5'}];
+            $scope.startBacktest( paramArr, '2016-01-20 13:47', '2016-02-05 14:04', 'MT4', 'ACTIVETRADES' );
+          }
+        });
+
+
+      };
+    }
+
     // START BACKTEST EURGBP
-    $scope.startBacktest([{'cross':'EURGBP','timeFrame':'m1','dataLenght':'v5'}],'2016-01-20 13:47','2016-02-05 14:04','MT4','ACTIVETRADES');
+    //$scope.startBacktest([{'cross':'EURGBP','timeFrame':'m1','dataLenght':'v5'}],'2016-01-20 13:47','2016-02-05 14:04','MT4','ACTIVETRADES');
 
     /*setTimeout(function(){
       console.log("second call");
@@ -626,10 +659,10 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
       $scope.startBacktest([{'cross':'EURGBP','timeFrame':'m1','dataLenght':'v5'}],'2016-02-07 13:47','2016-02-15 14:04','MT4','ACTIVETRADES');
     },30000);*/
 
-    setTimeout(function(){
+    /*setTimeout(function(){
       console.log("second call");
       $scope.startBacktest([{'cross':'EURGBP','timeFrame':'m1','dataLenght':'v5'}],'2016-02-01 13:47','2016-02-15 14:04','MT4','ACTIVETRADES');
-    },30000);
+    },30000);*/
 
     //////////////////////////////Config panel//////////////////
     $scope.openPanel = false;

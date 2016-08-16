@@ -1,0 +1,94 @@
+.chart_c3 .c3-legend-item text{
+  fill: #fff !important;
+  font-family: 'Circular Stf Book';
+}
+.chart_c3 .c3-chart-arcs-title{
+  fill: #fff !important;
+  font-family: 'Circular Stf Book';
+}
+
+.chart_c3 .tick{
+  fill: #fff !important;
+  font-size: 14px;
+}
+.chart_c3 .c3-chart-line .c3-lines path{
+  stroke-width: 2px;
+}
+.chart_c3 .c3-axis .tick line{
+  stroke: #fff !important;
+}
+.chart_c3 .c3-axis path{
+  stroke: #fff !important;
+}
+
+
+
+.chart_c3 .c3-axis text {
+  fill: #fff !important;
+  font-family: 'Circular Stf Book';
+}
+.chart_c3 .c3-circle {
+  /*fill: #fff !important;
+  opacity: 1 !important;*/
+  r: 3;
+  /*stroke: #23b7e5 !important;
+  stroke-width: 2px !important;*/
+}
+.chart_c3 .c3-axis-y{
+  /*display: none;*/
+}
+
+@media only screen and (max-width: 1024px){
+  .chart_c3 .c3-axis-x{
+    display: none;
+  }
+}
+
+.chart_c3 .c3-tooltip th{
+  background-color: #696969 !important; 
+  color: #fff !important;
+}
+.chart_c3 .c3-tooltip td{
+  background-color: #424345 !important;
+   color: #fff !important;
+}
+
+
+.off_pitch_page_hexagon {
+    position: absolute;
+    right: 80px;
+    left: 0;
+    z-index: 10;
+    display: flex;
+    width: 80px;
+    height: 80px;
+    margin-right: auto;
+    margin-left: auto;
+    background-color: #272628;
+    justify-content: center;
+    align-items: center;
+    -webkit-clip-path: polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0% 25%)!important;
+    clip-path: polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0% 25%)!important;
+}
+
+.off_pitch_page_hexagon_right {
+    position: absolute;
+    right: 0;
+    left: 80px;
+    z-index: 10;
+    display: flex;
+    width: 80px;
+    height: 80px;
+    margin-right: auto;
+    margin-left: auto;
+    font-size: 18px;
+    font-weight: 600;
+    color: #85fffe;
+    background-color: #424345;
+    background-position: center center;
+    background-size: cover;
+    justify-content: center;
+    align-items: center;
+    -webkit-clip-path: polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0% 25%)!important;
+    clip-path: polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0% 25%)!important;
+}

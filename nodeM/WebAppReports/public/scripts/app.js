@@ -16,6 +16,7 @@ var app = angular
 app.factory('AjaxService', ['$http', function($http) {
 
   var _getHistoryCSV = function() {
+    console.log("in1");
     var url = "/proxy";
     return $http.post(url, {urlData: "/history/csv", param: {}, method: "GET"})
   }; 
@@ -25,9 +26,17 @@ app.factory('AjaxService', ['$http', function($http) {
     return $http.post(url, {urlData: "/open/csv", param: {}, method: "GET"})
   }; 
 
+  var _getPerformanceCSV = function(magic) {
+    var url = "/proxy";
+    var path = "/performance?magic="+magic;
+    console.log("path: ",path);
+    return $http.post(url, {urlData: path, param: {}, method: "GET"})
+  }; 
+
   return {    
-    getHistoryCSV: function() { return _getHistoryCSV() },
-    getOpenCSV: function() { return _getOpenCSV() }
+    getHistoryCSV: function() {  console.log("in0"); return _getHistoryCSV() },
+    getOpenCSV: function() { return _getOpenCSV() },
+    getPerformance: function(magic){ return _getPerformanceCSV(magic)}
   };
 
 }]);
@@ -36,6 +45,32 @@ app.factory('AjaxService', ['$http', function($http) {
 app.factory('Help', function() {
   //1open, 2close, 3guadagno/2, 4direzione, 6 open date, 7 close date
   //-1,1.13026,1.12931,95,1,1,04/2016/21 10:30,04/2016/21 12:19,1,-1,-1,EURUSD,1.14096,1.11956,0,0,commento,1002,103353209,
+
+
+  var _csvToArrPerformance = function(strData,strDelimiter){
+    strDelimiter = (strDelimiter || ",");
+    var objPattern = new RegExp(
+        ( "(\\" + strDelimiter + "|\\r?\\n|\\r|^)" + "(?:\"([^\"]*(?:\"\"[^\"]*)*)\"|" + "([^\"\\" + strDelimiter + "\\r\\n]*))" ),"gi");
+    var arrData = {};
+    var arrMatches = null;
+    while (arrMatches = objPattern.exec( strData )){
+        var strMatchedDelimiter = arrMatches[ 1 ];
+        if ( strMatchedDelimiter.length && (strMatchedDelimiter != strDelimiter) ){
+            //arrData.push( {date:'',open:'',high:'',low:'',close:'',volume:'',magic:'',profit:''} );
+        }
+        if (arrMatches[ 2 ]){ var strMatchedValue = arrMatches[ 2 ].replace( new RegExp( "\"\"", "g" ), "\"" );
+        }else{ var strMatchedValue = arrMatches[ 3 ]; }
+        var strMatchedValueArr = strMatchedValue.split(",");
+        
+        if (strMatchedValueArr.length > 1) {
+          arrData[ strMatchedValueArr[0] ] = strMatchedValueArr[1];  
+        }
+        //arrData[ arrData.length - 1 ].push( strMatchedValue );
+    }
+    return arrData;
+  };
+
+
 
   var _csvToArr = function(strData,strDelimiter){
     strDelimiter = (strDelimiter || ",");
@@ -159,6 +194,7 @@ app.factory('Help', function() {
 
   return {  
     csvToArr: function(csv,strDelimiter) { return _csvToArr(csv,strDelimiter) },  
+    csvToArrPerformance: function(csv,strDelimiter) { return _csvToArrPerformance(csv,strDelimiter) },
     sort: function(arr,sortProperties,direction) { return _sort(arr,sortProperties,direction) },
     csvToArrOpenPosition: function(csv,strDelimiter) {return _csvToArrOpenPosition(csv,strDelimiter) }
   };
@@ -174,6 +210,10 @@ app.config(function ($routeProvider) {
     .when('/report', {
       controller: 'reportCtrl',
       templateUrl: 'views/report.html'
+    })
+    .when('/performance', {
+      controller: 'performanceCtrl',
+      templateUrl: 'views/performance.html'
     })
     .otherwise({
       redirectTo: '/'

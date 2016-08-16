@@ -23,8 +23,21 @@
     <link rel="stylesheet" href="styles/bootstrap.css">
     <link rel="stylesheet" href="styles/c3.css">
     <link rel="stylesheet" href="styles/report.css">
+    <link rel="stylesheet" href="styles/performance.css">
     <link rel="stylesheet" href="libs/bower_components/angular-bootstrap/ui-bootstrap-csp.css">
+    <link rel="stylesheet" href="libs/bower_components/jquery-typeahead/dist/jquery.typeahead.min.css">
+
     <!-- endbuild -->
+
+
+    <svg class="clip-svg" width="0" height="0" style="display: list-item;">
+        <defs>
+          <clipPath id="polygon-clip-hexagon-big" clipPathUnits="objectBoundingBox">
+            <polygon points="0.5 0, 1 0.25, 1 0.75, 0.5 1, 0 0.75, 0 0.25" />
+          </clipPath>
+        </defs>
+    </svg>
+
   </head>
   <body ng-app="webApp">
     
@@ -44,14 +57,34 @@
 
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-              <ul class="nav navbar-nav">
-                <li><a href="#/report">Reports</a></li>
-              </ul>
+                <ul class="nav navbar-nav">
+                    <li><a href="#/report">Reports</a></li>
+                </ul>
+                <ul class="nav navbar-nav">
+                    <li><a href="#/performance">Performance</a></li>
+                </ul>
+                <!--<form id="form-country_v1" name="form-country_v1"  class="navbar-form navbar-left" style="display: inline-table">
+                    <div class="typeahead__container">
+                        <div class="typeahead__field">
+                            <span class="typeahead__query">
+                                <input class="js-typeahead-country_v1" name="country_v1[query]" type="search" placeholder="Search" autocomplete="off">
+                            </span>
+                            <span class="typeahead__button">
+                                <button type="submit">
+                                    <i class="typeahead__search-icon"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                </form>-->
             </div><!-- /.navbar-collapse -->
           </div><!-- /.container-fluid -->
         </nav>
         <div id="viewWebApp" ng-view></div>
     </div>
+
+
+
 
     <script>
         function hideAddressBar()
@@ -69,6 +102,7 @@
 
         window.addEventListener("load", function(){ if(!window.pageYOffset){ hideAddressBar(); } } );
         window.addEventListener("orientationchange", hideAddressBar );
+
     </script>
 
 
@@ -79,6 +113,7 @@
     <!-- build:js(.) scripts/vendor.js -->
     <!-- bower:js -->
     <script src="libs/bower_components/jquery/dist/jquery.js"></script>
+    <script src="libs/bower_components/jquery-typeahead/dist/jquery.typeahead.min.js"></script>
     <script src="libs/bower_components/angular/angular.js"></script>
     <script src="libs/bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/affix.js"></script>
     <script src="libs/bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/alert.js"></script>
@@ -110,6 +145,67 @@
         <script src="scripts/app.js"></script>
         <script src="scripts/controllers/main.js"></script>
         <script src="scripts/controllers/report.js"></script>
+        <script src="scripts/controllers/performance.js"></script>
         <!-- endbuild -->
+
 </body>
+
+
+
+    <script type="text/javascript">
+
+        setTimeout(function(){
+
+            $.typeahead({
+                input: '.js-typeahead-country_v1',
+                order: "desc",
+                source: {
+                    data: [
+                        "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda",
+                        "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh",
+                        "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bermuda", "Bhutan", "Bolivia",
+                        "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", "Burkina Faso", "Burma",
+                        "Burundi", "Cambodia", "Cameroon", "Canada", "Cape Verde", "Central African Republic", "Chad",
+                        "Chile", "China", "Colombia", "Comoros", "Congo, Democratic Republic", "Congo, Republic of the",
+                        "Costa Rica", "Cote d'Ivoire", "Croatia", "Cuba", "Cyprus", "Czech Republic", "Denmark", "Djibouti",
+                        "Dominica", "Dominican Republic", "East Timor", "Ecuador", "Egypt", "El Salvador",
+                        "Equatorial Guinea", "Eritrea", "Estonia", "Ethiopia", "Fiji", "Finland", "France", "Gabon",
+                        "Gambia", "Georgia", "Germany", "Ghana", "Greece", "Greenland", "Grenada", "Guatemala", "Guinea",
+                        "Guinea-Bissau", "Guyana", "Haiti", "Honduras", "Hong Kong", "Hungary", "Iceland", "India",
+                        "Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy", "Jamaica", "Japan", "Jordan",
+                        "Kazakhstan", "Kenya", "Kiribati", "Korea, North", "Korea, South", "Kuwait", "Kyrgyzstan", "Laos",
+                        "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg",
+                        "Macedonia", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands",
+                        "Mauritania", "Mauritius", "Mexico", "Micronesia", "Moldova", "Mongolia", "Morocco", "Monaco",
+                        "Mozambique", "Namibia", "Nauru", "Nepal", "Netherlands", "New Zealand", "Nicaragua", "Niger",
+                        "Nigeria", "Norway", "Oman", "Pakistan", "Panama", "Papua New Guinea", "Paraguay", "Peru",
+                        "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russia", "Rwanda", "Samoa", "San Marino",
+                        "Sao Tome", "Saudi Arabia", "Senegal", "Serbia and Montenegro", "Seychelles", "Sierra Leone",
+                        "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "Spain",
+                        "Sri Lanka", "Sudan", "Suriname", "Swaziland", "Sweden", "Switzerland", "Syria", "Taiwan",
+                        "Tajikistan", "Tanzania", "Thailand", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey",
+                        "Turkmenistan", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States",
+                        "Uruguay", "Uzbekistan", "Vanuatu", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"
+                    ]
+                },
+                callback: {
+                    onInit: function (node) {
+                        console.log('Typeahead Initiated on ' + node.selector);
+                    },
+                    onClickAfter: function (node, a, item, event) {
+                        event.preventDefault();
+             
+                        console.log("item",item);           
+             
+                        $('#result-container').text('');
+             
+                    },
+                }
+            });
+
+        },3000);
+
+    </script>
+
+
 </html>

@@ -1,0 +1,314 @@
+<div class="row" style="padding:0px 15px 0px 15px">
+	<div class="col-xs-12 col-sm-12	col-md-12 col-lg-12" style="color:#fff">{{msg}}</div>
+
+	<div class="row">
+		<div class="col-xs-12 col-sm-1	col-md-1 col-lg-1" style="margin-top:15px">
+			<span style="color: #fff;padding-left: 15px;    line-height: 27px;">Server:</span>
+		</div>
+		<div class="col-xs-12 col-sm-11	col-md-11 col-lg-11" style="margin-top:15px">
+			<div class="serverButtons" style="">
+		        <button type="button" class="btn btn-rounded btn btn-icon button_server server_button_active" ng-click="setServer('production')" data-timespan="production" tabindex="0">Production</button>     
+		        <!--<button type="button" class="btn btn-rounded btn btn-icon button_server" ng-click="setServer('development')" data-timespan="development" tabindex="0">Development</button> -->    
+		     </div>
+		 </div>
+	</div>
+	
+	<div class="row">
+		<hr>
+	</div>
+	
+	<div class="row" style="height:60px">
+		<div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
+			<div class="input-group">
+				<span class="input-group-addon" id="basic-addon1">Magic</span>
+				<input type="text" class="form-control" placeholder="Magic" ng-model="magic" aria-describedby="basic-addon1">
+				<button type="button" class="btn btn-default button_default button_func" ng-click="loadPerformance($event)">Send</button>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="row btn-group btn-group-justified" style="height:120px;margin-top: 45px;">
+	    <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="height:100px;padding:0px">
+	      <div class="off_pitch_page_hexagon" style="-webkit-clip-path: url('#polygon-clip-hexagon-big');clip-path: url('#polygon-clip-hexagon-big');">
+	      	<span style="color:#fff">Total Pips</span>
+	      </div>
+	      <div class="off_pitch_page_hexagon_right" style="-webkit-clip-path: url('#polygon-clip-hexagon-big');clip-path: url('#polygon-clip-hexagon-big');">{{arrPerformance.pipsEarned || 0}}</div>
+	    </div>
+	    <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="height:100px;padding:0px">
+	      <div class="off_pitch_page_hexagon" style="-webkit-clip-path: url('#polygon-clip-hexagon-big');clip-path: url('#polygon-clip-hexagon-big');">
+	      	<span style="color:#fff">Total Euro</span>
+	      </div>
+	      <div class="off_pitch_page_hexagon_right" style="-webkit-clip-path: url('#polygon-clip-hexagon-big');clip-path: url('#polygon-clip-hexagon-big');">{{arrPerformance.EuroEarned || 0}}</div>
+	    </div>
+	    <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="height:100px;padding:0px">
+	      <div class="off_pitch_page_hexagon" style="-webkit-clip-path: url('#polygon-clip-hexagon-big');clip-path: url('#polygon-clip-hexagon-big');">
+	      	<span style="color:#fff">Total Return</span>
+	      </div>
+	      <div class="off_pitch_page_hexagon_right" style="-webkit-clip-path: url('#polygon-clip-hexagon-big');clip-path: url('#polygon-clip-hexagon-big');">{{arrPerformance.percEarned || 0}}%</div>
+	    </div>
+	    <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="height:100px;padding:0px">
+	      <div class="off_pitch_page_hexagon" style="-webkit-clip-path: url('#polygon-clip-hexagon-big');clip-path: url('#polygon-clip-hexagon-big');">
+	      	<span style="color:#fff">Total trades</span>
+	      </div>
+	      <div class="off_pitch_page_hexagon_right" style="-webkit-clip-path: url('#polygon-clip-hexagon-big');clip-path: url('#polygon-clip-hexagon-big');">{{arrPerformance.daysOperation || 0}}</div>
+	    </div>
+	    <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="height:100px;padding:0px">
+	      <div class="off_pitch_page_hexagon" style="-webkit-clip-path: url('#polygon-clip-hexagon-big');clip-path: url('#polygon-clip-hexagon-big');">
+	      	<span style="color:#fff">Sharp Ratio</span>
+	      </div>
+	      <div class="off_pitch_page_hexagon_right" style="-webkit-clip-path: url('#polygon-clip-hexagon-big');clip-path: url('#polygon-clip-hexagon-big');">{{arrPerformance.SR || 0}}</div>
+	    </div>
+	    <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="height:100px;padding:0px">
+	      <div class="off_pitch_page_hexagon" style="-webkit-clip-path: url('#polygon-clip-hexagon-big');clip-path: url('#polygon-clip-hexagon-big');">
+	      	<span style="color:#fff">RR</span>
+	      </div>
+	      <div class="off_pitch_page_hexagon_right" style="-webkit-clip-path: url('#polygon-clip-hexagon-big');clip-path: url('#polygon-clip-hexagon-big');">{{arrPerformance.RR || 0}}</div>
+	    </div>
+	</div>
+
+
+
+	<div class="row" style="margin-top:15px">
+		<div class="col-xs-12 col-sm-1	col-md-1 col-lg-1">
+			<span style="color: #fff;padding-left: 15px;line-height: 30px;">Profit:</span>
+		</div>
+		<div class="col-xs-12 col-sm-11	col-md-11 col-lg-11">
+			<div class="funcButtons" class="col-xs-12 col-sm-12	col-md-11 col-lg-11">
+
+				<button type="button" class="btn btn-default button_default button_func" ng-class="{ 'func_button_active' : typeProfitChart == 'pips' }" ng-click="profitChart('pips',$event)">Pips</button>
+				<button type="button" class="btn btn-default button_default button_func" ng-class="{ 'func_button_active' : typeProfitChart == 'currency' }" ng-click="profitChart('currency',$event)">Euro</button>
+				<button type="button" class="btn btn-default button_default button_func" ng-class="{ 'func_button_active' : typeProfitChart == 'percentage' }" ng-click="profitChart('percentage',$event)">Percentage</button>
+				<button type="button" class="btn btn-default button_default button_func" ng-class="{ 'func_button_active' : typeProfitChart == 'dailyPips' }" ng-click="profitChart('dailyPips',$event)">Daily pips</button>
+				<button type="button" class="btn btn-default button_default button_func" ng-class="{ 'func_button_active' : typeProfitChart == 'dailyCurrency' }" ng-click="profitChart('dailyCurrency',$event)">Daily Euro</button>
+				<button type="button" class="btn btn-default button_default button_func" ng-class="{ 'func_button_active' : typeProfitChart == 'dailyPercentage' }" ng-click="profitChart('dailyPercentage',$event)">Daily Percentage</button>
+			  	
+			</div>
+		</div>
+	</div>
+	<!--<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="color:#fff;margin-top:15px">{{chart_title}}</div>-->
+	<div id="chart_profit" class="chart_c3 col-xs-12 col-sm-12 col-md-12 col-lg-12" style="height:300px;margin-top:15px"></div>
+
+
+
+	<div class="row btn-group btn-group-justified" style="height:120px;margin-top: 45px;">
+	    <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="height:100px;padding:0px">
+	      <div class="off_pitch_page_hexagon" style="-webkit-clip-path: url('#polygon-clip-hexagon-big');clip-path: url('#polygon-clip-hexagon-big');">
+	      	<span style="color:#fff">DrawDown pips</span>
+	      </div>
+	      <div class="off_pitch_page_hexagon_right" style="-webkit-clip-path: url('#polygon-clip-hexagon-big');clip-path: url('#polygon-clip-hexagon-big');">{{arrPerformance.drawDown_pips || 0}}</div>
+	    </div>
+	    <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="height:100px;padding:0px">
+	      <div class="off_pitch_page_hexagon" style="-webkit-clip-path: url('#polygon-clip-hexagon-big');clip-path: url('#polygon-clip-hexagon-big');">
+	      	<span style="color:#fff">DrawDown %</span>
+	      </div>
+	      <div class="off_pitch_page_hexagon_right" style="-webkit-clip-path: url('#polygon-clip-hexagon-big');clip-path: url('#polygon-clip-hexagon-big');">{{arrPerformance.drawDown_perc || 0}}</div>
+	    </div>
+	    <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="height:100px;padding:0px">
+	      <div class="off_pitch_page_hexagon" style="-webkit-clip-path: url('#polygon-clip-hexagon-big');clip-path: url('#polygon-clip-hexagon-big');">
+	      	<span style="color:#fff">Total Return</span>
+	      </div>
+	      <div class="off_pitch_page_hexagon_right" style="-webkit-clip-path: url('#polygon-clip-hexagon-big');clip-path: url('#polygon-clip-hexagon-big');">{{arrPerformance.percEarned || 0}}%</div>
+	    </div>
+	    <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="height:100px;padding:0px">
+	      <div class="off_pitch_page_hexagon" style="-webkit-clip-path: url('#polygon-clip-hexagon-big');clip-path: url('#polygon-clip-hexagon-big');">
+	      	<span style="color:#fff">Total trades</span>
+	      </div>
+	      <div class="off_pitch_page_hexagon_right" style="-webkit-clip-path: url('#polygon-clip-hexagon-big');clip-path: url('#polygon-clip-hexagon-big');">{{arrPerformance.daysOperation || 0}}</div>
+	    </div>
+	    <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="height:100px;padding:0px">
+	      <div class="off_pitch_page_hexagon" style="-webkit-clip-path: url('#polygon-clip-hexagon-big');clip-path: url('#polygon-clip-hexagon-big');">
+	      	<span style="color:#fff">Sharp Ratio</span>
+	      </div>
+	      <div class="off_pitch_page_hexagon_right" style="-webkit-clip-path: url('#polygon-clip-hexagon-big');clip-path: url('#polygon-clip-hexagon-big');">{{arrPerformance.SR || 0}}</div>
+	    </div>
+	    <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="height:100px;padding:0px">
+	      <div class="off_pitch_page_hexagon" style="-webkit-clip-path: url('#polygon-clip-hexagon-big');clip-path: url('#polygon-clip-hexagon-big');">
+	      	<span style="color:#fff">RR</span>
+	      </div>
+	      <div class="off_pitch_page_hexagon_right" style="-webkit-clip-path: url('#polygon-clip-hexagon-big');clip-path: url('#polygon-clip-hexagon-big');">{{arrPerformance.RR || 0}}</div>
+	    </div>
+	</div>
+
+
+
+	<div class="row" style="margin-top:15px">
+		<div class="col-xs-12 col-sm-1	col-md-1 col-lg-1">
+			<span style="color: #fff;padding-left: 15px;line-height: 30px;">Drawdown:</span>
+		</div>
+		<div class="col-xs-12 col-sm-11	col-md-11 col-lg-11">
+			<div class="funcButtons" class="col-xs-12 col-sm-12	col-md-11 col-lg-11">
+
+				<div type="button" class="btn btn-default button_default button_func" ng-class="{ 'func_button_active' : typeDrawDownChart == 'drawDownPips' }" ng-click="drawDownChart('drawDownPips',$event)">DrawDown Pips</div>
+				<div type="button" class="btn btn-default button_default button_func" ng-class="{ 'func_button_active' : typeDrawDownChart == 'drawDownPercentage' }" ng-click="drawDownChart('drawDownPercentage',$event)">DrawDown Percentage</div>
+
+			</div>
+		</div>
+	</div>
+	<!--<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="color:#fff;margin-top:15px">{{chart_title}}</div>-->
+	<div id="chart_drawdown" class="chart_c3 col-xs-12 col-sm-12 col-md-12 col-lg-12" style="height:300px;margin-top:15px"></div>
+
+
+
+
+
+
+	<div class="row"><div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="color: #fff;margin-left: 7px;font-size: 16px;;margin-top:26px">Open Positions</div></div>
+	<div class="row">
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-top:10px;">
+			<!--<div class="table-responsive" style="height:36px;overflow-y: hidden;">
+				<table class="table table-striped">
+		            <thead style="color: #fff;background-color: transparent;">
+		                <tr> 
+							<th>Open Date</th>
+							<th>Open</th>
+							<th>Current Price</th>
+							<th>Operation Type</th>
+							<td>Stop Loss</td>
+		                    <td>Take Profit</td>
+		                    <td>Cross</td> 
+		                    <td>Magic</td>
+		                    <td>Operation Id</td>
+		                    <td>Profit</td>
+						</tr>
+					</thead>
+				</table>
+			</div>-->
+			<div class="table-responsive" style="overflow-y: auto;height: 148px;">
+		        <table class="table table-striped">
+		        	<thead style="color: #fff;background-color: transparent;">
+		                <tr> 
+							<th>Open Date</th>
+							<th>Open</th>
+							<th>Current Price</th>
+							<th>Operation Type</th>
+							<th>Stop Loss</th>
+		                    <th>Take Profit</th>
+		                    <th>Cross</th> 
+		                    <th>Magic</th>
+		                    <th>Operation Id</th>
+		                    <th>Profit</th>
+						</tr>
+					</thead>
+					<tbody>
+		                <tr ng-repeat="data in openOperations">
+							<td>{{data['openDate'] | date:'medium'}}</td>
+		                    <td>{{data.open}}</td> 
+		                    <td>{{data.currentPrice}}</td> 
+		                    <td>{{data.opType}}</td> 
+		                    <td>{{data.stopLoss}}</td>
+		                    <td>{{data.takeProfit}}</td>
+		                    <td>{{data.cross}}</td> 
+		                    <td>{{data.magic}}</td>
+		                    <td>{{data.opId}}</td>
+		                    <td>{{ getOpenProfit(data.open,data.currentPrice,data.opType) }}</td>
+		                </tr>
+		            </tbody>  
+		        </table>
+		    </div>
+		</div>
+	</div>
+
+
+
+	<div class="row"><div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="color: #fff;margin-left: 7px;font-size: 16px">History</div></div>
+	<div class="row" style="margin:15px 0px 15px 0px">
+		<div class="col-xs-12 col-sm-12 col-md-1 col-lg-1">
+			<span style="color: #fff;padding-left: 7px;line-height: 35px;">Filter:</span>
+		</div>
+		<div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
+			<div class="input-group">
+				<span class="input-group-addon" id="basic-addon1">Magic</span>
+				<input type="text" class="form-control" placeholder="Magic" ng-model="magic" aria-describedby="basic-addon1">
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="height: 500px;">
+			<div class="table-responsive">
+		        <table class="table table-striped">
+		            <thead style="color: #fff;background-color: transparent;">
+		                <tr> 
+		                	<!--SORT by: openDate,open,closeDate,close,profit,opType,cross,high,low,magic,opId-->
+							<th>
+								<div ng-class="{arrowUp: sortFlagClose==true, arrowDown: sortFlagClose==false}"></div>
+								<a class="headerTable" ng-click="sortFlagClose=!sortFlagClose;sortTable('close',sortFlagClose,'sortFlagClose')">Close Value</a>
+							</th> 
+							<th>
+								<div ng-class="{arrowUp: sortFlagCloseDate==true, arrowDown: sortFlagCloseDate==false}"></div>
+								<a class="headerTable" ng-click="sortFlagCloseDate=!sortFlagCloseDate;sortTable('closeDate',sortFlagCloseDate,'sortFlagCloseDate')">Close Date</a>
+							</th> 
+							<th>
+								<div></div>
+								<div class="headerTable">Cross</div>
+							</th> 
+							<th>
+								<div ng-class="{arrowUp: sortFlagHigh==true, arrowDown: sortFlagHigh==false}"></div>
+								<a class="headerTable" ng-click="sortFlagHigh=!sortFlagHigh;sortTable('high',sortFlagHigh,'sortFlagHigh')">High</a>
+							</th> 
+							<th>
+								<div ng-class="{arrowUp: sortFlagLow==true, arrowDown: sortFlagLow==false}"></div>
+								<a class="headerTable" ng-click="sortFlagLow=!sortFlagLow;sortTable('low',sortFlagLow,'sortFlagLow')">Low</a>
+							</th> 
+							<th>
+								<div ng-class="{arrowUp: sortFlagMagic==true, arrowDown: sortFlagMagic==false}"></div>
+								<a class="headerTable" ng-click="sortFlagMagic=!sortFlagMagic;sortTable('magic',sortFlagMagic,'sortFlagMagic')">Magic</a>
+							</th> 
+							<th>
+								<div ng-class="{arrowUp: sortFlagOpId==true, arrowDown: sortFlagOpId==false}"></div>
+								<a class="headerTable" ng-click="sortFlagOpId=!sortFlagOpId;sortTable('opId',sortFlagOpId,'sortFlagOpId')">Operation Id</a>
+							</th> 
+							<th>
+								<div ng-class="{arrowUp: sortFlagOpType==true, arrowDown: sortFlagOpType==false}"></div>
+								<a class="headerTable" ng-click="sortFlagOpType=!sortFlagOpType;sortTable('opType',sortFlagOpType,'sortFlagOpType')">Operation type</a>
+							</th> 
+							<th>
+								<div ng-class="{arrowUp: sortFlagOpen==true, arrowDown: sortFlagOpen==false}"></div>
+								<a class="headerTable" ng-click="sortFlagOpen=!sortFlagOpen;sortTable('open',sortFlagOpen,'sortFlagOpen')">Open Value</a>
+							</th>
+							<th>
+								<div ng-class="{arrowUp: sortFlagOpenDate==true, arrowDown: sortFlagOpenDate==false}"></div>
+								<a class="headerTable" ng-click="sortFlagOpenDate=!sortFlagOpenDate;sortTable('openDate',sortFlagOpenDate,'sortFlagOpenDate')">Open Date</a>
+							</th>
+							<th>
+								<div ng-class="{arrowUp: sortFlagProfit==true, arrowDown: sortFlagProfit==false}"></div>
+								<a class="headerTable" ng-click="sortFlagProfit=!sortFlagProfit;sortTable('profit',sortFlagProfit,'sortFlagProfit')">Profit</a>
+							</th>
+						</tr> 
+		            </thead>
+		            <tbody>
+		                <tr ng-repeat="data in pagedItems">
+		                    <td>{{data.close}}</td> 
+							<td>{{data['closeDate'] | date:'medium'}}</td>
+							<td>{{data.cross}}</td> 
+							<td>{{data.high}}</td> 
+							<td>{{data.low}}</td> 
+							<td>{{data.magic}}</td> 
+							<td>{{data.opId}}</td> 
+							<td>{{data.opType}}</td> 
+							<td>{{data.open}}</td>
+							<td>{{data['openDate'] | date:'medium'}}</td>
+							<td>{{data.profit}}</td>
+		                </tr>
+		            </tbody>            
+			    </table>
+			</div>
+
+		    <ul class="pagination">
+		        <li class="ng-scope"><a ng-click="selectItemsPerPage(10)" class="ng-binding">10</a></li>
+		        <li class="ng-scope"><a ng-click="selectItemsPerPage(20)" class="ng-binding">20</a></li>
+		        <li class="ng-scope"><a ng-click="selectItemsPerPage(30)" class="ng-binding">30</a></li>
+		    </ul>
+
+		    <uib-pagination ng-model="currentPage" total-items="totalItems" items-per-page='itemsPerPage' direction-links='false' num-pages='numPages'></uib-pagination>
+		    <ul class="pagination">
+		        <li class="ng-scope"><a ng-click="setPage(-1)" class="ng-binding">last page</a></li>
+		    </ul>
+		</div>
+	</div>
+
+		    
+	
+
+</div>
+	
