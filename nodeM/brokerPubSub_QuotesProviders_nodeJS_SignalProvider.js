@@ -841,19 +841,19 @@ setTimeout(function(){
 	    	level: 'error',
 	    	path: 'C:/4Casters/NodeLogs/4casterLogApp-error.log',  // log INFO and above to a file
 	    	period: '1d',   // daily rotation
-	    	count: 3        // keep 3 back copies
+	    	count: 1        // keep 3 back copies
 	    },
 	    {
 	    	level: 'info',
 	    	path: 'C:/4Casters/NodeLogs/4casterLogApp-info.log',  // log INFO and above to a file
 	    	period: '1d',   // daily rotation
-	    	count: 3       // keep 3 back copies
+	    	count: 1       // keep 3 back copies
 	    },
 	    {
 	      	level: 'fatal',
 	      	path: 'C:/4Casters/NodeLogs/4casterLogApp-fatal.log',  // log INFO and above to a file
 	      	period: '1d',   // daily rotation
-	      	count: 3        // keep 3 back copies
+	      	count: 1        // keep 3 back copies
 	    }
 	  ]
 	});
