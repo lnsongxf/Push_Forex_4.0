@@ -26,7 +26,12 @@ if listener1 == 1
             display(sprintf('Close Position: %s ', messagePub));
         elseif opOpen == 0
             %open position
-            messagePub = sprintf('price=%s,lots=1,slippage=1.5,sl=1220,tp=1220,magic=9999,op=-1',messageFirstArr{4} )
+            r_op = randi([1 2]);
+            op = '1';
+            if r_op == 2
+                op = '-1';
+            end
+            messagePub = sprintf('price=%s,lots=1,slippage=1.5,sl=1220,tp=1220,magic=9999,op=%s',messageFirstArr{4},op )
             display(sprintf('Open Position: %s ', messagePub));
             opOpen = 2;   %waiting status message to confirm the open position
         else

@@ -39,6 +39,14 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
     };
 
 
+    $('#nav-menu li').on('click', function(){
+        var $this = $(this);  
+        if(!$this.hasClass('active')){
+            $this.parent().find('li.active').removeClass("active");
+            $this.addClass("active");
+        }
+    });
+
     $scope.cross_list = [
       'AUDNZD',
       'AUDCAD',
@@ -246,6 +254,7 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
                       current_worker.sockSub.unsubscribe(event.data.d);
                     }else if (event.data.type == 'backtestFinished') {
                       console.log('backtestFinished: ',event.data.d);
+                      $scope.showBacktestResult(event.data.d);
                       // finish backtest
                       //send message to close matlab socket 
                       current_worker.sockPub.send(['SYSTEMSTATUS','BACKTESTFINISHED']);
@@ -282,9 +291,10 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
       var crossArr = [];
 
       var updateResults = function(platform,source,cross,timeFrame,from,to,dataLenght){
+        console.log("update result dataLenght: "+dataLenght);
         callback_number++;
         console.log("backtest from: "+from+" to: "+to);
-        crosses_data.push({platform:platform,source:source,cross:cross,timeFrame:timeFrame,from:from,to:to,dataLenght:length});
+        crosses_data.push({platform:platform,source:source,cross:cross,timeFrame:timeFrame,from:from,to:to,dataLenght:dataLenght});
         console.log("02: ",crosses_data[callback_number-1]);
         if( callback_number == cross_list.length){
           console.log(" create worker");
@@ -595,6 +605,8 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
       
       console.log("from before: ",from);
       console.log("to before: ",to);
+      console.log("dataLenght: "+cross_list[0].dataLenght);
+      console.log("from: "+from);
       get_quotes(platform,source,cross_list[0].cross,cross_list[0].dataLenght,cross_list[0].timeFrame,from,to);      
     }
 
@@ -621,9 +633,9 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
             console.log(" $scope.inputStopValue: "+ $scope.inputStopValue);
 
             //TO CHANGE WHEN THE HISTORY SERVICE IS READY  
-
+            console.log("start backtest");
             paramArr = [{'cross':'EURGBP','timeFrame':'m1','dataLenght':'v5'}];
-            $scope.startBacktest( paramArr, '2016-01-20 13:47', '2016-02-05 14:04', 'MT4', 'ACTIVETRADES' );
+            $scope.startBacktest( paramArr, '2016-01-20 13:47', '2016-02-05 14:04', 'MT4', 'ACTIVTRADES' );
           }
         });
 
@@ -632,21 +644,21 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
     }
 
     // START BACKTEST EURGBP
-    //$scope.startBacktest([{'cross':'EURGBP','timeFrame':'m1','dataLenght':'v5'}],'2016-01-20 13:47','2016-02-05 14:04','MT4','ACTIVETRADES');
+    //$scope.startBacktest([{'cross':'EURGBP','timeFrame':'m1','dataLenght':'v5'}],'2016-01-20 13:47','2016-02-05 14:04','MT4','ACTIVTRADES');
 
     /*setTimeout(function(){
       console.log("second call");
-      $scope.startBacktest([{'cross':'EURGBP','timeFrame':'m1','dataLenght':'v5'}],'2016-01-25 13:47','2016-02-02 14:04','MT4','ACTIVETRADES');
+      $scope.startBacktest([{'cross':'EURGBP','timeFrame':'m1','dataLenght':'v5'}],'2016-01-25 13:47','2016-02-02 14:04','MT4','ACTIVTRADES');
     },30000);*/
 
     /*setTimeout(function(){
       console.log("second call");
-      $scope.startBacktest([{'cross':'EURGBP','timeFrame':'m1','dataLenght':'v5'}],'2016-01-10 13:47','2016-01-15 14:04','MT4','ACTIVETRADES');
+      $scope.startBacktest([{'cross':'EURGBP','timeFrame':'m1','dataLenght':'v5'}],'2016-01-10 13:47','2016-01-15 14:04','MT4','ACTIVTRADES');
     },30000);*/
 
     /*setTimeout(function(){
       console.log("second call");
-      $scope.startBacktest([{'cross':'EURGBP','timeFrame':'m1','dataLenght':'v5'}],'2016-01-10 13:47','2016-01-23 14:04','MT4','ACTIVETRADES');
+      $scope.startBacktest([{'cross':'EURGBP','timeFrame':'m1','dataLenght':'v5'}],'2016-01-10 13:47','2016-01-23 14:04','MT4','ACTIVTRADES');
     },30000);*/
 
 
@@ -656,12 +668,12 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
 
     /*setTimeout(function(){
       console.log("second call");
-      $scope.startBacktest([{'cross':'EURGBP','timeFrame':'m1','dataLenght':'v5'}],'2016-02-07 13:47','2016-02-15 14:04','MT4','ACTIVETRADES');
+      $scope.startBacktest([{'cross':'EURGBP','timeFrame':'m1','dataLenght':'v5'}],'2016-02-07 13:47','2016-02-15 14:04','MT4','ACTIVTRADES');
     },30000);*/
 
     /*setTimeout(function(){
       console.log("second call");
-      $scope.startBacktest([{'cross':'EURGBP','timeFrame':'m1','dataLenght':'v5'}],'2016-02-01 13:47','2016-02-15 14:04','MT4','ACTIVETRADES');
+      $scope.startBacktest([{'cross':'EURGBP','timeFrame':'m1','dataLenght':'v5'}],'2016-02-01 13:47','2016-02-15 14:04','MT4','ACTIVTRADES');
     },30000);*/
 
     //////////////////////////////Config panel//////////////////
@@ -1708,53 +1720,89 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
       }
     }
 
+
+    $scope.getPage = function(page){
+
+      if (page == 'setting') {
+        $('#container').hide();
+        $scope.backtestPage = false;
+        $('#container_algo_backtest_detail').hide();
+         $('#container_create_algo').hide();
+        $('container_algo_setting').show();
+      }else if (page == 'algorithms') {
+        $scope.backtestPage = false;
+        $('#container_algo_backtest_detail').hide();
+         $('#container_create_algo').hide();
+        $('container_algo_setting').hide();
+        $('#container').show();
+      }else if (page == 'createAlgo') {
+        $scope.backtestPage = false;
+        $('#container_algo_backtest_detail').hide();
+        $('#container_algo_setting').hide();
+        $('#container').hide();
+        $('#container_create_algo').show();
+      };
+
+    }
+
+
     $scope.hideBacktestAndIntegrationTest = function(){
       $scope.show_conf_app_panel = true;
       $scope.algo_conf_right_conf_algo = true;
-      $(".algo_conf_right_conf_app").css( "top", "0px" );
-      $('#container_algo_backtest_detail').animate({'top': '501px'}, 1000, function() {
+      $scope.backtestPage = false;
+      //$(".algo_conf_right_conf_app").css( "top", "0px" );
+
+      $('#container_algo_backtest_detail').hide();
+      $('#container_create_algo').hide();
+      $('container_algo_setting').hide();
+      $('#container').show();
+
+      /*$('#container_algo_backtest_detail').animate({'top': '501px'}, 1000, function() {
         $('#container').animate({'margin-top': '0px'});
-      });
+      });*/
     }
 
-    $scope.showBacktestAndIntegrationTest = function(){
 
-      $scope.show_conf_app_panel = false;
-      $scope.algo_conf_right_conf_algo = false;
-      $(".algo_conf_right_conf_app").css( "top", "41px" );
+    $scope.showBacktestResult = function(objResult){
 
+      console.log("objResult: ",objResult);
+     
+      var cumulativeChart = ['Cumulative'];
+      cumulativeChart = cumulativeChart.concat( objResult.tot_backtest_comulative );
 
       var indexChartVar = c3.generate({
         bindto: '#backtest_chart',
         padding: {
-            top:0
+            top:0,
+            right:20
         },
         size: {
           height: 300
         },
         data: {
             columns: [
-              ['Comulative', 50, 70, 60, 100, 85, 115, 125, 175, 165, 175, 195, 235, 220, 255, 265, 315, 305, 315, 335, 325, 335, 355],
-              ['PL', 50, 20, -10, 40, -15, 35, 10, 50, -10, 10, 20, 50, 20, -10, 40, -15, 35, 10, 50, -10, 10, 20]
+              //['Comulative', 50, 70, 60, 100, 85, 115, 125, 175, 165, 175, 195, 235, 220, 255, 265, 315, 305, 315, 335, 325, 335, 355],
+              //['PL', 50, 20, -10, 40, -15, 35, 10, 50, -10, 10, 20, 50, 20, -10, 40, -15, 35, 10, 50, -10, 10, 20]
+              cumulativeChart
             ],
             types: {
-              Comulative: 'area-spline'
+              Cumulative: 'area-spline'
             },
-            axes: {
+            /*axes: {
               PL: 'y2' // ADD
-            },
+            },*/
             onclick: function (d, element) { }
             //type: 'spline'
         },
-        subchart: {
+        /*subchart: {
           show: true,
           size:{
             height: 30
           }
-        },
-        zoom: {
+        },*/
+        /*zoom: {
             enabled: true
-        },
+        },*/
         legend: {
            hide: true
         },
@@ -1762,29 +1810,35 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
           y: {
             label: { // ADD
               show: true,
-              text: 'Comulative',
+              text: 'Cumulative',
               position: 'outer-middle'
             }
           },
-          y2: {
+          /*y2: {
             show: true,
             label: { // ADD
               text: 'P&L',
               position: 'outer-middle'
             }
-          }
+          }*/
         },
         color: {
-            //pattern: ['#414345','#bdbdbd']
+            //pattern: ['#bdbdbd','#4B4E50']
             pattern: ['#4B4E50','#bdbdbd']
+            //pattern: ['#bdbdbd']
+
         }
       });
 
+      setTimeout(function(){
+        $("#backtest_chart").find(".extent").css({'width': '785px'});
+      },1000);
 
+      var pipsLoss = -1 * objResult.loss;
       var profitLoss_arr = [];
       profitLoss_arr.push(
-          ['Profit',123],
-          ['Loss',57]
+          ['Profit',objResult.profit],
+          ['Loss',pipsLoss]
       );
       var profitLoss_chart = c3.generate({
           bindto: "#profitLoss",
@@ -1841,16 +1895,30 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
               pattern: ['#7FFFFF','#FF0067']
           }
       }); 
-      $("#profitLoss").find(".c3-chart-arcs-title")[0].innerHTML = 123;
+      $("#profitLoss").find(".c3-chart-arcs-title")[0].innerHTML = objResult.profit;
       $("#profitLoss").find(".c3-chart-arcs-title").css({'fill': '#7FFFFF'});
 
-      var drawdown_arr = [];
-      drawdown_arr.push(
-          ['Max',12],
-          ['Min',5]
+      var best_trade = '';
+      var worst_trade = '';
+      if ( objResult.best_trade < 0) {
+        best_trade = -1 * objResult.best_trade;
+      }else{
+        best_trade =  objResult.best_trade;
+      }
+      if ( objResult.worst_trade < 0 ) {
+        worst_trade = -1 * objResult.worst_trade;
+      }else{
+        worst_trade = objResult.worst_trade;
+      }
+      console.log("best_trade "+best_trade);
+      console.log("worst_trade "+worst_trade);
+      var trades_arr = [];
+      trades_arr.push(
+          ['best_trade',best_trade],
+          ['worst_trade',worst_trade]
       );
       var profitLoss_chart = c3.generate({
-          bindto: "#drawdown",
+          bindto: "#bestWorstTrades",
           padding: {
               bottom: 20
           },
@@ -1868,17 +1936,17 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
               selection: {
                   enabled: true
               },
-              columns: drawdown_arr,
+              columns: trades_arr,
               type : 'donut',
               onclick: function (d, i) { 
                   console.log("onclick", d, i); 
                   console.log("value", d.value); 
-                  $("#drawdown").find(".c3-chart-arcs-title")[0].innerHTML = d.value;
+                  $("#bestWorstTrades").find(".c3-chart-arcs-title")[0].innerHTML = d.value;
 
-                  if (d.name == "Min") {
-                      $("#drawdown").find(".c3-chart-arcs-title").css({'fill': '#7FFFFF'});
-                  }else if (d.name == "Max") {
-                      $("#drawdown").find(".c3-chart-arcs-title").css({'fill': '#FF0067'});
+                  if (d.name == "best_trade") {
+                      $("#bestWorstTrades").find(".c3-chart-arcs-title").css({'fill': '#7FFFFF'});
+                  }else if (d.name == "worst_trade") {
+                      $("#bestWorstTrades").find(".c3-chart-arcs-title").css({'fill': '#FF0067'});
                   }
 
               },
@@ -1901,16 +1969,16 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
               }
           },
           color: {
-              pattern: ['#FF0067','#7FFFFF']
+              pattern: ['#7FFFFF','#FF0067']
           }
       }); 
-      $("#drawdown").find(".c3-chart-arcs-title")[0].innerHTML = 5;
-      $("#drawdown").find(".c3-chart-arcs-title").css({'fill': '#7FFFFF'});
+      $("#bestWorstTrades").find(".c3-chart-arcs-title")[0].innerHTML = best_trade;
+      $("#bestWorstTrades").find(".c3-chart-arcs-title").css({'fill': '#7FFFFF'});
 
       var shortLongPositions_arr = [];
       shortLongPositions_arr.push(
-          ['Short',7],
-          ['Long',15]
+          ['Short',objResult.short_trades],
+          ['Long',objResult.long_trades]
       );
       var profitLoss_chart = c3.generate({
           bindto: "#shortLongPositions",
@@ -1938,9 +2006,9 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
                   console.log("value", d.value); 
                   $("#shortLongPositions").find(".c3-chart-arcs-title")[0].innerHTML = d.value;
 
-                  if (d.name == "Short") {
+                  if (d.name == "Long") {
                       $("#shortLongPositions").find(".c3-chart-arcs-title").css({'fill': '#7FFFFF'});
-                  }else if (d.name == "Long") {
+                  }else if (d.name == "Short") {
                       $("#shortLongPositions").find(".c3-chart-arcs-title").css({'fill': '#FF0067'});
                   }
 
@@ -1964,17 +2032,17 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
               }
           },
           color: {
-              pattern: ['#7FFFFF','#FF0067']
+              pattern: ['#FF0067','#7FFFFF']
           }
       }); 
-      $("#shortLongPositions").find(".c3-chart-arcs-title")[0].innerHTML = 7;
+      $("#shortLongPositions").find(".c3-chart-arcs-title")[0].innerHTML = objResult.short_trades;
       $("#shortLongPositions").find(".c3-chart-arcs-title").css({'fill': '#7FFFFF'});
 
 
       var profitLossTrades_arr = [];
       profitLossTrades_arr.push(
-          ['Profit',17],
-          ['Loss',25]
+          ['Profit',objResult.profit_trades],
+          ['Loss',objResult.loss_trades]
       );
       var profitLoss_chart = c3.generate({
           bindto: "#profitLossTrades",
@@ -2031,14 +2099,14 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
               pattern: ['#7FFFFF','#FF0067']
           }
       }); 
-      $("#profitLossTrades").find(".c3-chart-arcs-title")[0].innerHTML = 17;
+      $("#profitLossTrades").find(".c3-chart-arcs-title")[0].innerHTML = objResult.profit_trades;
       $("#profitLossTrades").find(".c3-chart-arcs-title").css({'fill': '#7FFFFF'});
 
 
       var consecutiveWinLoss_arr = [];
       consecutiveWinLoss_arr.push(
-          ['Win',34],
-          ['Loss',5]
+          ['Win',objResult.consecutive_profit_trades],
+          ['Loss',objResult.consecutive_loss_trades]
       );
       var profitLoss_chart = c3.generate({
           bindto: "#consecutiveWinLoss",
@@ -2095,13 +2163,29 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
               pattern: ['#7FFFFF','#FF0067']
           }
       }); 
-      $("#consecutiveWinLoss").find(".c3-chart-arcs-title")[0].innerHTML = 34;
+      $("#consecutiveWinLoss").find(".c3-chart-arcs-title")[0].innerHTML = objResult.consecutive_profit_trades;
       $("#consecutiveWinLoss").find(".c3-chart-arcs-title").css({'fill': '#7FFFFF'});
 
-      
 
-      $('#container').animate({'margin-top': '501px'}, 1000, function() {
-        $('#container_algo_backtest_detail').animate({'top': '40px'});
+    }
+
+
+    $scope.showBacktestAndIntegrationTest = function(){
+
+      $scope.backtestPage = true;
+
+      $scope.show_conf_app_panel = false;
+      $scope.algo_conf_right_conf_algo = false;
+      $(".algo_conf_right_conf_app").css( "top", "41px" );
+
+      $('#container').hide();
+      $('#container_algo_backtest_detail').hide();
+      $('container_algo_setting').hide();
+      $('#container_algo_backtest_detail').show();
+
+
+      //$('#container').animate({'margin-top': '501px'}, 1000, function() {
+        //$('#container_algo_backtest_detail').animate({'top': '40px'});
         //setTimeout(function(){
 
 
@@ -2211,7 +2295,7 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
           $scope.$digest();
 
         //},2000);
-      });
+      //});
     }
 
     $scope.skipIntegrationTest = function(){

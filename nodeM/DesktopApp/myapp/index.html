@@ -62,7 +62,7 @@
       <div ng-if="statusAlert" class="alert alert-danger status_alert" role="alert">{{statusAlert || ''}}</div>
     </div>
     <div id="header_app">
-      <span class="back_button" ng-if="!algo_conf_right_conf_algo"ng-click="hideBacktestAndIntegrationTest()"><i class="fa fa-arrow-left fa-border button_border"></i></span>
+      <span class="back_button" ng-if="backtestPage" ng-click="hideBacktestAndIntegrationTest()"><i class="fa fa-arrow-left fa-border button_border"></i></span>
       <!--4Casters Console-->------
       <span class="conf_button"><i class="fa fa-bars fa-border button_border"></i></span>
     </div>
@@ -348,15 +348,15 @@
         </div>
       </div>
       <div class="row" style="margin-left:0px;margin-right:0px;height:45%;">
-        <div class="btn-group btn-group-justified" style="margin-top:-10px">
+        <div class="btn-group btn-group-justified" style="margin-top:10px">
 
           <div class="btn" style="height:100px;padding:0px;cursor: default;">
             <div id="profitLoss"></div>
             <div class="labelDonutsChart">Profit/Loss pips</div>
           </div>
           <div class="btn" style="height:100px;padding:0px;cursor: default;">
-            <div id="drawdown"></div>
-            <div class="labelDonutsChart">Max/Min drawdown</div>
+            <div id="bestWorstTrades"></div>
+            <div class="labelDonutsChart">Best/Worst trade</div>
           </div>
           <div class="btn" style="height:100px;padding:0px;cursor: default;">
             <div id="shortLongPositions"></div>
@@ -374,8 +374,8 @@
         </div>
       </div>
     </div>
-    <div class="algo_conf_right_conf_app">
-      <form ng-if="show_conf_app_panel">
+    <div id="container_algo_setting">
+      <form>
         <div class="form-group">
           <label for="inputUsername">Username</label>
           <input type="text" class="form-control" id="inputUsername" ng-model="userName" placeholder="Username">
@@ -393,6 +393,69 @@
           <input type="text" class="form-control" id="inputProductionIP" ng-model="ipProdServer" placeholder="ip">
         </div>
       </form>
+    </div>
+
+
+    <div id="container_create_algo">
+
+      <div class="create_algo_text">
+        Select your prefered programming language. One folder with the algorithm structure should be created in your Desktop
+      </div>
+
+      <ul class="algo_client_ul">
+        <li class="algo_client">
+          ds
+        </li>
+        <li class="algo_client">
+          ds
+        </li>
+        <li class="algo_client">
+          ds
+        </li>
+        <li class="algo_client">
+          ds
+        </li>
+      </ul>
+      <ul class="algo_client_ul" style="margin-top:-1px;border-top:0px">
+        <li class="algo_client">
+          ds
+        </li>
+        <li class="algo_client">
+          ds
+        </li>
+        <li class="algo_client">
+          ds
+        </li>
+        <li class="algo_client">
+          ds
+        </li>
+
+      </ul>
+
+    </div>
+
+        
+
+    <div class="algo_conf_right_conf_app">
+      
+      <ul id="nav-menu" style="padding:0px">
+        <li class="active nav-li" ng-click="getPage('algorithms')">
+          <a style="color: #fff;text-decoration: none;"  >
+            <span class="font-bold" translate="">Algorithms</span> 
+          </a>
+        </li>
+        <li class="nav-li" ng-click="getPage('setting')">
+          <a style="color: #fff;text-decoration: none;"  >
+            <span class="font-bold" translate="">Setting</span> 
+          </a>
+        </li>
+        <li class="nav-li" ng-click="getPage('createAlgo')">
+          <a style="color: #fff;text-decoration: none;" >
+            <span class="font-bold" translate="" >Create</span> 
+          </a>
+        </li>
+      </ul>
+
     </div>
    
     <div class="algo_conf_right_conf_algo">

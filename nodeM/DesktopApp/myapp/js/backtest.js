@@ -1077,7 +1077,12 @@ self.addEventListener('message',  function(event){
 								var operation_result = parseFloat((operation_result3 * 1000000));
 								operation_result = operation_result.toFixed(0);
 								console.log('OPERATION result: ',operation_result);
-								var last_operation = parseFloat(tot_backtest_all_operations[tot_backtest_all_operations.length-1]);
+								var last_operation = null;
+								if ( tot_backtest_all_operations.length == 0) {
+									last_operation = null;
+								}else{
+									last_operation = parseFloat(tot_backtest_all_operations[tot_backtest_all_operations.length-1]);
+								}
 								console.log('OPERATION last_operation: ',last_operation);
 								if ( tot_backtest_comulative.length > 0) {
 									tot_backtest_comulative.push( parseFloat(tot_backtest_comulative[tot_backtest_comulative.length-1]) + parseFloat(operation_result) );  //IF WE HAVE 5 NUMBERS, IN ORDER TO CALCULATE THE TOTAL OF PIPS WE HAVE Divide FOR 10 
@@ -1099,12 +1104,14 @@ self.addEventListener('message',  function(event){
 									console.log('OPERATION profit_trades: ',profit_trades);
 									profit = parseFloat(profit) + parseFloat(operation_result);
 									console.log('OPERATION profit: ',profit);
-									if (parseFloat(last_operation) > 0 || last_operation == undefined) {
+									console.log("last_operation 2: "+last_operation);
+									if (parseFloat(last_operation) > 0 || last_operation == undefined || last_operation == null || last_operation == NaN) {
 										consecutive_profit_trades_arr.push(1);
 									}else if (parseFloat(last_operation) < 0 || last_operation == undefined) {
 										if (consecutive_profit_trades < consecutive_profit_trades_arr.length) {
 											consecutive_profit_trades = consecutive_profit_trades_arr.length;
 										}
+										consecutive_profit_trades_arr = [];
 										consecutive_profit_trades_arr.push(1);
 									};
 									console.log("OPERATION  operation_result: ", operation_result);
@@ -1124,12 +1131,14 @@ self.addEventListener('message',  function(event){
 									console.log('OPERATION loss_trades: ',loss_trades);
 									loss = parseFloat(loss) + parseFloat(operation_result);
 									console.log('OPERATION loss: ',loss);
-									if (parseFloat(last_operation) < 0 || last_operation == undefined) {
+									console.log("last_operation 3: "+last_operation);
+									if (parseFloat(last_operation) < 0 || last_operation == undefined || last_operation == null || last_operation == NaN) {
 										consecutive_loss_trades_arr.push(1);
 									}else if (parseFloat(last_operation) > 0) {
 										if (parseFloat(consecutive_loss_trades) < consecutive_loss_trades_arr.length) {
 											consecutive_loss_trades = consecutive_loss_trades_arr.length;
 										}
+										consecutive_loss_trades_arr = [];
 										consecutive_loss_trades_arr.push(1);
 									};
 									if ( worst_trade != null && worst_trade != 'null') {
@@ -1217,6 +1226,9 @@ self.addEventListener('message',  function(event){
 
 //[{"v1":[]},{"v5":[]},{"v10":[]},{"v20":[]},{"v40":[]},{"v100":[]}];
 var getIndexValuesNumberToSend = function(type){
+	var index = '';
+	console.log("type: "+type);
+	console.log("index: "+index);
 	switch (type){
 		case 'v1':
     		index = 1;
@@ -1270,6 +1282,7 @@ var sendNewDataToSignalProvider = function(indexQuoteInt){
 						console.log("checkM1..: "+ checkM1 );
 			    		var timeFrame = 'm1';
 			    		var indexTimeFrame = 0;
+			    		console.log("setting[i]: ",setting[i]);
 			    		var indexDataLenght = getIndexValuesNumberToSend( setting[i].dataLenght );
 			    		console.log("indexDataLenght: ",indexDataLenght);
 			    		var quote = runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty][ setting[i].cross ][indexTimeFrame][timeFrame][0]['v1'].slice(0,  indexDataLenght);
@@ -1430,6 +1443,15 @@ var sendNewDataToSignalProvider = function(indexQuoteInt){
 		};	
 	};
 	if( countFinishBackTest.length == setting.length){
+
+
+		if ( consecutive_loss_trades == 0 && consecutive_loss_trades_arr.length > 0) {
+			consecutive_loss_trades = consecutive_loss_trades_arr.length;
+		};
+		if ( consecutive_profit_trades == 0 && consecutive_profit_trades_arr.length > 0) {
+			consecutive_profit_trades = consecutive_profit_trades_arr.length;
+		};
+
 		self.postMessage(
 			{'d': 
 				{
