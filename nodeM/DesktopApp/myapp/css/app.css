@@ -43,48 +43,78 @@ body {
 .algo_client_ul{
   position: relative;
   width: 100%;
-  height: 215px;
+  height: 143px;
   padding: 0px;
   margin-bottom: 0px;
 }
 
 .create_algo_text{
   text-align: center;
-  height: 30px;
+  height: 32px;
   width: 100%;
   line-height: 30px;
   color: #fff;
+}
+
+.algo_client_logo{
+  height: 50px;width: 50px;margin-top:0px
 }
 
 .algo_client_ul > li:nth-child(1){
   border-left:1px solid #000;
 }
 
-.algo_client_ul > li:nth-child(4){
+.algo_client_ul > li:nth-child(6){
   border-right:1px solid #000;
-  width:216px;
+  width:146px;
 }
 
-.algo_client_ul > li:active{
+/*.algo_client_ul > li:active{
   background-color: #1c1c1c;
+}*/
+
+.algo_client_cont {
+  color: white;
+  height: 40px;
+  width: 100%;
+  line-height: 30px;
+  position: absolute;
+  bottom: -41px;
+  background-color: #262626;;
 }
 
-.algo_client_ul > li:hover{
+.algo_client_label{
+  float: left;margin-left: 5px;margin-top: 5px;
+}
+
+.algo_client_take_button{
+  height: 30px;
+  line-height: 25px;
+  margin-top: 5px;
+  position: absolute;
+  width: 60px;
+  right: 5px;
+  background-color: #000;
+  border: 0px;
+  outline: none !important;
+
+}
+/*.algo_client_ul > li:hover{
   -moz-box-shadow:    inset 0 0 10px #1c1c1c;
   -webkit-box-shadow: inset 0 0 10px #1c1c1c;
   box-shadow:         inset 0 0 10px #1c1c1c;
-}
+}*/
 
 .algo_client{
-  width:215px;
-  height:215px;
+  width:143px;
+  height:143px;
   border-top:1px solid #000;
   border-right:1px solid #000;
   border-bottom:1px solid #000;
   background-color: #373739;
   position: relative;
   float: left;
-  padding: 50px;
+  padding-top: 40px;
   text-align: center;
   list-style-type:none
 }

@@ -1721,6 +1721,18 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
     }
 
 
+    $scope.algoClientEffectUp = function(e){
+      //$(e.currentTarget).animate({bottom: "0px"});
+      $(e.currentTarget).find(".algo_client_cont").animate({bottom:'0px'}, 200);
+      $(e.currentTarget).find("img.algo_client_logo").animate({'margin-top':'-16px'}, 200);
+    }
+    $scope.algoClientEffectDown = function(e){
+      //$(e.currentTarget).animate({bottom: "0px"});
+      $(e.currentTarget).find(".algo_client_cont").animate({bottom:'-41px'}, 200);
+      $(e.currentTarget).find("img.algo_client_logo").animate({'margin-top':'0px'}, 200);
+    }
+
+
     $scope.getPage = function(page){
 
       if (page == 'setting') {
