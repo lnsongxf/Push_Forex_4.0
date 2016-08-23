@@ -17,11 +17,17 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
     $scope.show_conf_app_panel = true;
     $scope.algo_conf_right_conf_algo = true;
 
+    $scope.zmq_dir_include = 'C:/PROGRA~1/ZEROMQ~1.4/include';
+    $scope.zmq_dir_lib = 'C:/PROGRA~1/ZEROMQ~1.4/lib/';
+    $scope.zmq_lib = 'libzmq-v120-mt-4_0_4';
+
     //$domain = "/Applications/4Casters/";
     $scope.domain = "C:/4CastersApp/";
 
+    var ncp = require('ncp').ncp;
     var zmq = require('zmq');
     var fs = require("fs");
+    var path = require('path');
     var request = require('request');
     $scope.sendRequest = request;
     var crypto = require('crypto');
@@ -1718,6 +1724,51 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
         $scope.dataCurrentAlgos.integrationTest.statusLabel = 'Error';*/
         //stop exe  
       }
+    }
+
+    $scope.saveAlgoTemplate = function(templateType){
+
+      if (templateType == 'Matlab') {
+
+        
+        //var execPath = path.dirname( process.execPath );
+        var execPath = process.cwd();
+        var algoTemplateFolder = execPath + '/AlgoTemplate/Matlab/';
+        console.log("algoTemplateFolder: "+algoTemplateFolder);
+        var userName = process.env['USERPROFILE'].split(path.sep)[2];
+        console.log("userName: "+userName);
+        var d = new Date();
+        var n = d.getTime();
+        var newAlgoTemplateFolderName = 'matlab_algo_'+n;
+        var destAlgoTemplateFolder = 'C:/Users/'+userName+'/Desktop/'+newAlgoTemplateFolderName;
+
+        ncp(algoTemplateFolder, destAlgoTemplateFolder, function (err) {
+          if (err) {
+            return console.error(err);
+          }
+          console.log('Copying files complete.');
+
+          //C:\code\Push_Forex_4.0\nodeM\MatlabZeroMQ\matlab-zmq\src
+          var configCompile = destAlgoTemplateFolder+'/4casters_matlab_lib/MatlabZeroMQ/matlab-zmq/configCompile.txt';
+
+          var zmq_dir_src = destAlgoTemplateFolder+'/4casters_matlab_lib/MatlabZeroMQ/matlab-zmq/src';
+          var text = zmq_dir_src+';'+$scope.zmq_dir_include+';'+$scope.zmq_dir_lib+';'+$scope.zmq_lib;
+          fs.writeFile(configCompile, text, function(err) {
+              if(err) {
+                  return console.log(err);
+              }
+              console.log("The file was saved!");
+          }); 
+
+        });
+
+        //$scope.copyRecursiveSync(algoTemplateFolder,destAlgoTemplateFolder);
+        //destAlgoTemplateFolder+
+        //AlgoTemplate\Matlab\4casters_matlab_lib/configCompile.txt
+
+      }
+
+
     }
 
 

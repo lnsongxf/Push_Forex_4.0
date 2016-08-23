@@ -181,7 +181,7 @@ var QuotesModule = (function(){
 	    			break;
 	    		case "m50":
 	    			prevTimeFrame = 'm5';
-	    			index = 3;
+	    			index = 1;
 	    			numValues = 10;   // m5 x 10 = m50
 	    			break;
 	    		case "h1":
