@@ -19,7 +19,7 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
 
     $scope.zmq_dir_include = 'C:/PROGRA~1/ZEROMQ~1.4/include';
     $scope.zmq_dir_lib = 'C:/PROGRA~1/ZEROMQ~1.4/lib/';
-    $scope.zmq_lib = 'libzmq-v120-mt-4_0_4';
+    $scope.zmq_lib = 'libzmq-v120-mt-4_0_4';  //for Visual Studio 2013
 
     //$domain = "/Applications/4Casters/";
     $scope.domain = "C:/4CastersApp/";
@@ -1726,14 +1726,56 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
       }
     }
 
+
+    $scope.windowsVersion = [
+      'Windows7',
+      'Windows8',
+      'Windows10',
+    ];
+
+    $scope.matlabVersion = [
+      'Matlab R2014',
+      'Matlab R2015',
+      'Matlab R2016',
+    ];
+    $scope.windowsVersionSelected = 'Windows7';
+    $scope.matlabVersionSelected = 'Matlab R2014';
+
+    $scope.changeWindowsVersion= function(data){
+      $scope.windowsVersionSelected = data;
+    };
+
+    $scope.changeMatlabVersion= function(data){
+      $scope.matlabVersionSelected = data;
+    };
+
+    $scope.matlabDownloadClient = false;
+    $scope.closeModal = function(name){
+      if (name == 'matlabDownloadClient') {
+        $scope.matlabDownloadClient = false;
+      };
+    }
+
     $scope.saveAlgoTemplate = function(templateType){
+      if (templateType == 'Matlab') {
+
+        $scope.matlabDownloadClient = true;
+        //var execPath = path.dirname( process.execPath );
+        //Matlab_R2014_windows7_64
+      }
+    }
+
+    $scope.downloadAlgoTemplate = function(templateType){
 
       if (templateType == 'Matlab') {
 
-        
-        //var execPath = path.dirname( process.execPath );
         var execPath = process.cwd();
-        var algoTemplateFolder = execPath + '/AlgoTemplate/Matlab/';
+
+        //$scope.windowsVersionSelected = 'Windows7';
+        //$scope.matlabVersionSelected = 'Matlab R2014';
+        var mat = $scope.matlabVersionSelected.split(' ');
+
+        var algoTemplateFolder = execPath + '/AlgoTemplate/'+mat[0]+'_'+mat[1]+'_'+$scope.windowsVersionSelected;
         console.log("algoTemplateFolder: "+algoTemplateFolder);
         var userName = process.env['USERPROFILE'].split(path.sep)[2];
         console.log("userName: "+userName);
@@ -1758,16 +1800,11 @@ movieStubApp.controller("homeCtrl", function ($scope, $location) {
                   return console.log(err);
               }
               console.log("The file was saved!");
+              $scope.matlabDownloadClient = false;
           }); 
-
         });
 
-        //$scope.copyRecursiveSync(algoTemplateFolder,destAlgoTemplateFolder);
-        //destAlgoTemplateFolder+
-        //AlgoTemplate\Matlab\4casters_matlab_lib/configCompile.txt
-
       }
-
 
     }
 

@@ -186,7 +186,7 @@ var QuotesModule = (function(){
 	    			break;
 	    		case "h1":
 	    			prevTimeFrame = 'm30';
-	    			index = 4;
+	    			index = 3;
 	    			numValues = 2;  // m30 x 2 = h1
 	    			break;
 	    		case "h4":
@@ -205,6 +205,13 @@ var QuotesModule = (function(){
 	    			numValues = 5;  // d1 x 7 = w1
 	    			break;
 			}
+
+			/*if (timeFrame == 'm50') {
+				console.log("m50, index m5: "+index);
+				console.log("m50, prevTimeFrame: "+prevTimeFrame);
+				console.log("m50, obj m5: ",runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty][cross][index]);
+			};*/
+
 
 			var tmpArrPreviousTimeFrameQuotesV10 = runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty][cross][index][prevTimeFrame][2]['v10']; //we are going to get the previous timeframe array(es: if timeframe is m5 we get m1)
 			if( tmpArrPreviousTimeFrameQuotesV10.length >= numValues ){
