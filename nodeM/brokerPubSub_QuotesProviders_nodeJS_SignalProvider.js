@@ -42,7 +42,7 @@ var QuotesModule = (function(){
 		    for(var key in arr[i]){
 		        var attrName = key;
 		        var attrValue = arr[i][key];
-		        _quotesObj[attrValue]=[{"m1":[]},{"m5":[]},{"m15":[]},{"m30":[]},{"h1":[]},{"h4":[]},{"d1":[]},{"w1":[]}];
+		        _quotesObj[attrValue]=[{"m1":[]},{"m5":[]},{"m15":[]},{"m30":[]},{"m50":[]},{"h1":[]},{"h4":[]},{"d1":[]},{"w1":[]}];
 				for(var j=0; j<_quotesObj[attrValue].length; j++){
 					_quotesObj[attrValue][j][Object.keys(_quotesObj[attrValue][j])[0]]=[{"v1":[]},{"v5":[]},{"v10":[]},{"v20":[]},{"v40":[]},{"v100":[]}];
 		        }
@@ -75,6 +75,7 @@ var QuotesModule = (function(){
 		        	"m5":{open:null,max:null,min:null,close:null,volume:0},
 		        	"m15":{open:null,max:null,min:null,close:null,volume:0},
 		        	"m30":{open:null,max:null,min:null,close:null,volume:0},
+		        	"m50":{open:null,max:null,min:null,close:null,volume:0},
 		        	"h1":{open:null,max:null,min:null,close:null,volume:0},
 		        	"h4":{open:null,max:null,min:null,close:null,volume:0},
 		        	"d1":{open:null,max:null,min:null,close:null,volume:0},
@@ -178,6 +179,11 @@ var QuotesModule = (function(){
 	    			index = 2;
 	    			numValues = 2;   // m15 x 2 = m30
 	    			break;
+	    		case "m50":
+	    			prevTimeFrame = 'm5';
+	    			index = 1;
+	    			numValues = 10;   // m5 x 10 = m50
+	    			break;
 	    		case "h1":
 	    			prevTimeFrame = 'm30';
 	    			index = 3;
@@ -185,20 +191,27 @@ var QuotesModule = (function(){
 	    			break;
 	    		case "h4":
 	    			prevTimeFrame = 'h1';
-	    			index = 4;
+	    			index = 5;
 	    			numValues = 4;  // h1 x 4 = h4
 	    			break;
 				case "d1":
 	    			prevTimeFrame = 'h4';
-	    			index = 5;
+	    			index = 6;
 	    			numValues = 6;  // h4 x 6 = d1
 	    			break;
 				case "w1":
 	    			prevTimeFrame = 'd1';
-	    			index = 6;
+	    			index = 7;
 	    			numValues = 5;  // d1 x 7 = w1
 	    			break;
 			}
+
+			/*if (timeFrame == 'm50') {
+				console.log("m50, index m5: "+index);
+				console.log("m50, prevTimeFrame: "+prevTimeFrame);
+				console.log("m50, obj m5: ",runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty][cross][index]);
+			};*/
+
 
 			var tmpArrPreviousTimeFrameQuotesV10 = runningProviderTimeFrameObjs[tmpTimeFrameQuoteProperty][cross][index][prevTimeFrame][2]['v10']; //we are going to get the previous timeframe array(es: if timeframe is m5 we get m1)
 			if( tmpArrPreviousTimeFrameQuotesV10.length >= numValues ){
@@ -259,17 +272,20 @@ var QuotesModule = (function(){
     		case "m30":
     			index = 3;
     			break;
-    		case "h1":
+    		case "m50":
     			index = 4;
     			break;
-    		case "h4":
+    		case "h1":
     			index = 5;
     			break;
-			case "d1":
+    		case "h4":
     			index = 6;
     			break;
-			case "w1":
+			case "d1":
     			index = 7;
+    			break;
+			case "w1":
+    			index = 8;
     			break;
 		}
 
@@ -298,6 +314,7 @@ var QuotesModule = (function(){
 							        	"m5":{open:null,max:null,min:null,close:null,volume:0},
 							        	"m15":{open:null,max:null,min:null,close:null,volume:0},
 							        	"m30":{open:null,max:null,min:null,close:null,volume:0},
+							        	"m50":{open:null,max:null,min:null,close:null,volume:0},
 							        	"h1":{open:null,max:null,min:null,close:null,volume:0},
 							        	"h4":{open:null,max:null,min:null,close:null,volume:0},
 							        	"d1":{open:null,max:null,min:null,close:null,volume:0},
@@ -559,7 +576,7 @@ if (startSchedule == null || startSchedule == undefined){
 	logger.info('Server Start Date'+serverSetting.serverSettingList[0].startScheduleTime);
 };
 var date_start_schedule = new Date(startSchedule[0],startSchedule[1],startSchedule[2],startSchedule[3],startSchedule[4],startSchedule[5]);
-//var minutesList=[{'m1':60000},{'m5':300000},{'m15':900000},{'m30':1800000},{'h1':3600000},{'h4':14400000},{'d1':86400000},{'w1':604800000}];
+//var minutesList=[{'m1':60000},{'m5':300000},{'m15':900000},{'m30':1800000},{'m50':1800000},{'h1':3600000},{'h4':14400000},{'d1':86400000},{'w1':604800000}];
 
 
 var updatingTimeFrameTaskFunction = function(timeFrameToUpdate){
@@ -586,6 +603,7 @@ var sched_m1 = later.parse.recur().every(1).minute();
 var sched_m5 = later.parse.recur().every(5).minute();
 var sched_m15 = later.parse.recur().every(15).minute();
 var sched_m30 = later.parse.recur().every(30).minute();
+var sched_m50 = later.parse.recur().every(50).minute();
 var sched_h1 = later.parse.recur().every(1).hour();
 var sched_h4 = later.parse.recur().every(4).hour();
 var sched_d1 = later.parse.recur().every(24).hour();
@@ -595,6 +613,7 @@ later.setInterval(function() { updatingTimeFrameTaskFunction('m1') }, sched_m1);
 later.setInterval(function() { updatingTimeFrameTaskFunction('m5') }, sched_m5);
 later.setInterval(function() { updatingTimeFrameTaskFunction('m15') }, sched_m15);
 later.setInterval(function() { updatingTimeFrameTaskFunction('m30') }, sched_m30);
+later.setInterval(function() { updatingTimeFrameTaskFunction('m50') }, sched_m50);
 later.setInterval(function() { updatingTimeFrameTaskFunction('h1') }, sched_h1);
 later.setInterval(function() { updatingTimeFrameTaskFunction('h4') }, sched_h4);
 later.setInterval(function() { updatingTimeFrameTaskFunction('d1') }, sched_d1);

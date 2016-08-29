@@ -5,6 +5,23 @@ body {
   width: 100% !important;
 }
 
+
+.active{
+  background-color: #262626;
+}
+
+.nav-li{
+  height: 40px;
+  width: 100%;
+  line-height: 40px;
+  text-align: center;
+  list-style-type:none
+}
+
+.nav-li:hover{
+  background-color: #262626;
+}
+
 .dropdown-menu{
   border-radius: 0px;
 }
@@ -21,6 +38,127 @@ body {
   font-family: sans-serif;
   font-size: 20px;
   z-index: 100;
+}
+
+.modal_cont_back{
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1050;
+  display: block;
+  background-color: rgba(28, 28, 28, 0.8);
+ 
+}
+
+.modal_cont{
+  border-radius: 0px !important;
+  width: 400px;
+  height: 300px;
+  margin: 30px auto;
+  -webkit-box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    position: relative;
+    background-color: #313032;
+    border: 1px solid #999;
+    border: 1px solid rgba(0,0,0,0.2);
+    border-radius: 6px;
+    outline: 0;
+    -webkit-box-shadow: 0 3px 9px rgba(0,0,0,0.5);
+    box-shadow: 0 3px 9px rgba(0,0,0,0.5);
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+}
+
+.modal_header{
+  padding: 15px;border-bottom: 1px solid #e5e5e5;
+}
+
+.modal-title{
+  color: white;
+    font-size: 18px;
+}
+
+.algo_client_ul{
+  position: relative;
+  width: 100%;
+  height: 143px;
+  padding: 0px;
+  margin-bottom: 0px;
+}
+
+.create_algo_text{
+  text-align: center;
+  height: 32px;
+  width: 100%;
+  line-height: 30px;
+  color: #fff;
+}
+
+.algo_client_logo{
+  height: 50px;width: 50px;margin-top:0px
+}
+
+.algo_client_ul > li:nth-child(1){
+  border-left:1px solid #000;
+}
+
+.algo_client_ul > li:nth-child(6){
+  border-right:1px solid #000;
+  width:146px;
+}
+
+/*.algo_client_ul > li:active{
+  background-color: #1c1c1c;
+}*/
+
+.algo_client_cont {
+  color: white;
+  height: 40px;
+  width: 100%;
+  line-height: 30px;
+  position: absolute;
+  bottom: -41px;
+  background-color: #262626;;
+}
+
+.algo_client_label{
+  float: left;margin-left: 5px;margin-top: 5px;
+}
+
+.algo_client_take_button{
+  height: 30px;
+  line-height: 25px;
+  margin-top: 5px;
+  position: absolute;
+  width: 60px;
+  right: 5px;
+  background-color: #000;
+  border: 0px;
+  outline: none !important;
+
+}
+/*.algo_client_ul > li:hover{
+  -moz-box-shadow:    inset 0 0 10px #1c1c1c;
+  -webkit-box-shadow: inset 0 0 10px #1c1c1c;
+  box-shadow:         inset 0 0 10px #1c1c1c;
+}*/
+
+.algo_client{
+  width:143px;
+  height:143px;
+  border-top:1px solid #000;
+  border-right:1px solid #000;
+  border-bottom:1px solid #000;
+  background-color: #373739;
+  position: relative;
+  float: left;
+  padding-top: 40px;
+  text-align: center;
+  list-style-type:none
 }
 
 .conf_button{
@@ -69,7 +207,7 @@ body {
   height: 100%;
   position: absolute;
   margin: 0px 0px 0px 0px;
-  top: 501px;
+  //top: 501px;
   
 
 background: #232526; /* fallback for old browsers */
@@ -170,9 +308,8 @@ background: linear-gradient(to top, #232526 , #414345); /* W3C, IE 10+/ Edge, Fi
 
 .algo_conf_right_conf_app{
   width: 200px;
-  height: 450px;
+  height: 100%;
   position: absolute;
-  padding: 20px;
   top: 40px;
   right: -200px;
   background-color: #373739;
@@ -1147,7 +1284,7 @@ label{
 #profitLoss .c3-chart-arc path {
   stroke: transparent;
 }
-#drawdown .c3-chart-arc path {
+#bestWorstTrades .c3-chart-arc path {
   stroke: transparent;
 }
 #shortLongPositions .c3-chart-arc path {

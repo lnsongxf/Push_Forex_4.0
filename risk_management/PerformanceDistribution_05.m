@@ -369,8 +369,8 @@ classdef PerformanceDistribution_05 < handle
             
             returnsp = obj.win_operations (:,4);
             returnsn = obj.lost_operations (:,4);
-            [xPDFlatp,hPDFlatp,hBinlatp,hBinIntegratedp,hPDFIntegratedp,~] = PDFcond(latencyp,returnsp,n);
-            [xPDFlatn,hPDFlatn,hBinlatn,hBinIntegratedn,hPDFIntegratedn,~] = PDFcond(latencyn,returnsn,n);
+            [~,xPDFlatp,~,hPDFlatp,hBinlatp,hBinIntegratedp,hPDFIntegratedp,~] = PDFcond(latencyp,returnsp,n);
+            [~,xPDFlatn,~,hPDFlatn,hBinlatn,hBinIntegratedn,hPDFIntegratedn,~] = PDFcond(latencyn,returnsn,n);
             
             % PDF of the operations latency
             subplot(2,2,1)
@@ -440,7 +440,7 @@ classdef PerformanceDistribution_05 < handle
             xMax=xPDF(indexMax(1));
             xMin=min(xPDF);
             
-            % PDF of the operations latency
+            % PDF of the operations Min Returns
             subplot(2,1,1)
             [xPDFmret,hPDFmretp,hBinmretp]=PDF(minimumReturnsp,n);
             [~,hPDFmretn,hBinmretn]=PDF(minimumReturnsn,n);
@@ -451,7 +451,7 @@ classdef PerformanceDistribution_05 < handle
             xlabel('min return touched (pips)');
             ylabel('PDF');
             
-            % plot the % of positive operations as a function of latency
+            % plot the % of positive operations as a function of Min Returns
             subplot(2,1,2)
             plot(xPDF,hCDF,'-k');
             hold on
