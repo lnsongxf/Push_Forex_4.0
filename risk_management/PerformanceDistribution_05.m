@@ -241,7 +241,7 @@ classdef PerformanceDistribution_05 < handle
             
             volumes=obj.HistData1min(index,5);
             sticks=abs(obj.HistData1min(index,3)-obj.HistData1min(index,2));
-            energies=(0.5.*volumes).*(sticks./obj.freq).^2;
+            energies=(volumes).*(sticks./obj.freq).^2;
             
             
             figure
