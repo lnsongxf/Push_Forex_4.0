@@ -1,0 +1,38 @@
+            % INPUT parameters:
+            % -------------------------------------------------------------
+            % nameAlgo:                 string containing the name of the algo (your MATLAB function)
+            % N:                        first optimization parameter (use array!!) -> lag,slowly varying
+            % M:                        second optimization parameter (use array or put = 1!!) -> lead,highly varying
+            % N_greater_than_M:         if = 1 then skip loops where n<=m (required in some algo with smoothing)
+            % Cross:                    e.g. 'EURUSD'
+            % histName:                 filename containing hist prices, e.g. : 'nome_storico.csv'
+            % actTimeScale:             timescale of the hist data, in minutes
+            % newTimeScale:             new timescale to work with (rescale)
+            % transCost:                spread in pips
+            % pips_TP:                  max TP
+            % pips_SL:                  max allowed SL
+            % stdev_TP:                 stdev(volatility) for calculating TP
+            % stdev_SL:                 stdev(volatility) for calculating SL
+            % WhatToPlot:               what do you want to plot:
+            %                              0: nothing
+            %                              1: returns of optimized algo(training and papertrading)
+            %                              2: + sweepPlot of training
+            %                              3: + performance
+            % -------------------------------------------------------------
+
+            
+nameAlgo = 'bkt_fast_008c_inverted_supertrend_dynamic' 
+N = 1:5 % 10:40 % 25 %  % 
+M = 10:5:100 % 1:25 % 18 % [18 18 18] %  
+N_greater_than_M = 0              
+Cross = 'EURUSD'  %  'AUDCAD'            
+histName =  'EURUSD-01-2014-07-2016.csv' % 'AUDCAD.csv'   %  'EURUSD_smallsample2014_2015.csv' %  'EURGBP.csv'  %      
+actTimeScale = 1             		
+newTimeScale = 30             		
+transCost = 1
+pips_TP = 10
+pips_SL = 10
+stdev_TP = 10
+stdev_SL = 10       		
+WhatToPlot = 2
+reverse_optimization = 1

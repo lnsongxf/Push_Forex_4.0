@@ -1,4 +1,4 @@
-classdef bkt_fast_008_supertrend < handle
+classdef bkt_fast_008b_inverted_supertrend < handle
     
     % bktfast VERSION 3 (with arrayAperture and minimumReturns)
     
@@ -94,10 +94,11 @@ classdef bkt_fast_008_supertrend < handle
             
             while i < sizeStorico
                 
-                % se il segnale è trending x due volte di seguito, compra (1 in long, -1 in short)
-                if  ( abs( s(i) + s(i-1) ) == 2 )
+                % se il segnale è trending x due volte di seguito e poi smette di esserlo, 
+                % compra sperando che il trend si inverta (-1 in long, 1 in short)
+                if  ( abs( s(i-1) + s(i-2) ) == 2 ) && ( s(i) ~= s (i-1) )
                     
-                    segnoOperazione = s(i);
+                    segnoOperazione = -s(i-1);
                     ntrades = ntrades + 1;
                     [obj, Pbuy, ~] = obj.apri(i, P, 0, ntrades, segnoOperazione, date);
                     
@@ -105,7 +106,7 @@ classdef bkt_fast_008_supertrend < handle
                     
                     for j = (i+1):(sizeStorico-1)
                         
-                        if s(j)==-segnoOperazione   % cioe' se il trend si inverte, chiudi
+                        if s(j)==-segnoOperazione || ( segnoOperazione*(P(j) - Pbuy) < -50 )  % cioe' se il trend si inverte, chiudi
                             
                             obj.r(j) =  segnoOperazione*(P(j) - Pbuy) - cost;
                             obj.closingPrices(ntrades) = P(j);
