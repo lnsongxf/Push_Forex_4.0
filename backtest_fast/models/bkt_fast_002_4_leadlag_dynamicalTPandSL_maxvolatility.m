@@ -111,7 +111,7 @@ classdef bkt_fast_002_4_leadlag_dynamicalTPandSL_maxvolatility < handle
                             
                             obj.r(indice_I) = (Pminute(j)-Pbuy)*segnoOperazione - cost;
                             obj.closingPrices(ntrades) = Pminute(j);
-                            obj.minimumReturns(ntrades)=calculate_min_return(Pbuy, Pminute(newTimeScale*i:j), segnoOperazione);
+                            obj.minimumReturns(ntrades)=calculate_min_return(Pbuy, Pminute(newTimeScale*obj.indexOpen:j), segnoOperazione);
                             obj.ClDates(ntrades) = date(indice_I); %controlla
                             i = indice_I;
                             obj.chei(ntrades)=i;

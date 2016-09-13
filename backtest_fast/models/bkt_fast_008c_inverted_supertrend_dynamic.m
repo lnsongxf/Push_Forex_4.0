@@ -134,7 +134,7 @@ classdef bkt_fast_008c_inverted_supertrend_dynamic < handle
                             obj.r(j) =  segnoOperazione*(P(j) - Pbuy) - cost;
                             obj.closingPrices(ntrades) = P(j);
                             obj.ClDates(ntrades) = date(j); %controlla
-                            obj.minimumReturns(ntrades)=calculate_min_return(Pbuy, P(i:j), segnoOperazione);
+                            obj.minimumReturns(ntrades)=calculate_min_return(Pbuy, P(obj.indexOpen:j), segnoOperazione);
                             i = j;
                             obj.chei(ntrades)=i;
                             obj.indexClose = obj.indexClose + 1;

@@ -113,7 +113,7 @@ classdef bkt_fast_008d_inverted_supertrend_check_minutes < handle
                             obj.r(indice_I) =  segnoOperazione*(Pminute(j) - Pbuy) - cost;
                             obj.closingPrices(ntrades) = Pminute(j);
                             obj.ClDates(ntrades) = date(indice_I); %controlla
-                            obj.minimumReturns(ntrades)=calculate_min_return(Pbuy, Pminute(newTimeScale*i:j), segnoOperazione);
+                            obj.minimumReturns(ntrades)=calculate_min_return(Pbuy, Pminute(newTimeScale*obj.indexOpen:j), segnoOperazione);
                             obj.chei(ntrades)=i;
                             obj.indexClose = obj.indexClose + 1;
                             obj.latency(ntrades)=j - newTimeScale*obj.indexOpen;

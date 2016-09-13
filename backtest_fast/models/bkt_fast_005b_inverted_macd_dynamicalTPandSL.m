@@ -110,7 +110,7 @@ classdef bkt_fast_005b_inverted_macd_dynamicalTPandSL < handle
                             obj.r(indice_I) =  segnoOperazione*(Pminute(j) - Pbuy) - cost;
                             obj.closingPrices(ntrades) = Pminute(j);
                             obj.ClDates(ntrades) = date(indice_I); %controlla
-                            obj.minimumReturns(ntrades)=calculate_min_return(Pbuy, Pminute(newTimeScale*i:j), segnoOperazione);
+                            obj.minimumReturns(ntrades)=calculate_min_return(Pbuy, Pminute(newTimeScale*obj.indexOpen:j), segnoOperazione);
                             %obj = obj.chiudi_per_TP(Pbuy, indice_I, segnoOperazione, devFluct2, wTP, cost, ntrades, date);
                             i = indice_I;
                             obj.chei(ntrades)=i;
