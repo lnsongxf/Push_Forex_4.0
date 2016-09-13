@@ -158,8 +158,16 @@ else
             closingTime = params.get('closeTime_');
             operationState.latency = closingTime - openingTime;
             
-            dynamicParameters {1} = 0;
-            [params,TakeProfitPrice,StopLossPrice,dynamicOn] = dynamicalTPandSLManager(operationState, chiusure, params, @closingDirectTakeProfitManager, dynamicParameters);
+            if ( params.get('trigger1') == 1 )
+                
+                %%%%% qui deve chiudere a priori xe il segnale si e' invertito
+                
+            else
+                
+                [params,TakeProfitPrice,StopLossPrice,dynamicOn] = dynamicalTPandSLManager(operationState, chiusure, params, @closingDirectTakeProfitManager, dynamicParameters);
+                
+            end
+            
             if dynamicOn  == 1
                 params.set('openTime__',indexHisData);
             end

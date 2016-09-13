@@ -486,6 +486,7 @@ classdef coreState_real02 < handle
             end
             
             prev_signal=params.get('previous_signal');
+            params.set('trigger1',0); % lo uso per triggerare la chiusura, vedi dopo
             
             if ( abs(s) == 2 && obj.state == 0)  % x l'apertura
                 
@@ -497,8 +498,12 @@ classdef coreState_real02 < handle
                 
             elseif ( abs(s) == 2 && obj.state == 1 && prev_signal==-s )  % x la chiusura quando il segnale si reinverte
                 
+                params.set('trigger1',1); % vuol dire "triggera la chiusura"
+                
             else
+                
                 obj.state = 0;
+                
             end
             
         end
