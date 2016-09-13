@@ -470,6 +470,41 @@ classdef coreState_real02 < handle
         end
         
         
+        
+        function obj = core_Algo_008b_inverted_supertrend(obj, low, high, closure, N, M, params)
+            
+            hl = high(end-N+1:end) - low(end-N+1:end);
+            atr = mean(hl);
+            avg = ( mean(high(end-M+1:end)) + mean(low(end-M+1:end)) ) / 2;
+            
+            if sum( sign ( closure(end-1:end)-(avg(end-1:end)+atr(end-1:end)) ) ) == 2  % vuol dire x due volte di seguito ho trend up
+                s = 1;
+            elseif sum( sign ( closure(end-1:end)-(avg(end-1:end)+atr(end-1:end)) ) ) == -2 % vuol dire x due volte di seguito ho trend down
+                s = -1;
+            else
+                s = 0;
+            end
+            
+            prev_signal=params.get('previous_signal');
+            
+            if ( abs(s) == 2 && obj.state == 0)  % x l'apertura
+                
+                obj.state = 1;
+                obj.suggestedDirection = -s; % apre al contrario del trend
+                params.set('previous_signal',-s);
+                obj.suggestedTP = 250;  % non serve in teoria
+                obj.suggestedSL = 80;   % questo si invece
+                
+            elseif ( abs(s) == 2 && obj.state == 1 && prev_signal==-s )  % x la chiusura quando il segnale si reinverte
+                
+            else
+                obj.state = 0;
+            end
+            
+        end
+
+        
+        
         function obj = core_Algo_011_stocOsc(obj, low, high, closure, params,Kperiods, Dperiods,valueTP,valueSL)
             
             stosc = stochosc(high, low, closure,Kperiods,Dperiods); % 3,1 for AUDCAD
