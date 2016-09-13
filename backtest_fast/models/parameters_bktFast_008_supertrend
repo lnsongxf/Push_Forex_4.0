@@ -19,12 +19,12 @@
             %                              2: + sweepPlot of training
             %                              3: + performance
             % -------------------------------------------------------------
-
+ 
             
-nameAlgo = 'bkt_fast_008c_inverted_supertrend_dynamic' 
-N = 1:5 % 10:40 % 25 %  % 
-M = 10:5:100 % 1:25 % 18 % [18 18 18] %  
-N_greater_than_M = 0              
+nameAlgo = 'bkt_fast_008d_inverted_supertrend_check_minutes' %  'bkt_fast_008b_inverted_supertrend' %  'bkt_fast_008c_inverted_supertrend_dynamic'  % 
+N =   25 % 10:40 %   % 
+M =   18 % 1:25 %  [18 18 18] %  
+N_greater_than_M = 1           
 Cross = 'EURUSD'  %  'AUDCAD'            
 histName =  'EURUSD-01-2014-07-2016.csv' % 'AUDCAD.csv'   %  'EURUSD_smallsample2014_2015.csv' %  'EURGBP.csv'  %      
 actTimeScale = 1             		

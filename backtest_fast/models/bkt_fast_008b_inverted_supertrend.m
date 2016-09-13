@@ -112,8 +112,7 @@ classdef bkt_fast_008b_inverted_supertrend < handle
                             obj.closingPrices(ntrades) = P(j);
                             obj.ClDates(ntrades) = date(j); %controlla
                             obj.minimumReturns(ntrades)=calculate_min_return(Pbuy, P(i:j), segnoOperazione);
-                            i = j;
-                            obj.chei(ntrades)=i;
+                            obj.chei(ntrades)=j;
                             obj.indexClose = obj.indexClose + 1;
                             obj.latency(ntrades)=j - obj.indexOpen;
                             %                                     display('operazione chiusa');

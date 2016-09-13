@@ -1,4 +1,4 @@
-classdef bkt_fast_008c_inverted_supertrend_dynamic < handle
+classdef bkt_fast_008d_inverted_supertrend_check_minutes < handle
     
     % bktfast VERSION 3 (with arrayAperture and minimumReturns)
     
@@ -24,7 +24,7 @@ classdef bkt_fast_008c_inverted_supertrend_dynamic < handle
     
     methods
         
-        function obj = spin(obj, ~, matrixNewHisData, ~, ~, dyn1, dyn2, cost, ~, ~, ~, ~, plottami)
+        function obj = spin(obj, Pminute, matrixNewHisData, ~, newTimeScale, N, M, cost, ~, ~, ~, ~, plottami) 
             
             % Pminute = prezzo al minuto
             % matrixNewHisData = matrice con prezzi e date alla new time scale
@@ -35,7 +35,7 @@ classdef bkt_fast_008c_inverted_supertrend_dynamic < handle
             % wTP = peso per calcolare quando chiuder per TP
             
             %% utilizza segnale del supertrend sia in apertura che in chiusura
-            
+                        
             high = matrixNewHisData(:,2);
             low = matrixNewHisData(:,3);
             P = matrixNewHisData(:,4);
@@ -64,9 +64,6 @@ classdef bkt_fast_008c_inverted_supertrend_dynamic < handle
             atr= zeros(sizeStorico,1);
             avg= zeros(sizeStorico,1);
             
-            N=25;
-            M=18;
-            
             for k = N:(sizeStorico)
                 
                 hl = high(k-N+1:k) - low(k-N+1:k);
@@ -82,22 +79,22 @@ classdef bkt_fast_008c_inverted_supertrend_dynamic < handle
             end
             
             % plot the supertrend signal
-            %             figure
-            %             sx(1) = subplot(2,1,1);
-            %             plot(P), grid on
-            %             hold on
-            %             plot(avg+atr)
-            %             plot(avg-atr)
-            %             sx(2) = subplot(2,1,2);
-            %             plot(s), grid on
-            %             linkaxes(sx,'x')
-            
+%             figure
+%             sx(1) = subplot(2,1,1);
+%             plot(P), grid on
+%             hold on
+%             plot(avg+atr)
+%             plot(avg-atr)
+%             sx(2) = subplot(2,1,2);
+%             plot(s), grid on
+%             linkaxes(sx,'x')
+
             i = 101;
             
             
             while i < sizeStorico
                 
-                % se il segnale è trending x due volte di seguito e poi smette di esserlo,
+                % se il segnale è trending x due volte di seguito e poi smette di esserlo, 
                 % compra sperando che il trend si inverta (-1 in long, 1 in short)
                 if  ( abs( s(i-1) + s(i-2) ) == 2 ) && ( s(i) ~= s (i-1) )
                     
@@ -105,46 +102,27 @@ classdef bkt_fast_008c_inverted_supertrend_dynamic < handle
                     ntrades = ntrades + 1;
                     [obj, Pbuy, ~] = obj.apri(i, P, 0, ntrades, segnoOperazione, date);
                     
-                    volat = max(high(i-M+1:i)) - min(low(i-M+1:i));
-                    
-                    TakeP = min(max(5,volat),100);
-                    StopL = min(max(5,volat),100);
-                    
-                    TakeProfitPrice = Pbuy + segnoOperazione * TakeP;
-                    StopLossPrice =  Pbuy - segnoOperazione * StopL;
                     
                     
-                    dynamicParameters {1} = 0;  % shrink TP pips
-                    dynamicParameters {2} = dyn1-1;  % shrink SL pips
-                    dynamicParameters {3} = 2;  % speed factor after reached min gain
-                    dynamicParameters {4} = dyn2; % min gain
-                    
-                    
-                    for j = (i+1):(sizeStorico-1)
+                    for j = newTimeScale*(i):length(Pminute)
                         
-                         [TakeProfitPrice,StopLossPrice,TakeP,StopL,~] = closingShrinkingBands_fastShrink_aboveXpips(Pbuy,P(j),segnoOperazione,TakeP,StopL, 0, dynamicParameters);
-                   
-                         
-                         condTP = ( sign( P(j) - TakeProfitPrice ) * segnoOperazione );
-                        condSL = ( sign( StopLossPrice - P(j) ) ) * segnoOperazione;
+                        indice_I = floor(j/newTimeScale);
                         
-                        
-                        if s(j)==-segnoOperazione || ( segnoOperazione*(P(j) - Pbuy) < -50 ) || ( condTP >=0 ) || ( condSL >= 0 )  % cioe' se il trend si inverte, chiudi
+                        if s(indice_I)==-segnoOperazione || ( segnoOperazione*(Pminute(j) - Pbuy) < -80 )  % cioe' se il trend si inverte, chiudi
                             
-                            obj.r(j) =  segnoOperazione*(P(j) - Pbuy) - cost;
-                            obj.closingPrices(ntrades) = P(j);
-                            obj.ClDates(ntrades) = date(j); %controlla
-                            obj.minimumReturns(ntrades)=calculate_min_return(Pbuy, P(i:j), segnoOperazione);
-                            i = j;
+                            obj.r(indice_I) =  segnoOperazione*(Pminute(j) - Pbuy) - cost;
+                            obj.closingPrices(ntrades) = Pminute(j);
+                            obj.ClDates(ntrades) = date(indice_I); %controlla
+                            obj.minimumReturns(ntrades)=calculate_min_return(Pbuy, Pminute(newTimeScale*i:j), segnoOperazione);
                             obj.chei(ntrades)=i;
                             obj.indexClose = obj.indexClose + 1;
-                            obj.latency(ntrades)=j - obj.indexOpen;
+                            obj.latency(ntrades)=j - newTimeScale*obj.indexOpen;
                             %                                     display('operazione chiusa');
                             break
                             
                         end
                         
-                        i = j;
+                        i = indice_I;
                         obj.trades(i) = 1;
                         
                     end
@@ -156,7 +134,7 @@ classdef bkt_fast_008c_inverted_supertrend_dynamic < handle
                 
             end
             
-            
+
             
             obj.outputbkt(:,1) = obj.chei(1:obj.indexClose);                    % index of stick
             obj.outputbkt(:,2) = obj.openingPrices(1:obj.indexClose);      % opening price
@@ -173,7 +151,7 @@ classdef bkt_fast_008c_inverted_supertrend_dynamic < handle
             
             obj.latency = obj.latency(1:obj.indexClose);
             obj.arrayAperture = obj.arrayAperture(1:obj.indexClose);
-            
+               
             
             
             % Plot a richiesta
@@ -207,24 +185,24 @@ classdef bkt_fast_008c_inverted_supertrend_dynamic < handle
             
         end
         
+
         
         
-        
-        %         function [obj] = chiudi_per_SL(obj, Pbuy, indice_I, segnoOperazione, devFluct2, wSL, cost, ntrades, date)
-        %
-        %             obj.r(indice_I) = - wSL*devFluct2 - cost;
-        %             obj.closingPrices(ntrades) = Pbuy - segnoOperazione*floor(wSL*devFluct2);
-        %             obj.ClDates(ntrades) = date(indice_I); %controlla
-        %
-        %         end
-        %
-        %         function [obj] = chiudi_per_TP(obj, Pbuy, indice_I, segnoOperazione, devFluct2, wTP, cost, ntrades, date)
-        %
-        %             obj.r(indice_I) = wTP*devFluct2 - cost;
-        %             obj.closingPrices(ntrades) = Pbuy + segnoOperazione*floor(wTP*devFluct2);
-        %             obj.ClDates(ntrades) = date(indice_I); %controlla
-        %
-        %         end
+%         function [obj] = chiudi_per_SL(obj, Pbuy, indice_I, segnoOperazione, devFluct2, wSL, cost, ntrades, date)
+%             
+%             obj.r(indice_I) = - wSL*devFluct2 - cost;
+%             obj.closingPrices(ntrades) = Pbuy - segnoOperazione*floor(wSL*devFluct2);
+%             obj.ClDates(ntrades) = date(indice_I); %controlla
+%             
+%         end
+%         
+%         function [obj] = chiudi_per_TP(obj, Pbuy, indice_I, segnoOperazione, devFluct2, wTP, cost, ntrades, date)
+%             
+%             obj.r(indice_I) = wTP*devFluct2 - cost;
+%             obj.closingPrices(ntrades) = Pbuy + segnoOperazione*floor(wTP*devFluct2);
+%             obj.ClDates(ntrades) = date(indice_I); %controlla
+%             
+%         end
         
         
     end
