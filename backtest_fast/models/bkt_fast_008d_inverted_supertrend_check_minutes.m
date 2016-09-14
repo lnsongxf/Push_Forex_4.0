@@ -70,11 +70,15 @@ classdef bkt_fast_008d_inverted_supertrend_check_minutes < handle
                 atr(k) = mean(hl);
                 avg(k) = ( mean(high(k-M+1:k)) + mean(low(k-M+1:k)) ) / 2;
                 
+                % display(['atr= ',num2str(atr(k)),', avg= ',num2str(avg(k)),', P= ',num2str(P(k)),', k= ',num2str(k)]);
+                
                 if P(k)>(avg(k)+atr(k))
                     s(k) = 1;
                 elseif P(k)<(avg(k)-atr(k));
                     s(k) = -1;
                 end
+                
+                % display(['k= ',num2str(k),' s= ',num2str(s(k))]);
                 
             end
             

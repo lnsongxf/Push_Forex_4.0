@@ -473,32 +473,40 @@ classdef coreState_real02 < handle
         
         function obj = core_Algo_008b_inverted_supertrend(obj, low, high, closure, N, M, params, operation)
             
-            hl = high(end-N+1:end) - low(end-N+1:end);
-            atr = mean(hl);
-            avg = ( mean(high(end-M+1:end)) + mean(low(end-M+1:end)) ) / 2;
+            s=zeros(3,1);
+            atr=zeros(3,1);
+            avg=zeros(3,1);
             
-            prev_signal=params.get('previous_signal');
-            
-            if ( closure(end) - (avg+atr) > 0 )
-                s = 1;
-            elseif ( closure(end) - (avg-atr) < 0 )
-                s = -1;
-            else
-                s = 0;
+            for k=1:3
+                
+                z=3-k;
+                    
+                hl = high(end-N-z+1:end-z) - low(end-N-z+1:end-z);
+                atr(k) = mean(hl);
+                avg(k) = ( mean(high(end-M-z+1:end-z)) + mean(low(end-M-z+1:end-z)) ) / 2;
+                
+                if closure(end-z)>(avg(k)+atr(k))
+                    s(k) = 1;
+                elseif closure(end-z)<(avg(k)-atr(k));
+                    s(k) = -1;
+                end
+                
             end
 
+            display(['atr= ',num2str(atr(3)),', avg= ',num2str(avg(3)),', P= ',num2str(closure(end)),', s= ',num2str(s(3))]);
+            
             params.set('trigger1',0); % lo uso per triggerare la chiusura, vedi dopo
 
             
-            if ( abs(prev_signal + s) == 2 &&  operation == 0)  % x l'apertura
+            if ( abs(s(1) + s(2)) == 2 && s(2)~=s(3) &&  operation == 0)  % x l'apertura
                 
                 obj.state = 1;
-                obj.suggestedDirection = -s; % apre al contrario del trend
-                params.set('direction',-s);
+                obj.suggestedDirection = -s(2); % apre al contrario del trend
+                params.set('direction',-s(2));
                 obj.suggestedTP = 250;  % non serve in teoria
                 obj.suggestedSL = 80;   % questo si invece
                 
-            elseif ( abs(prev_signal + s) == 2 && abs(operation) > 0 && params.get('direction')==s )  % x la chiusura quando il segnale si reinverte
+            elseif ( abs(operation) > 0 && params.get('direction')==-s(2) )  % x la chiusura quando il segnale si reinverte
                 
                 params.set('trigger1',1); % vuol dire "triggera la chiusura"
                 
@@ -507,8 +515,6 @@ classdef coreState_real02 < handle
                 obj.state = 0;
                 
             end
-            
-            params.set('previous_signal',s);
             
         end
 
