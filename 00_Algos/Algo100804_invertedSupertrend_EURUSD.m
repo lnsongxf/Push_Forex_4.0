@@ -99,7 +99,7 @@ end
 
 
 % controlla se ho dei nuovi dati sulla newTimeScale
-if (newTimeScalePoint)        %  !!! We use the supertrend signal also to trigger the closure of the operation !!!! 
+if (newTimeScalePoint)        %  !!! We use the supertrend signal also to trigger the closure of the operation !!!!
     
     % 01a
     % -------- stationarity Test ------------------- %
@@ -111,7 +111,7 @@ if (newTimeScalePoint)        %  !!! We use the supertrend signal also to trigge
     a=st.HurstExponent;
     c=st.pValue;
     d=st.halflife;
-
+    
     % ----- update timeSeriesProperties ------------ %
     b=0;
     e=0;
@@ -120,7 +120,7 @@ if (newTimeScalePoint)        %  !!! We use the supertrend signal also to trigge
     
     % 01c
     % -------- coreState filter -------------------- %
-    cState.core_Algo_008b_inverted_supertrend(lows(1:end-1),highs(1:end-1),chiusure(1:end-1),chiusure(end),25,18, params);
+    cState.core_Algo_008b_inverted_supertrend(lows(1:end-1),highs(1:end-1),chiusure(1:end-1),25,18, params,operationState.actualOperation);
     
 end
 
@@ -158,23 +158,26 @@ else
             closingTime = params.get('closeTime_');
             operationState.latency = closingTime - openingTime;
             
+            
+            
+            [params,TakeProfitPrice,StopLossPrice,dynamicOn] = dynamicalTPandSLManager(operationState, chiusure, params, @closingDirectTakeProfitManager, 0);
+            
             if ( params.get('trigger1') == 1 )
                 
-                %%%%% qui deve chiudere a priori xe il segnale si e' invertito
+                latencyTreshold = 1;    % faccio finta che chiuda x latency invece e' il segnale del supertrend
+                [operationState,~, params] = directTakeProfitManager (operationState, chiusure, params,TakeProfitPrice,StopLossPrice, latencyTreshold);
                 
             else
                 
-                [params,TakeProfitPrice,StopLossPrice,dynamicOn] = dynamicalTPandSLManager(operationState, chiusure, params, @closingDirectTakeProfitManager, dynamicParameters);
+                %             if dynamicOn  == 1
+                %                 params.set('openTime__',indexHisData);
+                %             end
+                
+                latencyTreshold = 1000000;    % latency treshold in minutes
+                [operationState,~, params] = directTakeProfitManager (operationState, chiusure, params,TakeProfitPrice,StopLossPrice, latencyTreshold);
+                
                 
             end
-            
-            if dynamicOn  == 1
-                params.set('openTime__',indexHisData);
-            end
-            
-            latencyTreshold = 1000000;    % latency treshold in minutes
-            [operationState,~, params] = directTakeProfitManager (operationState, chiusure, params,TakeProfitPrice,StopLossPrice, latencyTreshold);
-
             
         elseif openValueReal < 0
             
