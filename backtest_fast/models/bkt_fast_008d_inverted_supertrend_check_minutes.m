@@ -101,7 +101,7 @@ classdef bkt_fast_008d_inverted_supertrend_check_minutes < handle
                     segnoOperazione = -s(i-1);
                     ntrades = ntrades + 1;
                     [obj, Pbuy, ~] = obj.apri(i, P, 0, ntrades, segnoOperazione, date);
-                    
+                    obj.arrayAperture(ntrades)=i;
                     
                     
                     for j = newTimeScale*(i):length(Pminute)

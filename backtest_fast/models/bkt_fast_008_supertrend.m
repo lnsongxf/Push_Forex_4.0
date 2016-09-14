@@ -100,7 +100,7 @@ classdef bkt_fast_008_supertrend < handle
                     segnoOperazione = s(i);
                     ntrades = ntrades + 1;
                     [obj, Pbuy, ~] = obj.apri(i, P, 0, ntrades, segnoOperazione, date);
-                    
+                    obj.arrayAperture(ntrades)=i;
                     
                     
                     for j = (i+1):(sizeStorico-1)

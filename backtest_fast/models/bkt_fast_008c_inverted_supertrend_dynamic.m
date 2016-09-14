@@ -104,6 +104,7 @@ classdef bkt_fast_008c_inverted_supertrend_dynamic < handle
                     segnoOperazione = -s(i-1);
                     ntrades = ntrades + 1;
                     [obj, Pbuy, ~] = obj.apri(i, P, 0, ntrades, segnoOperazione, date);
+                    obj.arrayAperture(ntrades)=i;
                     
                     volat = max(high(i-M+1:i)) - min(low(i-M+1:i));
                     
