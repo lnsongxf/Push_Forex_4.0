@@ -78,7 +78,7 @@ classdef bkt_fast_008d_inverted_supertrend_check_minutes < handle
                     s(k) = -1;
                 end
                 
-                % display(['k= ',num2str(k),' s= ',num2str(s(k))]);
+%                 display(['k= ',num2str(k),' s= ',num2str(s(k))]);
                 
             end
             
@@ -112,7 +112,7 @@ classdef bkt_fast_008d_inverted_supertrend_check_minutes < handle
                         
                         indice_I = floor(j/newTimeScale);
                         
-                        if s(indice_I)==-segnoOperazione || ( segnoOperazione*(Pminute(j) - Pbuy) < -80 )  % cioe' se il trend si inverte, chiudi
+                        if s(indice_I)==-segnoOperazione || ( segnoOperazione*(Pminute(j) - Pbuy) < -80 || ( segnoOperazione*(Pminute(j) - Pbuy) > 300) )  % cioe' se il trend si inverte, chiudi
                             
                             obj.r(indice_I) =  segnoOperazione*(Pminute(j) - Pbuy) - cost;
                             obj.closingPrices(ntrades) = Pminute(j);
@@ -121,6 +121,7 @@ classdef bkt_fast_008d_inverted_supertrend_check_minutes < handle
                             obj.chei(ntrades)=i;
                             obj.indexClose = obj.indexClose + 1;
                             obj.latency(ntrades)=j - newTimeScale*obj.indexOpen;
+                            i = indice_I;
                             %                                     display('operazione chiusa');
                             break
                             
