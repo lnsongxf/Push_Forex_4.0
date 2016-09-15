@@ -139,7 +139,7 @@ if operationState.lock
     
 else
     
-    if abs(operationState.actualOperation) > 0 && newTimeScalePoint == 0 ;
+    if abs(operationState.actualOperation) > 0 ;
         
         % 02a
         % -------- takeProfitManager: close for TP or SL ------ %

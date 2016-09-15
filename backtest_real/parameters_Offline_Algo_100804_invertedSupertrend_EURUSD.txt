@@ -23,7 +23,7 @@
 nameAlgo = 'Algo100804_invertedSupertrend_EURUSD'
 Cross = 'EURUSD'
 nData_ = 100
-histName =  'EURUSD-01-2014-07-2016.csv' % 'EURUSD_smallsample2014_2015.csv' %  'EURUSD-04-2014-02-2016.csv' %    'AUDCAD.csv' %'AUDCAD_short2.csv'%'C:\Users\alericci\Desktop\Forex 4.0 noShared\EURUSD_2012_2015.csv'
+histName =  'EURUSD-01-2014-07-2016.csv' % 'EURUSD_smallsample2014_2015.csv' %    'EURUSD-04-2014-02-2016.csv' %    'AUDCAD.csv' %'AUDCAD_short2.csv'%'C:\Users\alericci\Desktop\Forex 4.0 noShared\EURUSD_2012_2015.csv'
 actTimeScale = 1
 newTimeScale = 30
 transCost = 1

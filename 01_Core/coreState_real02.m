@@ -493,7 +493,7 @@ classdef coreState_real02 < handle
                 
             end
 
-            display(['atr= ',num2str(atr(3)),', avg= ',num2str(avg(3)),', P= ',num2str(closure(end)),', s= ',num2str(s(3))]);
+%             display(['atr= ',num2str(atr(3)),', avg= ',num2str(avg(3)),', P= ',num2str(closure(end)),', s= ',num2str(s(3))]);
             
             params.set('trigger1',0); % lo uso per triggerare la chiusura, vedi dopo
 
@@ -503,10 +503,10 @@ classdef coreState_real02 < handle
                 obj.state = 1;
                 obj.suggestedDirection = -s(2); % apre al contrario del trend
                 params.set('direction',-s(2));
-                obj.suggestedTP = 250;  % non serve in teoria
+                obj.suggestedTP = 300;  % non serve in teoria
                 obj.suggestedSL = 80;   % questo si invece
                 
-            elseif ( abs(operation) > 0 && params.get('direction')==-s(2) )  % x la chiusura quando il segnale si reinverte
+            elseif ( abs(operation) > 0 && params.get('direction')==-s(3) )  % x la chiusura quando il segnale si reinverte
                 
                 params.set('trigger1',1); % vuol dire "triggera la chiusura"
                 
