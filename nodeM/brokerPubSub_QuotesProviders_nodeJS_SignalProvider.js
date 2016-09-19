@@ -613,7 +613,13 @@ later.setInterval(function() { updatingTimeFrameTaskFunction('m1') }, sched_m1);
 later.setInterval(function() { updatingTimeFrameTaskFunction('m5') }, sched_m5);
 later.setInterval(function() { updatingTimeFrameTaskFunction('m15') }, sched_m15);
 later.setInterval(function() { updatingTimeFrameTaskFunction('m30') }, sched_m30);
-later.setInterval(function() { updatingTimeFrameTaskFunction('m50') }, sched_m50);
+later.setTimeout(function() { 
+	setInterval(function(){
+		updatingTimeFrameTaskFunction('m50') 
+	},3000000);
+	updatingTimeFrameTaskFunction('m50'); 
+}, sched_m50);
+//later.setInterval(function() { updatingTimeFrameTaskFunction('m50') }, sched_m50);
 later.setInterval(function() { updatingTimeFrameTaskFunction('h1') }, sched_h1);
 later.setInterval(function() { updatingTimeFrameTaskFunction('h4') }, sched_h4);
 later.setInterval(function() { updatingTimeFrameTaskFunction('d1') }, sched_d1);
